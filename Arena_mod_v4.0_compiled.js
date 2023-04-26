@@ -1,9 +1,5 @@
 /* Dev's note
 
-Emmissives
-Repo: bhpsngum/bin
-- BFG_warning_line.png
-
 When calling `HelperFunctions.setPlaneOBJ`, if you want to set angle then set rotation like this:
 { x: Math.PI, y: 0, z: -<YOUR ANGLE> }
 otherwise just do { x: 0, y: 0, z: 0 }
@@ -52,7 +48,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from Config.js at Thu Apr 27 2023 08:10:59 GMT+0900 (Japan Standard Time) */
+/* Imported from Config.js at Thu Apr 27 2023 08:25:56 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -85,7 +81,7 @@ const CONTROL_POINT = {
     },
     score_increase: 0.10, // team points increases per sec for the dominating team
     texture: {
-        url: "https://raw.githubusercontent.com/Bhpsngum/bin/master/capture_area.png",
+        url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/capture_area.png",
         scale: 2.24,
     }
 }
@@ -95,11 +91,11 @@ const BASES = {
     intrusion_damage: 145, // damage per sec if enemy enters the base
     textures: [ // textures list to choose from (randomized)
         {
-            url: "https://raw.githubusercontent.com/Bhpsngum/bin/master/base_0.png",
+            url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_0.png",
             scale: 2.24
         },
         {
-            url: "https://raw.githubusercontent.com/Bhpsngum/bin/master/base_1.png",
+            url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_1.png",
             scale: 2.24
         }
     ]
@@ -107,7 +103,7 @@ const BASES = {
 
 
 
-/* Imported from Teams.js at Thu Apr 27 2023 08:10:59 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Thu Apr 27 2023 08:25:56 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -135,7 +131,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Thu Apr 27 2023 08:10:59 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Thu Apr 27 2023 08:25:56 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1563,7 +1559,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from Abilities.js at Thu Apr 27 2023 08:10:59 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Thu Apr 27 2023 08:25:56 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -2225,7 +2221,7 @@ const ShipAbilities = {
 
         warningDuration: 1 * 60, // warning before ship can fire
 
-        emissiveImg: `https://raw.githubusercontent.com/Bhpsngum/bin/master/BFG_warning_line.png`,
+        emissiveImg: `https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/BFG_warning_line.png`,
 
         imgScale: { // update this based on emissiveImg's resolution
             x: 3939,
@@ -2910,7 +2906,7 @@ const ShipAbilities = {
                 rotation: { x: 0, y: 0, z: 0 },
                 type: {
                     id: "healing_base_" + ship.team,
-                    emissive: "https://raw.githubusercontent.com/Bhpsngum/bin/master/healing_area.png",
+                    emissive: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/healing_area.png",
                     emissiveColor: HelperFunctions.toHSLA(TeamManager.getData(ship.team).hue)
                 }
             });

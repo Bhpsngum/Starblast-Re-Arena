@@ -29,7 +29,7 @@ const CONTROL_POINT = {
     },
     score_increase: 0.10, // team points increases per sec for the dominating team
     texture: {
-        url: "https://raw.githubusercontent.com/Bhpsngum/bin/master/capture_area.png",
+        url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/capture_area.png",
         scale: 2.24,
     }
 }
@@ -39,11 +39,11 @@ const BASES = {
     intrusion_damage: 145, // damage per sec if enemy enters the base
     textures: [ // textures list to choose from (randomized)
         {
-            url: "https://raw.githubusercontent.com/Bhpsngum/bin/master/base_0.png",
+            url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_0.png",
             scale: 2.24
         },
         {
-            url: "https://raw.githubusercontent.com/Bhpsngum/bin/master/base_1.png",
+            url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_1.png",
             scale: 2.24
         }
     ]

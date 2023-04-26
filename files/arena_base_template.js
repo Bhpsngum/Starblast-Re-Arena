@@ -1,9 +1,5 @@
 /* Dev's note
 
-Emmissives
-Repo: bhpsngum/bin
-- BFG_warning_line.png
-
 When calling `HelperFunctions.setPlaneOBJ`, if you want to set angle then set rotation like this:
 { x: Math.PI, y: 0, z: -<YOUR ANGLE> }
 otherwise just do { x: 0, y: 0, z: 0 }

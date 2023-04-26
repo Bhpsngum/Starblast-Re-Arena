@@ -658,7 +658,7 @@ const ShipAbilities = {
 
         warningDuration: 1 * 60, // warning before ship can fire
 
-        emissiveImg: `https://raw.githubusercontent.com/Bhpsngum/bin/master/BFG_warning_line.png`,
+        emissiveImg: `https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/BFG_warning_line.png`,
 
         imgScale: { // update this based on emissiveImg's resolution
             x: 3939,
@@ -1343,7 +1343,7 @@ const ShipAbilities = {
                 rotation: { x: 0, y: 0, z: 0 },
                 type: {
                     id: "healing_base_" + ship.team,
-                    emissive: "https://raw.githubusercontent.com/Bhpsngum/bin/master/healing_area.png",
+                    emissive: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/healing_area.png",
                     emissiveColor: HelperFunctions.toHSLA(TeamManager.getData(ship.team).hue)
                 }
             });
