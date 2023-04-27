@@ -1466,7 +1466,7 @@ const ShipAbilities = {
         duration: 1,
 
         launchTimeout: 1.5 * 60,
-        launchStrength: 6,
+        launchStrength: 4.5,
 
         endOnDeath: true,
         customEndcondition: true,
