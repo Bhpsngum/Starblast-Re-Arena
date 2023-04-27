@@ -61,7 +61,7 @@ if you clones/pull the updates next time
 
 
 
-/* Imported from Config.js at Fri Apr 28 2023 00:29:47 GMT+0900 (Japan Standard Time) */
+/* Imported from Config.js at Fri Apr 28 2023 00:55:45 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -166,7 +166,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from Teams.js at Fri Apr 28 2023 00:29:47 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Fri Apr 28 2023 00:55:45 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -194,7 +194,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Fri Apr 28 2023 00:29:47 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Fri Apr 28 2023 00:55:45 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1618,7 +1618,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Fri Apr 28 2023 00:29:47 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Fri Apr 28 2023 00:55:45 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -1941,12 +1941,12 @@ const ShipAbilities = {
             if (ship.custom.ability !== this) return;
             let ships = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, false, false, true);
             for (let victim of ships) {
-                let affectionRatio = 1 - (HelperFunctions.dist(ship, victim) / this.range);
+                let affectionRatio = 1 - (HelperFunctions.distance(ship, victim).distance / this.range);
                 let shipMass = this.shipMasses.get(victim.type) || 1;
                 HelperFunctions.damage(victim, affectionRatio * this.torpedoDamage);
                 HelperFunctions.accelerateToTarget(victim, ship, affectionRatio * this.torpedoCenterShockwaveStrength / shipMass, true);
             }
-            ship.set({type: this.codes.default, kill: true});
+            ship.set({type: this.codes.default, kill: true, stats: AbilityManager.maxStats});
         },
 
         globalTick: function (game) {
@@ -3240,7 +3240,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Fri Apr 28 2023 00:29:47 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Fri Apr 28 2023 00:55:45 GMT+0900 (Japan Standard Time) */
 
 const MAKE_COMMANDS = function (echo) {
     let gameCommands = game.modding.commands;
@@ -3447,7 +3447,7 @@ const MAKE_COMMANDS = function (echo) {
 
 
 
-/* Imported from Resources.js at Fri Apr 28 2023 00:29:47 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Fri Apr 28 2023 00:55:45 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -3455,7 +3455,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Fri Apr 28 2023 00:29:47 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Fri Apr 28 2023 00:55:45 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -3745,7 +3745,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Fri Apr 28 2023 00:29:47 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Fri Apr 28 2023 00:55:45 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     teams_list: Teams,
@@ -4178,11 +4178,11 @@ Press [${this.abilityShortcut}] to activate it.`
 
 
 
-/* Imported from templates/gameLogic.js at Fri Apr 28 2023 00:29:47 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/gameLogic.js at Fri Apr 28 2023 00:55:45 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from templates/Misc.js at Fri Apr 28 2023 00:29:47 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/Misc.js at Fri Apr 28 2023 00:55:45 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -4715,13 +4715,11 @@ const makeAlienSpawns = function () {
     });
 
     AlienSpawns = map;
-
-    console.log(map);
 }
 
 
 
-/* Imported from templates/tickFunctions.js at Fri Apr 28 2023 00:29:47 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/tickFunctions.js at Fri Apr 28 2023 00:55:45 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -5161,7 +5159,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from templates/eventFunction.js at Fri Apr 28 2023 00:29:47 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/eventFunction.js at Fri Apr 28 2023 00:55:45 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -5214,7 +5212,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from templates/gameOptions.js at Fri Apr 28 2023 00:29:47 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/gameOptions.js at Fri Apr 28 2023 00:55:45 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
