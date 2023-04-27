@@ -1,7 +1,7 @@
 // NodeJS program to merge Arena files into one runnable code
 
 const fs = require("fs").promises;
-const template_file = "arena_base_template.js";
+const template_file = "templates/base.js";
 const destination_file_name = "Arena_mod_v4.0_compiled.js";
 
 const getContent = async function (fileName) {
