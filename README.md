@@ -6,7 +6,7 @@ This is the remake of the old Arena Mod, which its development has been stopped 
 
 However, to make the mod more customizable and organized, I remake this mod with the help from the community.
 
-This mod is only in the early stage, prepare for tons of hidden bug, which I may ||or may not|| detect and fix in the future.
+This mod is only in the early stage, prepare for tons of hidden bug, which I may ~~or may not~~ detect and fix in the future.
 
 But at least it should run as expected ~~I guess~~
 
