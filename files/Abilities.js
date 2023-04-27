@@ -390,7 +390,7 @@ const ShipAbilities = {
         },
         name: "Air-strike",
         cooldown: 35 * 60,
-        duration: 3 * 60,
+        duration: 1.25 * 60,
         cooldownRestartOnEnd: true,
         endOnDeath: true,
 
