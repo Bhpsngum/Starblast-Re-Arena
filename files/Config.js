@@ -11,7 +11,7 @@ const GAME_OPTIONS = {
     duration: 30 * 60, // in seconds
     points: 100, // points for one team to reach in order to win
     healing_ratio: 1, // better don't touch this
-    crystal_drop: 0.3,
+    crystal_drop: 0.5, // this.options.crystal_drop
     ship_ui_timeout: 15, // time for the ship ui to hide, in seconds
     alienSpawns: {
         level: {
