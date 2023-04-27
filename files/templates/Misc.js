@@ -314,7 +314,7 @@ const UIData = {
                 {type: "text", position: [0,offsetY,100,textHeight], color: "#cde", value: " "}, // player component scale
                 ...players.map((player, index) => {
                     let pos = [0, offsetY + columnHeight * (index + 1), 100, textHeight];
-                    let color = HelperFunctions.toHSLA(TeamManager.getData(player.team).hue)
+                    let color = HelperFunctions.toHSLA(TeamManager.getData(player.team).hue, 1, 100, this.colorTextLightness)
                     return [
                         { type: "player", index, id: player.id, position: pos, color, align: "left"},
                         { type: "text", value: `${player.custom.kills}/${player.custom.deaths} `, position: pos, color, align: "right"},
@@ -335,7 +335,7 @@ const UIData = {
             let compos = HelperFunctions.clone(scoreboardData.components);
             let foundIndex = compos.findIndex(c => c.type == "player" && c.id === ship.id);
             if (foundIndex < 0) {
-                let color = HelperFunctions.toHSLA(TeamManager.getData(ship.team).hue);
+                let color = HelperFunctions.toHSLA(TeamManager.getData(ship.team).hue, 1, 100, this.colorTextLightness);
                 foundIndex = compos.findLastIndex(c => c.type == "player");
                 compos[foundIndex].id = ship.id;
                 compos[foundIndex].color = color;

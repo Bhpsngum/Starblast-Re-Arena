@@ -44,6 +44,8 @@ this.tick = function (game) {
     // your stuff here
 }
 
+// make sure to set `game.custom.started` to `true` so that ships can use the abilities
+
 // Control the event
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -61,7 +63,7 @@ if you clones/pull the updates next time
 
 
 
-/* Imported from Config.js at Thu Apr 27 2023 09:32:17 GMT+0900 (Japan Standard Time) */
+/* Imported from Config.js at Thu Apr 27 2023 09:42:32 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -116,7 +118,7 @@ const BASES = {
 
 
 
-/* Imported from Teams.js at Thu Apr 27 2023 09:32:17 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Thu Apr 27 2023 09:42:32 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -144,7 +146,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Thu Apr 27 2023 09:32:17 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Thu Apr 27 2023 09:42:32 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1573,7 +1575,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from Abilities.js at Thu Apr 27 2023 09:32:17 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Thu Apr 27 2023 09:42:32 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -3183,7 +3185,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Thu Apr 27 2023 09:32:17 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Thu Apr 27 2023 09:42:32 GMT+0900 (Japan Standard Time) */
 
 const MAKE_COMMANDS = function (echo) {
     let gameCommands = game.modding.commands;
@@ -3384,7 +3386,7 @@ const MAKE_COMMANDS = function (echo) {
 
 
 
-/* Imported from Resources.js at Thu Apr 27 2023 09:32:17 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Thu Apr 27 2023 09:42:32 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -3392,7 +3394,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Thu Apr 27 2023 09:32:17 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Thu Apr 27 2023 09:42:32 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -3682,7 +3684,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Thu Apr 27 2023 09:32:17 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Thu Apr 27 2023 09:42:32 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     teams_list: Teams,
@@ -4162,11 +4164,11 @@ Press [${this.abilityShortcut}] to activate it.`
 
 
 
-/* Imported from templates/gameLogic.js at Thu Apr 27 2023 09:32:17 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/gameLogic.js at Thu Apr 27 2023 09:42:32 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from templates/Misc.js at Thu Apr 27 2023 09:32:17 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/Misc.js at Thu Apr 27 2023 09:42:32 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     sendWaitingText: function (ship) {
@@ -4484,7 +4486,7 @@ const UIData = {
                 {type: "text", position: [0,offsetY,100,textHeight], color: "#cde", value: " "}, // player component scale
                 ...players.map((player, index) => {
                     let pos = [0, offsetY + columnHeight * (index + 1), 100, textHeight];
-                    let color = HelperFunctions.toHSLA(TeamManager.getData(player.team).hue)
+                    let color = HelperFunctions.toHSLA(TeamManager.getData(player.team).hue, 1, 100, this.colorTextLightness)
                     return [
                         { type: "player", index, id: player.id, position: pos, color, align: "left"},
                         { type: "text", value: `${player.custom.kills}/${player.custom.deaths} `, position: pos, color, align: "right"},
@@ -4505,7 +4507,7 @@ const UIData = {
             let compos = HelperFunctions.clone(scoreboardData.components);
             let foundIndex = compos.findIndex(c => c.type == "player" && c.id === ship.id);
             if (foundIndex < 0) {
-                let color = HelperFunctions.toHSLA(TeamManager.getData(ship.team).hue);
+                let color = HelperFunctions.toHSLA(TeamManager.getData(ship.team).hue, 1, 100, this.colorTextLightness);
                 foundIndex = compos.findLastIndex(c => c.type == "player");
                 compos[foundIndex].id = ship.id;
                 compos[foundIndex].color = color;
@@ -4622,7 +4624,7 @@ control_point_data.renderData = renderData;
 
 
 
-/* Imported from templates/tickFunctions.js at Thu Apr 27 2023 09:32:17 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/tickFunctions.js at Thu Apr 27 2023 09:42:32 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -5041,7 +5043,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from templates/eventFunction.js at Thu Apr 27 2023 09:32:17 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/eventFunction.js at Thu Apr 27 2023 09:42:32 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -5094,7 +5096,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from templates/gameOptions.js at Thu Apr 27 2023 09:32:17 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/gameOptions.js at Thu Apr 27 2023 09:42:32 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
