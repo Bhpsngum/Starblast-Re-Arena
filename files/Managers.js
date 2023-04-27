@@ -37,11 +37,7 @@ const MapManager = {
             this.map = { name: "Unknown", author: "Unknown", map: "", spawnpoints: []}
         }
         if (set) {
-            if (game.custom.initialized) {
-                game.setCustomMap(this.map.map);
-                this.setSpawnpointsOBJ()
-                HelperFunctions.updateRadar();
-            }
+            try { game.setCustomMap(this.map.map); } catch (e) {}
             this.assignSpawnpoints();
         }
         return this.map;
@@ -64,54 +60,11 @@ const MapManager = {
     set: function (nameOrIndex, set = false) {
         this.map = this.maps[nameOrIndex] || this.maps.find(m => m.name.toLowerCase() == String(nameOrIndex).toLowerCase());
         return this.get(set);
-    },
-    setSpawnpointsOBJ: function () {
-        let teams = TeamManager.getAll(), mapName = this.get().name;
-
-        let samples = [...BASES.textures];
-        let i = 0;
-        for (let team of teams) {
-            if (team == null) continue;
-            let spawnpoint = team.spawnpoint;
-
-            if (spawnpoint == null) continue;
-
-            if (samples.length < 1) samples = [...BASES.textures];
-
-            let texture = HelperFunctions.randomItem(samples, true);
-
-            let hue = team.hue;
-
-            let scale = BASES.size * texture.value.scale;
-
-            HelperFunctions.setPlaneOBJ({
-                id: "team_base_" + i,
-                position: {
-                    ...spawnpoint,
-                    z: 0
-                },
-                scale: {
-                    x: scale,
-                    y: scale,
-                    z: 0
-                },
-                rotation: {
-                    x: Math.PI,
-                    y: 0,
-                    z: -Math.atan2(CONTROL_POINT.position.y - spawnpoint.y, CONTROL_POINT.position.x - spawnpoint.x)
-                },
-                type: {
-                    id: "team_base_" + mapName + "_" + (i++) + "_" + texture.index,
-                    emissive: texture.value.url,
-                    emissiveColor: HelperFunctions.toHSLA(hue)
-                }
-            })
-        }
     }
 }
 
 const AbilityManager = {
-    includeRingOnModel: false, // the ring model assignments are only executed if this one is `true`
+    includeRingOnModel: false, // the individual ship's ring model inclusion are only checked if this one is `true`
     showAbilityNotice: true,
     abilityNoticeTimeout: 5 * 60, // in ticks
     abilityNoticeMessage: function (ship) {

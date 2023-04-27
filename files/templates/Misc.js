@@ -1,4 +1,54 @@
 const GameHelperFunctions = {
+    setSpawnpointsOBJ: function () {
+        let teams = TeamManager.getAll(), mapName = MapManager.get().name;
+
+        let samples = [...BASES.textures];
+        let i = 0;
+        for (let team of teams) {
+            if (team == null || team.spawnpoint == null) continue;
+            let spawnpoint = team.spawnpoint;
+
+            if (samples.length < 1) samples = [...BASES.textures];
+
+            let texture = team.texture;
+            let index = texture != null ? BASES.textures.findIndex(txt => txt.url === texture.url) : -1;
+
+            if (index < 0) {
+                texture = HelperFunctions.randomItem(samples, true).value;
+                index = BASES.textures.indexOf(texture);
+            }
+            else texture = BASES.textures[index];
+
+            team.texture = texture;
+
+            let hue = team.hue;
+
+            let scale = BASES.size * texture.scale;
+
+            HelperFunctions.setPlaneOBJ({
+                id: "team_base_" + i,
+                position: {
+                    ...spawnpoint,
+                    z: 0
+                },
+                scale: {
+                    x: scale,
+                    y: scale,
+                    z: 0
+                },
+                rotation: {
+                    x: Math.PI,
+                    y: 0,
+                    z: -Math.atan2(CONTROL_POINT.position.y - spawnpoint.y, CONTROL_POINT.position.x - spawnpoint.x)
+                },
+                type: {
+                    id: "team_base_" + mapName + "_" + (i++) + "_" + index,
+                    emissive: texture.url,
+                    emissiveColor: HelperFunctions.toHSLA(hue)
+                }
+            })
+        }
+    },
     sendWaitingText: function (ship) {
         HelperFunctions.sendUI(ship, {
             id: "waiting_text",
@@ -10,7 +60,8 @@ const GameHelperFunctions = {
         });
     },
     setControlPointOBJ: function (neutral = false, team, forced = false) {
-        let scale = CONTROL_POINT.texture.scale * CONTROL_POINT.size;
+        let { control_point_data } = game.custom;
+        let scale = control_point_data.texture.scale * CONTROL_POINT.size;
         let lastState = game.custom.winner == null ? "neutral" : game.custom.winner;
         let curState = neutral ? "neutral" : team;
         if (!forced && lastState == curState) return;
@@ -35,7 +86,7 @@ const GameHelperFunctions = {
             },
             type: {
                 id: "control_point_" + curState,
-                emissive: CONTROL_POINT.texture.url,
+                emissive: control_point_data.texture.url,
                 emissiveColor: color
             }
         });

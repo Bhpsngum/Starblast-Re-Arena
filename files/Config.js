@@ -1,6 +1,6 @@
 const DEBUG = true; // if in debug phase
 
-const map_name = `Arena Mod v4.0 Early Beta Test`;
+const map_name = `Arena Mod v4.0 Early Beta Test`; // leave `null` if you want randomized map name
 
 const GAME_OPTIONS = {
     map_size: 100,
@@ -28,10 +28,13 @@ const CONTROL_POINT = {
         dominating_percentage: 90 // % of control one team needs in order to dominate and gain points
     },
     score_increase: 0.10, // team points increases per sec for the dominating team
-    texture: {
-        url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/capture_area.png",
-        scale: 2.24,
-    }
+    textures: [
+        {
+            url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/capture_area.png",
+            author: "Nexagon", // it's shown nowhere on the mod, but at least a token of respect
+            scale: 2.24
+        }
+    ]
 }
 
 const BASES = {
@@ -40,11 +43,38 @@ const BASES = {
     textures: [ // textures list to choose from (randomized)
         {
             url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_0.png",
+            author: "Nexagon", // it's shown nowhere on the mod, but at least a token of respect
             scale: 2.24
         },
         {
             url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_1.png",
+            author: "Nexagon",
             scale: 2.24
+        },
+        {
+            url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_2.png",
+            author: "Caramel",
+            scale: 2.07
+        },
+        {
+            url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_3.png",
+            author: "Caramel",
+            scale: 2.07
+        },
+        {
+            url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_4.png",
+            author: "Caramel",
+            scale: 2.07
+        },
+        {
+            url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_5.png",
+            author: "Caramel",
+            scale: 2.07
+        },
+        {
+            url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_6.png",
+            author: "Caramel",
+            scale: 2.07
         }
     ]
 }

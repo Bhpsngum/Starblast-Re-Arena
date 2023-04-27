@@ -97,12 +97,20 @@ const initialization = function (game) {
         rotation: {x:0, y:0, z:0}
     });
 
+    let texture = control_point_data.texture;
+    let index = texture == null ? -1 : CONTROL_POINT.textures.findIndex(txt => txt.url === texture.url);
+    if (index < 0) index = HelperFunctions.randomItem(CONTROL_POINT.textures).index;
+    control_point_data.texture = CONTROL_POINT.textures[index];
+    
+    
     HelperFunctions.setControlPointOBJ(true, false, true);
 
-    MapManager.setSpawnpointsOBJ();
+    HelperFunctions.setSpawnpointsOBJ();
+
+    HelperFunctions.updateRadar();
 
     this.tick = waiting;
-    game.custom.initialized = true;
+
     this.tick(game); 
 }
 
