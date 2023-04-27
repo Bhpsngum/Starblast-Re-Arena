@@ -61,11 +61,11 @@ if you clones/pull the updates next time
 
 
 
-/* Imported from Config.js at Thu Apr 27 2023 15:11:13 GMT+0900 (Japan Standard Time) */
+/* Imported from Config.js at Thu Apr 27 2023 18:51:57 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
-const map_name = `Arena Mod v4.0 Early Beta Test`;
+const map_name = `Arena Mod v4.0 Early Beta Test`; // leave `null` if you want randomized map name
 
 const GAME_OPTIONS = {
     map_size: 100,
@@ -93,10 +93,13 @@ const CONTROL_POINT = {
         dominating_percentage: 90 // % of control one team needs in order to dominate and gain points
     },
     score_increase: 0.10, // team points increases per sec for the dominating team
-    texture: {
-        url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/capture_area.png",
-        scale: 2.24,
-    }
+    textures: [
+        {
+            url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/capture_area.png",
+            author: "Nexagon", // it's shown nowhere on the mod, but at least a token of respect
+            scale: 2.24
+        }
+    ]
 }
 
 const BASES = {
@@ -105,18 +108,45 @@ const BASES = {
     textures: [ // textures list to choose from (randomized)
         {
             url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_0.png",
+            author: "Nexagon", // it's shown nowhere on the mod, but at least a token of respect
             scale: 2.24
         },
         {
             url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_1.png",
+            author: "Nexagon",
             scale: 2.24
+        },
+        {
+            url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_2.png",
+            author: "Caramel",
+            scale: 2.07
+        },
+        {
+            url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_3.png",
+            author: "Caramel",
+            scale: 2.07
+        },
+        {
+            url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_4.png",
+            author: "Caramel",
+            scale: 2.07
+        },
+        {
+            url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_5.png",
+            author: "Caramel",
+            scale: 2.07
+        },
+        {
+            url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_6.png",
+            author: "Caramel",
+            scale: 2.07
         }
     ]
 }
 
 
 
-/* Imported from Teams.js at Thu Apr 27 2023 15:11:13 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Thu Apr 27 2023 18:51:57 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -144,7 +174,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Thu Apr 27 2023 15:11:13 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Thu Apr 27 2023 18:51:57 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1573,7 +1603,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from Abilities.js at Thu Apr 27 2023 15:11:13 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Thu Apr 27 2023 18:51:57 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -3183,7 +3213,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Thu Apr 27 2023 15:11:13 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Thu Apr 27 2023 18:51:57 GMT+0900 (Japan Standard Time) */
 
 const MAKE_COMMANDS = function (echo) {
     let gameCommands = game.modding.commands;
@@ -3384,7 +3414,7 @@ const MAKE_COMMANDS = function (echo) {
 
 
 
-/* Imported from Resources.js at Thu Apr 27 2023 15:11:13 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Thu Apr 27 2023 18:51:57 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -3392,7 +3422,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Thu Apr 27 2023 15:11:13 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Thu Apr 27 2023 18:51:57 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -3682,7 +3712,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Thu Apr 27 2023 15:11:13 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Thu Apr 27 2023 18:51:57 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     teams_list: Teams,
@@ -3723,11 +3753,7 @@ const MapManager = {
             this.map = { name: "Unknown", author: "Unknown", map: "", spawnpoints: []}
         }
         if (set) {
-            if (game.custom.initialized) {
-                game.setCustomMap(this.map.map);
-                this.setSpawnpointsOBJ()
-                HelperFunctions.updateRadar();
-            }
+            try { game.setCustomMap(this.map.map); } catch (e) {}
             this.assignSpawnpoints();
         }
         return this.map;
@@ -3750,54 +3776,11 @@ const MapManager = {
     set: function (nameOrIndex, set = false) {
         this.map = this.maps[nameOrIndex] || this.maps.find(m => m.name.toLowerCase() == String(nameOrIndex).toLowerCase());
         return this.get(set);
-    },
-    setSpawnpointsOBJ: function () {
-        let teams = TeamManager.getAll(), mapName = this.get().name;
-
-        let samples = [...BASES.textures];
-        let i = 0;
-        for (let team of teams) {
-            if (team == null) continue;
-            let spawnpoint = team.spawnpoint;
-
-            if (spawnpoint == null) continue;
-
-            if (samples.length < 1) samples = [...BASES.textures];
-
-            let texture = HelperFunctions.randomItem(samples, true);
-
-            let hue = team.hue;
-
-            let scale = BASES.size * texture.value.scale;
-
-            HelperFunctions.setPlaneOBJ({
-                id: "team_base_" + i,
-                position: {
-                    ...spawnpoint,
-                    z: 0
-                },
-                scale: {
-                    x: scale,
-                    y: scale,
-                    z: 0
-                },
-                rotation: {
-                    x: Math.PI,
-                    y: 0,
-                    z: -Math.atan2(CONTROL_POINT.position.y - spawnpoint.y, CONTROL_POINT.position.x - spawnpoint.x)
-                },
-                type: {
-                    id: "team_base_" + mapName + "_" + (i++) + "_" + texture.index,
-                    emissive: texture.value.url,
-                    emissiveColor: HelperFunctions.toHSLA(hue)
-                }
-            })
-        }
     }
 }
 
 const AbilityManager = {
-    includeRingOnModel: false, // the ring model assignments are only executed if this one is `true`
+    includeRingOnModel: false, // the individual ship's ring model inclusion are only checked if this one is `true`
     showAbilityNotice: true,
     abilityNoticeTimeout: 5 * 60, // in ticks
     abilityNoticeMessage: function (ship) {
@@ -4162,13 +4145,63 @@ Press [${this.abilityShortcut}] to activate it.`
 
 
 
-/* Imported from templates/gameLogic.js at Thu Apr 27 2023 15:11:13 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/gameLogic.js at Thu Apr 27 2023 18:51:57 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from templates/Misc.js at Thu Apr 27 2023 15:11:13 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/Misc.js at Thu Apr 27 2023 18:51:57 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
+    setSpawnpointsOBJ: function () {
+        let teams = TeamManager.getAll(), mapName = MapManager.get().name;
+
+        let samples = [...BASES.textures];
+        let i = 0;
+        for (let team of teams) {
+            if (team == null || team.spawnpoint == null) continue;
+            let spawnpoint = team.spawnpoint;
+
+            if (samples.length < 1) samples = [...BASES.textures];
+
+            let texture = team.texture;
+            let index = texture != null ? BASES.textures.findIndex(txt => txt.url === texture.url) : -1;
+
+            if (index < 0) {
+                texture = HelperFunctions.randomItem(samples, true).value;
+                index = BASES.textures.indexOf(texture);
+            }
+            else texture = BASES.textures[index];
+
+            team.texture = texture;
+
+            let hue = team.hue;
+
+            let scale = BASES.size * texture.scale;
+
+            HelperFunctions.setPlaneOBJ({
+                id: "team_base_" + i,
+                position: {
+                    ...spawnpoint,
+                    z: 0
+                },
+                scale: {
+                    x: scale,
+                    y: scale,
+                    z: 0
+                },
+                rotation: {
+                    x: Math.PI,
+                    y: 0,
+                    z: -Math.atan2(CONTROL_POINT.position.y - spawnpoint.y, CONTROL_POINT.position.x - spawnpoint.x)
+                },
+                type: {
+                    id: "team_base_" + mapName + "_" + (i++) + "_" + index,
+                    emissive: texture.url,
+                    emissiveColor: HelperFunctions.toHSLA(hue)
+                }
+            })
+        }
+    },
     sendWaitingText: function (ship) {
         HelperFunctions.sendUI(ship, {
             id: "waiting_text",
@@ -4180,7 +4213,8 @@ const GameHelperFunctions = {
         });
     },
     setControlPointOBJ: function (neutral = false, team, forced = false) {
-        let scale = CONTROL_POINT.texture.scale * CONTROL_POINT.size;
+        let { control_point_data } = game.custom;
+        let scale = control_point_data.texture.scale * CONTROL_POINT.size;
         let lastState = game.custom.winner == null ? "neutral" : game.custom.winner;
         let curState = neutral ? "neutral" : team;
         if (!forced && lastState == curState) return;
@@ -4205,7 +4239,7 @@ const GameHelperFunctions = {
             },
             type: {
                 id: "control_point_" + curState,
-                emissive: CONTROL_POINT.texture.url,
+                emissive: control_point_data.texture.url,
                 emissiveColor: color
             }
         });
@@ -4622,7 +4656,7 @@ control_point_data.renderData = renderData;
 
 
 
-/* Imported from templates/tickFunctions.js at Thu Apr 27 2023 15:11:13 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/tickFunctions.js at Thu Apr 27 2023 18:51:57 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -4723,12 +4757,20 @@ const initialization = function (game) {
         rotation: {x:0, y:0, z:0}
     });
 
+    let texture = control_point_data.texture;
+    let index = texture == null ? -1 : CONTROL_POINT.textures.findIndex(txt => txt.url === texture.url);
+    if (index < 0) index = HelperFunctions.randomItem(CONTROL_POINT.textures).index;
+    control_point_data.texture = CONTROL_POINT.textures[index];
+    
+    
     HelperFunctions.setControlPointOBJ(true, false, true);
 
-    MapManager.setSpawnpointsOBJ();
+    HelperFunctions.setSpawnpointsOBJ();
+
+    HelperFunctions.updateRadar();
 
     this.tick = waiting;
-    game.custom.initialized = true;
+
     this.tick(game); 
 }
 
@@ -5041,7 +5083,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from templates/eventFunction.js at Thu Apr 27 2023 15:11:13 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/eventFunction.js at Thu Apr 27 2023 18:51:57 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -5094,7 +5136,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from templates/gameOptions.js at Thu Apr 27 2023 15:11:13 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/gameOptions.js at Thu Apr 27 2023 18:51:57 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
