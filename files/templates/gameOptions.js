@@ -29,7 +29,7 @@ this.options = {
     radar_zoom: 1,
     weapons_store: false,
     crystal_value: 0,
-    crystal_drop: 0.6,
+    crystal_drop: GAME_OPTIONS.crystal_drop,
     asteroids_strength: 2,
     soundtrack: "crystals.mp3", //civilisation.mp3 | procedurality.mp3 | argon.mp3 | crystals.mp3
     healing_ratio: GAME_OPTIONS.healing_ratio, // better to set the ability ship's damage rather than setting this option
