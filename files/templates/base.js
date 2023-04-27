@@ -7,8 +7,6 @@ Reason: the plane obj is from neuronality's site, and it's weird
 
 */
 
-/* 
-
 /*
 Currently, to use the Ability System (which is bundled with TeamManager and MapManager) in any mod:
 
