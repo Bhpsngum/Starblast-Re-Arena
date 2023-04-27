@@ -529,6 +529,4 @@ const makeAlienSpawns = function () {
     });
 
     AlienSpawns = map;
-
-    console.log(map);
 }

@@ -319,12 +319,12 @@ const ShipAbilities = {
             if (ship.custom.ability !== this) return;
             let ships = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, false, false, true);
             for (let victim of ships) {
-                let affectionRatio = 1 - (HelperFunctions.dist(ship, victim) / this.range);
+                let affectionRatio = 1 - (HelperFunctions.distance(ship, victim).distance / this.range);
                 let shipMass = this.shipMasses.get(victim.type) || 1;
                 HelperFunctions.damage(victim, affectionRatio * this.torpedoDamage);
                 HelperFunctions.accelerateToTarget(victim, ship, affectionRatio * this.torpedoCenterShockwaveStrength / shipMass, true);
             }
-            ship.set({type: this.codes.default, kill: true});
+            ship.set({type: this.codes.default, kill: true, stats: AbilityManager.maxStats});
         },
 
         globalTick: function (game) {
