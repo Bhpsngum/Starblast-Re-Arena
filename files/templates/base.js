@@ -42,7 +42,10 @@ this.tick = function (game) {
     // your stuff here
 }
 
-// make sure to set `game.custom.started` to `true` so that ships can use the abilities
+// make sure to set
+//    - `game.custom.started` to `true` 
+//    - `ship.custom.kicked` to `false` (it should be by default)
+// so that ship can use the abilities
 
 // Control the event
 this.event = function (event, game) {
