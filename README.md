@@ -6,9 +6,25 @@ This is the remake of the old Arena Mod, which its development has been stopped 
 
 However, to make the mod more customizable and organized, I remake this mod with the help from the community.
 
-This mod is only in the early stage, prepare for tons of hidden bug, which I may ~~or may not~~ detect and fix in the future.
+This remake is only in the early stage, prepare for tons of hidden bug, which I may ~~or may not~~ detect and fix in the future.
 
 But at least it should run as expected ~~I guess~~
+
+## Credits
+
+### Original Arena Mod (v1.0 - v3.1.2)
+* **CEO:** Leon
+* **Coding:** Nexagon
+* **Textures:** Leon, and others
+* **Ships:** Leon, Nexagon, Supernova, and others
+* **Maps:** Supernova, and others
+
+### Arena Mod Remake/Recontinuation (v3.1.3 - v4.0+)
+* **CEO:** Tost
+* **Coding:** Bhpsngum
+* **Textures:** Caramel
+* **Ships:** -
+* **Maps:** -
 
 ## What's in here?
 **Folders:**

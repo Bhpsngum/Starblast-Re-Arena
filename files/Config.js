@@ -1,6 +1,6 @@
 const DEBUG = true; // if in debug phase
 
-const map_name = `Arena Mod v4.0 Early Beta Test`; // leave `null` if you want randomized map name
+const map_name = `Arena Mod v4.0 Beta`; // leave `null` if you want randomized map name
 
 const GAME_OPTIONS = {
     map_size: 100,
