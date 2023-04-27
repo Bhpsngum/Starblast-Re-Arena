@@ -9,14 +9,20 @@ Reason: the plane obj is from neuronality's site, and it's weird
 
 /* 
 
-// Currently, to use the Ability System in any mod, copy codes for
-// DEBUG
-// ShipAbilities, AbilityManager
-// RESOURCES, HelperFunctions
-// Teams, TeamManager
-// Maps, MapManager
+/*
+Currently, to use the Ability System (which is bundled with TeamManager and MapManager) in any mod:
 
-// NOTE: All stuffs below should be pasted after the codes for necessary variables above
+1. Clone this Repository to your machine and navigate to that folder
+2. Tune the files inside the "files" directory by your choice
+The files below are recommended and better don't touch other files unless you know what you're doing
+    - Config.js
+    - Abilities.js
+    - Maps.js
+    - Teams.js
+    - Commands.js (if you understand it, or else don't)
+
+3. Paste your current's mod code in the templates/gameLogic.js file
+Consider the things below:
 
 // to initialize the Ability System (required):
 AbilityManager.initialize()
@@ -44,6 +50,13 @@ this.event = function (event, game) {
     // your stuff here
 }
 
+4. Install NodeJS if you haven't yet
+5. Open terminal/console, move to the folder in step 1 (use cd command or whatever you want)
+6. Run `node mergeFile.js`
+7. Profit
+
+8. You might want to keep the files you've modified and replace them with original files
+if you clones/pull the updates next time
 */
 
 /* import Config.js */
