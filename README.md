@@ -10,6 +10,8 @@ This remake is only in the early stage, prepare for tons of hidden bug, which I 
 
 But at least it should run as expected ~~I guess~~
 
+**P/S:** This won't be the final code since there will be more future updates. Also, since this remake is aiming for Modding Space (MS), a (very) large amount of inappropiate text will be removed beforehand. But that'll be done in the future. Bug fixing and updating is still the main focus for now.
+
 ## Credits
 
 ### Original Arena Mod (v1.0 - v3.1.2)
