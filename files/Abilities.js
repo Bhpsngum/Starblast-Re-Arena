@@ -203,7 +203,7 @@ const ShipAbilities = {
         speed: 1.25,
 
         start: function (ship) {
-            HelperFunctions.accelerate(ship, this.speed + Math.sqrt(ship.vx ** 2 + ship.vy ** 2));
+            HelperFunctions.accelerate(ship, this.speed);
             ship.set({
                 invulnerable: 120,
                 x: ship.x + this.TPDistance * Math.cos(ship.r),

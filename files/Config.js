@@ -11,6 +11,7 @@ const GAME_OPTIONS = {
     duration: 30 * 60, // in seconds
     points: 100, // points for one team to reach in order to win
     healing_ratio: 1, // better don't touch this
+    crystal_drop: 0.3,
     ship_ui_timeout: 15, // time for the ship ui to hide, in seconds
     alienSpawns: {
         level: {
@@ -18,7 +19,7 @@ const GAME_OPTIONS = {
             max: 2
         },
         codes: [10, 11],
-        collectibles: [10, 11, 12, 20, 21, 40, 41, 42, 90, 91],
+        collectibles: [10, 11, 12, 20, 21, 41, 42, 90, 91],
         crystals: {
             min: 45,
             max: 80
