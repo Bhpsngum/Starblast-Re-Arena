@@ -61,7 +61,7 @@ if you clones/pull the updates next time
 
 
 
-/* Imported from Config.js at Thu Apr 27 2023 21:15:15 GMT+0900 (Japan Standard Time) */
+/* Imported from Config.js at Thu Apr 27 2023 22:13:51 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -77,6 +77,20 @@ const GAME_OPTIONS = {
     points: 100, // points for one team to reach in order to win
     healing_ratio: 1, // better don't touch this
     ship_ui_timeout: 15, // time for the ship ui to hide, in seconds
+    alienSpawns: {
+        level: {
+            min: 1,
+            max: 2
+        },
+        codes: [10, 11],
+        collectibles: [10, 11, 12, 20, 21, 40, 41, 42, 90, 91],
+        crystals: {
+            min: 45,
+            max: 80
+        },
+        interval: 10, // in seconds
+        capacity: 30 // number of aliens should be on map at a time (including aliens spawned by abilities)
+    }
 }
 
 const CONTROL_POINT = {
@@ -144,9 +158,14 @@ const BASES = {
     ]
 }
 
+// don't remove those
+GAME_OPTIONS.required_players = Math.max(GAME_OPTIONS.required_players, 2) || 2; // restriction
+GAME_OPTIONS.teams_count = Math.min(Math.max(GAME_OPTIONS.teams_count, 0), 5) || 0; // restriction
+CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POINT.control_bar.controlling_percentage, CONTROL_POINT.control_bar.dominating_percentage), 100) || 100;
 
 
-/* Imported from Teams.js at Thu Apr 27 2023 21:15:15 GMT+0900 (Japan Standard Time) */
+
+/* Imported from Teams.js at Thu Apr 27 2023 22:13:51 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -174,7 +193,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Thu Apr 27 2023 21:15:15 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Thu Apr 27 2023 22:13:51 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1596,14 +1615,9 @@ const Maps = [
     }
 ];
 
-// don't remove those
-GAME_OPTIONS.required_players = Math.max(GAME_OPTIONS.required_players, 2) || 2; // restriction
-GAME_OPTIONS.teams_count = Math.min(Math.max(GAME_OPTIONS.teams_count, 0), 5) || 0; // restriction
-CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POINT.control_bar.controlling_percentage, CONTROL_POINT.control_bar.dominating_percentage), 100) || 100;
 
 
-
-/* Imported from Abilities.js at Thu Apr 27 2023 21:15:15 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Thu Apr 27 2023 22:13:51 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -2588,6 +2602,8 @@ const ShipAbilities = {
 
         stingDuration: 8 * 60,
 
+        generatorInit: 0,
+
         range: 10,
         includeRingOnModel: true,
 
@@ -2600,16 +2616,20 @@ const ShipAbilities = {
             let target = HelperFunctions.findEntitiesInRange(ship, this.range, false, true)[0];
 
             if (target != null) {
+                ship.custom.abilityCustom.hasPlayers = true;
                 target.custom.poisonousStart = game.step - 1;
                 target.custom.poisonousShip = ship;
             }
-            else this.reload(ship);
+            else {
+                ship.custom.abilityCustom.hasPlayers = false;
+                this.reload(ship);
+            }
 
             ship.custom.forceEnd = true;
         },
 
         end: function (ship) {
-            if (ship.custom.ability === this) ship.set({type: this.codes.default, stats: AbilityManager.maxStats, generator: 0});
+            if (ship.custom.ability === this && ship.custom.abilityCustom.hasPlayers) ship.set({type: this.codes.default, stats: AbilityManager.maxStats, generator: 0});
         },
 
         globalTick: function (game) {
@@ -3219,7 +3239,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Thu Apr 27 2023 21:15:15 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Thu Apr 27 2023 22:13:51 GMT+0900 (Japan Standard Time) */
 
 const MAKE_COMMANDS = function (echo) {
     let gameCommands = game.modding.commands;
@@ -3312,8 +3332,14 @@ const MAKE_COMMANDS = function (echo) {
     });
 
     addCommand('sunall', function () {
+        for (let ship of game.ships) ship.set({x: 0, y: 0});
         echo('All players has been teleoprted to the sun!');
     }, { description: "Teleport all players to the sun" });
+
+    addCommand('killaliens', function () {
+        for (let alien of game.aliens) alien.set({ kill: true });
+        echo('Killed all aliens!');
+    }, { description: "Kill all aliens" });
 
     addShipCommand('kick', function (ship, id, args) {
         ship.custom.kicked = true;
@@ -3420,7 +3446,7 @@ const MAKE_COMMANDS = function (echo) {
 
 
 
-/* Imported from Resources.js at Thu Apr 27 2023 21:15:15 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Thu Apr 27 2023 22:13:51 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -3428,7 +3454,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Thu Apr 27 2023 21:15:15 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Thu Apr 27 2023 22:13:51 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -3718,7 +3744,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Thu Apr 27 2023 21:15:15 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Thu Apr 27 2023 22:13:51 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     teams_list: Teams,
@@ -4151,11 +4177,11 @@ Press [${this.abilityShortcut}] to activate it.`
 
 
 
-/* Imported from templates/gameLogic.js at Thu Apr 27 2023 21:15:15 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/gameLogic.js at Thu Apr 27 2023 22:13:51 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from templates/Misc.js at Thu Apr 27 2023 21:15:15 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/Misc.js at Thu Apr 27 2023 22:13:51 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -4660,9 +4686,41 @@ if (control_point_data == null) game.custom.control_point_data = control_point_d
 
 control_point_data.renderData = renderData;
 
+let AlienSpawns = [];
+
+const makeAlienSpawns = function () {
+    let { map } = MapManager.get(), teams = TeamManager.getAll().map(e => e.spawnpoint).filter(e => e != null);
+
+    let actual_size = GAME_OPTIONS.map_size * 5;
+    
+    // mapping first with positions
+    map = map.split("\n").map((v, y) => v.split("").map((size, x) => ({
+        x: x * 10 - actual_size + 5,
+        y: actual_size - y * 10 - 5,
+        size: +size || 0
+    }))).flat();
+
+    // filter positions
+    map = map.filter(pos => {
+        if (pos.size > 0) return false;
+
+        if (HelperFunctions.distance(CONTROL_POINT.position, pos).distance <= CONTROL_POINT.size) return false;
+
+        for (let team of teams) {
+            if (HelperFunctions.distance(team, pos).distance <= BASES.size) return false;
+        }
+
+        return true;
+    });
+
+    AlienSpawns = map;
+
+    console.log(map);
+}
 
 
-/* Imported from templates/tickFunctions.js at Thu Apr 27 2023 21:15:15 GMT+0900 (Japan Standard Time) */
+
+/* Imported from templates/tickFunctions.js at Thu Apr 27 2023 22:13:51 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -4774,6 +4832,8 @@ const initialization = function (game) {
     HelperFunctions.setSpawnpointsOBJ();
 
     HelperFunctions.updateRadar();
+
+    makeAlienSpawns();
 
     this.tick = waiting;
 
@@ -5021,6 +5081,17 @@ const main_phase = function (game) {
         if (game.custom.oneTeamLeft) game.custom.winner = [...test][0];
         if (game.custom.oneTeamLeft || game.custom.timeout || Math.max(...control_point_data.scores, control_point_data.ghostScore) >= GAME_OPTIONS.points) this.tick = endGame; 
     }
+
+    if ((game.step - game.custom.startedStep) % (GAME_OPTIONS.alienSpawns.interval * 60) === 0) {
+        let alienSpec = GAME_OPTIONS.alienSpawns;
+        while (game.aliens.length < alienSpec.capacity) game.addAlien({
+            ...HelperFunctions.randomItem(AlienSpawns).value, //x, y
+            level: HelperFunctions.randIntInRange(alienSpec.level.min, alienSpec.level.max + 1),
+            crystal_drop: HelperFunctions.randIntInRange(alienSpec.crystals.min, alienSpec.crystals.max + 1),
+            weapon_drop: HelperFunctions.randomItem(alienSpec.collectibles).value,
+            code: HelperFunctions.randomItem(alienSpec.codes).value
+        })
+    }
 }
 
 const endGame = function (game) {
@@ -5089,7 +5160,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from templates/eventFunction.js at Thu Apr 27 2023 21:15:15 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/eventFunction.js at Thu Apr 27 2023 22:13:51 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -5142,7 +5213,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from templates/gameOptions.js at Thu Apr 27 2023 21:15:15 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/gameOptions.js at Thu Apr 27 2023 22:13:51 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?

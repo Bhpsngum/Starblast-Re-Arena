@@ -981,6 +981,8 @@ const ShipAbilities = {
 
         stingDuration: 8 * 60,
 
+        generatorInit: 0,
+
         range: 10,
         includeRingOnModel: true,
 
@@ -993,16 +995,20 @@ const ShipAbilities = {
             let target = HelperFunctions.findEntitiesInRange(ship, this.range, false, true)[0];
 
             if (target != null) {
+                ship.custom.abilityCustom.hasPlayers = true;
                 target.custom.poisonousStart = game.step - 1;
                 target.custom.poisonousShip = ship;
             }
-            else this.reload(ship);
+            else {
+                ship.custom.abilityCustom.hasPlayers = false;
+                this.reload(ship);
+            }
 
             ship.custom.forceEnd = true;
         },
 
         end: function (ship) {
-            if (ship.custom.ability === this) ship.set({type: this.codes.default, stats: AbilityManager.maxStats, generator: 0});
+            if (ship.custom.ability === this && ship.custom.abilityCustom.hasPlayers) ship.set({type: this.codes.default, stats: AbilityManager.maxStats, generator: 0});
         },
 
         globalTick: function (game) {

@@ -61,6 +61,10 @@ if you clones/pull the updates next time
 
 /* import Config.js */
 
+/* import Teams.js */
+
+/* import Maps.js */
+
 /* import Abilities.js */
 
 /* import Commands.js */

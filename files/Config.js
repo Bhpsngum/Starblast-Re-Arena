@@ -12,6 +12,20 @@ const GAME_OPTIONS = {
     points: 100, // points for one team to reach in order to win
     healing_ratio: 1, // better don't touch this
     ship_ui_timeout: 15, // time for the ship ui to hide, in seconds
+    alienSpawns: {
+        level: {
+            min: 1,
+            max: 2
+        },
+        codes: [10, 11],
+        collectibles: [10, 11, 12, 20, 21, 40, 41, 42, 90, 91],
+        crystals: {
+            min: 45,
+            max: 80
+        },
+        interval: 10, // in seconds
+        capacity: 30 // number of aliens should be on map at a time (including aliens spawned by abilities)
+    }
 }
 
 const CONTROL_POINT = {
@@ -78,10 +92,6 @@ const BASES = {
         }
     ]
 }
-
-/* import Teams.js */
-
-/* import Maps.js */
 
 // don't remove those
 GAME_OPTIONS.required_players = Math.max(GAME_OPTIONS.required_players, 2) || 2; // restriction

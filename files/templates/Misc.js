@@ -500,3 +500,35 @@ if (control_point_data == null) game.custom.control_point_data = control_point_d
 }
 
 control_point_data.renderData = renderData;
+
+let AlienSpawns = [];
+
+const makeAlienSpawns = function () {
+    let { map } = MapManager.get(), teams = TeamManager.getAll().map(e => e.spawnpoint).filter(e => e != null);
+
+    let actual_size = GAME_OPTIONS.map_size * 5;
+    
+    // mapping first with positions
+    map = map.split("\n").map((v, y) => v.split("").map((size, x) => ({
+        x: x * 10 - actual_size + 5,
+        y: actual_size - y * 10 - 5,
+        size: +size || 0
+    }))).flat();
+
+    // filter positions
+    map = map.filter(pos => {
+        if (pos.size > 0) return false;
+
+        if (HelperFunctions.distance(CONTROL_POINT.position, pos).distance <= CONTROL_POINT.size) return false;
+
+        for (let team of teams) {
+            if (HelperFunctions.distance(team, pos).distance <= BASES.size) return false;
+        }
+
+        return true;
+    });
+
+    AlienSpawns = map;
+
+    console.log(map);
+}

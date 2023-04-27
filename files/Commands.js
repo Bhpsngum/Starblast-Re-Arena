@@ -89,8 +89,14 @@ const MAKE_COMMANDS = function (echo) {
     });
 
     addCommand('sunall', function () {
+        for (let ship of game.ships) ship.set({x: 0, y: 0});
         echo('All players has been teleoprted to the sun!');
     }, { description: "Teleport all players to the sun" });
+
+    addCommand('killaliens', function () {
+        for (let alien of game.aliens) alien.set({ kill: true });
+        echo('Killed all aliens!');
+    }, { description: "Kill all aliens" });
 
     addShipCommand('kick', function (ship, id, args) {
         ship.custom.kicked = true;
