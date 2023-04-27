@@ -52,3 +52,8 @@ const BASES = {
 /* import Teams.js */
 
 /* import Maps.js */
+
+// don't remove those
+GAME_OPTIONS.required_players = Math.max(GAME_OPTIONS.required_players, 2) || 2; // restriction
+GAME_OPTIONS.teams_count = Math.min(Math.max(GAME_OPTIONS.teams_count, 0), 5) || 0; // restriction
+CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POINT.control_bar.controlling_percentage, CONTROL_POINT.control_bar.dominating_percentage), 100) || 100;
