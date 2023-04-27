@@ -109,6 +109,8 @@ const initialization = function (game) {
 
     HelperFunctions.updateRadar();
 
+    makeAlienSpawns();
+
     this.tick = waiting;
 
     this.tick(game); 
@@ -354,6 +356,17 @@ const main_phase = function (game) {
         game.custom.oneTeamLeft = test.size < 2;
         if (game.custom.oneTeamLeft) game.custom.winner = [...test][0];
         if (game.custom.oneTeamLeft || game.custom.timeout || Math.max(...control_point_data.scores, control_point_data.ghostScore) >= GAME_OPTIONS.points) this.tick = endGame; 
+    }
+
+    if ((game.step - game.custom.startedStep) % (GAME_OPTIONS.alienSpawns.interval * 60) === 0) {
+        let alienSpec = GAME_OPTIONS.alienSpawns;
+        while (game.aliens.length < alienSpec.capacity) game.addAlien({
+            ...HelperFunctions.randomItem(AlienSpawns).value, //x, y
+            level: HelperFunctions.randIntInRange(alienSpec.level.min, alienSpec.level.max + 1),
+            crystal_drop: HelperFunctions.randIntInRange(alienSpec.crystals.min, alienSpec.crystals.max + 1),
+            weapon_drop: HelperFunctions.randomItem(alienSpec.collectibles).value,
+            code: HelperFunctions.randomItem(alienSpec.codes).value
+        })
     }
 }
 
