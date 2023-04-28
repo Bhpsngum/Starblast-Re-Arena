@@ -14,16 +14,22 @@ const TeamManager = {
         if (!Array.isArray(this.teams)) this.initialize();
         return this.teams;
     },
-    getData: function (team) {
+    getDataFromID: function (team) {
         return this.getAll()[team] || this.ghostTeam;
+    },
+    getDataFromShip: function (ship) {
+        return this.getDataFromID((ship.custom == null || ship.custom.team == null) ? ship.team : ship.custom.team);
     },
     setGhostTeam: function (ship, changeTeam = false, TpBackToBase = false) {
         this.set(ship, 69, changeTeam, TpBackToBase)
     },
     set: function (ship, team = ship.team, changeTeam = false, TpBackToBase = false) {
-        let teamData = this.getData(team);
+        let teamData = this.getDataFromID(team);
         ship.set({hue: teamData.hue});
-        if (changeTeam) ship.set({team: teamData.id});
+        if (changeTeam) {
+            ship.set({team: teamData.id});
+            ship.custom.team = teamData.id;
+        }
         if (TpBackToBase) MapManager.spawn(ship);
     }
 }
@@ -76,7 +82,7 @@ const MapManager = {
         }
     },
     spawn: function (ship) {
-        let { spawnpoint } = TeamManager.getData(ship.team);
+        let { spawnpoint } = TeamManager.getDataFromShip(ship);
         if (spawnpoint != null) {
             let distance = Math.random() * BASES.size, angle = Math.random() * 2 * Math.PI;
             ship.set({
@@ -177,10 +183,13 @@ Press [${this.abilityShortcut}] to activate it.`
         if (ship.custom.pucked != null) return { ready: false, text: "Pucked" };
         if (ability == null) return { ready: false, text: "Disabled" };
         let ready = this.canStart(ship);
-        if (ready && !ability.useRequirementsTextWhenReady) return { ready: true, text: "Ready" };
+        if (ready) return {
+            ready: true,
+            text: ability.useRequirementsTextWhenReady ? ability.requirementsText(ship) : "Ready"
+        };
         return {
-            ready,
-            text: ability.requirementsText(ship)
+            ready: false,
+            text: ship.custom.inAbility && ability.cooldownRestartOnEnd && !ability.customDisabledText ? "Disabled" : ability.requirementsText(ship)
         }
     },
     updateUI: function (ship) {
@@ -279,7 +288,7 @@ Press [${this.abilityShortcut}] to activate it.`
             }
             if (this.showAbilityNotice && ship.custom.allowInstructor) {
                 if (this.abilityNoticeMessage) {
-                    ship.instructorSays(String(this.abilityNoticeMessage(ship)), TeamManager.getData(ship.team).instructor);
+                    ship.instructorSays(String(this.abilityNoticeMessage(ship)), TeamManager.getDataFromShip(ship).instructor);
                     if (this.abilityNoticeTimeout > 0) HelperFunctions.TimeManager.setTimeout(function () {
                         ship.hideInstructor();
                     }, this.abilityNoticeTimeout);

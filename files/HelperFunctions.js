@@ -74,7 +74,8 @@ const HelperFunctions = {
     },
     isTeam: function (ship1, ship2) {
         // check if ship2 is on the same team with ship1
-        return !TeamManager.getData(ship1.team).ghost && ship2.team === ship1.team;
+        let team1 = TeamManager.getDataFromShip(ship1), team2 = TeamManager.getDataFromShip(ship2);
+        return !team1.ghost && team1.id === team2.id;
     },
     simpleDistance: function (ship = {x: 0, y: 0}, target = {x: 0, y: 0}) {
         // @description simple distance function, just regular math

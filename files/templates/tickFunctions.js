@@ -25,7 +25,7 @@ const alwaysTick = function (game) {
         if (!ship.custom.shipUIsPermaHidden &&
             (stepDifference > GAME_OPTIONS.ship_ui_timeout * 60 ||
                 (stepDifference > 1 * 60 && 
-                    (spawnpoint = TeamManager.getData(ship.team).spawnpoint) != null 
+                    (spawnpoint = TeamManager.getDataFromShip(ship).spawnpoint) != null 
                     && HelperFunctions.distance(spawnpoint, ship).distance > BASES.size
                 )
             )) {
@@ -330,8 +330,9 @@ const main_phase = function (game) {
             let winningTeam = maxControlTeam[0];
             if (maxControl >= CONTROL_POINT.control_bar.dominating_percentage) {
                 scoreIncreased = true;
-                let winningTeamID = TeamManager.getData(winningTeam).id;
-                let increaseAmount = game.custom.increaseAmount = CONTROL_POINT.score_increase * players.filter(s => TeamManager.getData(s.team).id === winningTeamID).length;
+                let winningTeamInfo = TeamManager.getDataFromID(winningTeam);
+                let mult = winningTeamInfo.ghost ? 1 : players.filter(s => TeamManager.getDataFromShip(s).id === winningTeamInfo.id).length;
+                let increaseAmount = game.custom.increaseAmount = CONTROL_POINT.score_increase * mult;
                 if (winningTeam == "ghost") control_point_data.ghostScore += increaseAmount;
                 else control_point_data.scores[winningTeam] += increaseAmount;
             }
@@ -394,7 +395,7 @@ const endGame = function (game) {
         if (index < 0) index = "Ghost";
         game.custom.winner = index;
     }
-    let winnerData = TeamManager.getData(game.custom.winner);
+    let winnerData = TeamManager.getDataFromID(game.custom.winner);
     HelperFunctions.sendUI(game, {
         id: "endgame_notification",
         position: [25, 20, 50, 10],
@@ -418,7 +419,7 @@ const endGame = function (game) {
         "-----------------": "-----",
         "MVP in this game:": "Stats",
         "- Name": MVP.name,
-        "- Team": TeamManager.getData(MVP.team).name.toUpperCase(),
+        "- Team": TeamManager.getDataFromShip(MVP).name.toUpperCase(),
         "- Kills": (+MVP.custom.kills || 0).toString(),
         "- Deaths": (+MVP.custom.deaths || 0).toString()
     });
@@ -442,7 +443,7 @@ const im_here_just_to_kick_every_players_out_of_the_game = function (game) {
     for (let ship of game.ships) {
         if (!ship.custom.kicked && (ship.custom.endGameTick == null || game.step - ship.custom.endGameTick > 5 * 60)) {
             let endInfo = HelperFunctions.clone(game.custom.endGameInfo);
-            endInfo["Your team"] = TeamManager.getData(ship.team).name.toUpperCase();
+            endInfo["Your team"] = TeamManager.getDataFromShip(ship).name.toUpperCase();
             endInfo["Your kills"] = (+ship.custom.kills || 0).toString();
             endInfo["Your deaths"] = (+ship.custom.deaths || 0).toString();
             ship.gameover(endInfo);

@@ -21,6 +21,10 @@ The files below are recommended and better don't touch other files unless you kn
 
 3. Paste your current's mod code in the templates/gameLogic.js file
 Consider the things below:
+// Make some terminal commands (optional)
+MAKE_COMMANDS(echo);
+// `echo` is the global `echo` function, but it's recommended to take `game.modding.terminal.echo` instead
+// since it might run unexpectedly at first launch if you use `window.echo`
 
 // to initialize the Ability System (required):
 AbilityManager.initialize()
