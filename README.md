@@ -2,15 +2,15 @@
 Remake of Arena mod (aka Arena Mod Recontinuation)
 
 ## What's this?
-This is the remake of the old Arena Mod, which its development has been stopped by its original developers.
+This is the remake of Arena Mod, after development was stopped by the original developers.
 
-However, to make the mod more customizable and organized, I remake this mod with the help from the community.
+However, to make the mod more customizable and organized, I remade this mod with the help from the community.
 
-This remake is only in the early stage, prepare for tons of hidden bug, which I may ~~or may not~~ detect and fix in the future.
+This remake is only in the early stages, so do prepare for tons of hidden bugs, which I may ~~or may not~~ detect and fix in the future.
 
 But at least it should run as expected ~~I guess~~
 
-**P/S:** This won't be the final code since there will be more future updates. Also, since this remake is aiming for Modding Space (MS), a (very) large amount of inappropiate text needs to be removed beforehand. But that'll be done in the future. Bug fixing and updating are still the main focus for now.
+**P/S:** This won't be the final code since there will be more updates in the future. Also, since this remake is aiming for Modding Space (MS), a (very) large amount of inappropiate text will be removed beforehand. But that'll be done in the future. Bug fixing and updating are still the main focus for now.
 
 ## Credits
 
