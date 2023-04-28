@@ -39,7 +39,7 @@ const Teams = [
 
 const GhostTeam = {
     ghost: true,
-    id: '',
+    id: [],
     name: "Sussy Amogus",
     hue: 270,
     instructor: "Kan",
