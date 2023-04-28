@@ -345,16 +345,19 @@ const UIData = {
             });
         }
     },
+    getTopPlayers: function (game) {
+        return game.ships.filter(e => e && e.id != null).sort((a, b) => {
+            let aKills = a.custom.kills = a.custom.kills || 0;
+            let aDeaths = a.custom.deaths = a.custom.deaths || 0;
+            let bKills = b.custom.kills = b.custom.kills || 0;
+            let bDeaths = b.custom.deaths = b.custom.deaths || 0;
+
+            return (bKills - bDeaths / 3) - (aKills - aDeaths / 3);
+        })
+    },
     updateScoreboard: function (game) {
         if (game.custom.started) {
-            let players = game.ships.filter(e => e && e.id != null).sort((a, b) => {
-                let aKills = a.custom.kills = a.custom.kills || 0;
-                let aDeaths = a.custom.deaths = a.custom.deaths || 0;
-                let bKills = b.custom.kills = b.custom.kills || 0;
-                let bDeaths = b.custom.deaths = b.custom.deaths || 0;
-
-                return (bKills - bDeaths / 3) - (aKills - aDeaths / 3);
-            }).slice(0, 10);
+            let players = this.getTopPlayers(game).slice(0, 10);
             let columnHeight = 100 / 11;
             let textHeight = columnHeight / 1.2;
             let offsetY = (columnHeight - textHeight) / 2;

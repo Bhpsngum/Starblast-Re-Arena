@@ -37,3 +37,6 @@ In the root directory, you can also see other files:
 * **`README.md`**: This file
 * **`mergeFiles.js`**: This file is used to assemble the codes to create a complete mod file, only run in NodeJS
 * **(whatever its name)**: The compiled file, output of `mergeFile.js`
+
+## Q&A
+If you have any questions or feedbacks, please open an issue and I might include answers in this section.
