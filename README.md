@@ -19,14 +19,14 @@ But at least it should run as expected ~~I guess~~
 * **Coding:** Nexagon
 * **Textures:** Leon, and others
 * **Ships:** Leon, Nexagon, Supernova, and others
-* **Maps:** Supernova, and others
+* **Maps:** Leon, Carme, Caramel, and others
 
 ### Arena Mod Remake/Recontinuation (v3.1.3 - v4.0+)
 * **CEO:** Tost
 * **Coding:** Bhpsngum
 * **Textures:** Caramel
 * **Ships:** -
-* **Maps:** -
+* **Maps:** Supernova, Caramel, Bylolopro, Nerd69420, Megalodon, and others
 
 ## What's in here?
 **Folders:**

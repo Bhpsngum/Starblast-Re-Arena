@@ -1,7 +1,7 @@
 const Maps = [
     {
         name: "Crosshair",
-        author: "B",
+        author: "Carme",
         spawnpoints: [ // An array of spawnpoints to random from
             { x: 390, y: -390 },
             { x: -390, y: 390 }
@@ -110,7 +110,7 @@ const Maps = [
     },
     {
         name: "Flames",
-        author: "Yes give me author name",
+        author: "Leon",
         spawnpoints: [
             { x: 390, y: -390},
             { x: -390, y: 390 }
@@ -219,7 +219,7 @@ const Maps = [
     },
     {
         name: "Nebula",
-        author: "A",
+        author: "Leon",
         spawnpoints: [
             { x: 390, y: -390 },
             { x: -390, y: 390 }
@@ -328,7 +328,7 @@ const Maps = [
     },
     {
         name: "Blockchain",
-        author: "C",
+        author: "Leon",
         spawnpoints: [
             { x: 390, y: 0},
             { x: -390, y: 0}
@@ -437,7 +437,7 @@ const Maps = [
     },
     {
         name: "Spiral",
-        author: "D",
+        author: "Caramel",
         spawnpoints: [
             { x: 390, y: 0},
             { x: -390, y: 0}
@@ -546,7 +546,7 @@ const Maps = [
     },
     {
         name: "Bullseye",
-        author: "E",
+        author: "Supernova",
         spawnpoints: [
             { x: 390, y: -390 },
             { x: -390, y: 390 }
@@ -655,7 +655,7 @@ const Maps = [
     },
     {
         name: "Vortex",
-        author: "F",
+        author: "Caramel",
         spawnpoints: [
             { x: 390, y: -390 },
             { x: -390, y: 390 }
@@ -764,7 +764,7 @@ const Maps = [
     },
     {
         name: "Genesis",
-        author: "G",
+        author: "Caramel",
         spawnpoints: [
             { x: 390, y: 0},
             { x: -390, y: 0}
@@ -873,7 +873,7 @@ const Maps = [
     },
     {
         name: "Deathwings",
-        author: "H",
+        author: "Nerd69420",
         spawnpoints: [
             { x: 390, y: -390 },
             { x: -390, y: 390 }
@@ -982,7 +982,7 @@ const Maps = [
     },
     {
         name: "Redaction",
-        author: "I",
+        author: "Bylolopro",
         spawnpoints: [
             { x: 390, y: -390 },
             { x: -390, y: 390 }
@@ -1091,7 +1091,7 @@ const Maps = [
     },
     {
         name: "Sights",
-        author: "J",
+        author: "Nerd69420",
         spawnpoints: [
             { x: 390, y: 0},
             { x: -390, y: 0}
@@ -1200,7 +1200,7 @@ const Maps = [
     },
     {
         name: "Shockwave",
-        author: "K",
+        author: "Megalodon",
         spawnpoints: [
             { x: 390, y: -390 },
             { x: -390, y: 390 }
@@ -1309,7 +1309,7 @@ const Maps = [
     },
     {
         name: "Atom",
-        author: "L",
+        author: "45rfew",
         spawnpoints: [
             { x: 390, y: -390 },
             { x: -390, y: 390 }
