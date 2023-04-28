@@ -325,8 +325,9 @@ const main_phase = function (game) {
             let winningTeam = maxControlTeam[0];
             if (maxControl >= CONTROL_POINT.control_bar.dominating_percentage) {
                 scoreIncreased = true;
-                if (winningTeam == "ghost") control_point_data.ghostScore += CONTROL_POINT.score_increase;
-                else control_point_data.scores[winningTeam] += CONTROL_POINT.score_increase;
+                let increaseAmount = game.custom.increaseAmount = CONTROL_POINT.score_increase * game.ships.filter(s => s && s.id != null && TeamManager.getData(s.team).id == winningTeam).length;
+                if (winningTeam == "ghost") control_point_data.ghostScore += increaseAmount;
+                else control_point_data.scores[winningTeam] += increaseAmount;
             }
             HelperFunctions.setControlPointOBJ(false, winningTeam);
         }

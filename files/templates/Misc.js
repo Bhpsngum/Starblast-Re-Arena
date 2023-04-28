@@ -418,7 +418,7 @@ const UIData = {
                     { type: "text", position: [index * width, 0, width, 100], value: Math.floor(score), color}
                 ];
                 if (game.custom.scoreIncreased && id == game.custom.winner) data.push(
-                    { type: "text", position: [(index + 3/4) * width, 0, width * 1 / 4, 50], value: "+" + CONTROL_POINT.score_increase, color}
+                    { type: "text", position: [(index + 3/4) * width, 0, width * 1 / 4, 50], value: "+" + game.custom.increaseAmount, color}
                 );
 
                 data.push( { ...dash, position: [(index + 1) * width, 0, width, 100]});
@@ -434,7 +434,7 @@ const UIData = {
                     { type: "text", position: [index * width, 0, width, 100], value: ghostTeamScore, color}
                 ];
                 if (game.custom.scoreIncreased && "ghost" == game.custom.winner) data.push(
-                    { type: "text", position: [(index + 3/4) * width, 0, width * 1 / 4, 25], value: "+" + CONTROL_POINT.score_increase, color}
+                    { type: "text", position: [(index + 3/4) * width, 0, width * 1 / 4, 25], value: "+" + game.custom.increaseAmount, color}
                 );
                 data.push( { ...dash, position: [(index + 1) * width, 0, width, 100]});
                 UIData.scores.components.push(...data);
