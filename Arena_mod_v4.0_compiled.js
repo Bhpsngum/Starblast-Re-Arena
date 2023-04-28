@@ -64,7 +64,7 @@ if you clones/pull the updates next time
 
 
 
-/* Imported from Config.js at Fri Apr 28 2023 22:12:26 GMT+0900 (Japan Standard Time) */
+/* Imported from Config.js at Fri Apr 28 2023 22:58:10 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -169,7 +169,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from Teams.js at Fri Apr 28 2023 22:12:26 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Fri Apr 28 2023 22:58:10 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -221,7 +221,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Fri Apr 28 2023 22:12:26 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Fri Apr 28 2023 22:58:10 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1911,7 +1911,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Fri Apr 28 2023 22:12:26 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Fri Apr 28 2023 22:58:10 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -3533,7 +3533,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Fri Apr 28 2023 22:12:26 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Fri Apr 28 2023 22:58:10 GMT+0900 (Japan Standard Time) */
 
 const MAKE_COMMANDS = function (echo) {
     let gameCommands = game.modding.commands;
@@ -3751,7 +3751,7 @@ const MAKE_COMMANDS = function (echo) {
 
 
 
-/* Imported from Resources.js at Fri Apr 28 2023 22:12:26 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Fri Apr 28 2023 22:58:10 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -3759,7 +3759,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Fri Apr 28 2023 22:12:26 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Fri Apr 28 2023 22:58:10 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4049,7 +4049,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Fri Apr 28 2023 22:12:26 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Fri Apr 28 2023 22:58:10 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     teams_list: Teams,
@@ -4511,11 +4511,11 @@ Press [${this.abilityShortcut}] to activate it.`
 
 
 
-/* Imported from templates/gameLogic.js at Fri Apr 28 2023 22:12:26 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/gameLogic.js at Fri Apr 28 2023 22:58:10 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from templates/Misc.js at Fri Apr 28 2023 22:12:26 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/Misc.js at Fri Apr 28 2023 22:58:10 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -4864,16 +4864,19 @@ const UIData = {
             });
         }
     },
+    getTopPlayers: function (game) {
+        return game.ships.filter(e => e && e.id != null).sort((a, b) => {
+            let aKills = a.custom.kills = a.custom.kills || 0;
+            let aDeaths = a.custom.deaths = a.custom.deaths || 0;
+            let bKills = b.custom.kills = b.custom.kills || 0;
+            let bDeaths = b.custom.deaths = b.custom.deaths || 0;
+
+            return (bKills - bDeaths / 3) - (aKills - aDeaths / 3);
+        })
+    },
     updateScoreboard: function (game) {
         if (game.custom.started) {
-            let players = game.ships.filter(e => e && e.id != null).sort((a, b) => {
-                let aKills = a.custom.kills = a.custom.kills || 0;
-                let aDeaths = a.custom.deaths = a.custom.deaths || 0;
-                let bKills = b.custom.kills = b.custom.kills || 0;
-                let bDeaths = b.custom.deaths = b.custom.deaths || 0;
-
-                return (bKills - bDeaths / 3) - (aKills - aDeaths / 3);
-            }).slice(0, 10);
+            let players = this.getTopPlayers(game).slice(0, 10);
             let columnHeight = 100 / 11;
             let textHeight = columnHeight / 1.2;
             let offsetY = (columnHeight - textHeight) / 2;
@@ -5052,7 +5055,7 @@ const makeAlienSpawns = function () {
 
 
 
-/* Imported from templates/tickFunctions.js at Fri Apr 28 2023 22:12:26 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/tickFunctions.js at Fri Apr 28 2023 22:58:10 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -5462,8 +5465,23 @@ const endGame = function (game) {
     });
     game.custom.endGameInfo = {
         "Status": message,
-        "Results": `${winnerData.name.toUpperCase()} wins!`
+        "Winner team": winnerData.name.toUpperCase(),
+        " ": " ",
+        "Your team": "Unknown",
+        "Your kills": 0,
+        "Your deaths": 0
     };
+
+    let MVP = UIData.getTopPlayers(game)[0];
+    if (MVP != null && (MVP.custom.kills || MVP.custom.deaths)) Object.assign(game.custom.endGameInfo, {
+        "-----------------": "-----",
+        "MVP in this game:": "Stats",
+        "- Name": MVP.name,
+        "- Team": TeamManager.getData(MVP.team).name.toUpperCase(),
+        "- Kills": MVP.custom.kills || 0,
+        "- Deaths": MVP.custom.deaths || 0
+    });
+
     HelperFunctions.sendUI(game, {
         id: "timer",
         position: [40,7.5,20,4],
@@ -5482,7 +5500,11 @@ const im_here_just_to_kick_every_players_out_of_the_game = function (game) {
     // yes kick everyone
     for (let ship of game.ships) {
         if (!ship.custom.kicked && (ship.custom.endGameTick == null || game.step - ship.custom.endGameTick > 5 * 60)) {
-            ship.gameover(game.custom.endGameInfo);
+            let endInfo = HelperFunctions.clone(game.custom.endGameInfo);
+            endInfo["Your team"] = TeamManager.getData(ship.team).name.toUpperCase();
+            endInfo["Your kills"] = (+ship.custom.kills || 0).toString();
+            endInfo["Your deaths"] = (+ship.custom.deaths || 0).toString();
+            ship.gameover(endInfo);
             ship.custom.kicked = true;
         }
     }
@@ -5499,7 +5521,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from templates/eventFunction.js at Fri Apr 28 2023 22:12:26 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/eventFunction.js at Fri Apr 28 2023 22:58:10 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -5552,7 +5574,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from templates/gameOptions.js at Fri Apr 28 2023 22:12:26 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/gameOptions.js at Fri Apr 28 2023 22:58:10 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?

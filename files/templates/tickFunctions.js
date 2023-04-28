@@ -406,8 +406,23 @@ const endGame = function (game) {
     });
     game.custom.endGameInfo = {
         "Status": message,
-        "Results": `${winnerData.name.toUpperCase()} wins!`
+        "Winner team": winnerData.name.toUpperCase(),
+        " ": " ",
+        "Your team": "Unknown",
+        "Your kills": 0,
+        "Your deaths": 0
     };
+
+    let MVP = UIData.getTopPlayers(game)[0];
+    if (MVP != null && (MVP.custom.kills || MVP.custom.deaths)) Object.assign(game.custom.endGameInfo, {
+        "-----------------": "-----",
+        "MVP in this game:": "Stats",
+        "- Name": MVP.name,
+        "- Team": TeamManager.getData(MVP.team).name.toUpperCase(),
+        "- Kills": MVP.custom.kills || 0,
+        "- Deaths": MVP.custom.deaths || 0
+    });
+
     HelperFunctions.sendUI(game, {
         id: "timer",
         position: [40,7.5,20,4],
@@ -426,7 +441,11 @@ const im_here_just_to_kick_every_players_out_of_the_game = function (game) {
     // yes kick everyone
     for (let ship of game.ships) {
         if (!ship.custom.kicked && (ship.custom.endGameTick == null || game.step - ship.custom.endGameTick > 5 * 60)) {
-            ship.gameover(game.custom.endGameInfo);
+            let endInfo = HelperFunctions.clone(game.custom.endGameInfo);
+            endInfo["Your team"] = TeamManager.getData(ship.team).name.toUpperCase();
+            endInfo["Your kills"] = (+ship.custom.kills || 0).toString();
+            endInfo["Your deaths"] = (+ship.custom.deaths || 0).toString();
+            ship.gameover(endInfo);
             ship.custom.kicked = true;
         }
     }
