@@ -74,9 +74,11 @@ const alwaysTick = function (game) {
     if (IDs.length > 0 || game.custom.ids.length > 0) UIData.updateScoreboard(game);
     
     game.custom.ids = arIDs;
+
+    if (game.custom.last_map != MapManager.get()) initialization(game, true);
 }
 
-const initialization = function (game) {
+const initialization = function (game, dontChangeTick = false) {
     var lost_sector_aries = {
         id: "lost_sector_aries",
         obj: "https://starblast.io/lost_sector/LostSector_Aries_HardEdges.obj",
@@ -111,9 +113,12 @@ const initialization = function (game) {
 
     makeAlienSpawns();
 
-    this.tick = waiting;
+    game.custom.last_map = MapManager.get();
 
-    this.tick(game); 
+    if (!dontChangeTick) {
+        this.tick = waiting;
+        this.tick(game);
+    }
 }
 
 const waiting = function (game) {
@@ -325,7 +330,7 @@ const main_phase = function (game) {
             let winningTeam = maxControlTeam[0];
             if (maxControl >= CONTROL_POINT.control_bar.dominating_percentage) {
                 scoreIncreased = true;
-                let increaseAmount = game.custom.increaseAmount = CONTROL_POINT.score_increase * game.ships.filter(s => s && s.id != null && TeamManager.getData(s.team).id == winningTeam).length;
+                let increaseAmount = game.custom.increaseAmount = CONTROL_POINT.score_increase * players.filter(s => TeamManager.getData(s.team).id === winningTeam).length;
                 if (winningTeam == "ghost") control_point_data.ghostScore += increaseAmount;
                 else control_point_data.scores[winningTeam] += increaseAmount;
             }
