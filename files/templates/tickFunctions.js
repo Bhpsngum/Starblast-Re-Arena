@@ -330,7 +330,8 @@ const main_phase = function (game) {
             let winningTeam = maxControlTeam[0];
             if (maxControl >= CONTROL_POINT.control_bar.dominating_percentage) {
                 scoreIncreased = true;
-                let increaseAmount = game.custom.increaseAmount = CONTROL_POINT.score_increase * players.filter(s => TeamManager.getData(s.team).id === winningTeam).length;
+                let winningTeamID = TeamManager.getData(winningTeam).id;
+                let increaseAmount = game.custom.increaseAmount = CONTROL_POINT.score_increase * players.filter(s => TeamManager.getData(s.team).id === winningTeamID).length;
                 if (winningTeam == "ghost") control_point_data.ghostScore += increaseAmount;
                 else control_point_data.scores[winningTeam] += increaseAmount;
             }
