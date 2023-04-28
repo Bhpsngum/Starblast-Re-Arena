@@ -98,6 +98,17 @@ const MAKE_COMMANDS = function (echo) {
         echo('Killed all aliens!');
     }, { description: "Kill all aliens" });
 
+    addCommand('map', function (req) {
+        MapManager.set(req.split(" ").slice(1).join(" ").trim(), true);
+        let info = MapManager.get();
+        echo(`Changed map to ${info.name} by ${info.author}`);
+    }, {
+        arguments: [
+            { name: "map_name", required: false }
+        ],
+        description: "Change map, leave map name blank for random"
+    });
+
     addShipCommand('kick', function (ship, id, args) {
         ship.custom.kicked = true;
         ship.gameover({
