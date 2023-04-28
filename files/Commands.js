@@ -56,7 +56,7 @@ const MAKE_COMMANDS = function (echo) {
             ship.custom.pucked != null || ship.custom.EMP ? "Ability disabled" : ""
         ].filter(e => e).join(`.${newline ? "\n" : " "}`))
     }, showTeamInfo = function (ship) {
-        let teamInfo = TeamManager.getData(ship.team);
+        let teamInfo = TeamManager.getDataFromShip(ship);
         return `Team: ${teamInfo.name.toUpperCase()}, Hue: ${teamInfo.hue}, ${teamInfo.ghost ? "Ghost team, " : ""}${teamInfo.spawnpoint ? ("Spawnpoint: X: " + teamInfo.spawnpoint.x + " Y: " + teamInfo.spawnpoint.y) : "No spawnpoint"}`;
     }
 
@@ -157,9 +157,9 @@ const MAKE_COMMANDS = function (echo) {
 
     addShipCommand('team', function (ship, id, args) {
         let team = args.slice(2).join(' ').trim();
-        let teamInfo = TeamManager.getData(ship.team);
+        let teamInfo = TeamManager.getDataFromShip(ship);
         if (team) {
-            let newTeam = TeamManager.getData(team);
+            let newTeam = TeamManager.getDataFromID(team);
             if (newTeam == teamInfo) return `%s is already on ${teamInfo.name.toUpperCase()}`;
             teamInfo = newTeam;
             TeamManager.set(ship, team, true, false);

@@ -67,7 +67,7 @@ const GameHelperFunctions = {
         if (!forced && lastState == curState) return;
         if (lastState != curState) HelperFunctions.removeObject("control_point_" + lastState);
         game.custom.winner = curState;
-        let color = neutral ? CONTROL_POINT.neutral_color : HelperFunctions.toHSLA(TeamManager.getData(team).hue);
+        let color = neutral ? CONTROL_POINT.neutral_color : HelperFunctions.toHSLA(TeamManager.getDataFromID(team).hue);
         HelperFunctions.setPlaneOBJ({
             id: "control_point_" + curState,
             position: {
@@ -94,7 +94,7 @@ const GameHelperFunctions = {
         this.updateRadar();
     },
     updateRadar: function () {
-        let color = (game.custom.winner == null || game.custom.winner == "neutral") ? CONTROL_POINT.neutral_color : HelperFunctions.toHSLA(TeamManager.getData(game.custom.winner).hue);
+        let color = (game.custom.winner == null || game.custom.winner == "neutral") ? CONTROL_POINT.neutral_color : HelperFunctions.toHSLA(TeamManager.getDataFromID(game.custom.winner).hue);
         let radar_components = [
             ...TeamManager.getAll().filter(t => t && t.spawnpoint != null).map(t => ({
                 ...t.spawnpoint,
@@ -358,7 +358,7 @@ const UIData = {
         let team_counts = new Array(teams.length).fill(0), ghost_count = 0;
 
         for (let player of players) {
-            let teamInfo = TeamManager.getData(player.team);
+            let teamInfo = TeamManager.getDataFromShip(player);
 
             if (teamInfo.ghost) ++ghost_count;
             else ++team_counts[teamInfo.id];
@@ -446,7 +446,7 @@ const UIData = {
                 {type: "text", position: [0,offsetY,100,textHeight], color: "#cde", value: " "}, // player component scale
                 ...players.map((player, index) => {
                     let pos = [0, offsetY + columnHeight * (index + 1), 100, textHeight];
-                    let color = HelperFunctions.toHSLA(TeamManager.getData(player.team).hue, 1, 100, this.colorTextLightness)
+                    let color = HelperFunctions.toHSLA(TeamManager.getDataFromShip(player).hue, 1, 100, this.colorTextLightness)
                     return [
                         { type: "player", index, id: player.id, position: pos, color, align: "left"},
                         { type: "text", value: `${player.custom.kills}/${player.custom.deaths} `, position: pos, color, align: "right"},
@@ -469,7 +469,7 @@ const UIData = {
             let compos = HelperFunctions.clone(scoreboardData.components);
             let foundIndex = compos.findIndex(c => c.type == "player" && c.id === ship.id);
             if (foundIndex < 0) {
-                let color = HelperFunctions.toHSLA(TeamManager.getData(ship.team).hue, 1, 100, this.colorTextLightness);
+                let color = HelperFunctions.toHSLA(TeamManager.getDataFromShip(ship).hue, 1, 100, this.colorTextLightness);
                 foundIndex = compos.findLastIndex(c => c.type == "player");
                 compos[foundIndex].id = ship.id;
                 compos[foundIndex].color = color;
@@ -496,7 +496,7 @@ const UIData = {
             let dash = { type: "text", value: "-", color: "#fff"};
             let index = 0;
             UIData.scores.components = control_point_data.scores.map((score, id) => {
-                let color = HelperFunctions.toHSLA(TeamManager.getData(id).hue, 1, 100, this.colorTextLightness);
+                let color = HelperFunctions.toHSLA(TeamManager.getDataFromID(id).hue, 1, 100, this.colorTextLightness);
                 let data = [
                     { type: "text", position: [index * width, 0, width, 100], value: Math.floor(score), color}
                 ];
@@ -546,7 +546,7 @@ const renderData = function (ship, forceUpdate = false) {
         let offset = 0;
         control_point_data.teams.forEach((control, index) => {
             if (control <= 0) return; // skip 0% team
-            compos.push([offset, control, HelperFunctions.toHSLA(TeamManager.getData(index).hue)]);
+            compos.push([offset, control, HelperFunctions.toHSLA(TeamManager.getDataFromID(index).hue)]);
             offset += control;
         });
 

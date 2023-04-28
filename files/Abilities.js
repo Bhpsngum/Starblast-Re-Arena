@@ -14,6 +14,8 @@ const ShipAbilities = {
         // omit duration time if you don't need it to end on duration
         cooldown: 120, // in ticks,
         cooldownRestartOnEnd: true, // cooldown will restart on ability end
+        customDisabledText: true, // requirementsText(ship) will show up instead of "Disabled"
+        // default false, only applied when `cooldownRestartOnEnd` is set
         range: 69, // ability range for special ships, in radii
 
         includeRingOnModel: true, // to include the indicator model in ship model or not
@@ -196,8 +198,7 @@ const ShipAbilities = {
         },
         name: "Quickdrive",
         cooldown: 6 * 60,
-        duration: 0.5 * 60,
-        cooldownRestartOnEnd: true,
+        duration: 1,
 
         TPDistance: 5,
         speed: 1.25,
@@ -245,13 +246,11 @@ const ShipAbilities = {
         },
         name: "Pull",
         cooldown: 15 * 60,
+        duration: 1,
 
         range: 40,
 
         includeRingOnModel: true,
-
-        customEndcondition: true,
-        cooldownRestartOnEnd: true,
 
         pullStrength: 2,
 
@@ -260,9 +259,7 @@ const ShipAbilities = {
             for (let affectedShip of ships) HelperFunctions.accelerateToTarget(affectedShip, ship, this.pullStrength);
         },
 
-        end: function () {},
-
-        canEnd: function () { return true; }
+        end: function () {}
     },
     "O-Defender": {
         models: {
@@ -422,6 +419,7 @@ const ShipAbilities = {
         customEndcondition: true,
         canStartOnAbility: true,
         cooldownRestartOnEnd: true,
+        customDisabledText: true,
 
         endName: "Un-Stealth",
 
@@ -579,8 +577,7 @@ const ShipAbilities = {
         },
         name: "Boogie Woogie",
         cooldown: 9 * 60,
-        customEndcondition: true,
-        cooldownRestartOnEnd: true,
+        duration: 1,
 
         includeRingOnModel: true,
 
@@ -595,9 +592,7 @@ const ShipAbilities = {
             ship.set({invulnerable: 120});
         },
 
-        end: function () {},
-
-        canEnd: function () { return true }
+        end: function () {}
     },
     "Lancelot": {
         models: {
@@ -781,7 +776,7 @@ const ShipAbilities = {
                         type: {
                             id: "BFG_warning_" + ship.team, 
                             emissive: this.emissiveImg,
-                            emissiveColor: HelperFunctions.toHSLA(TeamManager.getData(ship.team).hue)
+                            emissiveColor: HelperFunctions.toHSLA(TeamManager.getDataFromShip(ship).hue)
                         }
                     });
                 }
@@ -1317,6 +1312,7 @@ const ShipAbilities = {
 
         customEndcondition: true,
         cooldownRestartOnEnd: true,
+        customDisabledText: true,
         canStartOnAbility: true,
 
         healingCooldown: 5 * 60,
@@ -1355,7 +1351,7 @@ const ShipAbilities = {
                 type: {
                     id: "healing_base_" + ship.team,
                     emissive: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/healing_area.png",
-                    emissiveColor: HelperFunctions.toHSLA(TeamManager.getData(ship.team).hue)
+                    emissiveColor: HelperFunctions.toHSLA(TeamManager.getDataFromShip(ship).hue)
                 }
             });
         },
@@ -1499,6 +1495,7 @@ const ShipAbilities = {
         duration: 10 * 60,
         customEndcondition: true,
         cooldownRestartOnEnd: true,
+        customDisabledText: true,
         canStartOnAbility: true,
         endOnDeath: true,
         generatorInit: 0,
