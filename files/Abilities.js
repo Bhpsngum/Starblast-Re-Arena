@@ -1533,7 +1533,7 @@ const ShipAbilities = {
         killsRequired: 3,
 
         requirementsText: function (ship) {
-            return `${ship.custom.abilityCustom.kills || 0}/${this.killsRequired} kills`;
+            return ship.custom.inAbility ? HelperFunctions.timeLeft(ship.custom.lastTriggered + this.duration) : `${ship.custom.abilityCustom.kills || 0}/${this.killsRequired} kills`;
         },
 
         canStart: function (ship) {
