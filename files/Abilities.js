@@ -952,11 +952,11 @@ const ShipAbilities = {
 
         start: function (ship) {
             TeamManager.set(ship, 1 - ship.team, false, false);
-            ship.set({ type: this.codes.ability });
+            ship.set({ type: this.codes.ability, stats: AbilityManager.maxStats });
         },
         end: function (ship) {
             TeamManager.set(ship, void 0, false, false);
-            ship.set({ type: this.codes.default });
+            ship.set({ type: this.codes.default, stats: AbilityManager.maxStats });
         }
     },
     "Guren": {
