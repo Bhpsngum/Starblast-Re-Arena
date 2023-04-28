@@ -25,7 +25,8 @@ const GAME_OPTIONS = {
             max: 80
         },
         interval: 10, // in seconds
-        capacity: 30 // number of aliens should be on map at a time (including aliens spawned by abilities)
+        capacity: 30, // number of aliens should be on map at a time (including aliens spawned by abilities),
+        distanceFromBases: 30 // avoid spawning aliens <x> radius from the outer border of bases and control points
     }
 }
 

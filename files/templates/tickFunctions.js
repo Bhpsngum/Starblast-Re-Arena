@@ -419,8 +419,8 @@ const endGame = function (game) {
         "MVP in this game:": "Stats",
         "- Name": MVP.name,
         "- Team": TeamManager.getData(MVP.team).name.toUpperCase(),
-        "- Kills": MVP.custom.kills || 0,
-        "- Deaths": MVP.custom.deaths || 0
+        "- Kills": (+MVP.custom.kills || 0).toString(),
+        "- Deaths": (+MVP.custom.deaths || 0).toString()
     });
 
     HelperFunctions.sendUI(game, {
