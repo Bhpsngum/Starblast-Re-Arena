@@ -64,7 +64,7 @@ if you clones/pull the updates next time
 
 
 
-/* Imported from Config.js at Fri Apr 28 2023 22:58:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Config.js at Sat Apr 29 2023 03:21:38 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -93,7 +93,8 @@ const GAME_OPTIONS = {
             max: 80
         },
         interval: 10, // in seconds
-        capacity: 30 // number of aliens should be on map at a time (including aliens spawned by abilities)
+        capacity: 30, // number of aliens should be on map at a time (including aliens spawned by abilities),
+        distanceFromBases: 30 // avoid spawning aliens <x> radius from the outer border of bases and control points
     }
 }
 
@@ -169,7 +170,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from Teams.js at Fri Apr 28 2023 22:58:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Sat Apr 29 2023 03:21:38 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -221,7 +222,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Fri Apr 28 2023 22:58:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Sat Apr 29 2023 03:21:38 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1911,7 +1912,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Fri Apr 28 2023 22:58:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Sat Apr 29 2023 03:21:38 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -3533,7 +3534,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Fri Apr 28 2023 22:58:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Sat Apr 29 2023 03:21:38 GMT+0900 (Japan Standard Time) */
 
 const MAKE_COMMANDS = function (echo) {
     let gameCommands = game.modding.commands;
@@ -3751,7 +3752,7 @@ const MAKE_COMMANDS = function (echo) {
 
 
 
-/* Imported from Resources.js at Fri Apr 28 2023 22:58:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Sat Apr 29 2023 03:21:38 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -3759,7 +3760,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Fri Apr 28 2023 22:58:10 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Sat Apr 29 2023 03:21:38 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4049,7 +4050,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Fri Apr 28 2023 22:58:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Sat Apr 29 2023 03:21:38 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     teams_list: Teams,
@@ -4511,11 +4512,11 @@ Press [${this.abilityShortcut}] to activate it.`
 
 
 
-/* Imported from templates/gameLogic.js at Fri Apr 28 2023 22:58:10 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/gameLogic.js at Sat Apr 29 2023 03:21:38 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from templates/Misc.js at Fri Apr 28 2023 22:58:10 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/Misc.js at Sat Apr 29 2023 03:21:38 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -4710,6 +4711,10 @@ const UIData = {
             {type: "text",position:[15,0,70,10],value:"Waiting for more players...",color:"#cde"}
         ]
     },
+    player_count: {
+        id: "player_count",
+        visible: false
+    },
     blockers: {
         list: [
             {
@@ -4864,15 +4869,89 @@ const UIData = {
             });
         }
     },
-    getTopPlayers: function (game) {
-        return game.ships.filter(e => e && e.id != null).sort((a, b) => {
+    updatePlayerCount: function (game) {
+        let players = this.getTopPlayers(game, true);
+
+        if (players.length < 1) return;
+
+        let teams = TeamManager.getAll();
+        let team_counts = new Array(teams.length).fill(0), ghost_count = 0;
+
+        for (let player of players) {
+            let teamInfo = TeamManager.getData(player.team);
+
+            if (teamInfo.ghost) ++ghost_count;
+            else ++team_counts[teamInfo.id];
+        }
+
+        let colon_width = 0.25; // ratio to counter
+
+        let single_equiv = 1 + colon_width; // 1: own width, colon_width: the ":" width
+
+        let width_equiv = teams.length * single_equiv; 
+        if (ghost_count > 0) width_equiv += single_equiv;
+
+        width_equiv -= colon_width;
+
+        let width = 100 / width_equiv;
+
+        let compos = [
+            {type: "text", position: [0, 0, 100, 25], value: "Players distribution:", color: "#cde"}
+        ];
+
+        // render team ratio
+        let i = 0;
+        team_counts.forEach((count) => {
+            let offsetX = i * width * single_equiv;
+            compos.push(
+                { type: "text", position: [offsetX, 25, width, 25], value: count, color: HelperFunctions.toHSLA(teams[i].hue, 1, 100, this.colorTextLightness) },
+                { type: "text", position: [offsetX + width, 25, width * colon_width, 25], value: ":", color: "#cde" }
+            );
+            ++i;
+        });
+
+        if (ghost_count > 0) {
+            let offsetX = i * width * single_equiv;
+            compos.push(
+                { type: "text", position: [offsetX, 25, width, 25], value: ghost_count, color: HelperFunctions.toHSLA(TeamManager.ghostTeam.hue, 1, 100, this.colorTextLightness) }
+            );
+        }
+        else compos.pop();
+
+        // render chart
+        let chart_width = 100 / (teams.length + (ghost_count > 0));
+
+        i = 0;
+        for (let count of team_counts) compos.push(
+            { type: "box", position: [i * chart_width, 50, chart_width, 50 * count / players.length], fill: HelperFunctions.toHSLA(teams[i++].hue) }
+        );
+
+        if (ghost_count > 0) compos.push(
+            { type: "box", position: [i * chart_width, 50, chart_width, 50 * ghost_count / players.length], fill: HelperFunctions.toHSLA(TeamManager.ghostTeam.hue) }
+        );
+
+        this.player_count = {
+            id: "player_count",
+            position: [85, 40, 10, 10],
+            components: compos
+        }
+
+        this.renderPlayerCount(game);
+    },
+    renderPlayerCount: function (ship) {
+        HelperFunctions.sendUI(ship, this.player_count);
+    },
+    getTopPlayers: function (game, donSort = false) {
+        let players = game.ships.filter(e => e && e.id != null);
+        if (donSort) return players;
+        return players.sort((a, b) => {
             let aKills = a.custom.kills = a.custom.kills || 0;
             let aDeaths = a.custom.deaths = a.custom.deaths || 0;
             let bKills = b.custom.kills = b.custom.kills || 0;
             let bDeaths = b.custom.deaths = b.custom.deaths || 0;
 
             return (bKills - bDeaths / 3) - (aKills - aDeaths / 3);
-        })
+        });
     },
     updateScoreboard: function (game) {
         if (game.custom.started) {
@@ -4895,6 +4974,8 @@ const UIData = {
                 }).flat()
             ]
         }
+
+        this.updatePlayerCount(game);
 
         for (let ship of game.ships) {
             if (ship && ship.id != null) this.renderScoreboard(ship);
@@ -4958,11 +5039,9 @@ const UIData = {
                 if (game.custom.scoreIncreased && "ghost" == game.custom.winner) data.push(
                     { type: "text", position: [(index + 3/4) * width, 0, width * 1 / 4, 25], value: "+" + game.custom.increaseAmount, color}
                 );
-                data.push( { ...dash, position: [(index + 1) * width, 0, width, 100]});
                 UIData.scores.components.push(...data);
             }
-
-            UIData.scores.components.pop();
+            else UIData.scores.components.pop();
         };
         HelperFunctions.sendUI(ship, UIData.scores);
     }
@@ -5029,6 +5108,8 @@ const makeAlienSpawns = function () {
     let { map } = MapManager.get(), teams = TeamManager.getAll().map(e => e.spawnpoint).filter(e => e != null);
 
     let actual_size = GAME_OPTIONS.map_size * 5;
+
+    let dist = GAME_OPTIONS.alienSpawns.distanceFromBases;
     
     // mapping first with positions
     map = map.split("\n").map((v, y) => v.split("").map((size, x) => ({
@@ -5041,10 +5122,10 @@ const makeAlienSpawns = function () {
     map = map.filter(pos => {
         if (pos.size > 0) return false;
 
-        if (HelperFunctions.distance(CONTROL_POINT.position, pos).distance <= CONTROL_POINT.size) return false;
+        if (HelperFunctions.distance(CONTROL_POINT.position, pos).distance <= CONTROL_POINT.size + dist) return false;
 
         for (let team of teams) {
-            if (HelperFunctions.distance(team, pos).distance <= BASES.size) return false;
+            if (HelperFunctions.distance(team, pos).distance <= BASES.size + dist) return false;
         }
 
         return true;
@@ -5055,7 +5136,7 @@ const makeAlienSpawns = function () {
 
 
 
-/* Imported from templates/tickFunctions.js at Fri Apr 28 2023 22:58:10 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/tickFunctions.js at Sat Apr 29 2023 03:21:38 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -5478,8 +5559,8 @@ const endGame = function (game) {
         "MVP in this game:": "Stats",
         "- Name": MVP.name,
         "- Team": TeamManager.getData(MVP.team).name.toUpperCase(),
-        "- Kills": MVP.custom.kills || 0,
-        "- Deaths": MVP.custom.deaths || 0
+        "- Kills": (+MVP.custom.kills || 0).toString(),
+        "- Deaths": (+MVP.custom.deaths || 0).toString()
     });
 
     HelperFunctions.sendUI(game, {
@@ -5521,7 +5602,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from templates/eventFunction.js at Fri Apr 28 2023 22:58:10 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/eventFunction.js at Sat Apr 29 2023 03:21:38 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -5574,7 +5655,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from templates/gameOptions.js at Fri Apr 28 2023 22:58:10 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/gameOptions.js at Sat Apr 29 2023 03:21:38 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
