@@ -64,7 +64,7 @@ if you clones/pull the updates next time
 
 
 
-/* Imported from Config.js at Fri Apr 28 2023 16:00:03 GMT+0900 (Japan Standard Time) */
+/* Imported from Config.js at Fri Apr 28 2023 17:34:37 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -110,7 +110,7 @@ const CONTROL_POINT = {
         controlling_percentage: 66, // % of control one team needs in order to be a winning team
         dominating_percentage: 90 // % of control one team needs in order to dominate and gain points
     },
-    score_increase: 0.10, // team points increases per sec for the dominating team
+    score_increase: 0.10, // team points increases per player per sec for the dominating team
     textures: [
         {
             url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/capture_area.png",
@@ -169,7 +169,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from Teams.js at Fri Apr 28 2023 16:00:03 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Fri Apr 28 2023 17:34:37 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -179,8 +179,32 @@ const Teams = [
         need_spawnpoint: true
     },
     {
-        name: "Blue",
+        name: "Cyan",
         hue: 180,
+        instructor: "Lucina",
+        need_spawnpoint: true
+    },
+    {
+        name: "Green",
+        hue: 90,
+        instructor: "Klaus",
+        need_spawnpoint: true
+    },
+    {
+        name: "Yellow",
+        hue: 60,
+        instructor: "Maria",
+        need_spawnpoint: true
+    },
+    {
+        name: "Orange",
+        hue: 30,
+        instructor: "Zoltar",
+        need_spawnpoint: true
+    },
+    {
+        name: "Blue",
+        hue: 240,
         instructor: "Lucina",
         need_spawnpoint: true
     }
@@ -197,7 +221,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Fri Apr 28 2023 16:00:03 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Fri Apr 28 2023 17:34:37 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -207,6 +231,8 @@ const Maps = [
             { x: 390, y: -390 },
             { x: -390, y: 390 }
         ],
+        pairings: [], // An array of spawnpoints index that should be paired/grouped
+        // leave blank or omit if not needed
         map:
             "99999999999999999                                66                                99999999999999999\n"+
             "999999999999999                             757757757757                             999999999999999\n"+
@@ -1616,12 +1642,258 @@ const Maps = [
             " 9 9      99        9        9                                     9       9                9       \n"+
             "9 9                  9        9                                     9      9               9        \n"+
             " 9       9            9       9                                     9       9              9       9"
+    },
+    {
+        name: "Clover",
+        author: "Caramel",
+        spawnpoints: [
+            { x: 390, y: -390 },
+            { x: -390, y: 390 },
+            { x: 390, y: 390 },
+            { x: -390, y: -390 },
+            { x: 0, y: -390 },
+            { x: 0, y: 390 },
+            { x: -390, y: 0 },
+            { x: 390, y: 0 }
+        ],
+        pairings: [
+            [0, 1],
+            [2, 3],
+            [4, 5],
+            [6, 7],
+            [0, 1, 2, 3], // depends on number of teams, it will prioritize groups with most element that is lower than the teams count
+            [4, 5, 6, 7]
+        ],
+        map:
+            "                                                                                                    \n"+
+            "  9999    9999    9999    9999    9999    9999    9999    9999    9999    9999    9999    9999      \n"+
+            "  9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999 \n"+
+            "  9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999 \n"+
+            "  9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999 \n"+
+            "  9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999 \n"+
+            " 9999999999999                                99999999                                999999999999  \n"+
+            " 99999999                                    999    999                                    9999999  \n"+
+            " 9999999         6             6             99      99             6             6         999999  \n"+
+            " 999999                   9        6  6     99        99     6  6        9                   99999  \n"+
+            "  99999                                     99        99                                     999999 \n"+
+            "  99999                                     99        99                                     999999 \n"+
+            "  99999             6                       99        99                       6             999999 \n"+
+            "  99999                         6            99      99            6                         999999 \n"+
+            " 999999         6       6             9       9      9       9             6       6         99999  \n"+
+            " 99999                                                                                        9999  \n"+
+            " 99999   6                                                                                6   9999  \n"+
+            " 99996       6              8            9                9            8              6       6999  \n"+
+            "  9999                                  9                  9                                  99999 \n"+
+            "  9999                          9      9                    9      9                          99999 \n"+
+            "  9999                                 9                    9                                 99999 \n"+
+            "  9999  6   8        8                                                        8        8   6  99999 \n"+
+            " 99999           6        6                                              6        6           9999  \n"+
+            " 99999                                                                                        9999  \n"+
+            " 99999                               9                        9                               9999  \n"+
+            " 99999                               9           99           9                               9999  \n"+
+            "  9999      6   9         99999      9          8558          9      99999         9   6      99999 \n"+
+            "  9999              6     955559     9         755557         9     955559     6              99999 \n"+
+            "  9999                    9555559             59555595             9555559                    99999 \n"+
+            "  9999   6                9555559             95555559             9555559                6   99999 \n"+
+            " 99999         6          9555559             95555559             9555559          6         9999  \n"+
+            " 99999             9       95559              95555559              95559       9             9999  \n"+
+            " 99999                      999    9          99555599          9    999                      9999  \n"+
+            " 99999                             9           995599           9                             9999  \n"+
+            "  9999     6    7                 9             9999             9                 7    6     99999 \n"+
+            "  9999                          99                                99                          99999 \n"+
+            "  9999                                                                                        99999 \n"+
+            "  9999                  9999                                            9999                  99999 \n"+
+            " 99999                                                                                        9999  \n"+
+            " 99999  9          99                                                          99          9  9999  \n"+
+            " 99999            9                     999999        999999                     9            9999  \n"+
+            " 99999           9                      9777779      9777779                      9           9999  \n"+
+            "  9999                                  97555579    97555579                                  99999 \n"+
+            "  9999                                  97533579    97533579                                  99999 \n"+
+            "  9999   9999                           9753359      9533579                           9999   99999 \n"+
+            "  9999 9999999                          97555          55579                          9999999 99999 \n"+
+            " 99999999    99            69999         9779          9779         99996            99    9999999  \n"+
+            " 9999999                  7555599         99            99         9955557                  999999  \n"+
+            " 999999                  855555599                                995555558                  99999  \n"+
+            " 999999                 9555555559                                9555555559                 99999  \n"+
+            "  99999                 9555555559                                9555555559                 999999 \n"+
+            "  99999                  855555599                                995555558                  999999 \n"+
+            "  999999                  7555599         99            99         9955557                  9999999 \n"+
+            "  9999999    99            69999         9779          9779         99996            99    99999999 \n"+
+            " 99999 9999999                          97555          55579                          9999999 99999 \n"+
+            " 99999   9999                           9753359      9533579                           9999   9999  \n"+
+            " 99999                                  97533579    97533579                                  9999  \n"+
+            " 99999                                  97555579    97555579                                  9999  \n"+
+            "  9999           9                      9777779      9777779                      9           9999  \n"+
+            "  9999            9                     999999        999999                     9            99999 \n"+
+            "  9999  9          99                                                          99          9  99999 \n"+
+            "  9999                                                                                        99999 \n"+
+            " 99999                  9999                                            9999                  99999 \n"+
+            " 99999                                                                                        9999  \n"+
+            " 99999                          99                                99                          9999  \n"+
+            " 99999     6    7                 9             9999             9                 7    6     9999  \n"+
+            "  9999                             9           995599           9                             9999  \n"+
+            "  9999                      999    9          99555599          9    999                      99999 \n"+
+            "  9999             9       95559              95555559              95559       9             99999 \n"+
+            "  9999         6          9555559             95555559             9555559          6         99999 \n"+
+            " 99999   6                9555559             95555559             9555559                6   99999 \n"+
+            " 99999                    9555559             59555595             9555559                    9999  \n"+
+            " 99999              6     955559     9         755557         9     955559     6              9999  \n"+
+            " 99999      6   9         99999      9          8558          9      99999         9   6      9999  \n"+
+            "  9999                               9           99           9                               9999  \n"+
+            "  9999                               9                        9                               99999 \n"+
+            "  9999                                                                                        99999 \n"+
+            "  9999           6        6                                              6        6           99999 \n"+
+            " 99999  6   8        8                                                        8        8   6  99999 \n"+
+            " 99999                                 9                    9                                 9999  \n"+
+            " 99999                          9      9                    9      9                          9999  \n"+
+            " 99999                                  9                  9                                  9999  \n"+
+            "  9996       6              8            9                9            8              6       6999  \n"+
+            "  9999   6                                                                                6   99999 \n"+
+            "  9999                                                                                        99999 \n"+
+            "  99999         6       6             9       9      9       9             6       6         999999 \n"+
+            " 999999                         6            99      99            6                         999999 \n"+
+            " 999999             6                       99        99                       6             99999  \n"+
+            " 999999                                     99        99                                     99999  \n"+
+            " 999999                                     99        99                                     99999  \n"+
+            "  99999                   9        6  6     99        99     6  6        9                   999999 \n"+
+            "  999999         6             6             99      99             6             6         9999999 \n"+
+            "  9999999                                    999    999                                    99999999 \n"+
+            "  999999999999                                99999999                                9999999999999 \n"+
+            " 9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999  \n"+
+            " 9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999  \n"+
+            " 9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999  \n"+
+            " 9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999  \n"+
+            "      9999    9999    9999    9999    9999    9999    9999    9999    9999    9999    9999    9999  \n"+
+            "                                                                                                    "
+    },
+    {
+        name: "Spark",
+        author: "Caramel",
+        spawnpoints: [
+            { x: 390, y: -390 },
+            { x: -390, y: 390 },
+            { x: 390, y: 390 },
+            { x: -390, y: -390 },
+            { x: 0, y: -390 },
+            { x: 0, y: 390 },
+            { x: -390, y: 0 },
+            { x: 390, y: 0 }
+        ],
+        pairings: [
+            [0, 1],
+            [2, 3],
+            [4, 5],
+            [6, 7],
+            [0, 1, 2, 3],
+            [4, 5, 6, 7]
+        ],
+        map:
+            "        9999 9999 7777 9993 77 499 77 999999999999999999999999 77 994 77 3999 7777 9999 9999        \n"+
+            "         99  9999  77  9995    5996  69999999999999999999999996  6995    5999  77  9999  99         \n"+
+            "  999753    999999    99999533599999999999999999999999999999999999999533599999    999999    357999  \n"+
+            "  999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999  \n"+
+            "  989999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999989  \n"+
+            "  799999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999997  \n"+
+            "  5999                                                                                        9995  \n"+
+            "  3999                                   575            575                                   9993  \n"+
+            "9  999            7           9          8963          3698          9           7            999  9\n"+
+            "99 999                                   6654          4566                                   999 99\n"+
+            "99 999                             7     5666          6665     7                             999 99\n"+
+            "9  999                  6                4466          6644                6                  999  9\n"+
+            "  9999                                    556          655                                    9999  \n"+
+            "999999                                    5775        5775                                    999999\n"+
+            "999999                         7           655        556           7                         999999\n"+
+            "999999                                      575      575                                      999999\n"+
+            "999999                   8                   554    455                   8                   999999\n"+
+            "  9999                                   5    47    74    5                                   9999  \n"+
+            "7  999     6                       95                          59                       6     999  7\n"+
+            "77 999                            8996                        6998                            999 77\n"+
+            "77 999                       6    6797                        7976    6                       999 77\n"+
+            "7  999                             5894                      4985                             999  7\n"+
+            "  9999                              797   8              8   797                              9999  \n"+
+            "999999                              479                      974                              999999\n"+
+            "999999      7                        697                    796                        7      999999\n"+
+            "999999                                79                    97                                999999\n"+
+            "359999                                486                  684                                999953\n"+
+            "  5999             6                   78                  87                   6             9995  \n"+
+            "7 3999                                  76                67                                  9993 7\n"+
+            "7 3999                                  57                75                                  9993 7\n"+
+            "  5999     8                             64              46                             8     9995  \n"+
+            "359999                                   36      77      63                                   999953\n"+
+            "999999                           99       5      99      5       99                           999999\n"+
+            "999999                          9999             88             9999                          999999\n"+
+            "999999             96           99998            77            89999           69             999999\n"+
+            " 69999            9975           99997           55           79999           5799            99996 \n"+
+            "7 9999        7   589874          89995          33          59998          478985   7        9999 7\n"+
+            "7 9999             679976          79993                    39997          679976             9999 7\n"+
+            " 69999               479974         5999                    9995         479974               99996 \n"+
+            "999999                  7987         3999                  9993         7897                  999999\n"+
+            "999999                    6875         997                799         5786                    999999\n"+
+            "999999 58764   8            6763        795              597        3676            8   46785 999999\n"+
+            "999999 8987654                465        593            395        564                4567898 999999\n"+
+            "999999 56566774                           37            73                           47766565 999999\n"+
+            "999999  34667774       5                    5          5                    5       47776643  999999\n"+
+            "999999       4574                                                                  4754       999999\n"+
+            "999999         554                                                                455         999999\n"+
+            "999999          46                                                                64          999999\n"+
+            "999999                                                                                        999999\n"+
+            "999999                         798753                          357897                         999999\n"+
+            "999999                         798753                          357897                         999999\n"+
+            "999999                                                                                        999999\n"+
+            "999999          46                                                                64          999999\n"+
+            "999999         554                                                                455         999999\n"+
+            "999999       4574                                                                  4754       999999\n"+
+            "999999  34667774       5                    5          5                    5       47776643  999999\n"+
+            "999999 56566774                           37            73                           47766565 999999\n"+
+            "999999 8987654                465        593            395        564                4567898 999999\n"+
+            "999999 58764   8            6763        795              597        3676            8   46785 999999\n"+
+            "999999                    6875         997                799         5786                    999999\n"+
+            "999999                  7987         3999                  9993         7897                  999999\n"+
+            " 69999               479974         5999                    9995         479974               99996 \n"+
+            "7 9999             679976          79993                    39997          679976             9999 7\n"+
+            "7 9999        7   589874          89995          33          59998          478985   7        9999 7\n"+
+            " 69999            9975           99997           55           79999           5799            99996 \n"+
+            "999999             96           99998            77            89999           69             999999\n"+
+            "999999                          9999             88             9999                          999999\n"+
+            "999999                           99       5      99      5       99                           999999\n"+
+            "359999                                   36      77      63                                   999953\n"+
+            "  5999     8                             64              46                             8     9995  \n"+
+            "7 3999                                  57                75                                  9993 7\n"+
+            "7 3999                                  76                67                                  9993 7\n"+
+            "  5999             6                   78                  87                   6             9995  \n"+
+            "359999                                486                  684                                999953\n"+
+            "999999                                79                    97                                999999\n"+
+            "999999      7                        697                    796                        7      999999\n"+
+            "999999                              479                      974                              999999\n"+
+            "  9999                              797   8              8   797                              9999  \n"+
+            "7  999                             5894                      4985                             999  7\n"+
+            "77 999                       6    6797                        7976    6                       999 77\n"+
+            "77 999                            8996                        6998                            999 77\n"+
+            "7  999     6                       95                          59                       6     999  7\n"+
+            "  9999                                   5    47    74    5                                   9999  \n"+
+            "999999                   8                   554    455                   8                   999999\n"+
+            "999999                                      575      575                                      999999\n"+
+            "999999                         7           655        556           7                         999999\n"+
+            "999999                                    5775        5775                                    999999\n"+
+            "  9999                                    556          655                                    9999  \n"+
+            "9  999                  6                4466          6644                6                  999  9\n"+
+            "99 999                             7     5666          6665     7                             999 99\n"+
+            "99 999                                   6654          4566                                   999 99\n"+
+            "9  999            7           9          8963          3698          9           7            999  9\n"+
+            "  3999                                   575            575                                   9993  \n"+
+            "  5999                                                                                        9995  \n"+
+            "  799999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999997  \n"+
+            "  989999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999989  \n"+
+            "  999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999  \n"+
+            "  999753    999999    99999533599999999999999999999999999999999999999533599999    999999    357999  \n"+
+            "         99  9999  77  9995    5996  69999999999999999999999996  6995    5999  77  9999  99         \n"+
+            "        9999 9999 7777 9993 77 499 77 999999999999999999999999 77 994 77 3999 7777 9999 9999        "
     }
 ];
 
 
 
-/* Imported from Abilities.js at Fri Apr 28 2023 16:00:03 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Fri Apr 28 2023 17:34:37 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -3243,7 +3515,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Fri Apr 28 2023 16:00:03 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Fri Apr 28 2023 17:34:37 GMT+0900 (Japan Standard Time) */
 
 const MAKE_COMMANDS = function (echo) {
     let gameCommands = game.modding.commands;
@@ -3450,7 +3722,7 @@ const MAKE_COMMANDS = function (echo) {
 
 
 
-/* Imported from Resources.js at Fri Apr 28 2023 16:00:03 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Fri Apr 28 2023 17:34:37 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -3458,7 +3730,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Fri Apr 28 2023 16:00:03 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Fri Apr 28 2023 17:34:37 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -3748,7 +4020,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Fri Apr 28 2023 16:00:03 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Fri Apr 28 2023 17:34:37 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     teams_list: Teams,
@@ -3795,8 +4067,37 @@ const MapManager = {
         return this.map;
     },
     assignSpawnpoints: function () {
-        let teams = TeamManager.getAll(), { spawnpoints } = this.get();
-        for (let team of teams) if (team && team.need_spawnpoint) team.spawnpoint = HelperFunctions.randomItem(spawnpoints, true).value;
+        let teams = TeamManager.getAll(), { spawnpoints, pairings } = this.get();
+
+        if (!Array.isArray(spawnpoints) || spawnpoints.length < 1) return;
+
+        let pairs = pairings;
+
+        if (Array.isArray(pairs)) pairs = pairs.filter(e => Array.isArray(e) && e.length > 0)
+        .sort((p1, p2) => {
+            if (p1.length == p2.length) return HelperFunctions.randInt(2) || -1;
+            let absoluteDistance = Math.abs(GAME_OPTIONS.teams_count - p1.length) - Math.abs(GAME_OPTIONS.teams_count - p2.length);
+
+            if (absoluteDistance == 0) return p2.length - p1.length;
+
+            return absoluteDistance;
+        }); // no invalid pairs
+        else pairs = [];
+
+        if (pairs.length < 1) pairs = [ // placeholder
+            new Array(spawnpoints.length).fill(0).map((e, i) => i)
+        ];
+
+        let curPair = HelperFunctions.randomItem(pairs, true).value;
+
+        for (let team of teams) if (team && team.need_spawnpoint) {
+            if (curPair.length < 1) { // current candidate has no spawnpoints
+                if (pairs.length < 1) break; // no more pairs
+                curPair = pairs.shift();
+            }
+            
+            team.spawnpoint = spawnpoints[HelperFunctions.randomItem(curPair, true).value];
+        }
     },
     spawn: function (ship) {
         let { spawnpoint } = TeamManager.getData(ship.team);
@@ -4181,11 +4482,11 @@ Press [${this.abilityShortcut}] to activate it.`
 
 
 
-/* Imported from templates/gameLogic.js at Fri Apr 28 2023 16:00:03 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/gameLogic.js at Fri Apr 28 2023 17:34:37 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from templates/Misc.js at Fri Apr 28 2023 16:00:03 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/Misc.js at Fri Apr 28 2023 17:34:37 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -4607,7 +4908,7 @@ const UIData = {
                     { type: "text", position: [index * width, 0, width, 100], value: Math.floor(score), color}
                 ];
                 if (game.custom.scoreIncreased && id == game.custom.winner) data.push(
-                    { type: "text", position: [(index + 3/4) * width, 0, width * 1 / 4, 50], value: "+" + CONTROL_POINT.score_increase, color}
+                    { type: "text", position: [(index + 3/4) * width, 0, width * 1 / 4, 50], value: "+" + game.custom.increaseAmount, color}
                 );
 
                 data.push( { ...dash, position: [(index + 1) * width, 0, width, 100]});
@@ -4623,7 +4924,7 @@ const UIData = {
                     { type: "text", position: [index * width, 0, width, 100], value: ghostTeamScore, color}
                 ];
                 if (game.custom.scoreIncreased && "ghost" == game.custom.winner) data.push(
-                    { type: "text", position: [(index + 3/4) * width, 0, width * 1 / 4, 25], value: "+" + CONTROL_POINT.score_increase, color}
+                    { type: "text", position: [(index + 3/4) * width, 0, width * 1 / 4, 25], value: "+" + game.custom.increaseAmount, color}
                 );
                 data.push( { ...dash, position: [(index + 1) * width, 0, width, 100]});
                 UIData.scores.components.push(...data);
@@ -4722,7 +5023,7 @@ const makeAlienSpawns = function () {
 
 
 
-/* Imported from templates/tickFunctions.js at Fri Apr 28 2023 16:00:03 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/tickFunctions.js at Fri Apr 28 2023 17:34:37 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -5051,8 +5352,9 @@ const main_phase = function (game) {
             let winningTeam = maxControlTeam[0];
             if (maxControl >= CONTROL_POINT.control_bar.dominating_percentage) {
                 scoreIncreased = true;
-                if (winningTeam == "ghost") control_point_data.ghostScore += CONTROL_POINT.score_increase;
-                else control_point_data.scores[winningTeam] += CONTROL_POINT.score_increase;
+                let increaseAmount = game.custom.increaseAmount = CONTROL_POINT.score_increase * game.ships.filter(s => s && s.id != null && TeamManager.getData(s.team).id == winningTeam).length;
+                if (winningTeam == "ghost") control_point_data.ghostScore += increaseAmount;
+                else control_point_data.scores[winningTeam] += increaseAmount;
             }
             HelperFunctions.setControlPointOBJ(false, winningTeam);
         }
@@ -5162,7 +5464,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from templates/eventFunction.js at Fri Apr 28 2023 16:00:03 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/eventFunction.js at Fri Apr 28 2023 17:34:37 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -5215,7 +5517,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from templates/gameOptions.js at Fri Apr 28 2023 16:00:03 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/gameOptions.js at Fri Apr 28 2023 17:34:37 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?

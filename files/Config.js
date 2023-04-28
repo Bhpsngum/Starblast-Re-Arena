@@ -42,7 +42,7 @@ const CONTROL_POINT = {
         controlling_percentage: 66, // % of control one team needs in order to be a winning team
         dominating_percentage: 90 // % of control one team needs in order to dominate and gain points
     },
-    score_increase: 0.10, // team points increases per sec for the dominating team
+    score_increase: 0.10, // team points increases per player per sec for the dominating team
     textures: [
         {
             url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/capture_area.png",

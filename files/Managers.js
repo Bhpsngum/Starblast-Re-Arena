@@ -43,8 +43,37 @@ const MapManager = {
         return this.map;
     },
     assignSpawnpoints: function () {
-        let teams = TeamManager.getAll(), { spawnpoints } = this.get();
-        for (let team of teams) if (team && team.need_spawnpoint) team.spawnpoint = HelperFunctions.randomItem(spawnpoints, true).value;
+        let teams = TeamManager.getAll(), { spawnpoints, pairings } = this.get();
+
+        if (!Array.isArray(spawnpoints) || spawnpoints.length < 1) return;
+
+        let pairs = pairings;
+
+        if (Array.isArray(pairs)) pairs = pairs.filter(e => Array.isArray(e) && e.length > 0)
+        .sort((p1, p2) => {
+            if (p1.length == p2.length) return HelperFunctions.randInt(2) || -1;
+            let absoluteDistance = Math.abs(GAME_OPTIONS.teams_count - p1.length) - Math.abs(GAME_OPTIONS.teams_count - p2.length);
+
+            if (absoluteDistance == 0) return p2.length - p1.length;
+
+            return absoluteDistance;
+        }); // no invalid pairs
+        else pairs = [];
+
+        if (pairs.length < 1) pairs = [ // placeholder
+            new Array(spawnpoints.length).fill(0).map((e, i) => i)
+        ];
+
+        let curPair = HelperFunctions.randomItem(pairs, true).value;
+
+        for (let team of teams) if (team && team.need_spawnpoint) {
+            if (curPair.length < 1) { // current candidate has no spawnpoints
+                if (pairs.length < 1) break; // no more pairs
+                curPair = pairs.shift();
+            }
+            
+            team.spawnpoint = spawnpoints[HelperFunctions.randomItem(curPair, true).value];
+        }
     },
     spawn: function (ship) {
         let { spawnpoint } = TeamManager.getData(ship.team);
