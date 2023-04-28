@@ -15,11 +15,11 @@ But at least it should run as expected ~~I guess~~
 ## Credits
 
 ### Original Arena Mod (v1.0 - v3.1.2)
-* **CEO:** Leon
+* **CEO:** Noel
 * **Coding:** Nexagon
-* **Textures:** Leon, and others
-* **Ships:** Leon, Nexagon, Supernova, and others
-* **Maps:** Leon, Carme, Caramel, and others
+* **Textures:** Noel, and others
+* **Ships:** Noel, Nexagon, Supernova, and others
+* **Maps:** Noel, Carme, Caramel, and others
 
 ### Arena Mod Remake/Recontinuation (v3.1.3 - v4.0+)
 * **CEO:** Tost
