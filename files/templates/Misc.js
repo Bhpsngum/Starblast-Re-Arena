@@ -170,6 +170,20 @@ const GameHelperFunctions = {
 
 Object.assign(HelperFunctions, GameHelperFunctions);
 
+const WeightCalculator = {
+    playerWeight: function (ship) {
+        let kills = ship.custom.kills = +ship.custom.kills || 0;
+        let deaths = ship.custom.deaths = +ship.custom.deaths || 0;
+
+        return kills - deaths / 3;
+    },
+    getTopPlayers: function (game, donSort = false) {
+        let players = game.ships.filter(e => e && e.id != null);
+        if (donSort) return players;
+        return players.sort((a, b) => this.playerWeight(b) - this.playerWeight(a));
+    },
+}
+
 const UIData = {
     colorTextLightness: 65,
     control_bar: {
@@ -350,7 +364,7 @@ const UIData = {
         }
     },
     updatePlayerCount: function (game) {
-        let players = this.getTopPlayers(game, true);
+        let players = WeightCalculator.getTopPlayers(game, true);
 
         if (players.length < 1) return;
 
@@ -421,21 +435,9 @@ const UIData = {
     renderPlayerCount: function (ship) {
         HelperFunctions.sendUI(ship, this.player_count);
     },
-    getTopPlayers: function (game, donSort = false) {
-        let players = game.ships.filter(e => e && e.id != null);
-        if (donSort) return players;
-        return players.sort((a, b) => {
-            let aKills = a.custom.kills = a.custom.kills || 0;
-            let aDeaths = a.custom.deaths = a.custom.deaths || 0;
-            let bKills = b.custom.kills = b.custom.kills || 0;
-            let bDeaths = b.custom.deaths = b.custom.deaths || 0;
-
-            return (bKills - bDeaths / 3) - (aKills - aDeaths / 3);
-        });
-    },
     updateScoreboard: function (game) {
         if (game.custom.started) {
-            let players = this.getTopPlayers(game).slice(0, 10);
+            let players = WeightCalculator.getTopPlayers(game).slice(0, 10);
             let columnHeight = 100 / 11;
             let textHeight = columnHeight / 1.2;
             let offsetY = (columnHeight - textHeight) / 2;

@@ -414,11 +414,10 @@ const endGame = function (game) {
         "Your deaths": 0
     };
 
-    let MVP = UIData.getTopPlayers(game)[0];
+    let MVP = WeightCalculator.getTopPlayers(game)[0];
     if (MVP != null && (MVP.custom.kills || MVP.custom.deaths)) Object.assign(game.custom.endGameInfo, {
-        "-----------------": "-----",
-        "MVP in this game:": "Stats",
-        "- Name": MVP.name,
+        "  ": " ",
+        "MVP in this match:": MVP.name,
         "- Team": TeamManager.getDataFromShip(MVP).name.toUpperCase(),
         "- Kills": (+MVP.custom.kills || 0).toString(),
         "- Deaths": (+MVP.custom.deaths || 0).toString()
