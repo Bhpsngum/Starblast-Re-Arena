@@ -18,8 +18,9 @@ But at least it should run as expected ~~I guess~~
 * **CEO:** Noel
 * **Coding:** Nexagon
 * **Textures:** Noel, and others
-* **Ships:** Noel, Nexagon, Supernova, and others
-* **Maps:** Noel, Carme, Caramel, and others
+* **Ships:** Noel, Nexagon, Edward, Supernova, and others
+* **Maps:** Noel, Carme, Caramel, Nerd69420, and others
+* **Contributors:** Lexydrow, Boris, Thuliux, Bylolopro, Caramel, Duschi, Edward, Megalodon, Supernova, ThirdToeMan, Madness, Slayer, and others
 
 ### Arena Mod Remake/Recontinuation (v3.1.3 - v4.0+)
 * **CEO:** Tost
@@ -27,6 +28,7 @@ But at least it should run as expected ~~I guess~~
 * **Textures:** Caramel
 * **Ships:** -
 * **Maps:** Supernova, Caramel, Bylolopro, Nerd69420, Megalodon, and others
+* **Contributors:** Tost, Caramel, Lexydrow, and others
 
 ## What's in here?
 **Folders:**
