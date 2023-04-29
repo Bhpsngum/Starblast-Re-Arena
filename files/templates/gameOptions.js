@@ -12,7 +12,7 @@ const vocabulary = [
     { text: "Good Game", icon:"\u00a3", key:"G" },
     { text: "Bruh", icon:"\u{1F480}", key:"I" },
     { text: "Ability", icon:"\u0028", key:"J" },
-    { text: "Hmm", icon:"\u004b", key:"Q" },
+    { text: "Hmm???", icon:"\u004b", key:"Q" },
     //{ text: "No Problem", icon:"\u0047", key:"P" },
     { text: "Defend", icon:"\u0025", key:"D" },
     { text: " ", icon:"\u{1F913}", key:"L" }

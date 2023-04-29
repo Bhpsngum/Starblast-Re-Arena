@@ -152,7 +152,7 @@ const HelperFunctions = {
         if (asteroid) data.push(...game.asteroids.filter(al => this.distance(ship, al).distance <= range));
         if (teammate || enemy) data.push(...game.ships.filter(e => e !== ship && e.alive && !e.custom.spectator && this.satisfies(ship, e, teammate, enemy) && this.distance(ship, e).distance <= range));
         if (dontSort) return data;
-        return data.sort((a, b) => this.dist(ship, a) - this.dist(ship, b));
+        return data.sort((a, b) => this.distance(ship, a).distance - this.distance(ship, b).distance);
     },
     damage: function (ship,num) {
         // damage ship by `num` HP

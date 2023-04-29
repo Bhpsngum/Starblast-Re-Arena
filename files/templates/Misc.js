@@ -186,6 +186,7 @@ const WeightCalculator = {
 
 const UIData = {
     colorTextLightness: 65,
+    scoreIncreaseRouding: (String(CONTROL_POINT.score_increase).match(/\..*/) || ["a"])[0].length - 1,
     control_bar: {
         id: "POINT_BAR",
         visible: false
@@ -485,6 +486,8 @@ const UIData = {
     },
     renderTeamScores: function (ship, forceUpdate = false) {
         if (forceUpdate && game.custom.started) {
+            let increaseAmount = 0;
+            try { increaseAmount = game.custom.increaseAmount.toFixed(this.scoreIncreaseRouding) } catch (e) {}
             UIData.scores = {
                 id: "team_points",
                 position: [35,11.5,30,5],
@@ -503,7 +506,7 @@ const UIData = {
                     { type: "text", position: [index * width, 0, width, 100], value: Math.floor(score), color}
                 ];
                 if (game.custom.scoreIncreased && id == game.custom.winner) data.push(
-                    { type: "text", position: [(index + 3/4) * width, 0, width * 1 / 4, 50], value: "+" + game.custom.increaseAmount, color}
+                    { type: "text", position: [(index + 3/4) * width, 0, width * 1 / 4, 50], value: "+" + increaseAmount, color}
                 );
 
                 data.push( { ...dash, position: [(index + 1) * width, 0, width, 100]});
@@ -519,7 +522,7 @@ const UIData = {
                     { type: "text", position: [index * width, 0, width, 100], value: ghostTeamScore, color}
                 ];
                 if (game.custom.scoreIncreased && "ghost" == game.custom.winner) data.push(
-                    { type: "text", position: [(index + 3/4) * width, 0, width * 1 / 4, 25], value: "+" + game.custom.increaseAmount, color}
+                    { type: "text", position: [(index + 3/4) * width, 0, width * 1 / 4, 25], value: "+" + increaseAmount, color}
                 );
                 UIData.scores.components.push(...data);
             }
