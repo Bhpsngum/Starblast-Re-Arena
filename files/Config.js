@@ -4,12 +4,12 @@ const map_name = `Arena Mod v4.0 Beta`; // leave `null` if you want randomized m
 
 const GAME_OPTIONS = {
     map_size: 100,
-    waiting_time: 1, // in seconds
+    waiting_time: 30, // in seconds
     teams_count: 2, // number of teams
     required_players: 2, // players required to start, min 2
     max_players: 80,
-    duration: 300 * 60, // in seconds
-    points: 1000, // points for one team to reach in order to win
+    duration: 30 * 60, // in seconds
+    points: 100, // points for one team to reach in order to win
     healing_ratio: 1, // better don't touch this
     crystal_drop: 0.5, // this.options.crystal_drop
     ship_ui_timeout: 15, // time for the ship ui to hide, in seconds
