@@ -331,6 +331,8 @@ Press [${this.abilityShortcut}] to activate it.`
         }
     },
     initialize: function () {
+        this.compileAbilities();
+        
         // for debug issues
         if (game.custom.AbilityManager) {
             for (let ship of game.ships) {
@@ -351,8 +353,6 @@ Press [${this.abilityShortcut}] to activate it.`
 
             MAKE_COMMANDS(this.echo);
         }
-
-        this.compileAbilities();
     },
     compileAbilities: function () {
         // Compile ships and abilities
