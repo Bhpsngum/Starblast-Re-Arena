@@ -12,7 +12,7 @@ const GAME_OPTIONS = {
     points: 100, // points for one team to reach in order to win
     healing_ratio: 1, // better don't touch this
     crystal_drop: 0.5, // this.options.crystal_drop
-    ship_ui_timeout: 15, // time for the ship ui to hide, in seconds
+    ship_ui_timeout: 30, // time for the ship ui to hide, in seconds
     alienSpawns: {
         level: {
             min: 1,
@@ -43,7 +43,7 @@ const CONTROL_POINT = {
         controlling_percentage: 66, // % of control one team needs in order to be a winning team
         dominating_percentage: 90 // % of control one team needs in order to dominate and gain points
     },
-    score_increase: 0.10, // team points increases per player per sec for the dominating team
+    score_increase: 0.1, // team points increases per player per sec for the dominating team
     textures: [
         {
             url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/capture_area.png",

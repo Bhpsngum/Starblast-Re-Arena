@@ -38,7 +38,7 @@ const alwaysTick = function (game) {
 
         for (let i = 0; i < teams.length; ++i) {
             let { spawnpoint } = teams[i] || {};
-            if (i == ship.team || spawnpoint == null) continue;
+            if (i == TeamManager.getDataFromShip(ship).id || spawnpoint == null) continue;
             if (HelperFunctions.distance(spawnpoint, ship).distance <= BASES.size) {
                 if (ship.custom.intrudedEnemyBaseStart == null) {
                     ship.custom.intrudedEnemyBaseStart = game.step;
