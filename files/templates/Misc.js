@@ -231,7 +231,7 @@ const UIData = {
         toggleID: "toggle_choose_ship",
         shipSelectPrefix: "choose_ship_",
         shipSelectSize: {
-            textLength: 40, // to keep the text looks pretty and aligned
+            textLength: 35, // to keep the text looks pretty and aligned
             itemsPerLine: 4,
             xStart: 21,
             yStart: 19,
