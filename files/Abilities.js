@@ -278,7 +278,7 @@ const ShipAbilities = {
 
         generatorInit: 0,
 
-        torpedoDamage: 1000,
+        torpedoDamage: 800,
         torpedoCenterShockwaveStrength: 800,
 
         // shockwave strength: strength of the shockwave on center (applying to ship with mass 1 and has distance 0 from torp)
