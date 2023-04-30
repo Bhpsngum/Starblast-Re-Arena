@@ -330,8 +330,11 @@ const main_phase = function (game) {
             let winningTeam = maxControlTeam[0];
             if (maxControl >= CONTROL_POINT.control_bar.dominating_percentage) {
                 scoreIncreased = true;
-                let winningTeamInfo = TeamManager.getDataFromID(winningTeam);
-                let mult = winningTeamInfo.ghost ? 1 : players.filter(s => TeamManager.getDataFromShip(s).id === winningTeamInfo.id).length;
+                let mult = 1;
+                if (CONTROL_POINT.player_multiplier) {
+                    let winningTeamInfo = TeamManager.getDataFromID(winningTeam);
+                    mult = winningTeamInfo.ghost ? 1 : players.filter(s => TeamManager.getDataFromShip(s).id === winningTeamInfo.id).length;
+                }
                 let increaseAmount = game.custom.increaseAmount = CONTROL_POINT.score_increase * mult;
                 if (winningTeam == "ghost") control_point_data.ghostScore += increaseAmount;
                 else control_point_data.scores[winningTeam] += increaseAmount;

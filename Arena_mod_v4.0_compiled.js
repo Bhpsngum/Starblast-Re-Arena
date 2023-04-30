@@ -68,7 +68,7 @@ if you clones/pull the updates next time
 
 
 
-/* Imported from Config.js at Sun Apr 30 2023 02:48:45 GMT+0900 (Japan Standard Time) */
+/* Imported from Config.js at Sun Apr 30 2023 11:05:23 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -115,7 +115,8 @@ const CONTROL_POINT = {
         controlling_percentage: 66, // % of control one team needs in order to be a winning team
         dominating_percentage: 90 // % of control one team needs in order to dominate and gain points
     },
-    score_increase: 0.1, // team points increases per player per sec for the dominating team
+    score_increase: 0.15, // team points increases per sec for the dominating team
+    player_multiplier: false, // when set to true, the increase is per player per sec, and not per sec anymore
     textures: [
         {
             url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/capture_area.png",
@@ -174,7 +175,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from Teams.js at Sun Apr 30 2023 02:48:45 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Sun Apr 30 2023 11:05:23 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -226,7 +227,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Sun Apr 30 2023 02:48:45 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Sun Apr 30 2023 11:05:23 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1916,7 +1917,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Sun Apr 30 2023 02:48:45 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Sun Apr 30 2023 11:05:23 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -2198,7 +2199,7 @@ const ShipAbilities = {
 
         generatorInit: 0,
 
-        torpedoDamage: 1000,
+        torpedoDamage: 800,
         torpedoCenterShockwaveStrength: 800,
 
         // shockwave strength: strength of the shockwave on center (applying to ship with mass 1 and has distance 0 from torp)
@@ -3539,7 +3540,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Sun Apr 30 2023 02:48:45 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Sun Apr 30 2023 11:05:23 GMT+0900 (Japan Standard Time) */
 
 const MAKE_COMMANDS = function (echo) {
     let gameCommands = game.modding.commands;
@@ -3757,7 +3758,7 @@ const MAKE_COMMANDS = function (echo) {
 
 
 
-/* Imported from Resources.js at Sun Apr 30 2023 02:48:45 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Sun Apr 30 2023 11:05:23 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -3765,7 +3766,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Sun Apr 30 2023 02:48:45 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Sun Apr 30 2023 11:05:23 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4056,7 +4057,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Sun Apr 30 2023 02:48:45 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Sun Apr 30 2023 11:05:23 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     teams_list: Teams,
@@ -4527,11 +4528,11 @@ Press [${this.abilityShortcut}] to activate it.`
 
 
 
-/* Imported from templates/gameLogic.js at Sun Apr 30 2023 02:48:45 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/gameLogic.js at Sun Apr 30 2023 11:05:23 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from templates/Misc.js at Sun Apr 30 2023 02:48:45 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/Misc.js at Sun Apr 30 2023 11:05:23 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -5156,7 +5157,7 @@ const makeAlienSpawns = function () {
 
 
 
-/* Imported from templates/tickFunctions.js at Sun Apr 30 2023 02:48:45 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/tickFunctions.js at Sun Apr 30 2023 11:05:23 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -5490,8 +5491,11 @@ const main_phase = function (game) {
             let winningTeam = maxControlTeam[0];
             if (maxControl >= CONTROL_POINT.control_bar.dominating_percentage) {
                 scoreIncreased = true;
-                let winningTeamInfo = TeamManager.getDataFromID(winningTeam);
-                let mult = winningTeamInfo.ghost ? 1 : players.filter(s => TeamManager.getDataFromShip(s).id === winningTeamInfo.id).length;
+                let mult = 1;
+                if (CONTROL_POINT.player_multiplier) {
+                    let winningTeamInfo = TeamManager.getDataFromID(winningTeam);
+                    mult = winningTeamInfo.ghost ? 1 : players.filter(s => TeamManager.getDataFromShip(s).id === winningTeamInfo.id).length;
+                }
                 let increaseAmount = game.custom.increaseAmount = CONTROL_POINT.score_increase * mult;
                 if (winningTeam == "ghost") control_point_data.ghostScore += increaseAmount;
                 else control_point_data.scores[winningTeam] += increaseAmount;
@@ -5622,7 +5626,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from templates/eventFunction.js at Sun Apr 30 2023 02:48:45 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/eventFunction.js at Sun Apr 30 2023 11:05:23 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -5675,7 +5679,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from templates/gameOptions.js at Sun Apr 30 2023 02:48:45 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/gameOptions.js at Sun Apr 30 2023 11:05:23 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
