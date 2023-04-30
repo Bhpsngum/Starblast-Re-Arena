@@ -505,7 +505,7 @@ const UIData = {
                 let data = [
                     { type: "text", position: [index * width, 0, width, 100], value: Math.floor(score), color}
                 ];
-                if (game.custom.scoreIncreased && id == game.custom.winner) data.push(
+                if (game.custom.scoreIncreased && id === game.custom.winner) data.push(
                     { type: "text", position: [(index + 3/4) * width, 0, width * 1 / 4, 50], value: "+" + increaseAmount, color}
                 );
 
