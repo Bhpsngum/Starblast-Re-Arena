@@ -22,6 +22,7 @@ The files below are recommended and better don't touch other files unless you kn
 3. Paste your current's mod code in the templates/gameLogic.js file
 Consider the things below:
 // Make some terminal commands (optional)
+// It's made automatically when DEBUG = true, but if you want to manually make it anyway
 MAKE_COMMANDS(echo);
 // `echo` is the global `echo` function, but it's recommended to take `game.modding.terminal.echo` instead
 // since it might run unexpectedly at first launch if you use `window.echo`

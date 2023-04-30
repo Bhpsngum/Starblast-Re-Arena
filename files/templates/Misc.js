@@ -302,7 +302,7 @@ const UIData = {
             let width = (UISpec.xEnd - UISpec.xStart) / (itemsPerLine + (itemsPerLine - 1) * UISpec.margin_scale_x);
             let height = (UISpec.yEnd - UISpec.yStart) / (itemsPerColumn + (itemsPerColumn - 1) * UISpec.margin_scale_y);
 
-            let lastLineXOffset = (abilities.length % itemsPerLine) * width * (1 + UISpec.margin_scale_x) / 2;
+            let lastLineXOffset = (itemsPerLine - abilities.length % itemsPerLine) * width * (1 + UISpec.margin_scale_x) / 2;
 
             let i = 0;
             for (let abil of abilities) {
