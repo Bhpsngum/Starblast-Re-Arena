@@ -1,38 +1,32 @@
 const Teams = [
     {
-        name: "Red",
-        hue: 0,
+        names: ["Red", "Orange"],
+        hues: [0, 30],
         instructor: "Zoltar",
         need_spawnpoint: true
     },
     {
-        name: "Cyan",
-        hue: 180,
+        names: ["Cyan", "Blue"],
+        hues: [180, 210],
         instructor: "Lucina",
         need_spawnpoint: true
     },
     {
-        name: "Green",
-        hue: 90,
+        names: ["Green"],
+        hues: [150],
         instructor: "Klaus",
         need_spawnpoint: true
     },
     {
-        name: "Yellow",
-        hue: 60,
+        names: ["Yellow"],
+        hues: [60],
         instructor: "Maria",
         need_spawnpoint: true
     },
     {
-        name: "Orange",
-        hue: 30,
-        instructor: "Zoltar",
-        need_spawnpoint: true
-    },
-    {
-        name: "Blue",
-        hue: 240,
-        instructor: "Lucina",
+        names: ["Purple", "Pink"],
+        hues: [270, 300],
+        instructor: "Kan",
         need_spawnpoint: true
     }
 ];
@@ -41,7 +35,7 @@ const GhostTeam = {
     ghost: true,
     id: [],
     name: "Sussy Amogus",
-    hue: 270,
+    hue: 340,
     instructor: "Kan",
     need_spawnpoint: false
 };

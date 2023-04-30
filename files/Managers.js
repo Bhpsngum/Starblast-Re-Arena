@@ -4,10 +4,14 @@ const TeamManager = {
     initialize: function () {
         this.teams = game.custom.teams;
         if (this.teams == null) game.custom.teams = this.teams = [...Array(GAME_OPTIONS.teams_count)].map((e, i) => {
-            let index = HelperFunctions.randInt(this.teams_list);
-            let team = this.teams_list.splice(index, 1)[0];
-            team.id = i;
-            return team;
+            let chosenTeam = HelperFunctions.randomItem(this.teams_list, true).value;
+            let { index } = HelperFunctions.randomItem(chosenTeam.names);
+            return {
+                ...chosenTeam,
+                name: chosenTeam.names[index],
+                hue: chosenTeam.hues[index],
+                id: i
+            }
         });
     },
     getAll: function () {
