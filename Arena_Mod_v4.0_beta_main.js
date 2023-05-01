@@ -1,3 +1,9 @@
+/*
+(WIP Credit text)
+*/
+
+
+
 /* Dev's note
 
 When calling `HelperFunctions.setPlaneOBJ`, if you want to set angle then set rotation like this:
@@ -23,9 +29,7 @@ The files below are recommended and better don't touch other files unless you kn
 Consider the things below:
 // Make some terminal commands (optional)
 // It's made automatically when DEBUG = true, but if you want to manually make it anyway
-MAKE_COMMANDS(echo);
-// `echo` is the global `echo` function, but it's recommended to take `game.modding.terminal.echo` instead
-// since it might run unexpectedly at first launch if you use `window.echo`
+MAKE_COMMANDS();
 
 // to initialize the Ability System (required):
 AbilityManager.initialize()
@@ -58,18 +62,22 @@ this.event = function (event, game) {
     // your stuff here
 }
 
-4. Install NodeJS if you haven't yet
+4. Install NodeJS and NPM if you haven't yet
 5. Open terminal/console, move to the folder in step 1 (use cd command or whatever you want)
-6. Run `node mergeFile.js`
+6. Run `npm run compile main`
 7. Profit
 
 8. You might want to keep the files you've modified and replace them with original files
 if you clones/pull the updates next time
+9. Also if you have enough experience with Node and related stuff,
+you can fck around and find out how to compile custom templates as well
 */
 
 
 
-/* Imported from Config.js at Mon May 01 2023 09:04:32 GMT+0900 (Japan Standard Time) */
+
+
+/* Imported from Config.js at Mon May 01 2023 10:17:56 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -176,7 +184,9 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from Teams.js at Mon May 01 2023 09:04:32 GMT+0900 (Japan Standard Time) */
+
+
+/* Imported from Teams.js at Mon May 01 2023 10:17:56 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -222,7 +232,9 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Mon May 01 2023 09:04:32 GMT+0900 (Japan Standard Time) */
+
+
+/* Imported from Maps.js at Mon May 01 2023 10:17:56 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1912,7 +1924,9 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Mon May 01 2023 09:04:32 GMT+0900 (Japan Standard Time) */
+
+
+/* Imported from Abilities.js at Mon May 01 2023 10:17:56 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -3545,20 +3559,23 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Mon May 01 2023 09:04:32 GMT+0900 (Japan Standard Time) */
 
-const MAKE_COMMANDS = function (echo) {
+
+/* Imported from Commands.js at Mon May 01 2023 10:17:56 GMT+0900 (Japan Standard Time) */
+
+const MAKE_COMMANDS = function () {
+    const { echo, error } = game.modding.terminal;
     let gameCommands = game.modding.commands;
 
     const locateShip = function(req, handler) {
         let args=req.replace(/^\s+/,"").replace(/\s+/," ").split(" "),id=Number(args[1]||"NaN");
-        if (isNaN(id)) game.modding.terminal.error("Please specify a ship id to take action");
+        if (isNaN(id)) error("Please specify a ship id to take action");
         else {
             let ship=game.findShip(id);
-            if (!ship) game.modding.terminal.error("Requested ship not found!");
+            if (!ship) error("Requested ship not found!");
             else {
                 try{typeof handler == "function" && handler(ship, id, args)}
-                catch(e){game.modding.terminal.error("An error occured while taking action with the requested ship!")}
+                catch(e){ error("An error occured while taking action with the requested ship!")}
             }
         }
     }, infoName = function (ship) {
@@ -3728,7 +3745,7 @@ const MAKE_COMMANDS = function (echo) {
         let id2 = +args.slice(2).join(' ');
         let ship2 = game.findShip(id2);
         if (ship2 == null || ship2.id == null) {
-            game.modding.terminal.error(`Failed: Ship with ID ${id2} doesn't exist`);
+            error(`Failed: Ship with ID ${id2} doesn't exist`);
             return '';
         }
         ship1.set({ x: ship2.x, y: ship2.y });
@@ -3763,7 +3780,9 @@ const MAKE_COMMANDS = function (echo) {
 
 
 
-/* Imported from Resources.js at Mon May 01 2023 09:04:32 GMT+0900 (Japan Standard Time) */
+
+
+/* Imported from Resources.js at Mon May 01 2023 10:17:56 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -3771,7 +3790,9 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Mon May 01 2023 09:04:32 GMT+0900 (Japan Standard Time) */
+
+
+/* Imported from HelperFunctions.js at Mon May 01 2023 10:17:56 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4062,7 +4083,9 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Mon May 01 2023 09:04:32 GMT+0900 (Japan Standard Time) */
+
+
+/* Imported from Managers.js at Mon May 01 2023 10:17:56 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     teams_list: Teams,
@@ -4414,14 +4437,14 @@ Press [${this.abilityShortcut}] to activate it.`
 
         game.custom.AbilityManager = AbilityManager;
 
-        let gb = window || global;
-
         if (DEBUG) {
+            let gb = window || global;
+            
             gb.AbilityManager = AbilityManager;
             gb.TeamManager = TeamManager;
             gb.MapManager = MapManager;
 
-            MAKE_COMMANDS(this.echo);
+            MAKE_COMMANDS();
         }
     },
     compileAbilities: function () {
@@ -4540,11 +4563,13 @@ Press [${this.abilityShortcut}] to activate it.`
 
 
 
-/* Imported from templates/gameLogic.js at Mon May 01 2023 09:04:32 GMT+0900 (Japan Standard Time) */
+
+
+/* Imported from misc/gameLogic.js at Mon May 01 2023 10:17:56 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from templates/Misc.js at Mon May 01 2023 09:04:32 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Mon May 01 2023 10:17:56 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -4730,6 +4755,25 @@ const WeightCalculator = {
         if (donSort) return players;
         return players.sort((a, b) => this.playerWeight(b) - this.playerWeight(a));
     },
+    getTeamPlayersCount: function (id) {
+        let teamData = TeamManager.getDataFromID(id);
+        if (teamData.ghost) return game.ships.filter(ship => ship != null && ship.id != null && ship.custom.joined && TeamManager.getDataFromShip(ship).ghost).length;
+        return game.ships.filter(ship => ship != null && ship.id != null && ship.custom.joined && TeamManager.getDataFromShip(ship).id === teamData.id).length;
+    },
+    teamWeight: function (id) {
+        return this.getTeamPlayersCount(id);
+    },
+    getTeamsWeights: function () {
+        return TeamManager.getAll().map(team => ({
+            id: team.id, weight: this.teamWeight(team.id)
+        })).sort((t1, t2) => {
+            if (t1.weight == t2.weight) return HelperFunctions.randInt(2) || -1;
+            return t1.weight - t2.weight;
+        })
+    },
+    joinBalanceTeam: function (ship) {
+        TeamManager.set(ship, this.getTeamsWeights()[0].id, true, true);
+    }
 }
 
 const UIData = {
@@ -5169,7 +5213,9 @@ const makeAlienSpawns = function () {
 
 
 
-/* Imported from templates/tickFunctions.js at Mon May 01 2023 09:04:32 GMT+0900 (Japan Standard Time) */
+
+
+/* Imported from misc/tickFunctions.js at Mon May 01 2023 10:17:56 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -5179,7 +5225,7 @@ const alwaysTick = function (game) {
         if (ship == null || ship.id == null) continue;
         if (!ship.custom.joined) {
             UIData.blockers.set(ship);
-            TeamManager.set(ship, void 0, false, true);
+            WeightCalculator.joinBalanceTeam(ship);
             control_point_data.renderData(ship, false);
             UIData.renderTeamScores(ship);
             HelperFunctions.sendUI(ship, UIData.radar);
@@ -5627,6 +5673,8 @@ const im_here_just_to_kick_every_players_out_of_the_game = function (game) {
     }
 }
 
+
+
 if (DEBUG) {
     const debug = { ...this };
     debug.tick = initialization;
@@ -5638,7 +5686,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from templates/eventFunction.js at Mon May 01 2023 09:04:32 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Mon May 01 2023 10:17:56 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -5691,7 +5739,9 @@ this.event = function (event, game) {
 
 
 
-/* Imported from templates/gameOptions.js at Mon May 01 2023 09:04:32 GMT+0900 (Japan Standard Time) */
+
+
+/* Imported from misc/gameOptions.js at Mon May 01 2023 10:17:56 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
@@ -5740,4 +5790,7 @@ this.options = {
     hues: TeamManager.getAll().map(e => e ? e.hue : 0)
 }
 
+
+
 AbilityManager.echo("[[bg;crimson;]Arena Mod[[bg;DarkTurquoise;] Recontinuation][[;Cyan;]\nRandomized map picked:]][[b;Cyan;] " + MapManager.get().name + " by " + MapManager.get().author + "\n\nType `commands` to see all commands and `usage <commandName>` to show usage of a command\n\n]");
+

@@ -182,6 +182,25 @@ const WeightCalculator = {
         if (donSort) return players;
         return players.sort((a, b) => this.playerWeight(b) - this.playerWeight(a));
     },
+    getTeamPlayersCount: function (id) {
+        let teamData = TeamManager.getDataFromID(id);
+        if (teamData.ghost) return game.ships.filter(ship => ship != null && ship.id != null && ship.custom.joined && TeamManager.getDataFromShip(ship).ghost).length;
+        return game.ships.filter(ship => ship != null && ship.id != null && ship.custom.joined && TeamManager.getDataFromShip(ship).id === teamData.id).length;
+    },
+    teamWeight: function (id) {
+        return this.getTeamPlayersCount(id);
+    },
+    getTeamsWeights: function () {
+        return TeamManager.getAll().map(team => ({
+            id: team.id, weight: this.teamWeight(team.id)
+        })).sort((t1, t2) => {
+            if (t1.weight == t2.weight) return HelperFunctions.randInt(2) || -1;
+            return t1.weight - t2.weight;
+        })
+    },
+    joinBalanceTeam: function (ship) {
+        TeamManager.set(ship, this.getTeamsWeights()[0].id, true, true);
+    }
 }
 
 const UIData = {

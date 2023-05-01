@@ -348,14 +348,14 @@ Press [${this.abilityShortcut}] to activate it.`
 
         game.custom.AbilityManager = AbilityManager;
 
-        let gb = window || global;
-
         if (DEBUG) {
+            let gb = window || global;
+            
             gb.AbilityManager = AbilityManager;
             gb.TeamManager = TeamManager;
             gb.MapManager = MapManager;
 
-            MAKE_COMMANDS(this.echo);
+            MAKE_COMMANDS();
         }
     },
     compileAbilities: function () {

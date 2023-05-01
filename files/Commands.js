@@ -1,15 +1,16 @@
-const MAKE_COMMANDS = function (echo) {
+const MAKE_COMMANDS = function () {
+    const { echo, error } = game.modding.terminal;
     let gameCommands = game.modding.commands;
 
     const locateShip = function(req, handler) {
         let args=req.replace(/^\s+/,"").replace(/\s+/," ").split(" "),id=Number(args[1]||"NaN");
-        if (isNaN(id)) game.modding.terminal.error("Please specify a ship id to take action");
+        if (isNaN(id)) error("Please specify a ship id to take action");
         else {
             let ship=game.findShip(id);
-            if (!ship) game.modding.terminal.error("Requested ship not found!");
+            if (!ship) error("Requested ship not found!");
             else {
                 try{typeof handler == "function" && handler(ship, id, args)}
-                catch(e){game.modding.terminal.error("An error occured while taking action with the requested ship!")}
+                catch(e){ error("An error occured while taking action with the requested ship!")}
             }
         }
     }, infoName = function (ship) {
@@ -179,7 +180,7 @@ const MAKE_COMMANDS = function (echo) {
         let id2 = +args.slice(2).join(' ');
         let ship2 = game.findShip(id2);
         if (ship2 == null || ship2.id == null) {
-            game.modding.terminal.error(`Failed: Ship with ID ${id2} doesn't exist`);
+            error(`Failed: Ship with ID ${id2} doesn't exist`);
             return '';
         }
         ship1.set({ x: ship2.x, y: ship2.y });

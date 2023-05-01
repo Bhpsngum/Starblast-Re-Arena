@@ -6,7 +6,7 @@ const alwaysTick = function (game) {
         if (ship == null || ship.id == null) continue;
         if (!ship.custom.joined) {
             UIData.blockers.set(ship);
-            TeamManager.set(ship, void 0, false, true);
+            WeightCalculator.joinBalanceTeam(ship);
             control_point_data.renderData(ship, false);
             UIData.renderTeamScores(ship);
             HelperFunctions.sendUI(ship, UIData.radar);
