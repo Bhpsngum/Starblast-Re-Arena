@@ -1,18 +1,30 @@
 const TeamManager = {
-    teams_list: Teams,
     ghostTeam: GhostTeam,
+    staticList: StaticTeams.map(v => {
+        let x = Teams[v];
+        Teams[v] = null;
+        return x;
+    }),
+    teams_list: Teams.filter(t => t),
     initialize: function () {
         this.teams = game.custom.teams;
-        if (this.teams == null) game.custom.teams = this.teams = [...Array(GAME_OPTIONS.teams_count)].map((e, i) => {
-            let chosenTeam = HelperFunctions.randomItem(this.teams_list, true).value;
-            let { index } = HelperFunctions.randomItem(chosenTeam.names);
-            return {
-                ...chosenTeam,
-                name: chosenTeam.names[index],
-                hue: chosenTeam.hues[index],
-                id: i
+        if (this.teams == null) {
+            this.teams = game.custom.teams = new Array(GAME_OPTIONS.teams_count);
+            let teams = [...Array(GAME_OPTIONS.teams_count)].map((v, i)=> i);
+            while (teams.length > 0) {
+                let i = HelperFunctions.randomItem(teams, true).value;
+                let chosenTeam;
+                if (this.staticList.length > 0) chosenTeam = HelperFunctions.randomItem(this.staticList, true).value;
+                else chosenTeam = HelperFunctions.randomItem(this.teams_list, true).value;
+                let { index } = HelperFunctions.randomItem(chosenTeam.names);
+                this.teams[i] = {
+                    ...chosenTeam,
+                    name: chosenTeam.names[index],
+                    hue: chosenTeam.hues[index],
+                    id: i
+                };
             }
-        });
+        };
     },
     getAll: function () {
         if (!Array.isArray(this.teams)) this.initialize();
@@ -52,6 +64,16 @@ const MapManager = {
         }
         return this.map;
     },
+    sortPairings: function (pairs, dist) {
+        return pairs.sort((p1, p2) => {
+            if (p1.length == p2.length) return HelperFunctions.randInt(2) || -1;
+            let absoluteDistance = Math.abs(dist - p1.length) - Math.abs(dist - p2.length);
+
+            if (absoluteDistance == 0) return p2.length - p1.length;
+
+            return absoluteDistance;
+        }); // no invalid pairs
+    },
     assignSpawnpoints: function () {
         let teams = TeamManager.getAll(), { spawnpoints, pairings } = this.get();
 
@@ -59,30 +81,33 @@ const MapManager = {
 
         let pairs = pairings;
 
-        if (Array.isArray(pairs)) pairs = pairs.filter(e => Array.isArray(e) && e.length > 0)
-        .sort((p1, p2) => {
-            if (p1.length == p2.length) return HelperFunctions.randInt(2) || -1;
-            let absoluteDistance = Math.abs(GAME_OPTIONS.teams_count - p1.length) - Math.abs(GAME_OPTIONS.teams_count - p2.length);
-
-            if (absoluteDistance == 0) return p2.length - p1.length;
-
-            return absoluteDistance;
-        }); // no invalid pairs
+        if (Array.isArray(pairs)) pairs = this.sortPairings(HelperFunctions.clone(pairs).filter(e => Array.isArray(e) && e.length > 0), GAME_OPTIONS.teams_count);
         else pairs = [];
 
         if (pairs.length < 1) pairs = [ // placeholder
             new Array(spawnpoints.length).fill(0).map((e, i) => i)
         ];
 
-        let curPair = HelperFunctions.randomItem(pairs, true).value;
+        let curPair = pairs.shift(), dist = GAME_OPTIONS.teams_count;
 
         for (let team of teams) if (team && team.need_spawnpoint) {
             if (curPair.length < 1) { // current candidate has no spawnpoints
                 if (pairs.length < 1) break; // no more pairs
-                curPair = pairs.shift();
+                curPair = this.sortPairings(pairs, dist).shift();
+            }
+
+            --dist;
+
+            let val = HelperFunctions.randomItem(curPair, true).value;
+
+            let i = 0;
+
+            while (i < pairs.length) { // delete all pairs with duplicate index
+                if (pairs[i].indexOf(val) < 0) ++i;
+                else pairs.splice(i, 1);
             }
             
-            team.spawnpoint = spawnpoints[HelperFunctions.randomItem(curPair, true).value];
+            team.spawnpoint = spawnpoints[val];
         }
     },
     spawn: function (ship) {
@@ -350,7 +375,7 @@ Press [${this.abilityShortcut}] to activate it.`
 
         if (DEBUG) {
             let gb = window || global;
-            
+
             gb.AbilityManager = AbilityManager;
             gb.TeamManager = TeamManager;
             gb.MapManager = MapManager;
