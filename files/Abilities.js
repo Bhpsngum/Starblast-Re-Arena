@@ -1175,7 +1175,7 @@ const ShipAbilities = {
         },
         name: "Choo choo",
         cooldown: 35 * 60,
-        duration: 2 * 60,
+        duration: 3 * 60,
         endOnDeath: true,
         
         bonkSpeed: 5,
