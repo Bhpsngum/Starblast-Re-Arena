@@ -374,7 +374,7 @@ const ShipAbilities = {
 
         tick: function (ship) {
             if (!ship.custom.abilityCustom.overclocked) {
-                ship.set({generator: this.enery_capacities.ability});
+                ship.set({generator: this.energy_capacities.ability});
                 ship.custom.abilityCustom.overclocked = true;
             }
         }
@@ -476,7 +476,7 @@ const ShipAbilities = {
 
         start: function (ship) {
             HelperFunctions.templates.start.call(this, ship);
-            ship.set({ generator: this.enery_capacities.ability, invulnerable: 180 });
+            ship.set({ generator: this.energy_capacities.ability, invulnerable: 180 });
             ship.emptyWeapons();
             HelperFunctions.spawnCollectibles(ship, Array(6).fill(this.attackPodCode));
             let targets = HelperFunctions.findEntitiesInRange(ship, this.range, true, false, false, false, true);
@@ -536,7 +536,7 @@ const ShipAbilities = {
             ship.set({
                 type: this.codes[model],
                 stats: AbilityManager.maxStats,
-                generator: this.enery_capacities[model] * (isHigher ? 1/4 : 1)
+                generator: this.energy_capacities[model] * (isHigher ? 1/4 : 1)
             });
             ship.custom.forceEnd = true;
         },

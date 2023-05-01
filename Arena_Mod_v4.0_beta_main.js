@@ -77,7 +77,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config.js at Mon May 01 2023 19:00:24 GMT+0900 (Japan Standard Time) */
+/* Imported from Config.js at Mon May 01 2023 19:59:48 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -186,7 +186,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from Teams.js at Mon May 01 2023 19:00:24 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Mon May 01 2023 19:59:48 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -236,7 +236,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Mon May 01 2023 19:00:24 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Mon May 01 2023 19:59:48 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1928,7 +1928,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Mon May 01 2023 19:00:24 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Mon May 01 2023 19:59:48 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -2306,7 +2306,7 @@ const ShipAbilities = {
 
         tick: function (ship) {
             if (!ship.custom.abilityCustom.overclocked) {
-                ship.set({generator: this.enery_capacities.ability});
+                ship.set({generator: this.energy_capacities.ability});
                 ship.custom.abilityCustom.overclocked = true;
             }
         }
@@ -2408,7 +2408,7 @@ const ShipAbilities = {
 
         start: function (ship) {
             HelperFunctions.templates.start.call(this, ship);
-            ship.set({ generator: this.enery_capacities.ability, invulnerable: 180 });
+            ship.set({ generator: this.energy_capacities.ability, invulnerable: 180 });
             ship.emptyWeapons();
             HelperFunctions.spawnCollectibles(ship, Array(6).fill(this.attackPodCode));
             let targets = HelperFunctions.findEntitiesInRange(ship, this.range, true, false, false, false, true);
@@ -2468,7 +2468,7 @@ const ShipAbilities = {
             ship.set({
                 type: this.codes[model],
                 stats: AbilityManager.maxStats,
-                generator: this.enery_capacities[model] * (isHigher ? 1/4 : 1)
+                generator: this.energy_capacities[model] * (isHigher ? 1/4 : 1)
             });
             ship.custom.forceEnd = true;
         },
@@ -3565,7 +3565,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Mon May 01 2023 19:00:24 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Mon May 01 2023 19:59:48 GMT+0900 (Japan Standard Time) */
 
 const MAKE_COMMANDS = function () {
     const { echo, error } = game.modding.terminal;
@@ -3786,7 +3786,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Mon May 01 2023 19:00:24 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Mon May 01 2023 19:59:48 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -3796,7 +3796,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Mon May 01 2023 19:00:25 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Mon May 01 2023 19:59:48 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4089,7 +4089,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Mon May 01 2023 19:00:25 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Mon May 01 2023 19:59:48 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -4594,11 +4594,11 @@ Press [${this.abilityShortcut}] to activate it.`
 
 
 
-/* Imported from misc/gameLogic.js at Mon May 01 2023 19:00:25 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Mon May 01 2023 19:59:48 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/Misc.js at Mon May 01 2023 19:00:25 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Mon May 01 2023 19:59:48 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -5244,7 +5244,7 @@ const makeAlienSpawns = function () {
 
 
 
-/* Imported from misc/tickFunctions.js at Mon May 01 2023 19:00:25 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Mon May 01 2023 19:59:48 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -5715,7 +5715,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Mon May 01 2023 19:00:25 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Mon May 01 2023 19:59:48 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -5770,7 +5770,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Mon May 01 2023 19:00:25 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Mon May 01 2023 19:59:48 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
