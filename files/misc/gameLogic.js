@@ -1,6 +1,6 @@
-/* import templates/Misc.js */
+/* import misc/Misc.js */
 
-/* import templates/tickFunctions.js */
+/* import misc/tickFunctions.js */
 
 if (DEBUG) {
     const debug = { ...this };
@@ -11,8 +11,8 @@ if (DEBUG) {
 }
 else this.tick = initialization;
 
-/* import templates/eventFunction.js */
+/* import misc/eventFunction.js */
 
-/* import templates/gameOptions.js */
+/* import misc/gameOptions.js */
 
 AbilityManager.echo("[[bg;crimson;]Arena Mod[[bg;DarkTurquoise;] Recontinuation][[;Cyan;]\nRandomized map picked:]][[b;Cyan;] " + MapManager.get().name + " by " + MapManager.get().author + "\n\nType `commands` to see all commands and `usage <commandName>` to show usage of a command\n\n]");

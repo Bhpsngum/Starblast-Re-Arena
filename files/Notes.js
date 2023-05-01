@@ -23,9 +23,7 @@ The files below are recommended and better don't touch other files unless you kn
 Consider the things below:
 // Make some terminal commands (optional)
 // It's made automatically when DEBUG = true, but if you want to manually make it anyway
-MAKE_COMMANDS(echo);
-// `echo` is the global `echo` function, but it's recommended to take `game.modding.terminal.echo` instead
-// since it might run unexpectedly at first launch if you use `window.echo`
+MAKE_COMMANDS();
 
 // to initialize the Ability System (required):
 AbilityManager.initialize()
@@ -58,29 +56,13 @@ this.event = function (event, game) {
     // your stuff here
 }
 
-4. Install NodeJS if you haven't yet
+4. Install NodeJS and NPM if you haven't yet
 5. Open terminal/console, move to the folder in step 1 (use cd command or whatever you want)
-6. Run `node mergeFile.js`
+6. Run `npm run compile main`
 7. Profit
 
 8. You might want to keep the files you've modified and replace them with original files
 if you clones/pull the updates next time
+9. Also if you have enough experience with Node and related stuff,
+you can fck around and find out how to compile custom templates as well
 */
-
-/* import Config.js */
-
-/* import Teams.js */
-
-/* import Maps.js */
-
-/* import Abilities.js */
-
-/* import Commands.js */
-
-/* import Resources.js */
-
-/* import HelperFunctions.js */
-
-/* import Managers.js */
-
-/* import templates/gameLogic.js */
