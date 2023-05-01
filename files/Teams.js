@@ -31,6 +31,8 @@ const Teams = [
     }
 ];
 
+const StaticTeams = [0, 1]; // list of team indices that MUST BE on list of teams regardless of randomization
+
 const GhostTeam = {
     ghost: true,
     id: [],
