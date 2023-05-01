@@ -383,10 +383,6 @@ Press [${this.abilityShortcut}] to activate it.`
 
             if (isNaN(ability.crystals)) ability.crystals = this.crystals;
 
-            ability.generatorInit = Math.min(1e5, Math.max(0, ability.generatorInit));
-
-            if (isNaN(ability.generatorInit)) ability.generatorInit = 1e5;
-
             if ("function" != typeof ability.canStart) ability.canStart = templates.canStart;
 
             if ("function" != typeof ability.canEnd) ability.canEnd = templates.canEnd;
@@ -421,12 +417,15 @@ Press [${this.abilityShortcut}] to activate it.`
 
             // process ship codes
             ability.codes = {};
+            ability.energy_capacities = {};
             for (let shipAbilityName in ability.models) try {
                 let jsonData = JSON.parse(ability.models[shipAbilityName]);
                 if (jsonData == null || jsonData.typespec == null) throw "No ship data or typespec";
                 jsonData.level = jsonData.typespec.level = this.shipLevels;
                 jsonData.model = --model;
+
                 ability.codes[shipAbilityName] = jsonData.typespec.code = this.shipLevels * 100 + model;
+                ability.energy_capacities[shipAbilityName] = Math.max(...jsonData.specs.generator.capacity);
 
                 let allowRingOnModel;
 
@@ -449,6 +448,10 @@ Press [${this.abilityShortcut}] to activate it.`
             catch (e) {
                 HelperFunctions.terminal.error(`Failed to compile ship code for model '${shipAbilityName}' of '${shipName}'.\nCaught Error: ${e.message}`);
             }
+
+            ability.generatorInit = Math.min(1e5, Math.max(0, ability.generatorInit));
+
+            if (isNaN(ability.generatorInit)) ability.generatorInit = ability.energy_capacities.default;
             
             if (!ability.codes.default) HelperFunctions.terminal.error(`Missing 'default' model for '${shipName}'.`);
             if (needAbilityShip && !ability.codes.ability) HelperFunctions.terminal.error(`'${shipName}' uses default ability behaviour but model 'ability' is missing.`);
