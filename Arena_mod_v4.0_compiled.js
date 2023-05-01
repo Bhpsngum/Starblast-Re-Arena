@@ -69,7 +69,7 @@ if you clones/pull the updates next time
 
 
 
-/* Imported from Config.js at Sun Apr 30 2023 22:27:14 GMT+0900 (Japan Standard Time) */
+/* Imported from Config.js at Mon May 01 2023 09:04:32 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -176,7 +176,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from Teams.js at Sun Apr 30 2023 22:27:14 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Mon May 01 2023 09:04:32 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -222,7 +222,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Sun Apr 30 2023 22:27:14 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Mon May 01 2023 09:04:32 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1912,7 +1912,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Sun Apr 30 2023 22:27:14 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Mon May 01 2023 09:04:32 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -1942,7 +1942,7 @@ const ShipAbilities = {
 
         crystals: 500, // crystals when first set, default `AbilityManager.crystals`,
 
-        generatorInit: 69, // generator value on first set, default 100000
+        generatorInit: 69, // generator value on first set, default maximum default model's energy capacity
 
         useRequirementsTextWhenReady: false, // if set to `true`, ability.requirementsText will be called even when the ability is ready 
 
@@ -2290,7 +2290,7 @@ const ShipAbilities = {
 
         tick: function (ship) {
             if (!ship.custom.abilityCustom.overclocked) {
-                ship.set({generator: 1e5});
+                ship.set({generator: this.enery_capacities.ability});
                 ship.custom.abilityCustom.overclocked = true;
             }
         }
@@ -2392,7 +2392,7 @@ const ShipAbilities = {
 
         start: function (ship) {
             HelperFunctions.templates.start.call(this, ship);
-            ship.set({ generator: 1e5, invulnerable: 180 });
+            ship.set({ generator: this.enery_capacities.ability, invulnerable: 180 });
             ship.emptyWeapons();
             HelperFunctions.spawnCollectibles(ship, Array(6).fill(this.attackPodCode));
             let targets = HelperFunctions.findEntitiesInRange(ship, this.range, true, false, false, false, true);
@@ -2452,7 +2452,7 @@ const ShipAbilities = {
             ship.set({
                 type: this.codes[model],
                 stats: AbilityManager.maxStats,
-                generator: this.generatorCapacities.get(model) * (isHigher ? 1/4 : 1)
+                generator: this.enery_capacities[model] * (isHigher ? 1/4 : 1)
             });
             ship.custom.forceEnd = true;
         },
@@ -2461,11 +2461,6 @@ const ShipAbilities = {
 
         reload: function (ship) {
             ship.custom.lastTriggered = game.step - this.getCooldown(ship);
-        },
-
-        compile: function (_this) {
-            this.generatorCapacities = new Map();
-            for (let name in this.models) this.generatorCapacities.set(name, Math.max(...JSON.parse(this.models[name]).specs.generator.capacity));
         }
     },
     "Phoenix": {
@@ -3021,7 +3016,7 @@ const ShipAbilities = {
             ship.set({
                 type: this.codes[model],
                 stats: AbilityManager.maxStats,
-                generator: this.generatorCapacities.get(model)
+                generator: this.energy_capacities[model]
             });
             HelperFunctions.accelerate(ship,  this.stateSpeed * ((-1) ** !!isDefensive));
             ship.custom.forceEnd = true;
@@ -3031,11 +3026,6 @@ const ShipAbilities = {
 
         reload: function (ship) {
             ship.custom.lastTriggered = game.step - this.getCooldown(ship);
-        },
-
-        compile: function (_this) {
-            this.generatorCapacities = new Map();
-            for (let name in this.models) this.generatorCapacities.set(name, Math.max(...JSON.parse(this.models[name]).specs.generator.capacity));
         }
     },
     "Synthesis": {
@@ -3555,7 +3545,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Sun Apr 30 2023 22:27:14 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Mon May 01 2023 09:04:32 GMT+0900 (Japan Standard Time) */
 
 const MAKE_COMMANDS = function (echo) {
     let gameCommands = game.modding.commands;
@@ -3773,7 +3763,7 @@ const MAKE_COMMANDS = function (echo) {
 
 
 
-/* Imported from Resources.js at Sun Apr 30 2023 22:27:14 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Mon May 01 2023 09:04:32 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -3781,7 +3771,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Sun Apr 30 2023 22:27:14 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Mon May 01 2023 09:04:32 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4072,7 +4062,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Sun Apr 30 2023 22:27:14 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Mon May 01 2023 09:04:32 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     teams_list: Teams,
@@ -4459,10 +4449,6 @@ Press [${this.abilityShortcut}] to activate it.`
 
             if (isNaN(ability.crystals)) ability.crystals = this.crystals;
 
-            ability.generatorInit = Math.min(1e5, Math.max(0, ability.generatorInit));
-
-            if (isNaN(ability.generatorInit)) ability.generatorInit = 1e5;
-
             if ("function" != typeof ability.canStart) ability.canStart = templates.canStart;
 
             if ("function" != typeof ability.canEnd) ability.canEnd = templates.canEnd;
@@ -4497,12 +4483,15 @@ Press [${this.abilityShortcut}] to activate it.`
 
             // process ship codes
             ability.codes = {};
+            ability.energy_capacities = {};
             for (let shipAbilityName in ability.models) try {
                 let jsonData = JSON.parse(ability.models[shipAbilityName]);
                 if (jsonData == null || jsonData.typespec == null) throw "No ship data or typespec";
                 jsonData.level = jsonData.typespec.level = this.shipLevels;
                 jsonData.model = --model;
+
                 ability.codes[shipAbilityName] = jsonData.typespec.code = this.shipLevels * 100 + model;
+                ability.energy_capacities[shipAbilityName] = Math.max(...jsonData.specs.generator.capacity);
 
                 let allowRingOnModel;
 
@@ -4525,6 +4514,10 @@ Press [${this.abilityShortcut}] to activate it.`
             catch (e) {
                 HelperFunctions.terminal.error(`Failed to compile ship code for model '${shipAbilityName}' of '${shipName}'.\nCaught Error: ${e.message}`);
             }
+
+            ability.generatorInit = Math.min(1e5, Math.max(0, ability.generatorInit));
+
+            if (isNaN(ability.generatorInit)) ability.generatorInit = ability.energy_capacities.default;
             
             if (!ability.codes.default) HelperFunctions.terminal.error(`Missing 'default' model for '${shipName}'.`);
             if (needAbilityShip && !ability.codes.ability) HelperFunctions.terminal.error(`'${shipName}' uses default ability behaviour but model 'ability' is missing.`);
@@ -4547,11 +4540,11 @@ Press [${this.abilityShortcut}] to activate it.`
 
 
 
-/* Imported from templates/gameLogic.js at Sun Apr 30 2023 22:27:14 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/gameLogic.js at Mon May 01 2023 09:04:32 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from templates/Misc.js at Sun Apr 30 2023 22:27:14 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/Misc.js at Mon May 01 2023 09:04:32 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -5176,7 +5169,7 @@ const makeAlienSpawns = function () {
 
 
 
-/* Imported from templates/tickFunctions.js at Sun Apr 30 2023 22:27:14 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/tickFunctions.js at Mon May 01 2023 09:04:32 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -5645,7 +5638,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from templates/eventFunction.js at Sun Apr 30 2023 22:27:14 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/eventFunction.js at Mon May 01 2023 09:04:32 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -5698,7 +5691,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from templates/gameOptions.js at Sun Apr 30 2023 22:27:14 GMT+0900 (Japan Standard Time) */
+/* Imported from templates/gameOptions.js at Mon May 01 2023 09:04:32 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?

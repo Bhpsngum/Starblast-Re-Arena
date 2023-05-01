@@ -26,7 +26,7 @@ const ShipAbilities = {
 
         crystals: 500, // crystals when first set, default `AbilityManager.crystals`,
 
-        generatorInit: 69, // generator value on first set, default 100000
+        generatorInit: 69, // generator value on first set, default maximum default model's energy capacity
 
         useRequirementsTextWhenReady: false, // if set to `true`, ability.requirementsText will be called even when the ability is ready 
 
@@ -374,7 +374,7 @@ const ShipAbilities = {
 
         tick: function (ship) {
             if (!ship.custom.abilityCustom.overclocked) {
-                ship.set({generator: 1e5});
+                ship.set({generator: this.enery_capacities.ability});
                 ship.custom.abilityCustom.overclocked = true;
             }
         }
@@ -476,7 +476,7 @@ const ShipAbilities = {
 
         start: function (ship) {
             HelperFunctions.templates.start.call(this, ship);
-            ship.set({ generator: 1e5, invulnerable: 180 });
+            ship.set({ generator: this.enery_capacities.ability, invulnerable: 180 });
             ship.emptyWeapons();
             HelperFunctions.spawnCollectibles(ship, Array(6).fill(this.attackPodCode));
             let targets = HelperFunctions.findEntitiesInRange(ship, this.range, true, false, false, false, true);
@@ -536,7 +536,7 @@ const ShipAbilities = {
             ship.set({
                 type: this.codes[model],
                 stats: AbilityManager.maxStats,
-                generator: this.generatorCapacities.get(model) * (isHigher ? 1/4 : 1)
+                generator: this.enery_capacities[model] * (isHigher ? 1/4 : 1)
             });
             ship.custom.forceEnd = true;
         },
@@ -545,11 +545,6 @@ const ShipAbilities = {
 
         reload: function (ship) {
             ship.custom.lastTriggered = game.step - this.getCooldown(ship);
-        },
-
-        compile: function (_this) {
-            this.generatorCapacities = new Map();
-            for (let name in this.models) this.generatorCapacities.set(name, Math.max(...JSON.parse(this.models[name]).specs.generator.capacity));
         }
     },
     "Phoenix": {
@@ -1105,7 +1100,7 @@ const ShipAbilities = {
             ship.set({
                 type: this.codes[model],
                 stats: AbilityManager.maxStats,
-                generator: this.generatorCapacities.get(model)
+                generator: this.energy_capacities[model]
             });
             HelperFunctions.accelerate(ship,  this.stateSpeed * ((-1) ** !!isDefensive));
             ship.custom.forceEnd = true;
@@ -1115,11 +1110,6 @@ const ShipAbilities = {
 
         reload: function (ship) {
             ship.custom.lastTriggered = game.step - this.getCooldown(ship);
-        },
-
-        compile: function (_this) {
-            this.generatorCapacities = new Map();
-            for (let name in this.models) this.generatorCapacities.set(name, Math.max(...JSON.parse(this.models[name]).specs.generator.capacity));
         }
     },
     "Synthesis": {
