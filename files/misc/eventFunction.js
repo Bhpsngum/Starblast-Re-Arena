@@ -27,20 +27,20 @@ this.event = function (event, game) {
                     UIData.shipUIs.toggle(ship);
                     break;
                 case "next_ship": if (HelperFunctions.canUseButtons(ship)) {
-                    let pos = AbilityManager.ships_list.indexOf(ship.custom.shipName) + 1;
-                    AbilityManager.assign(ship, AbilityManager.ships_list[pos] || AbilityManager.ships_list[0]);
-                    UIData.shipUIs.toggleSelectMenu(ship);
+                    let ships_list = AbilityManager.getAssignableShipsList(ship);
+                    let pos = ships_list.indexOf(ship.custom.shipName) + 1;
+                    UIData.assign(ship, ships_list[pos] || ships_list[0]);
                     break;
                 }
                 case "prev_ship": if (HelperFunctions.canUseButtons(ship)) {
-                    let pos = AbilityManager.ships_list.lastIndexOf(ship.custom.shipName) - 1;
-                    AbilityManager.assign(ship, AbilityManager.ships_list.at(pos));
-                    UIData.shipUIs.toggleSelectMenu(ship);
+                    let ships_list = AbilityManager.getAssignableShipsList(ship);
+                    let pos = ships_list.lastIndexOf(ship.custom.shipName) - 1;
+                    UIData.assign(ship, ships_list.at(pos));
                     break;
                 }
                 default:
                     if (HelperFunctions.canUseButtons(ship) && component.startsWith(UIData.shipUIs.shipSelectPrefix)) {
-                        AbilityManager.assign(ship, component.replace(UIData.shipUIs.shipSelectPrefix, ""));
+                        UIData.assign(ship, component.replace(UIData.shipUIs.shipSelectPrefix, ""));
                         UIData.shipUIs.toggleSelectMenu(ship);
                     }
             }

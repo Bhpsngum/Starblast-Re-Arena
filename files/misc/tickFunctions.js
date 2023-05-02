@@ -130,6 +130,7 @@ const waiting = function (game) {
         if (game.step > game.custom.waiting_time) {
             // game started
             game.custom.started = true;
+            game.custom.abilitySystemEnabled = true;
             UIData.renderTeamScores(game, true);
             UIData.updateScoreboard(game);
             HelperFunctions.sendUI(game, UIData.radar);

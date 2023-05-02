@@ -46,6 +46,7 @@ const MAKE_COMMANDS = function () {
         let args = Array.isArray(docs.arguments) ? docs.arguments : [];
         echo(`${commandName} ${args.map(e => "<" + (e.required ? "" : "?") + e.name + ">").join(' ').trim()}${newline ? "\n": "\t"}[[;#0f60ff;]${docs.description || "No detailed description."}]`);
     }, showShipInfo = function (ship, newline = false) {
+        let block = AbilityManager.isActionBlocked(ship);
         echo([
             `ID: ${ship.id}`,
             `Name: ${ship.name}`,
@@ -54,7 +55,7 @@ const MAKE_COMMANDS = function () {
             `Y: ${ship.y}`,
             `Ship: ${ship.custom.shipName}`,
             ship.custom.inAbility ? "In ability" : "",
-            ship.custom.pucked != null || ship.custom.EMP ? "Ability disabled" : ""
+            block.blocked ? (block.blocker.reason || "Blocked for no reasons") : ""
         ].filter(e => e).join(`.${newline ? "\n" : " "}`))
     }, showTeamInfo = function (ship) {
         let teamInfo = TeamManager.getDataFromShip(ship);
@@ -135,9 +136,10 @@ const MAKE_COMMANDS = function () {
     });
 
     addShipCommand('assign', function (ship, id, args) {
-        AbilityManager.assign(ship, args.slice(2).join(' ').trim());
-        return ship.custom.shipName;
-    }, '%s has been set to %r', {
+        let result = AbilityManager.assign(ship, args.slice(2).join(' ').trim());
+        if (result.success) return `%s has been set to ${ship.custom.shipName}`
+        return `Failed to set %s to another ship\nReason: ${result.reason || "No reason has been provided."}`;
+    }, '%r', {
         arguments: [
             { name: "ship_name", required: false }
         ],

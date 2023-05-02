@@ -164,7 +164,7 @@ const GameHelperFunctions = {
         return `${hours}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
     },
     canUseButtons: function (ship) {
-        return !ship.custom.EMP && !ship.custom.shipUIsHidden && ship.custom.pucked == null && !ship.custom.inAbility;
+        return !ship.custom.shipUIsHidden;
     }
 }
 
@@ -326,14 +326,29 @@ const UIData = {
             let i = 0;
             for (let abil of abilities) {
                 let row = Math.trunc(i / itemsPerLine), column = i % itemsPerLine;
-                let color = ship.custom.shipName == abil ? "#AAFF00" : "#FFFFFF";
-                let strokeWidth = ship.custom.shipName == abil ? 8 : 2;
                 let offsetX = row == itemsPerColumn - 1 ? lastLineXOffset : 0;
-                let bg = ship.custom.shipName == abil ? "rgba(170, 225, 0, 0.25)" : "rgba(68, 85, 102, 0.25)"
+                let usable = HelperFunctions.canUseButtons(ship) && AbilityManager.assign(ship, abil, true).success;
+                let color, strokeWidth, bg, bdColor;
+                if (ship.custom.shipName == abil) {
+                    bdColor = color = "#AAFF00";
+                    strokeWidth = 8;
+                    bg = "rgba(170, 225, 0, 0.25)";
+                }
+                else if (usable) {
+                    bdColor = color = "#FFFFFF";
+                    strokeWidth = 2;
+                    bg = `rgba(68, 85, 102, 0.25)`;
+                }
+                else {
+                    color = "#fff";
+                    bdColor = "hsla(0, 100%, 50%, 1)";
+                    strokeWidth = 8;
+                    bg = "hsla(0, 100%, 50%, 0.25)";
+                }
                 HelperFunctions.sendUI(ship, {
                     id: this.shipSelectPrefix + abil,
                     visible: true,
-                    clickable: true,
+                    clickable: usable,
                     position: [
                         offsetX + UISpec.xStart + column * width * (UISpec.margin_scale_x + 1),
                         UISpec.yStart + row * height * (UISpec.margin_scale_y + 1),
@@ -341,7 +356,7 @@ const UIData = {
                         height
                     ],
                     components: [
-                        { type: "box", position: [0, 0, 100, 100], fill: bg,stroke: color,width: strokeWidth},
+                        { type: "box", position: [0, 0, 100, 100], fill: bg,stroke: bdColor,width: strokeWidth},
                         { type: "text", position: [0, 0, 100, 100], value: HelperFunctions.fill(abil, UISpec.textLength), color}
                     ]     
                 });
@@ -548,6 +563,17 @@ const UIData = {
             else UIData.scores.components.pop();
         };
         HelperFunctions.sendUI(ship, UIData.scores);
+    },
+    assign: function (ship, name) {
+        let res = AbilityManager.assign(ship, name);
+        if (res.success) {
+            let t = TeamManager.getDataFromShip(ship);
+            for (let s of game.ships) {
+                if (s == null || s.id == null || s.custom.shipUIsPermaHidden || s.custom.shipUIsHidden) continue;
+                let x = TeamManager.getDataFromShip(s);
+                if (t.ghost ? x.ghost : t.id === x.id) this.shipUIs.toggleSelectMenu(s);
+            }
+        }
     }
 }
 
