@@ -47,7 +47,7 @@ this.tick = function (game) {
 
 // make sure to set
 //    - `game.custom.abilitySystemEnabled` to `true` 
-//    - `ship.custom.kicked` to `false` (it should be by default)
+//    - `ship.custom.abilitySystemDisabled` to `false` (it should be by default)
 // so that ship can use the abilities
 
 // Control the event

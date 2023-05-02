@@ -68,7 +68,7 @@ this.tick = function (game) {
 
 // make sure to set
 //    - `game.custom.abilitySystemEnabled` to `true` 
-//    - `ship.custom.kicked` to `false` (it should be by default)
+//    - `ship.custom.abilitySystemDisabled` to `false` (it should be by default)
 // so that ship can use the abilities
 
 // Control the event
@@ -92,7 +92,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config.js at Tue May 02 2023 17:51:53 GMT+0900 (Japan Standard Time) */
+/* Imported from Config.js at Tue May 02 2023 23:03:36 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -202,7 +202,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from Teams.js at Tue May 02 2023 17:51:53 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Tue May 02 2023 23:03:36 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -252,7 +252,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Tue May 02 2023 17:51:53 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Tue May 02 2023 23:03:36 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1944,7 +1944,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Tue May 02 2023 17:51:53 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Tue May 02 2023 23:03:36 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -3608,7 +3608,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Tue May 02 2023 17:51:53 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Tue May 02 2023 23:03:36 GMT+0900 (Japan Standard Time) */
 
 const MAKE_COMMANDS = function () {
     const { echo, error } = game.modding.terminal;
@@ -3725,6 +3725,7 @@ const MAKE_COMMANDS = function () {
 
     addShipCommand('kick', function (ship, id, args) {
         ship.custom.kicked = true;
+        ship.custom.abilitySystemDisabled = true;
         ship.gameover({
             "You've been kicked by the map host": " ",
             "Reason": args.slice(2).join(" ") || "No reason has been provided"
@@ -3831,7 +3832,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Tue May 02 2023 17:51:53 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Tue May 02 2023 23:03:36 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -3841,7 +3842,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Tue May 02 2023 17:51:53 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Tue May 02 2023 23:03:36 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4134,7 +4135,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Tue May 02 2023 17:51:53 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Tue May 02 2023 23:03:36 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -4329,7 +4330,7 @@ Press [${this.abilityShortcut}] to activate it.`
         ability.end(ship);
     },
     canStart: function (ship) {
-        return game.custom.abilitySystemEnabled && ship.alive && !this.isActionBlocked(ship).blocked && ship.custom.ability.canStart(ship);
+        return game.custom.abilitySystemEnabled && !ship.custom.abilitySystemDisabled && ship.alive && !this.isActionBlocked(ship).blocked && ship.custom.ability.canStart(ship);
     },
     start: function (ship) {
         let ability = ship.custom.ability;
@@ -4348,6 +4349,7 @@ Press [${this.abilityShortcut}] to activate it.`
         }
     },
     requirementsInfo: function (ship) {
+        if (!game.custom.abilitySystemEnabled || ship == null || ship.custom.abilitySystemDisabled || !ship.alive) return { ready: false, text: "Disabled" }
         let ability = ship.custom.ability;
         let isActionBlocked = this.isActionBlocked(ship);
         if (isActionBlocked.blocked) return { ready: false, text: isActionBlocked.blocker.abilityDisabledText || "Disabled" };
@@ -4472,7 +4474,7 @@ Press [${this.abilityShortcut}] to activate it.`
     },
     globalEvent: function (event, game) {
         let ship = event.ship;
-        if (ship == null || ship.custom.kicked || !ship.custom.__ability__initialized__) return;
+        if (ship == null || !ship.custom.__ability__initialized__) return;
         switch (event.name) {
             case "ui_component_clicked":
                 let component = event.id;
@@ -4484,7 +4486,7 @@ Press [${this.abilityShortcut}] to activate it.`
                 break;
             case "ship_spawned":
                 ship.set({crystals: ship.custom.ability.crystals});
-                ship.custom.lastTriggered = game.step;
+                if (ship.custom.ability && ship.custom.ability.endOnDeath) ship.custom.lastTriggered = game.step;
                 break;
         }
         AbilityManager.event(event, ship);
@@ -4663,11 +4665,11 @@ Press [${this.abilityShortcut}] to activate it.`
 
 
 
-/* Imported from misc/gameLogic.js at Tue May 02 2023 17:51:53 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Tue May 02 2023 23:03:36 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/Misc.js at Tue May 02 2023 17:51:53 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Tue May 02 2023 23:03:36 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -5339,7 +5341,7 @@ const makeAlienSpawns = function () {
 
 
 
-/* Imported from misc/tickFunctions.js at Tue May 02 2023 17:51:53 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Tue May 02 2023 23:03:36 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -5811,7 +5813,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Tue May 02 2023 17:51:53 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Tue May 02 2023 23:03:36 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -5866,7 +5868,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Tue May 02 2023 17:51:53 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Tue May 02 2023 23:03:36 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?

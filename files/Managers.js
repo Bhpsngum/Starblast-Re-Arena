@@ -191,7 +191,7 @@ Press [${this.abilityShortcut}] to activate it.`
         ability.end(ship);
     },
     canStart: function (ship) {
-        return game.custom.abilitySystemEnabled && ship.alive && !this.isActionBlocked(ship).blocked && ship.custom.ability.canStart(ship);
+        return game.custom.abilitySystemEnabled && !ship.custom.abilitySystemDisabled && ship.alive && !this.isActionBlocked(ship).blocked && ship.custom.ability.canStart(ship);
     },
     start: function (ship) {
         let ability = ship.custom.ability;
@@ -210,6 +210,7 @@ Press [${this.abilityShortcut}] to activate it.`
         }
     },
     requirementsInfo: function (ship) {
+        if (!game.custom.abilitySystemEnabled || ship == null || ship.custom.abilitySystemDisabled || !ship.alive) return { ready: false, text: "Disabled" }
         let ability = ship.custom.ability;
         let isActionBlocked = this.isActionBlocked(ship);
         if (isActionBlocked.blocked) return { ready: false, text: isActionBlocked.blocker.abilityDisabledText || "Disabled" };
@@ -334,7 +335,7 @@ Press [${this.abilityShortcut}] to activate it.`
     },
     globalEvent: function (event, game) {
         let ship = event.ship;
-        if (ship == null || ship.custom.kicked || !ship.custom.__ability__initialized__) return;
+        if (ship == null || !ship.custom.__ability__initialized__) return;
         switch (event.name) {
             case "ui_component_clicked":
                 let component = event.id;
@@ -346,7 +347,7 @@ Press [${this.abilityShortcut}] to activate it.`
                 break;
             case "ship_spawned":
                 ship.set({crystals: ship.custom.ability.crystals});
-                ship.custom.lastTriggered = game.step;
+                if (ship.custom.ability && ship.custom.ability.endOnDeath) ship.custom.lastTriggered = game.step;
                 break;
         }
         AbilityManager.event(event, ship);
