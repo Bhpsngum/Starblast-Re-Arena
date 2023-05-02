@@ -113,6 +113,7 @@ const MAKE_COMMANDS = function () {
 
     addShipCommand('kick', function (ship, id, args) {
         ship.custom.kicked = true;
+        ship.custom.abilitySystemDisabled = true;
         ship.gameover({
             "You've been kicked by the map host": " ",
             "Reason": args.slice(2).join(" ") || "No reason has been provided"
