@@ -119,7 +119,7 @@ const MapManager = {
                 y: spawnpoint.y + distance * Math.sin(angle)
             });
         }
-        if (game.custom.started) UIData.shipUIs.toggle(ship, false, true);
+        if (game.custom.abilitySystemEnabled) UIData.shipUIs.toggle(ship, false, true);
     },
     set: function (nameOrIndex, set = false) {
         this.map = this.maps[nameOrIndex] || this.maps.find(m => m.name.toLowerCase() == String(nameOrIndex).toLowerCase());
@@ -142,6 +142,8 @@ Press [${this.abilityShortcut}] to activate it.`
     model_conversion_ratio: 50, // don't change
     maxStats: 1e8 - 1,
     crystals: 720,
+    usageLimit: 3, // default value for `abilityShip.usageLimit`
+    // minimum value depends on number of max players, number of teams, and number of ship templates on this system.
     _this: this,
     echo: DEBUG ? (window || global).echo || game.modding.terminal.echo : function () {},
     ring_model: {
@@ -189,7 +191,7 @@ Press [${this.abilityShortcut}] to activate it.`
         ability.end(ship);
     },
     canStart: function (ship) {
-        return game.custom.started && !ship.custom.EMP && ship.alive && ship.custom.pucked == null && ship.custom.ability.canStart(ship);
+        return game.custom.abilitySystemEnabled && ship.alive && !this.isActionBlocked(ship).blocked && ship.custom.ability.canStart(ship);
     },
     start: function (ship) {
         let ability = ship.custom.ability;
@@ -209,7 +211,8 @@ Press [${this.abilityShortcut}] to activate it.`
     },
     requirementsInfo: function (ship) {
         let ability = ship.custom.ability;
-        if (ship.custom.pucked != null) return { ready: false, text: "Pucked" };
+        let isActionBlocked = this.isActionBlocked(ship);
+        if (isActionBlocked.blocked) return { ready: false, text: isActionBlocked.blocker.abilityDisabledText || "Disabled" };
         if (ability == null) return { ready: false, text: "Disabled" };
         let ready = this.canStart(ship);
         if (ready) return {
@@ -218,7 +221,7 @@ Press [${this.abilityShortcut}] to activate it.`
         };
         return {
             ready: false,
-            text: ship.custom.inAbility && ability.cooldownRestartOnEnd && !ability.customDisabledText ? "Disabled" : ability.requirementsText(ship)
+            text: ship.custom.inAbility && ability.cooldownRestartOnEnd && !ability.customDisabledText ? "In Ability" : ability.requirementsText(ship)
         }
     },
     updateUI: function (ship) {
@@ -247,13 +250,35 @@ Press [${this.abilityShortcut}] to activate it.`
     reload: function (ship) {
         return ship.custom.ability && ship.custom.ability.reload(ship);
     },
-    assign: function (ship, abilityShip) {
+    isActionBlocked: function (ship) {
+        // check if there are any ship effects blocking this ship from taking actions
+        for (let actionBlocker of this.shipActionBlockers) {
+            if ("function" == typeof actionBlocker.checker && actionBlocker.checker(ship)) return {
+                blocked: true,
+                blocker: actionBlocker
+            }
+        }
+
+        return { blocked: false }
+    },
+    limitExceeded: function (shipName, ship) {
+        return this.abilities[shipName] != null && shipName != ship.custom.shipName && !this.getAssignableShipsList(ship).includes(shipName);
+    },
+    assign: function (ship, abilityShip, dontAssign = false) {
+        if (ship.custom.inAbility) return { success: false, reason: "Ship is still in ability" }
+        let isActionBlocked = this.isActionBlocked(ship);
+        if (isActionBlocked.blocked) return {
+            success: false,
+            reason: isActionBlocked.blocker.reason || "No reason was provided"
+        }
         let shipAbil = this.abilities[abilityShip];
         if (shipAbil == null) {
             let requestedName = String(abilityShip).toLowerCase().replace(/[^a-z0-9]/gi, "");
             let foundName = this.ships_list.find(name => name.toLowerCase().replace(/[^a-z0-9]/gi, "") == requestedName);
             if (foundName != null) shipAbil = this.abilities[abilityShip = foundName];
         }
+        if (this.limitExceeded(abilityShip, ship)) return { success: false, reason: "Ship limit exceeded" }
+        if (dontAssign) return { success: true }
         if (shipAbil == null) return this.random(ship);
         ship.custom.shipName = abilityShip;
         ship.custom.ability = shipAbil;
@@ -272,16 +297,8 @@ Press [${this.abilityShortcut}] to activate it.`
             crystals: shipAbil.crystals
         });
         shipAbil.initialize(ship);
-        // HelperFunctions.sendUI(ship, {
-        //     id: "debug_test",
-        //     position: [25,0,50,10],
-        //     clickable: false,
-        //     visible: true,
-        //     components: [
-        //         {type: "text", position: [0,0,100,50], value: "[D]: Random ship, [F]: Skip cooldown, [G]: Previous ship, [H]: Next ship", color: "#FFF"},
-        //         {type: "text", position: [0,50,100,50], value: `Current ship: ${abilityShip}`, color: "#FFF"}
-        //     ]
-        // });
+        this.updateShipsList(TeamManager.getDataFromShip(ship));
+        return { success: true };
     },
     globalTick: function (game) {
         if (DEBUG && game.step == 0 && HelperFunctions.terminal.errors > 0) {
@@ -301,18 +318,6 @@ Press [${this.abilityShortcut}] to activate it.`
             if (ship.id == null) continue;
             if (!ship.custom.__ability__initialized__ && ship.alive) {
                 this.random(ship);
-                // for (let keys of [
-                //     ["random", "D"],
-                //     ["reload", "F"],
-                //     ["prev", "G"],
-                //     ["next", "H"]
-                // ]) HelperFunctions.sendUI(ship, {
-                //     id: keys[0],
-                //     position: [0,0,0,0],
-                //     clickable: true,
-                //     visible: true,
-                //     shortcut: keys[1]
-                // });
                 ship.custom.__ability__initialized__ = true;
             }
             if (this.showAbilityNotice && ship.custom.allowInstructor) {
@@ -337,15 +342,6 @@ Press [${this.abilityShortcut}] to activate it.`
                     case AbilityManager.UI.id:
                         AbilityManager.start(ship);
                         break;
-                    // case "random":
-                    //     if (ship.custom.pucked == null && !ship.custom.inAbility && (!ship.custom.lastClicked || game.step - ship.custom.lastClicked > 30)) {
-                    //         AbilityManager.random(ship);
-                    //         ship.custom.lastClicked = game.step;
-                    //     }
-                    //     break;
-                    // case "reload":
-                    //     AbilityManager.reload(ship);
-                    //     break;
                 }
                 break;
             case "ship_spawned":
@@ -387,6 +383,11 @@ Press [${this.abilityShortcut}] to activate it.`
         // Compile ships and abilities
         
         this.ship_codes = [];
+        this.shipActionBlockers = [];
+
+        let smallestLimit = Math.ceil(GAME_OPTIONS.max_players / GAME_OPTIONS.teams_count / Object.values(this.abilities).filter(e => !e.hidden).length);
+
+        this.usageLimit = Math.max(this.usageLimit, smallestLimit) || Infinity;
 
         let model = 100, templates = HelperFunctions.templates;
 
@@ -398,7 +399,9 @@ Press [${this.abilityShortcut}] to activate it.`
                 HelperFunctions.terminal.log(`Ignoring '${shipName}' because it's hidden`);
                 continue;
             }
-            // functions polyfill
+            // functions and properties polyfill
+
+            if (ability.actionBlocker != null) this.shipActionBlockers.push(ability.actionBlocker);
 
             ability.ships = new Map();
 
@@ -407,6 +410,8 @@ Press [${this.abilityShortcut}] to activate it.`
             ability.crystals = Math.max(0, ability.crystals);
 
             if (isNaN(ability.crystals)) ability.crystals = this.crystals;
+
+            ability.usageLimit = Math.max(ability.usageLimit, smallestLimit) || this.usageLimit;
 
             if ("function" != typeof ability.canStart) ability.canStart = templates.canStart;
 
@@ -486,13 +491,32 @@ Press [${this.abilityShortcut}] to activate it.`
 
         this.ships_list = Object.keys(this.abilities);
     },
+    getAssignableShipsList: function (ship, forceUpdate = false) {
+        let teamData = TeamManager.getDataFromShip(ship);
+        if (forceUpdate || !Array.isArray(teamData.ships_list)) this.updateShipsList(teamData);
+        return teamData.ships_list
+    },
+    updateShipsList: function (team) {
+        team.ships_list = [];
+        let data = {};
+        for (let ship of game.ships) {
+            if (ship == null || ship.id == null) continue;
+            let t = TeamManager.getDataFromShip(ship);
+            if (team.ghost ? !t.ghost : team.id !== t.id) continue;
+            data[ship.custom.shipName] = (+data[ship.custom.shipName] || 0) + 1;
+        }
+
+        for (let abil of this.ships_list) {
+            if ((+data[abil] || 0) < AbilityManager.abilities[abil].usageLimit) team.ships_list.push(abil);
+        }
+    },
     getShipCodes: function () {
         if (!Array.isArray(this.ship_codes)) this.initialize();
         return this.ship_codes;
     },
     random: function (ship) {
         // select random ship
-        return this.assign(ship, HelperFunctions.randomItem(this.ships_list).value);
+        return this.assign(ship, HelperFunctions.randomItem(this.getAssignableShipsList(ship)).value);
     },
     abilities: ShipAbilities
 }

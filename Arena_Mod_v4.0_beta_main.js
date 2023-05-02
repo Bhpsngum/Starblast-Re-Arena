@@ -1,5 +1,20 @@
 /*
-(WIP Credit text)
+Arena Mod Remake/Recontinuation (v3.1.3 - v4.0+)
+- CEO: Tost
+- Coding: Bhpsngum
+- Textures: Caramel
+- Ships: Caramel
+- Maps: Supernova, Caramel, Bylolopro, Nerd69420, Megalodon, and others
+- Contributors: Tost, Caramel, Lexydrow, and others
+
+
+Original Arena Mod (v1.0 - v3.1.2)
+- CEO: Noel
+- Coding: Nexagon
+- Textures: Noel, and others
+- Ships: Noel, Nexagon, Edward, Supernova, and others
+- Maps: Noel, Carme, Caramel, Nerd69420, and others
+- Contributors: Lexydrow, Boris, Thuliux, Bylolopro, Caramel, Duschi, Edward, Megalodon, Supernova, ThirdToeMan, Madness, Slayer, and others
 */
 
 
@@ -52,7 +67,7 @@ this.tick = function (game) {
 }
 
 // make sure to set
-//    - `game.custom.started` to `true` 
+//    - `game.custom.abilitySystemEnabled` to `true` 
 //    - `ship.custom.kicked` to `false` (it should be by default)
 // so that ship can use the abilities
 
@@ -77,7 +92,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config.js at Mon May 01 2023 19:59:48 GMT+0900 (Japan Standard Time) */
+/* Imported from Config.js at Tue May 02 2023 17:51:53 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -178,15 +193,16 @@ const BASES = {
 }
 
 // don't remove those
-GAME_OPTIONS.required_players = Math.max(GAME_OPTIONS.required_players, 2) || 2; // restriction
-GAME_OPTIONS.teams_count = Math.min(Math.max(GAME_OPTIONS.teams_count, 0), 5) || 0; // restriction
+GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players, 1), 240)) || 1
+GAME_OPTIONS.required_players = Math.trunc(Math.max(GAME_OPTIONS.required_players, 2)) || 2; // restriction
+GAME_OPTIONS.teams_count = Math.trunc(Math.min(Math.max(GAME_OPTIONS.teams_count, 0), 5)) || 0; // restriction
 CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POINT.control_bar.controlling_percentage, CONTROL_POINT.control_bar.dominating_percentage), 100) || 100;
 
 
 
 
 
-/* Imported from Teams.js at Mon May 01 2023 19:59:48 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Tue May 02 2023 17:51:53 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -236,7 +252,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Mon May 01 2023 19:59:48 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Tue May 02 2023 17:51:53 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1240,115 +1256,115 @@ const Maps = [
             "66695967687669965778679869967656679976857859585      58595875867997665676996897687756996678676959666\n"+
             "66695566687666965778677969966656679976857859585      58595875867997665666996977687756966678666559666"
     },
-    {
-        name: "Redaction",
-        author: "Bylolopro",
-        spawnpoints: [
-            { x: 390, y: -390 },
-            { x: -390, y: 390 }
-        ],
-        map:
-            "  99999999999999999999999999999999999  9999999999  9999999999  99999999999999999999999999999999999  \n"+
-            "9  99999999999999999     9999999999     999999999  999999999     9999999999     99999999999999999  9\n"+
-            "99  999      999999  999   9999999  999   99999      99999   999  9999999   999  999999      999  99\n"+
-            "999     9999  999   999999  9999   999999       9  9       999999   9999  999999   999  9999     999\n"+
-            "99999  999999     999999999  99  9999999999999999  9999999999999999  99  999999999     999999  99999\n"+
-            "99999  999999999999999999999    99999999999999999  99999999999999999    999999999999999999999  99999\n"+
-            "999999 99       999999999999999999999999999999999  999999999999999999999999999999999       99 999999\n"+
-            "999999 99        9999                                                          999999      99 999999\n"+
-            "999999 99                   7  445              73     643536  4434    3            99     99 999999\n"+
-            "999999 99           4335               474  57  3       74435                        9     99 999999\n"+
-            "9999   99              3                                       4               7        9  99   9999\n"+
-            "999  9999                9  9  9  9  9  9  9  9  99  9  9  9  9  9  9  9  9   5 5       9999999  999\n"+
-            "99  99999                9  9  9  9  9  9  9  9  99  9  9  9  9  9  9  9  9     5    44   999999  99\n"+
-            "99 999999                9              9  9  9  99  9  9  9     9  9  9  9   5            999999 99\n"+
-            "9  99999  5              9     9  9  9     9  9  99  9  9     9        9  9   6  65         99999  9\n"+
-            "  99999   4              9  9  9  9  9        9  99  9        9  9  9     9        3         99999  \n"+
-            "  99999   4              9  9  9  9  9  9        99        9  9  9  9  9  9   353 57 7 5     99999  \n"+
-            "  99999   37                            9  9            9  9                            34   99999  \n"+
-            "9  9999    56      9   64               9  9  9      9  9  9               7  6          4   9999  9\n"+
-            "99 9999           99        9     5     9  9  9  99  9  9  9        74 9           3         9999 99\n"+
-            "99 9999                5   99              9  9  99  9  9              99                    9999 99\n"+
-            "99  999         9                   9      9  9  99  9  9      57       9         99         999  99\n"+
-            "999 999         9        99      9    5       9  99  9            9       9       9      3   999 999\n"+
-            "999 999 6       9       99      99    7    9  9  99  9      4  9  99      99 5    9      6   999 999\n"+
-            "9999 99                 9      99      36       999         6              9      9       3  99 9999\n"+
-            "9999 99        99             99                 99                 99            9       64 99 9999\n"+
-            "9999 99        999   9              99   37      99      33   9                   9        7 99 9999\n"+
-            "9999 99   5    9999  9       9                           5      9     9           99         99 9999\n"+
-            "9999 99                  4                  5 99   9                        5      99     77 99 9999\n"+
-            "9999 99                           9                  74          99            9    9   663  99 9999\n"+
-            "9999 99   7        9             9       9        3         99    99                     67  99 9999\n"+
-            "9999 99   7        9      99    9 9         9        9       9     9    99  4                99 9999\n"+
-            "9999 99          999      9       9  9     99        9 99    99          9                   99 9999\n"+
-            "999  99         99      499   4     99     9   9   9    9     99     3   99               6  99  999\n"+
-            "999 999        99       99         99            3      99     99         99     9        4  999 999\n"+
-            "99  999         999     9          9     99   9      9   99     9 5        9     9           999  99\n"+
-            "99 9999  3          99  9               99    9      9    99      3        9     9    9      9999 99\n"+
-            "99 9999  4          9   9     99   7    9     9      9     9         9     9     9    99     9999 99\n"+
-            "99 9999  6                    9         9    99      99    9         9       3   9     9     9999 99\n"+
-            "99 9999                    7  9            999    7   999     3   9  9           99          9999 99\n"+
-            "99 9999         99           99 9         99            99           99           9      6   9999 99\n"+
-            "99  999  4   99       3      9  9  9     99              99     9     9     4            5   999  99\n"+
-            "999  99  3    9              9  9  9     9    99    99    9     9     9           9          99  999\n"+
-            "9999  9  7                  99 9   9    99   99      99   99    9     99                     9  9999\n"+
-            "99999                   9          9    9                  9    9  9                     5     99999\n"+
-            "999999            99    9         9  4  9  4     11        9     9 99               9    7    999999\n"+
-            "9999999  46        9    9         9                      4       9  9      9       99    6   9999999\n"+
-            "9999999   67    99                                                  9       9      9         9999999\n"+
-            "9999999          99   9   7    9                                                             9999999\n"+
-            "           5            3  9   9    3     5  1        1         4   9   9  6      99                \n"+
-            "           6         99    9   9          4  1        1    7        9   9          99  9            \n"+
-            "9999999               9        9    6                                 47            9  9  3  9999999\n"+
-            "9999999                        9                                       9    9          9  66 9999999\n"+
-            "9999999   3      9      9      4  9         7                    9     9   99         99   3 9999999\n"+
-            "999999    6                       9     9  7     11      7 9     9         9                  999999\n"+
-            "99999          9                   9    9                  9    9                         5    99999\n"+
-            "9999  9                   6 99  9  9    99   99      99   99    9     99          9       5  9  9999\n"+
-            "999  99            9         9  9  9     9    99    99    9     9     9    96     9      4   99  999\n"+
-            "99  999            9   9     9     9     99              99     9     9                      999  99\n"+
-            "99 9999   3      9     6     99   6       99      5     99           99                 3    9999 99\n"+
-            "99 9999  47      9            9            999        999        6   9                       9999 99\n"+
-            "99 9999          9            9         9    99      99    9         9         9 9    9      9999 99\n"+
-            "99 9999                 9  3  9      5  9     9   9  9  5  9         9     9     99   99     9999 99\n"+
-            "99 9999 4               9       7       9     9      9    99               9      9999 9     9999 99\n"+
-            "99  999 7               9          9          9   9  9    9    99  7       9                 999  99\n"+
-            "999 999    5            99         99     99      9            99         99 9               999 999\n"+
-            "999  99    5   999       99  5    9999     9         9  9     99         99              7   99  999\n"+
-            "9999 99             9     9       9        99    3     99                9            9996   99 9999\n"+
-            "9999 99             9     99    9           9          9     9     9    99               67  99 9999\n"+
-            "9999 99  6                      99    99          9         9     99        6      9      3  99 9999\n"+
-            "9999 99  5             73  9     9     99         9        99            5  3    9        77 99 9999\n"+
-            "9999 99                7   9                                    99              99    9    5 99 9999\n"+
-            "9999 99          99          9     99        57          63 9  99 4   9         9    99    5 99 9999\n"+
-            "9999 99  3               9   99     99    7      99           99      9               9      99 9999\n"+
-            "9999 99  75     9             9          45      99                 9                        99 9999\n"+
-            "9999 99    3    99      9       9                99                99     99             7   99 9999\n"+
-            "999 999                 99      99     4      9  99  9            99      99             5   999 999\n"+
-            "999 999             9    99      9    56      9  99  9    9    57 9       9        99  9     999 999\n"+
-            "99  999             99         9           9  9  99  9  9               9    5     9         999  99\n"+
-            "99 9999  3                 99              9  9  99  9  9     7   6    99                    9999 99\n"+
-            "99 9999          6          9     6     9  9  9  99  9  9  9      4    9                     9999 99\n"+
-            "9  9999    643                          9  9  9      9  9  9                   9             9999  9\n"+
-            "  99999           45                    9  9            9  9                                 99999  \n"+
-            "  99999         6    5   9  9  9  9  9  9        99        9  9  9  9  9  9                  99999  \n"+
-            "  99999              36  9  9  9  9           9  99  9        9  9  9  9  9  9               99999  \n"+
-            "9  99999          5      9  9              9  9  99  9  9           9  9  9                 99999  9\n"+
-            "99 999999   73           9        9  9  9  9  9  99  9  9  9  9  9        9                999999 99\n"+
-            "99  99999             7  9  9  9  9  9  9  9  9  99  9  9  9  9  9  9  9  9                99999  99\n"+
-            "999  999999      44   56 9  9  9  9  9  9  9  9  99  9  9  9  9  9  9  9  9                9999  999\n"+
-            "9999   99 99      4                                                                        99   9999\n"+
-            "999999 99     99              664   36777            3    467    6            6            99 999999\n"+
-            "999999 99      99       534             3    64     77           46    56                  99 999999\n"+
-            "999999 99       99999                         55                               9999        99 999999\n"+
-            "999999 99       999999999999999999999999999999999  999999999999999999999999999999999       99 999999\n"+
-            "99999  999999999999999999999    99999999999999999  99999999999999999    999999999999999999999  99999\n"+
-            "99999  999999     999999999  99  9999999999999999  9999999999999999  99  999999999     999999  99999\n"+
-            "999     9999  999   999999  9999   999999       9  9       999999   9999  999999   999  9999     999\n"+
-            "99  999      999999  999   9999999  999   99999      99999   999  9999999   999  999999      999  99\n"+
-            "9  99999999999999999     9999999999     999999999  999999999     9999999999     99999999999999999  9\n"+
-            "  99999999999999999999999999999999999  9999999999  9999999999  99999999999999999999999999999999999  "
-    },
+    // {
+    //     name: "Redaction",
+    //     author: "Bylolopro",
+    //     spawnpoints: [
+    //         { x: 390, y: -390 },
+    //         { x: -390, y: 390 }
+    //     ],
+    //     map:
+    //         "  99999999999999999999999999999999999  9999999999  9999999999  99999999999999999999999999999999999  \n"+
+    //         "9  99999999999999999     9999999999     999999999  999999999     9999999999     99999999999999999  9\n"+
+    //         "99  999      999999  999   9999999  999   99999      99999   999  9999999   999  999999      999  99\n"+
+    //         "999     9999  999   999999  9999   999999       9  9       999999   9999  999999   999  9999     999\n"+
+    //         "99999  999999     999999999  99  9999999999999999  9999999999999999  99  999999999     999999  99999\n"+
+    //         "99999  999999999999999999999    99999999999999999  99999999999999999    999999999999999999999  99999\n"+
+    //         "999999 99       999999999999999999999999999999999  999999999999999999999999999999999       99 999999\n"+
+    //         "999999 99        9999                                                          999999      99 999999\n"+
+    //         "999999 99                   7  445              73     643536  4434    3            99     99 999999\n"+
+    //         "999999 99           4335               474  57  3       74435                        9     99 999999\n"+
+    //         "9999   99              3                                       4               7        9  99   9999\n"+
+    //         "999  9999                9  9  9  9  9  9  9  9  99  9  9  9  9  9  9  9  9   5 5       9999999  999\n"+
+    //         "99  99999                9  9  9  9  9  9  9  9  99  9  9  9  9  9  9  9  9     5    44   999999  99\n"+
+    //         "99 999999                9              9  9  9  99  9  9  9     9  9  9  9   5            999999 99\n"+
+    //         "9  99999  5              9     9  9  9     9  9  99  9  9     9        9  9   6  65         99999  9\n"+
+    //         "  99999   4              9  9  9  9  9        9  99  9        9  9  9     9        3         99999  \n"+
+    //         "  99999   4              9  9  9  9  9  9        99        9  9  9  9  9  9   353 57 7 5     99999  \n"+
+    //         "  99999   37                            9  9            9  9                            34   99999  \n"+
+    //         "9  9999    56      9   64               9  9  9      9  9  9               7  6          4   9999  9\n"+
+    //         "99 9999           99        9     5     9  9  9  99  9  9  9        74 9           3         9999 99\n"+
+    //         "99 9999                5   99              9  9  99  9  9              99                    9999 99\n"+
+    //         "99  999         9                   9      9  9  99  9  9      57       9         99         999  99\n"+
+    //         "999 999         9        99      9    5       9  99  9            9       9       9      3   999 999\n"+
+    //         "999 999 6       9       99      99    7    9  9  99  9      4  9  99      99 5    9      6   999 999\n"+
+    //         "9999 99                 9      99      36       999         6              9      9       3  99 9999\n"+
+    //         "9999 99        99             99                 99                 99            9       64 99 9999\n"+
+    //         "9999 99        999   9              99   37      99      33   9                   9        7 99 9999\n"+
+    //         "9999 99   5    9999  9       9                           5      9     9           99         99 9999\n"+
+    //         "9999 99                  4                  5 99   9                        5      99     77 99 9999\n"+
+    //         "9999 99                           9                  74          99            9    9   663  99 9999\n"+
+    //         "9999 99   7        9             9       9        3         99    99                     67  99 9999\n"+
+    //         "9999 99   7        9      99    9 9         9        9       9     9    99  4                99 9999\n"+
+    //         "9999 99          999      9       9  9     99        9 99    99          9                   99 9999\n"+
+    //         "999  99         99      499   4     99     9   9   9    9     99     3   99               6  99  999\n"+
+    //         "999 999        99       99         99            3      99     99         99     9        4  999 999\n"+
+    //         "99  999         999     9          9     99   9      9   99     9 5        9     9           999  99\n"+
+    //         "99 9999  3          99  9               99    9      9    99      3        9     9    9      9999 99\n"+
+    //         "99 9999  4          9   9     99   7    9     9      9     9         9     9     9    99     9999 99\n"+
+    //         "99 9999  6                    9         9    99      99    9         9       3   9     9     9999 99\n"+
+    //         "99 9999                    7  9            999    7   999     3   9  9           99          9999 99\n"+
+    //         "99 9999         99           99 9         99            99           99           9      6   9999 99\n"+
+    //         "99  999  4   99       3      9  9  9     99              99     9     9     4            5   999  99\n"+
+    //         "999  99  3    9              9  9  9     9    99    99    9     9     9           9          99  999\n"+
+    //         "9999  9  7                  99 9   9    99   99      99   99    9     99                     9  9999\n"+
+    //         "99999                   9          9    9                  9    9  9                     5     99999\n"+
+    //         "999999            99    9         9  4  9  4     11        9     9 99               9    7    999999\n"+
+    //         "9999999  46        9    9         9                      4       9  9      9       99    6   9999999\n"+
+    //         "9999999   67    99                                                  9       9      9         9999999\n"+
+    //         "9999999          99   9   7    9                                                             9999999\n"+
+    //         "           5            3  9   9    3     5  1        1         4   9   9  6      99                \n"+
+    //         "           6         99    9   9          4  1        1    7        9   9          99  9            \n"+
+    //         "9999999               9        9    6                                 47            9  9  3  9999999\n"+
+    //         "9999999                        9                                       9    9          9  66 9999999\n"+
+    //         "9999999   3      9      9      4  9         7                    9     9   99         99   3 9999999\n"+
+    //         "999999    6                       9     9  7     11      7 9     9         9                  999999\n"+
+    //         "99999          9                   9    9                  9    9                         5    99999\n"+
+    //         "9999  9                   6 99  9  9    99   99      99   99    9     99          9       5  9  9999\n"+
+    //         "999  99            9         9  9  9     9    99    99    9     9     9    96     9      4   99  999\n"+
+    //         "99  999            9   9     9     9     99              99     9     9                      999  99\n"+
+    //         "99 9999   3      9     6     99   6       99      5     99           99                 3    9999 99\n"+
+    //         "99 9999  47      9            9            999        999        6   9                       9999 99\n"+
+    //         "99 9999          9            9         9    99      99    9         9         9 9    9      9999 99\n"+
+    //         "99 9999                 9  3  9      5  9     9   9  9  5  9         9     9     99   99     9999 99\n"+
+    //         "99 9999 4               9       7       9     9      9    99               9      9999 9     9999 99\n"+
+    //         "99  999 7               9          9          9   9  9    9    99  7       9                 999  99\n"+
+    //         "999 999    5            99         99     99      9            99         99 9               999 999\n"+
+    //         "999  99    5   999       99  5    9999     9         9  9     99         99              7   99  999\n"+
+    //         "9999 99             9     9       9        99    3     99                9            9996   99 9999\n"+
+    //         "9999 99             9     99    9           9          9     9     9    99               67  99 9999\n"+
+    //         "9999 99  6                      99    99          9         9     99        6      9      3  99 9999\n"+
+    //         "9999 99  5             73  9     9     99         9        99            5  3    9        77 99 9999\n"+
+    //         "9999 99                7   9                                    99              99    9    5 99 9999\n"+
+    //         "9999 99          99          9     99        57          63 9  99 4   9         9    99    5 99 9999\n"+
+    //         "9999 99  3               9   99     99    7      99           99      9               9      99 9999\n"+
+    //         "9999 99  75     9             9          45      99                 9                        99 9999\n"+
+    //         "9999 99    3    99      9       9                99                99     99             7   99 9999\n"+
+    //         "999 999                 99      99     4      9  99  9            99      99             5   999 999\n"+
+    //         "999 999             9    99      9    56      9  99  9    9    57 9       9        99  9     999 999\n"+
+    //         "99  999             99         9           9  9  99  9  9               9    5     9         999  99\n"+
+    //         "99 9999  3                 99              9  9  99  9  9     7   6    99                    9999 99\n"+
+    //         "99 9999          6          9     6     9  9  9  99  9  9  9      4    9                     9999 99\n"+
+    //         "9  9999    643                          9  9  9      9  9  9                   9             9999  9\n"+
+    //         "  99999           45                    9  9            9  9                                 99999  \n"+
+    //         "  99999         6    5   9  9  9  9  9  9        99        9  9  9  9  9  9                  99999  \n"+
+    //         "  99999              36  9  9  9  9           9  99  9        9  9  9  9  9  9               99999  \n"+
+    //         "9  99999          5      9  9              9  9  99  9  9           9  9  9                 99999  9\n"+
+    //         "99 999999   73           9        9  9  9  9  9  99  9  9  9  9  9        9                999999 99\n"+
+    //         "99  99999             7  9  9  9  9  9  9  9  9  99  9  9  9  9  9  9  9  9                99999  99\n"+
+    //         "999  999999      44   56 9  9  9  9  9  9  9  9  99  9  9  9  9  9  9  9  9                9999  999\n"+
+    //         "9999   99 99      4                                                                        99   9999\n"+
+    //         "999999 99     99              664   36777            3    467    6            6            99 999999\n"+
+    //         "999999 99      99       534             3    64     77           46    56                  99 999999\n"+
+    //         "999999 99       99999                         55                               9999        99 999999\n"+
+    //         "999999 99       999999999999999999999999999999999  999999999999999999999999999999999       99 999999\n"+
+    //         "99999  999999999999999999999    99999999999999999  99999999999999999    999999999999999999999  99999\n"+
+    //         "99999  999999     999999999  99  9999999999999999  9999999999999999  99  999999999     999999  99999\n"+
+    //         "999     9999  999   999999  9999   999999       9  9       999999   9999  999999   999  9999     999\n"+
+    //         "99  999      999999  999   9999999  999   99999      99999   999  9999999   999  999999      999  99\n"+
+    //         "9  99999999999999999     9999999999     999999999  999999999     9999999999     99999999999999999  9\n"+
+    //         "  99999999999999999999999999999999999  9999999999  9999999999  99999999999999999999999999999999999  "
+    // },
     {
         name: "Sights",
         author: "Nerd69420",
@@ -1928,7 +1944,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Mon May 01 2023 19:59:48 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Tue May 02 2023 17:51:53 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -1961,6 +1977,17 @@ const ShipAbilities = {
         generatorInit: 69, // generator value on first set, default maximum default model's energy capacity
 
         useRequirementsTextWhenReady: false, // if set to `true`, ability.requirementsText will be called even when the ability is ready 
+
+        usageLimit: 69, // Maximum number of players on one team that are allowed to use this ship
+        // default `AbilityManager.usageLimit`
+
+        actionBlocker: {
+            // block a certain ship from starting abilities or changing to other ships
+            // only include this object if needed
+            checker: function (ship) { return false }, // whether the ship will be blocked or not
+            reason: "Ship is being affected by this ability", // Reason
+            abilityDisabledText: "DISABLED" // text shown on the ability cooldown
+        },
 
         // Displaying text for ability when it can't be activated (e.g "2/3 kills")
         // optional, returns cooldown time left (in seconds)
@@ -2052,6 +2079,14 @@ const ShipAbilities = {
         range: 45,
         includeRingOnModel: true,
         selfDMG: 150,
+
+        actionBlocker: {
+            checker: function (ship) {
+                return ship.custom.EMP
+            },
+            reason: "Ship is being blocked by EMP Shockwave",
+            abilityDisabledText: "EMP-Shocked"
+        },
 
         removeEMP: function (ship) {
             ship.set({idle: false});
@@ -2293,7 +2328,7 @@ const ShipAbilities = {
             ability: '{"name":"Turbodisc","designer":"Noel & Supernova","level":7,"model":10,"size":2.2,"zoom":0.9,"specs":{"shield":{"capacity":[400,400],"reload":[20,20]},"generator":{"capacity":[2000,2000],"reload":[0.0001,0.0001]},"ship":{"mass":200,"speed":[250,250],"rotation":[40,40],"acceleration":[50,50]}},"bodies":{"pooper":{"section_segments":0,"offset":{"x":0,"y":25,"z":-25},"position":{"x":[0,0],"y":[-40,-50],"z":[0,0]},"width":[0,5],"height":[0,5],"angle":180,"laser":{"damage":[6,6],"rate":0.1,"type":1,"speed":[300,300],"number":10,"error":120}},"pooper2":{"section_segments":0,"offset":{"x":0,"y":25,"z":-25},"position":{"x":[0,0],"y":[-40,-50],"z":[0,0]},"width":[0,5],"height":[0,5],"angle":180,"laser":{"damage":[15,15],"rate":0.1,"type":1,"speed":[250,250],"number":10,"error":90}},"pooper3":{"section_segments":0,"offset":{"x":0,"y":25,"z":-25},"position":{"x":[0,0],"y":[-40,-50],"z":[0,0]},"width":[0,5],"height":[0,5],"angle":180,"laser":{"damage":[100,100],"rate":0.1,"type":1,"speed":[150,150],"number":10,"error":60,"recoil":0}},"thechewinggum":{"section_segments":0,"offset":{"x":0,"y":25,"z":-25},"position":{"x":[0,0],"y":[-40,-50],"z":[0,0]},"width":[0,5],"height":[0,5],"angle":180,"laser":{"damage":[0.1,0.1],"rate":0.1,"type":1,"speed":[1,1],"number":1,"error":120,"recoil":2000}},"front":{"section_segments":[45,135,225,315],"offset":{"x":0,"y":0,"z":-5},"position":{"x":[0,0,0,0,0,0,0,0,0],"y":[-95,-90,-60,-30,0,30,50,50],"z":[0,0,0,0,0,0,0,0]},"width":[0,10,20,25,30,30,20,0],"height":[0,10,15,20,20,20,15,0],"texture":[15.9,2,18.01,63,11,10,12],"propeller":false},"cockpit":{"section_segments":[40,90,180,270,320],"offset":{"x":0,"y":-75,"z":7},"position":{"x":[0,0,0,0,0,0],"y":[15,35,60,85,95],"z":[-2,1,5,10,18]},"width":[5,7,15,10,5],"height":[0,12,15,15,0],"texture":[5,17,5,4]},"cockpit_base":{"section_segments":[45,135,225,315],"offset":{"x":0,"y":0,"z":5},"position":{"x":[0,0,0,0,0,0,0],"y":[-40,-20,0,20,50],"z":[0,0,0,0,0]},"width":[20,25,20,10,0],"height":[0,18,25,18,0],"texture":[4,4,4,4],"propeller":false},"cockpit_base2":{"section_segments":[45,135,225,315],"offset":{"x":0,"y":-0.1,"z":5},"position":{"x":[0,0,0,0,0,0,0,0,0],"y":[-40,-20,0,27.5,50],"z":[0,0,2.5,0.5,0,0,0]},"width":[17.5,20,18,10,0],"height":[0,18,25,28,0],"texture":[63,8,4,63],"propeller":false},"side_propulsors":{"section_segments":6,"offset":{"x":10,"y":5,"z":5},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[-20,-10,0,10,20,25,30,40,80,70],"z":[0,0,0,0,0,0,-5,-10,-10,-10]},"width":[0,15,20,20,20,15,15,20,10,0],"height":[0,15,20,20,20,15,15,20,15,0],"propeller":false,"texture":[12,63,2,4,63,5,63,4,17]},"side_side_propulsors":{"section_segments":0,"offset":{"x":10,"y":50,"z":-5},"position":{"x":[0],"y":[50],"z":[0]},"width":[20],"height":[15],"propeller":true},"uwings2":{"section_segments":8,"offset":{"x":20,"y":-50,"z":-5},"position":{"x":[-10,-2,0,0,-2,-10],"y":[-30,-20,-15,15,20,30],"z":[0,0,0,0,0,0]},"width":[0,3,3,3,3,0],"height":[0,2,5,5,2,0],"texture":[4,5,8,5,4,4],"angle":8},"topdeco1":{"section_segments":20,"offset":{"x":0,"y":-5.5,"z":-62},"position":{"x":[0,0,0,0,0,0,0,0],"y":[-10,-10,-10,0,10,15,20,15],"z":[0,0,0,0,0,0,0,0,0]},"width":[5,10,10,10,10,12.5,10,0],"height":[5,10,10,10,10,12.5,10,0],"texture":[5,63,63,63,63,13,17],"propeller":false,"vertical":true},"topdeco2":{"section_segments":20,"offset":{"x":0,"y":2.5,"z":-35},"position":{"x":[0,0,0,0,0,0,0,0],"y":[-10,-10,-10,0,10,15,20,15],"z":[0,0,0,0,0,0,0,0,0]},"width":[5,10,10,10,10,12.5,10,0],"height":[5,10,10,10,10,12.5,10,0],"texture":[5,63,63,63,63,13,17],"propeller":false,"vertical":true}},"wings":{"spoiler":{"doubleside":true,"length":[20,20,15,10],"width":[35,35,28,30,30],"angle":[0,5,-75,-140],"position":[-12,-12,-8,-10,-30],"texture":[3.3,10,12,4],"bump":{"position":30,"size":10},"offset":{"x":0,"y":100,"z":35}},"top_supports":{"length":[0,5,10],"width":[0,20,30,20],"angle":[0,80,30],"position":[0,10,10,25],"texture":[63],"doubleside":true,"bump":{"position":30,"size":10},"offset":{"x":40,"y":80,"z":35}},"support":{"doubleside":true,"offset":{"x":16,"y":40,"z":-5},"length":[0,40,0],"width":[35,35,20,20],"angle":[90,90,90],"position":[0,0,50,50,50,50],"texture":[63],"bump":{"position":-20,"size":10}}},"typespec":{"name":"Turbodisc","level":7,"model":10,"code":710,"specs":{"shield":{"capacity":[400,400],"reload":[20,20]},"generator":{"capacity":[2000,2000],"reload":[0.0001,0.0001]},"ship":{"mass":200,"speed":[250,250],"rotation":[40,40],"acceleration":[50,50]}},"shape":[4.18,4.01,3.264,2.98,2.382,2.013,1.274,1.147,1.061,0.998,1.003,1.057,1.105,1.179,1.241,1.293,1.371,1.485,1.63,1.651,3.117,5.116,5.509,4.897,4.725,4.651,4.725,4.897,5.509,5.116,3.117,1.651,1.63,1.485,1.371,1.293,1.241,1.179,1.107,1.057,1.003,0.998,1.061,1.147,1.274,2.013,2.382,2.98,3.264,4.01],"lasers":[{"x":0,"y":3.3,"z":-1.1,"angle":180,"damage":[6,6],"rate":0.1,"type":1,"speed":[300,300],"number":10,"spread":0,"error":120,"recoil":0},{"x":0,"y":3.3,"z":-1.1,"angle":180,"damage":[15,15],"rate":0.1,"type":1,"speed":[250,250],"number":10,"spread":0,"error":90,"recoil":0},{"x":0,"y":3.3,"z":-1.1,"angle":180,"damage":[100,100],"rate":0.1,"type":1,"speed":[150,150],"number":10,"spread":0,"error":60,"recoil":0},{"x":0,"y":3.3,"z":-1.1,"angle":180,"damage":[0.1,0.1],"rate":0.1,"type":1,"speed":[1,1],"number":1,"spread":0,"error":120,"recoil":2000}],"radius":5.509}}'
         },
         name: "Overclock",
-        cooldown: 20 * 60,
+        cooldown: 23 * 60,
         duration: 3 * 60,
         endOnDeath: true,
 
@@ -2801,6 +2836,14 @@ const ShipAbilities = {
         customEndcondition: true,
 
         puckedDuration: 12.5 * 60,
+
+        actionBlocker: {
+            checker: function (ship) {
+                return ship.custom.pucked != null
+            },
+            reason: "Ship is being Pucked",
+            abilityDisabledText: "PUCKED"
+        },
 
         removePuck: function (player) {
             if (player.custom.pucked != null) {
@@ -3565,7 +3608,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Mon May 01 2023 19:59:48 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Tue May 02 2023 17:51:53 GMT+0900 (Japan Standard Time) */
 
 const MAKE_COMMANDS = function () {
     const { echo, error } = game.modding.terminal;
@@ -3615,6 +3658,7 @@ const MAKE_COMMANDS = function () {
         let args = Array.isArray(docs.arguments) ? docs.arguments : [];
         echo(`${commandName} ${args.map(e => "<" + (e.required ? "" : "?") + e.name + ">").join(' ').trim()}${newline ? "\n": "\t"}[[;#0f60ff;]${docs.description || "No detailed description."}]`);
     }, showShipInfo = function (ship, newline = false) {
+        let block = AbilityManager.isActionBlocked(ship);
         echo([
             `ID: ${ship.id}`,
             `Name: ${ship.name}`,
@@ -3623,7 +3667,7 @@ const MAKE_COMMANDS = function () {
             `Y: ${ship.y}`,
             `Ship: ${ship.custom.shipName}`,
             ship.custom.inAbility ? "In ability" : "",
-            ship.custom.pucked != null || ship.custom.EMP ? "Ability disabled" : ""
+            block.blocked ? (block.blocker.reason || "Blocked for no reasons") : ""
         ].filter(e => e).join(`.${newline ? "\n" : " "}`))
     }, showTeamInfo = function (ship) {
         let teamInfo = TeamManager.getDataFromShip(ship);
@@ -3704,9 +3748,10 @@ const MAKE_COMMANDS = function () {
     });
 
     addShipCommand('assign', function (ship, id, args) {
-        AbilityManager.assign(ship, args.slice(2).join(' ').trim());
-        return ship.custom.shipName;
-    }, '%s has been set to %r', {
+        let result = AbilityManager.assign(ship, args.slice(2).join(' ').trim());
+        if (result.success) return `%s has been set to ${ship.custom.shipName}`
+        return `Failed to set %s to another ship\nReason: ${result.reason || "No reason has been provided."}`;
+    }, '%r', {
         arguments: [
             { name: "ship_name", required: false }
         ],
@@ -3786,7 +3831,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Mon May 01 2023 19:59:48 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Tue May 02 2023 17:51:53 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -3796,7 +3841,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Mon May 01 2023 19:59:48 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Tue May 02 2023 17:51:53 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4089,7 +4134,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Mon May 01 2023 19:59:48 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Tue May 02 2023 17:51:53 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -4212,7 +4257,7 @@ const MapManager = {
                 y: spawnpoint.y + distance * Math.sin(angle)
             });
         }
-        if (game.custom.started) UIData.shipUIs.toggle(ship, false, true);
+        if (game.custom.abilitySystemEnabled) UIData.shipUIs.toggle(ship, false, true);
     },
     set: function (nameOrIndex, set = false) {
         this.map = this.maps[nameOrIndex] || this.maps.find(m => m.name.toLowerCase() == String(nameOrIndex).toLowerCase());
@@ -4235,6 +4280,8 @@ Press [${this.abilityShortcut}] to activate it.`
     model_conversion_ratio: 50, // don't change
     maxStats: 1e8 - 1,
     crystals: 720,
+    usageLimit: 3, // default value for `abilityShip.usageLimit`
+    // minimum value depends on number of max players, number of teams, and number of ship templates on this system.
     _this: this,
     echo: DEBUG ? (window || global).echo || game.modding.terminal.echo : function () {},
     ring_model: {
@@ -4282,7 +4329,7 @@ Press [${this.abilityShortcut}] to activate it.`
         ability.end(ship);
     },
     canStart: function (ship) {
-        return game.custom.started && !ship.custom.EMP && ship.alive && ship.custom.pucked == null && ship.custom.ability.canStart(ship);
+        return game.custom.abilitySystemEnabled && ship.alive && !this.isActionBlocked(ship).blocked && ship.custom.ability.canStart(ship);
     },
     start: function (ship) {
         let ability = ship.custom.ability;
@@ -4302,7 +4349,8 @@ Press [${this.abilityShortcut}] to activate it.`
     },
     requirementsInfo: function (ship) {
         let ability = ship.custom.ability;
-        if (ship.custom.pucked != null) return { ready: false, text: "Pucked" };
+        let isActionBlocked = this.isActionBlocked(ship);
+        if (isActionBlocked.blocked) return { ready: false, text: isActionBlocked.blocker.abilityDisabledText || "Disabled" };
         if (ability == null) return { ready: false, text: "Disabled" };
         let ready = this.canStart(ship);
         if (ready) return {
@@ -4311,7 +4359,7 @@ Press [${this.abilityShortcut}] to activate it.`
         };
         return {
             ready: false,
-            text: ship.custom.inAbility && ability.cooldownRestartOnEnd && !ability.customDisabledText ? "Disabled" : ability.requirementsText(ship)
+            text: ship.custom.inAbility && ability.cooldownRestartOnEnd && !ability.customDisabledText ? "In Ability" : ability.requirementsText(ship)
         }
     },
     updateUI: function (ship) {
@@ -4340,13 +4388,35 @@ Press [${this.abilityShortcut}] to activate it.`
     reload: function (ship) {
         return ship.custom.ability && ship.custom.ability.reload(ship);
     },
-    assign: function (ship, abilityShip) {
+    isActionBlocked: function (ship) {
+        // check if there are any ship effects blocking this ship from taking actions
+        for (let actionBlocker of this.shipActionBlockers) {
+            if ("function" == typeof actionBlocker.checker && actionBlocker.checker(ship)) return {
+                blocked: true,
+                blocker: actionBlocker
+            }
+        }
+
+        return { blocked: false }
+    },
+    limitExceeded: function (shipName, ship) {
+        return this.abilities[shipName] != null && shipName != ship.custom.shipName && !this.getAssignableShipsList(ship).includes(shipName);
+    },
+    assign: function (ship, abilityShip, dontAssign = false) {
+        if (ship.custom.inAbility) return { success: false, reason: "Ship is still in ability" }
+        let isActionBlocked = this.isActionBlocked(ship);
+        if (isActionBlocked.blocked) return {
+            success: false,
+            reason: isActionBlocked.blocker.reason || "No reason was provided"
+        }
         let shipAbil = this.abilities[abilityShip];
         if (shipAbil == null) {
             let requestedName = String(abilityShip).toLowerCase().replace(/[^a-z0-9]/gi, "");
             let foundName = this.ships_list.find(name => name.toLowerCase().replace(/[^a-z0-9]/gi, "") == requestedName);
             if (foundName != null) shipAbil = this.abilities[abilityShip = foundName];
         }
+        if (this.limitExceeded(abilityShip, ship)) return { success: false, reason: "Ship limit exceeded" }
+        if (dontAssign) return { success: true }
         if (shipAbil == null) return this.random(ship);
         ship.custom.shipName = abilityShip;
         ship.custom.ability = shipAbil;
@@ -4365,16 +4435,8 @@ Press [${this.abilityShortcut}] to activate it.`
             crystals: shipAbil.crystals
         });
         shipAbil.initialize(ship);
-        // HelperFunctions.sendUI(ship, {
-        //     id: "debug_test",
-        //     position: [25,0,50,10],
-        //     clickable: false,
-        //     visible: true,
-        //     components: [
-        //         {type: "text", position: [0,0,100,50], value: "[D]: Random ship, [F]: Skip cooldown, [G]: Previous ship, [H]: Next ship", color: "#FFF"},
-        //         {type: "text", position: [0,50,100,50], value: `Current ship: ${abilityShip}`, color: "#FFF"}
-        //     ]
-        // });
+        this.updateShipsList(TeamManager.getDataFromShip(ship));
+        return { success: true };
     },
     globalTick: function (game) {
         if (DEBUG && game.step == 0 && HelperFunctions.terminal.errors > 0) {
@@ -4394,18 +4456,6 @@ Press [${this.abilityShortcut}] to activate it.`
             if (ship.id == null) continue;
             if (!ship.custom.__ability__initialized__ && ship.alive) {
                 this.random(ship);
-                // for (let keys of [
-                //     ["random", "D"],
-                //     ["reload", "F"],
-                //     ["prev", "G"],
-                //     ["next", "H"]
-                // ]) HelperFunctions.sendUI(ship, {
-                //     id: keys[0],
-                //     position: [0,0,0,0],
-                //     clickable: true,
-                //     visible: true,
-                //     shortcut: keys[1]
-                // });
                 ship.custom.__ability__initialized__ = true;
             }
             if (this.showAbilityNotice && ship.custom.allowInstructor) {
@@ -4430,15 +4480,6 @@ Press [${this.abilityShortcut}] to activate it.`
                     case AbilityManager.UI.id:
                         AbilityManager.start(ship);
                         break;
-                    // case "random":
-                    //     if (ship.custom.pucked == null && !ship.custom.inAbility && (!ship.custom.lastClicked || game.step - ship.custom.lastClicked > 30)) {
-                    //         AbilityManager.random(ship);
-                    //         ship.custom.lastClicked = game.step;
-                    //     }
-                    //     break;
-                    // case "reload":
-                    //     AbilityManager.reload(ship);
-                    //     break;
                 }
                 break;
             case "ship_spawned":
@@ -4480,6 +4521,11 @@ Press [${this.abilityShortcut}] to activate it.`
         // Compile ships and abilities
         
         this.ship_codes = [];
+        this.shipActionBlockers = [];
+
+        let smallestLimit = Math.ceil(GAME_OPTIONS.max_players / GAME_OPTIONS.teams_count / Object.values(this.abilities).filter(e => !e.hidden).length);
+
+        this.usageLimit = Math.max(this.usageLimit, smallestLimit) || Infinity;
 
         let model = 100, templates = HelperFunctions.templates;
 
@@ -4491,7 +4537,9 @@ Press [${this.abilityShortcut}] to activate it.`
                 HelperFunctions.terminal.log(`Ignoring '${shipName}' because it's hidden`);
                 continue;
             }
-            // functions polyfill
+            // functions and properties polyfill
+
+            if (ability.actionBlocker != null) this.shipActionBlockers.push(ability.actionBlocker);
 
             ability.ships = new Map();
 
@@ -4500,6 +4548,8 @@ Press [${this.abilityShortcut}] to activate it.`
             ability.crystals = Math.max(0, ability.crystals);
 
             if (isNaN(ability.crystals)) ability.crystals = this.crystals;
+
+            ability.usageLimit = Math.max(ability.usageLimit, smallestLimit) || this.usageLimit;
 
             if ("function" != typeof ability.canStart) ability.canStart = templates.canStart;
 
@@ -4579,13 +4629,32 @@ Press [${this.abilityShortcut}] to activate it.`
 
         this.ships_list = Object.keys(this.abilities);
     },
+    getAssignableShipsList: function (ship, forceUpdate = false) {
+        let teamData = TeamManager.getDataFromShip(ship);
+        if (forceUpdate || !Array.isArray(teamData.ships_list)) this.updateShipsList(teamData);
+        return teamData.ships_list
+    },
+    updateShipsList: function (team) {
+        team.ships_list = [];
+        let data = {};
+        for (let ship of game.ships) {
+            if (ship == null || ship.id == null) continue;
+            let t = TeamManager.getDataFromShip(ship);
+            if (team.ghost ? !t.ghost : team.id !== t.id) continue;
+            data[ship.custom.shipName] = (+data[ship.custom.shipName] || 0) + 1;
+        }
+
+        for (let abil of this.ships_list) {
+            if ((+data[abil] || 0) < AbilityManager.abilities[abil].usageLimit) team.ships_list.push(abil);
+        }
+    },
     getShipCodes: function () {
         if (!Array.isArray(this.ship_codes)) this.initialize();
         return this.ship_codes;
     },
     random: function (ship) {
         // select random ship
-        return this.assign(ship, HelperFunctions.randomItem(this.ships_list).value);
+        return this.assign(ship, HelperFunctions.randomItem(this.getAssignableShipsList(ship)).value);
     },
     abilities: ShipAbilities
 }
@@ -4594,11 +4663,11 @@ Press [${this.abilityShortcut}] to activate it.`
 
 
 
-/* Imported from misc/gameLogic.js at Mon May 01 2023 19:59:48 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Tue May 02 2023 17:51:53 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/Misc.js at Mon May 01 2023 19:59:48 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Tue May 02 2023 17:51:53 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -4766,7 +4835,7 @@ const GameHelperFunctions = {
         return `${hours}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
     },
     canUseButtons: function (ship) {
-        return !ship.custom.EMP && !ship.custom.shipUIsHidden && ship.custom.pucked == null && !ship.custom.inAbility;
+        return !ship.custom.shipUIsHidden;
     }
 }
 
@@ -4928,14 +4997,29 @@ const UIData = {
             let i = 0;
             for (let abil of abilities) {
                 let row = Math.trunc(i / itemsPerLine), column = i % itemsPerLine;
-                let color = ship.custom.shipName == abil ? "#AAFF00" : "#FFFFFF";
-                let strokeWidth = ship.custom.shipName == abil ? 8 : 2;
                 let offsetX = row == itemsPerColumn - 1 ? lastLineXOffset : 0;
-                let bg = ship.custom.shipName == abil ? "rgba(170, 225, 0, 0.25)" : "rgba(68, 85, 102, 0.25)"
+                let usable = HelperFunctions.canUseButtons(ship) && AbilityManager.assign(ship, abil, true).success;
+                let color, strokeWidth, bg, bdColor;
+                if (ship.custom.shipName == abil) {
+                    bdColor = color = "#AAFF00";
+                    strokeWidth = 8;
+                    bg = "rgba(170, 225, 0, 0.25)";
+                }
+                else if (usable) {
+                    bdColor = color = "#FFFFFF";
+                    strokeWidth = 2;
+                    bg = `rgba(68, 85, 102, 0.25)`;
+                }
+                else {
+                    color = "#fff";
+                    bdColor = "hsla(0, 100%, 50%, 1)";
+                    strokeWidth = 8;
+                    bg = "hsla(0, 100%, 50%, 0.25)";
+                }
                 HelperFunctions.sendUI(ship, {
                     id: this.shipSelectPrefix + abil,
                     visible: true,
-                    clickable: true,
+                    clickable: usable,
                     position: [
                         offsetX + UISpec.xStart + column * width * (UISpec.margin_scale_x + 1),
                         UISpec.yStart + row * height * (UISpec.margin_scale_y + 1),
@@ -4943,7 +5027,7 @@ const UIData = {
                         height
                     ],
                     components: [
-                        { type: "box", position: [0, 0, 100, 100], fill: bg,stroke: color,width: strokeWidth},
+                        { type: "box", position: [0, 0, 100, 100], fill: bg,stroke: bdColor,width: strokeWidth},
                         { type: "text", position: [0, 0, 100, 100], value: HelperFunctions.fill(abil, UISpec.textLength), color}
                     ]     
                 });
@@ -5150,6 +5234,17 @@ const UIData = {
             else UIData.scores.components.pop();
         };
         HelperFunctions.sendUI(ship, UIData.scores);
+    },
+    assign: function (ship, name) {
+        let res = AbilityManager.assign(ship, name);
+        if (res.success) {
+            let t = TeamManager.getDataFromShip(ship);
+            for (let s of game.ships) {
+                if (s == null || s.id == null || s.custom.shipUIsPermaHidden || s.custom.shipUIsHidden) continue;
+                let x = TeamManager.getDataFromShip(s);
+                if (t.ghost ? x.ghost : t.id === x.id) this.shipUIs.toggleSelectMenu(s);
+            }
+        }
     }
 }
 
@@ -5244,7 +5339,7 @@ const makeAlienSpawns = function () {
 
 
 
-/* Imported from misc/tickFunctions.js at Mon May 01 2023 19:59:48 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Tue May 02 2023 17:51:53 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -5378,6 +5473,7 @@ const waiting = function (game) {
         if (game.step > game.custom.waiting_time) {
             // game started
             game.custom.started = true;
+            game.custom.abilitySystemEnabled = true;
             UIData.renderTeamScores(game, true);
             UIData.updateScoreboard(game);
             HelperFunctions.sendUI(game, UIData.radar);
@@ -5715,7 +5811,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Mon May 01 2023 19:59:48 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Tue May 02 2023 17:51:53 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -5746,20 +5842,20 @@ this.event = function (event, game) {
                     UIData.shipUIs.toggle(ship);
                     break;
                 case "next_ship": if (HelperFunctions.canUseButtons(ship)) {
-                    let pos = AbilityManager.ships_list.indexOf(ship.custom.shipName) + 1;
-                    AbilityManager.assign(ship, AbilityManager.ships_list[pos] || AbilityManager.ships_list[0]);
-                    UIData.shipUIs.toggleSelectMenu(ship);
+                    let ships_list = AbilityManager.getAssignableShipsList(ship);
+                    let pos = ships_list.indexOf(ship.custom.shipName) + 1;
+                    UIData.assign(ship, ships_list[pos] || ships_list[0]);
                     break;
                 }
                 case "prev_ship": if (HelperFunctions.canUseButtons(ship)) {
-                    let pos = AbilityManager.ships_list.lastIndexOf(ship.custom.shipName) - 1;
-                    AbilityManager.assign(ship, AbilityManager.ships_list.at(pos));
-                    UIData.shipUIs.toggleSelectMenu(ship);
+                    let ships_list = AbilityManager.getAssignableShipsList(ship);
+                    let pos = ships_list.lastIndexOf(ship.custom.shipName) - 1;
+                    UIData.assign(ship, ships_list.at(pos));
                     break;
                 }
                 default:
                     if (HelperFunctions.canUseButtons(ship) && component.startsWith(UIData.shipUIs.shipSelectPrefix)) {
-                        AbilityManager.assign(ship, component.replace(UIData.shipUIs.shipSelectPrefix, ""));
+                        UIData.assign(ship, component.replace(UIData.shipUIs.shipSelectPrefix, ""));
                         UIData.shipUIs.toggleSelectMenu(ship);
                     }
             }
@@ -5770,7 +5866,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Mon May 01 2023 19:59:48 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Tue May 02 2023 17:51:53 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
