@@ -15,7 +15,7 @@ const alwaysTick = function (game) {
             }
             else {
                 HelperFunctions.sendWaitingText(ship);
-                ship.set({ idle: true, collider: false });
+                ship.set({ idle: true, collider: false, vx: 0, vy: 0 });
             }
             ship.custom.kills = ship.custom.deaths = 0;
             ship.custom.joined = true;

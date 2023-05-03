@@ -26,7 +26,7 @@ But at least it should run as expected ~~I guess~~
 * **CEO:** Tost
 * **Coding:** Bhpsngum
 * **Textures:** Caramel
-* **Ships:** -
+* **Ships:** Caramel
 * **Maps:** Supernova, Caramel, Bylolopro, Nerd69420, Megalodon, and others
 * **Contributors:** Tost, Caramel, Lexydrow, and others
 
