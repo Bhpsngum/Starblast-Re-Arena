@@ -45,6 +45,7 @@ const TeamManager = {
         if (changeTeam) {
             ship.set({team: teamData.id});
             ship.custom.team = teamData.id;
+            AbilityManager.updateShipsList(teamData);
         }
         if (TpBackToBase) MapManager.spawn(ship);
     }

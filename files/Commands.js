@@ -168,9 +168,7 @@ const MAKE_COMMANDS = function () {
             if (newTeam == teamInfo) return `%s is already on ${teamInfo.name.toUpperCase()}`;
             teamInfo = newTeam;
             TeamManager.set(ship, team, true, false);
-            HelperFunctions.TimeManager.setTimeout(function () {
-                UIData.updateScoreboard(game);
-            }, 60);
+            UIData.updateScoreboard(game);
         }
         return team ? `Set %s to team ${teamInfo.name.toUpperCase()}`: showTeamInfo(ship);
     }, '%r', {
@@ -181,8 +179,9 @@ const MAKE_COMMANDS = function () {
     });
 
     addShipCommand('ability', function (ship, id, args) {
-        let abilityStatus = ship.custom.abilitySystemDisabled = !ship.custom.abilitySystemDisabled;
-        return abilityStatus ? "Disabled" : "Enabled";
+        let abilityDisabled = ship.custom.abilitySystemDisabled = !ship.custom.abilitySystemDisabled;
+        if (abilityDisabled) AbilityManager.end(ship);
+        return abilityDisabled ? "Disabled" : "Enabled";
     }, '%r ability system for %s', {
         description: "Toggle ship's ability system (enable/disable)"
     });

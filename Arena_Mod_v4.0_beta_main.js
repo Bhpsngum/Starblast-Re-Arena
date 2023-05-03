@@ -92,7 +92,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config.js at Wed May 03 2023 22:08:23 GMT+0900 (Japan Standard Time) */
+/* Imported from Config.js at Wed May 03 2023 22:50:26 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -202,7 +202,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from Teams.js at Wed May 03 2023 22:08:23 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Wed May 03 2023 22:50:26 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -252,7 +252,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Wed May 03 2023 22:08:23 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Wed May 03 2023 22:50:26 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1944,7 +1944,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Wed May 03 2023 22:08:23 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Wed May 03 2023 22:50:26 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -3608,7 +3608,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Wed May 03 2023 22:08:23 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Wed May 03 2023 22:50:26 GMT+0900 (Japan Standard Time) */
 
 const MAKE_COMMANDS = function () {
     const { echo, error } = game.modding.terminal;
@@ -3780,9 +3780,7 @@ const MAKE_COMMANDS = function () {
             if (newTeam == teamInfo) return `%s is already on ${teamInfo.name.toUpperCase()}`;
             teamInfo = newTeam;
             TeamManager.set(ship, team, true, false);
-            HelperFunctions.TimeManager.setTimeout(function () {
-                UIData.updateScoreboard(game);
-            }, 60);
+            UIData.updateScoreboard(game);
         }
         return team ? `Set %s to team ${teamInfo.name.toUpperCase()}`: showTeamInfo(ship);
     }, '%r', {
@@ -3793,8 +3791,9 @@ const MAKE_COMMANDS = function () {
     });
 
     addShipCommand('ability', function (ship, id, args) {
-        let abilityStatus = ship.custom.abilitySystemDisabled = !ship.custom.abilitySystemDisabled;
-        return abilityStatus ? "Disabled" : "Enabled";
+        let abilityDisabled = ship.custom.abilitySystemDisabled = !ship.custom.abilitySystemDisabled;
+        if (abilityDisabled) AbilityManager.end(ship);
+        return abilityDisabled ? "Disabled" : "Enabled";
     }, '%r ability system for %s', {
         description: "Toggle ship's ability system (enable/disable)"
     });
@@ -3840,7 +3839,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Wed May 03 2023 22:08:23 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Wed May 03 2023 22:50:26 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -3850,7 +3849,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Wed May 03 2023 22:08:23 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Wed May 03 2023 22:50:26 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4143,7 +4142,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Wed May 03 2023 22:08:23 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Wed May 03 2023 22:50:26 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -4192,6 +4191,7 @@ const TeamManager = {
         if (changeTeam) {
             ship.set({team: teamData.id});
             ship.custom.team = teamData.id;
+            AbilityManager.updateShipsList(teamData);
         }
         if (TpBackToBase) MapManager.spawn(ship);
     }
@@ -4673,11 +4673,11 @@ Press [${this.abilityShortcut}] to activate it.`
 
 
 
-/* Imported from misc/gameLogic.js at Wed May 03 2023 22:08:23 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Wed May 03 2023 22:50:26 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/Misc.js at Wed May 03 2023 22:08:23 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Wed May 03 2023 22:50:26 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -5388,7 +5388,7 @@ const makeAlienSpawns = function () {
 
 
 
-/* Imported from misc/tickFunctions.js at Wed May 03 2023 22:08:23 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Wed May 03 2023 22:50:26 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -5860,7 +5860,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Wed May 03 2023 22:08:23 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Wed May 03 2023 22:50:26 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -5915,7 +5915,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Wed May 03 2023 22:08:23 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Wed May 03 2023 22:50:26 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
@@ -5966,5 +5966,5 @@ this.options = {
 
 
 
-AbilityManager.echo("[[bg;crimson;]Arena Mod[[bg;DarkTurquoise;] Recontinuation][[;Cyan;]\nRandomized map picked:]][[b;Cyan;] " + MapManager.get().name + " by " + MapManager.get().author + "\n\nType `commands` to see all commands and `usage <commandName>` to show usage of a command\n\n]");
+AbilityManager.echo("[[bg;crimson;]Arena Mod[[bg;DarkTurquoise;] Recontinuation][[;Cyan;]\nRandomized map picked:]][[b;Cyan;] " + MapManager.get().name + " by " + MapManager.get().author + "\n\nType `commands` to see all commands\nAnd `usage <commandName>` to show usage of a command\n\n]");
 

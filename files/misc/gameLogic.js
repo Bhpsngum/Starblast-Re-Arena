@@ -15,4 +15,4 @@ else this.tick = initialization;
 
 /* import misc/gameOptions.js */
 
-AbilityManager.echo("[[bg;crimson;]Arena Mod[[bg;DarkTurquoise;] Recontinuation][[;Cyan;]\nRandomized map picked:]][[b;Cyan;] " + MapManager.get().name + " by " + MapManager.get().author + "\n\nType `commands` to see all commands and `usage <commandName>` to show usage of a command\n\n]");
+AbilityManager.echo("[[bg;crimson;]Arena Mod[[bg;DarkTurquoise;] Recontinuation][[;Cyan;]\nRandomized map picked:]][[b;Cyan;] " + MapManager.get().name + " by " + MapManager.get().author + "\n\nType `commands` to see all commands\nAnd `usage <commandName>` to show usage of a command\n\n]");
