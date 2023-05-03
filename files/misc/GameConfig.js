@@ -10,6 +10,7 @@ Object.assign(GAME_OPTIONS, {
     healing_ratio: 1, // better don't touch this
     crystal_drop: 0.5, // this.options.crystal_drop
     map_size: 100,
+    plane_3D_OBJ_Z_level: -3, // z value of 3D Plane OBJ
     alienSpawns: {
         level: {
             min: 1,

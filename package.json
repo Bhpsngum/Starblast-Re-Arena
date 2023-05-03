@@ -1,6 +1,6 @@
 {
     "name": "Arena_Mod",
-    "version": "4.0_beta",
+    "version": "4.0.0",
     "scripts": {
         "compile": "node mergeFiles.js"
     }
