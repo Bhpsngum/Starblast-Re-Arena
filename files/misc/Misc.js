@@ -29,7 +29,7 @@ const GameHelperFunctions = {
                 id: "team_base_" + i,
                 position: {
                     ...spawnpoint,
-                    z: 0
+                    z: GAME_OPTIONS.plane_3D_OBJ_Z_level
                 },
                 scale: {
                     x: scale,
@@ -72,7 +72,7 @@ const GameHelperFunctions = {
             id: "control_point_" + curState,
             position: {
                 ...CONTROL_POINT.position,
-                z: 0
+                z: GAME_OPTIONS.plane_3D_OBJ_Z_level
             },
             scale: {
                 x: scale,
