@@ -1,3 +1,5 @@
+/* import misc/GameConfig.js */
+
 /* import misc/Misc.js */
 
 /* import misc/tickFunctions.js */
