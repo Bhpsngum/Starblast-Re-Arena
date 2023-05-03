@@ -55,7 +55,8 @@ const MAKE_COMMANDS = function () {
             `Y: ${ship.y}`,
             `Ship: ${ship.custom.shipName}`,
             ship.custom.inAbility ? "In ability" : "",
-            block.blocked ? (block.blocker.reason || "Blocked for no reasons") : ""
+            block.blocked ? (block.blocker.reason || "Blocked for no reasons") : "",
+            ship.custom.abilitySystemDisabled ? "Ability Disabled" : ""
         ].filter(e => e).join(`.${newline ? "\n" : " "}`))
     }, showTeamInfo = function (ship) {
         let teamInfo = TeamManager.getDataFromShip(ship);
@@ -177,6 +178,13 @@ const MAKE_COMMANDS = function () {
             { name: "team_id", required: false }
         ],
         description: "Get/Set ship's team info"
+    });
+
+    addShipCommand('ability', function (ship, id, args) {
+        let abilityStatus = ship.custom.abilitySystemDisabled = !ship.custom.abilitySystemDisabled;
+        return abilityStatus ? "Disabled" : "Enabled";
+    }, '%r ability system for %s', {
+        description: "Toggle ship's ability system (enable/disable)"
     });
 
     addShipCommand('tptoship', function (ship1, id1, args) {

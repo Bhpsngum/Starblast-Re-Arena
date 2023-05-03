@@ -92,7 +92,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config.js at Tue May 02 2023 23:03:36 GMT+0900 (Japan Standard Time) */
+/* Imported from Config.js at Wed May 03 2023 12:13:46 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -202,7 +202,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from Teams.js at Tue May 02 2023 23:03:36 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Wed May 03 2023 12:13:46 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -252,7 +252,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Tue May 02 2023 23:03:36 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Wed May 03 2023 12:13:46 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1944,7 +1944,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Tue May 02 2023 23:03:36 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Wed May 03 2023 12:13:46 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -3608,7 +3608,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Tue May 02 2023 23:03:36 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Wed May 03 2023 12:13:46 GMT+0900 (Japan Standard Time) */
 
 const MAKE_COMMANDS = function () {
     const { echo, error } = game.modding.terminal;
@@ -3667,7 +3667,8 @@ const MAKE_COMMANDS = function () {
             `Y: ${ship.y}`,
             `Ship: ${ship.custom.shipName}`,
             ship.custom.inAbility ? "In ability" : "",
-            block.blocked ? (block.blocker.reason || "Blocked for no reasons") : ""
+            block.blocked ? (block.blocker.reason || "Blocked for no reasons") : "",
+            ship.custom.abilitySystemDisabled ? "Ability Disabled" : ""
         ].filter(e => e).join(`.${newline ? "\n" : " "}`))
     }, showTeamInfo = function (ship) {
         let teamInfo = TeamManager.getDataFromShip(ship);
@@ -3791,6 +3792,13 @@ const MAKE_COMMANDS = function () {
         description: "Get/Set ship's team info"
     });
 
+    addShipCommand('ability', function (ship, id, args) {
+        let abilityStatus = ship.custom.abilitySystemDisabled = !ship.custom.abilitySystemDisabled;
+        return abilityStatus ? "Disabled" : "Enabled";
+    }, '%r ability system for %s', {
+        description: "Toggle ship's ability system (enable/disable)"
+    });
+
     addShipCommand('tptoship', function (ship1, id1, args) {
         let id2 = +args.slice(2).join(' ');
         let ship2 = game.findShip(id2);
@@ -3832,7 +3840,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Tue May 02 2023 23:03:36 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Wed May 03 2023 12:13:46 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -3842,7 +3850,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Tue May 02 2023 23:03:36 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Wed May 03 2023 12:13:46 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4135,7 +4143,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Tue May 02 2023 23:03:36 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Wed May 03 2023 12:13:46 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -4640,7 +4648,7 @@ Press [${this.abilityShortcut}] to activate it.`
         team.ships_list = [];
         let data = {};
         for (let ship of game.ships) {
-            if (ship == null || ship.id == null) continue;
+            if (ship == null || ship.id == null || ship.custom.abilitySystemDisabled) continue;
             let t = TeamManager.getDataFromShip(ship);
             if (team.ghost ? !t.ghost : team.id !== t.id) continue;
             data[ship.custom.shipName] = (+data[ship.custom.shipName] || 0) + 1;
@@ -4665,11 +4673,11 @@ Press [${this.abilityShortcut}] to activate it.`
 
 
 
-/* Imported from misc/gameLogic.js at Tue May 02 2023 23:03:36 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Wed May 03 2023 12:13:46 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/Misc.js at Tue May 02 2023 23:03:36 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Wed May 03 2023 12:13:46 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -5341,7 +5349,7 @@ const makeAlienSpawns = function () {
 
 
 
-/* Imported from misc/tickFunctions.js at Tue May 02 2023 23:03:36 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Wed May 03 2023 12:13:46 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -5813,7 +5821,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Tue May 02 2023 23:03:36 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Wed May 03 2023 12:13:46 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -5868,7 +5876,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Tue May 02 2023 23:03:36 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Wed May 03 2023 12:13:46 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
