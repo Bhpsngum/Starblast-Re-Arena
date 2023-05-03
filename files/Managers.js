@@ -501,7 +501,7 @@ Press [${this.abilityShortcut}] to activate it.`
         team.ships_list = [];
         let data = {};
         for (let ship of game.ships) {
-            if (ship == null || ship.id == null) continue;
+            if (ship == null || ship.id == null || ship.custom.abilitySystemDisabled) continue;
             let t = TeamManager.getDataFromShip(ship);
             if (team.ghost ? !t.ghost : team.id !== t.id) continue;
             data[ship.custom.shipName] = (+data[ship.custom.shipName] || 0) + 1;
