@@ -129,22 +129,16 @@ const MapManager = {
 }
 
 const AbilityManager = {
-    includeRingOnModel: false, // the individual ship's ring model inclusion are only checked if this one is `true`
-    showAbilityNotice: true,
-    abilityNoticeTimeout: 5 * 60, // in ticks
-    abilityNoticeMessage: function (ship) {
-        return `Greetings, Commander.
-Your ship is equipped with a special ability module.
-Press [${this.abilityShortcut}] to activate it.`
-// Capture the point in the middle to win! Stand inside the point to capture it.`
-    },
-    abilityShortcut: 'X',
-    shipLevels: 6, // all ship levels
+    includeRingOnModel: GAME_OPTIONS.ability.include_rings_on_model,
+    showAbilityNotice: GAME_OPTIONS.ability.notice.show,
+    abilityNoticeTimeout: GAME_OPTIONS.ability.notice.timeout,
+    abilityNoticeMessage: GAME_OPTIONS.ability.notice.message,
+    abilityShortcut: GAME_OPTIONS.ability.shortcut,
+    shipLevels: GAME_OPTIONS.ability.ship_levels,
     model_conversion_ratio: 50, // don't change
-    maxStats: 1e8 - 1,
-    crystals: 720,
-    usageLimit: 3, // default value for `abilityShip.usageLimit`
-    // minimum value depends on number of max players, number of teams, and number of ship templates on this system.
+    maxStats: GAME_OPTIONS.ability.max_stats,
+    crystals: GAME_OPTIONS.ability.crystals,
+    usageLimit: GAME_OPTIONS.ability.usage_limit,
     _this: this,
     echo: DEBUG ? (window || global).echo || game.modding.terminal.echo : function () {},
     ring_model: {
@@ -324,7 +318,7 @@ Press [${this.abilityShortcut}] to activate it.`
             }
             if (this.showAbilityNotice && ship.custom.allowInstructor) {
                 if (this.abilityNoticeMessage) {
-                    ship.instructorSays(String(this.abilityNoticeMessage(ship)), TeamManager.getDataFromShip(ship).instructor);
+                    ship.instructorSays(String(this.abilityNoticeMessage.call(GAME_OPTIONS, ship)), TeamManager.getDataFromShip(ship).instructor);
                     if (this.abilityNoticeTimeout > 0) HelperFunctions.TimeManager.setTimeout(function () {
                         ship.hideInstructor();
                     }, this.abilityNoticeTimeout);
@@ -522,3 +516,15 @@ Press [${this.abilityShortcut}] to activate it.`
     },
     abilities: ShipAbilities
 }
+
+this.__ABILITY_MANAGER_OPTIONS__ = {
+    friendly_colors: GAME_OPTIONS.teams_count,
+    hues: TeamManager.getAll().map(e => e ? e.hue : 0),
+    custom_map: MapManager.get(true).map,
+    max_players: GAME_OPTIONS.max_players
+}
+
+Object.defineProperty(this, 'options', {
+    get () { return this.__ABILITY_MANAGER_OPTIONS__ },
+    set (value) { return Object.assign(this.__ABILITY_MANAGER_OPTIONS__, value) }
+});

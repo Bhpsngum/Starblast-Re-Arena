@@ -92,117 +92,48 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config.js at Wed May 03 2023 22:50:26 GMT+0900 (Japan Standard Time) */
+/* Imported from Config.js at Wed May 03 2023 23:54:24 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
-const map_name = `Arena Mod v4.0 Beta`; // leave `null` if you want randomized map name
-
+// This is generic Ability System options only
+// for Arena game options please edit in misc/GameConfig.js
 const GAME_OPTIONS = {
-    map_size: 100,
-    waiting_time: 30, // in seconds
     teams_count: 2, // number of teams
-    required_players: 2, // players required to start, min 2
-    max_players: 80,
-    duration: 30 * 60, // in seconds
-    points: 100, // points for one team to reach in order to win
-    healing_ratio: 1, // better don't touch this
-    crystal_drop: 0.5, // this.options.crystal_drop
-    ship_ui_timeout: 30, // time for the ship ui to hide, in seconds
-    alienSpawns: {
-        level: {
-            min: 1,
-            max: 2
+    max_players: 80, // number of max players, used to define minimum ship usage limit
+    ability: {
+        include_rings_on_model: false, // the individual ship's ring model inclusion are only checked if this one is `true`
+        shortcut: "X", // ability activation shortcut
+        ship_levels: 6, // all ship levels
+        max_stats: 1e8 - 1, // maximum stats for ships
+        crystals: 720, // crystals when first set, default of `abilityTemplate.crystals`
+        notice: {
+            show: true, // to show it or not
+            timeout: 5 * 60, // time for instructor to disappear, in ticks
+            message: function (ship) { // notice message function for each ships
+                // this function binds to `GAME_OPTIONS` object
+                return `Greetings, Commander.
+Your ship is equipped with a special ability module.
+Press [${this.ability.shortcut}] to activate it.`
+// Capture the point in the middle to win! Stand inside the point to capture it.`
+            }
         },
-        codes: [10, 11],
-        collectibles: [10, 11, 12, 20, 21, 41, 42, 90, 91],
-        crystals: {
-            min: 45,
-            max: 80
-        },
-        interval: 10, // in seconds
-        capacity: 30, // number of aliens should be on map at a time (including aliens spawned by abilities),
-        distanceFromBases: 30 // avoid spawning aliens <x> radius from the outer border of bases and control points
+        usage_limit: 3 // default usage limit of a ship in one team
+        // minimum depends on number of teams, max players and number of ability ships
+        // maximum Infinity, you can also omit the limit to obtain same result
+        // to define different limit for a certain ship, use `usageLimit` spec in ship template
     }
 }
 
-const CONTROL_POINT = {
-    neutral_color: "#fff", // color of control point when neutral, better don't change this
-    neutral_fill: "hsla(0, 0%, 0%, 0)", // this is for displaying bar point
-    position: {
-        x: 0,
-        y: 0
-    },
-    size: 65, // in radius
-    control_bar: {
-        percentage_increase: 3.5, // percentage of control point increased/decreased for each ship
-        controlling_percentage: 66, // % of control one team needs in order to be a winning team
-        dominating_percentage: 90 // % of control one team needs in order to dominate and gain points
-    },
-    score_increase: 0.15, // team points increases per sec for the dominating team
-    player_multiplier: false, // when set to true, the increase is per player per sec, and not per sec anymore
-    textures: [
-        {
-            url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/capture_area.png",
-            author: "Nexagon", // it's shown nowhere on the mod, but at least a token of respect
-            scale: 2.24
-        }
-    ]
-}
-
-const BASES = {
-    size: 45, // in radius
-    intrusion_damage: 145, // damage per sec if enemy enters the base
-    textures: [ // textures list to choose from (randomized)
-        {
-            url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_0.png",
-            author: "Nexagon", // it's shown nowhere on the mod, but at least a token of respect
-            scale: 2.24
-        },
-        {
-            url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_1.png",
-            author: "Nexagon",
-            scale: 2.24
-        },
-        {
-            url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_2.png",
-            author: "Caramel",
-            scale: 2.07
-        },
-        {
-            url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_3.png",
-            author: "Caramel",
-            scale: 2.07
-        },
-        {
-            url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_4.png",
-            author: "Caramel",
-            scale: 2.07
-        },
-        {
-            url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_5.png",
-            author: "Caramel",
-            scale: 2.07
-        },
-        {
-            url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_6.png",
-            author: "Caramel",
-            scale: 2.07
-        }
-    ]
-}
-
 // don't remove those
-GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players, 1), 240)) || 1
-GAME_OPTIONS.required_players = Math.trunc(Math.max(GAME_OPTIONS.required_players, 2)) || 2; // restriction
 GAME_OPTIONS.teams_count = Math.trunc(Math.min(Math.max(GAME_OPTIONS.teams_count, 0), 5)) || 0; // restriction
-CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POINT.control_bar.controlling_percentage, CONTROL_POINT.control_bar.dominating_percentage), 100) || 100;
+GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players, 1), 240)) || 1;
 
 
 
 
 
-/* Imported from Teams.js at Wed May 03 2023 22:50:26 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Wed May 03 2023 23:54:24 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -252,7 +183,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Wed May 03 2023 22:50:26 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Wed May 03 2023 23:54:24 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1944,7 +1875,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Wed May 03 2023 22:50:26 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Wed May 03 2023 23:54:24 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -3608,7 +3539,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Wed May 03 2023 22:50:26 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Wed May 03 2023 23:54:24 GMT+0900 (Japan Standard Time) */
 
 const MAKE_COMMANDS = function () {
     const { echo, error } = game.modding.terminal;
@@ -3839,7 +3770,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Wed May 03 2023 22:50:26 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Wed May 03 2023 23:54:24 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -3849,7 +3780,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Wed May 03 2023 22:50:26 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Wed May 03 2023 23:54:24 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4142,7 +4073,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Wed May 03 2023 22:50:26 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Wed May 03 2023 23:54:24 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -4275,22 +4206,16 @@ const MapManager = {
 }
 
 const AbilityManager = {
-    includeRingOnModel: false, // the individual ship's ring model inclusion are only checked if this one is `true`
-    showAbilityNotice: true,
-    abilityNoticeTimeout: 5 * 60, // in ticks
-    abilityNoticeMessage: function (ship) {
-        return `Greetings, Commander.
-Your ship is equipped with a special ability module.
-Press [${this.abilityShortcut}] to activate it.`
-// Capture the point in the middle to win! Stand inside the point to capture it.`
-    },
-    abilityShortcut: 'X',
-    shipLevels: 6, // all ship levels
+    includeRingOnModel: GAME_OPTIONS.ability.include_rings_on_model,
+    showAbilityNotice: GAME_OPTIONS.ability.notice.show,
+    abilityNoticeTimeout: GAME_OPTIONS.ability.notice.timeout,
+    abilityNoticeMessage: GAME_OPTIONS.ability.notice.message,
+    abilityShortcut: GAME_OPTIONS.ability.shortcut,
+    shipLevels: GAME_OPTIONS.ability.ship_levels,
     model_conversion_ratio: 50, // don't change
-    maxStats: 1e8 - 1,
-    crystals: 720,
-    usageLimit: 3, // default value for `abilityShip.usageLimit`
-    // minimum value depends on number of max players, number of teams, and number of ship templates on this system.
+    maxStats: GAME_OPTIONS.ability.max_stats,
+    crystals: GAME_OPTIONS.ability.crystals,
+    usageLimit: GAME_OPTIONS.ability.usage_limit,
     _this: this,
     echo: DEBUG ? (window || global).echo || game.modding.terminal.echo : function () {},
     ring_model: {
@@ -4470,7 +4395,7 @@ Press [${this.abilityShortcut}] to activate it.`
             }
             if (this.showAbilityNotice && ship.custom.allowInstructor) {
                 if (this.abilityNoticeMessage) {
-                    ship.instructorSays(String(this.abilityNoticeMessage(ship)), TeamManager.getDataFromShip(ship).instructor);
+                    ship.instructorSays(String(this.abilityNoticeMessage.call(GAME_OPTIONS, ship)), TeamManager.getDataFromShip(ship).instructor);
                     if (this.abilityNoticeTimeout > 0) HelperFunctions.TimeManager.setTimeout(function () {
                         ship.hideInstructor();
                     }, this.abilityNoticeTimeout);
@@ -4669,15 +4594,131 @@ Press [${this.abilityShortcut}] to activate it.`
     abilities: ShipAbilities
 }
 
+this.__ABILITY_MANAGER_OPTIONS__ = {
+    friendly_colors: GAME_OPTIONS.teams_count,
+    hues: TeamManager.getAll().map(e => e ? e.hue : 0),
+    custom_map: MapManager.get(true).map,
+    max_players: GAME_OPTIONS.max_players
+}
+
+Object.defineProperty(this, 'options', {
+    get () { return this.__ABILITY_MANAGER_OPTIONS__ },
+    set (value) { return Object.assign(this.__ABILITY_MANAGER_OPTIONS__, value) }
+});
 
 
 
 
-/* Imported from misc/gameLogic.js at Wed May 03 2023 22:50:26 GMT+0900 (Japan Standard Time) */
+
+/* Imported from misc/gameLogic.js at Wed May 03 2023 23:54:24 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/Misc.js at Wed May 03 2023 22:50:26 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Wed May 03 2023 23:54:24 GMT+0900 (Japan Standard Time) */
+
+const map_name = `Arena Mod v4.0 Beta`; // leave `null` if you want randomized map name
+
+Object.assign(GAME_OPTIONS, {
+    duration: 30 * 60, // game duration in seconds
+    points: 100, // points for one team to reach in order to win
+    required_players: 2, // players required to start, min 2
+    waiting_time: 30, // in seconds
+    ship_ui_timeout: 30, // time for the ship ui to hide, in seconds
+    max_players: 80,
+    healing_ratio: 1, // better don't touch this
+    crystal_drop: 0.5, // this.options.crystal_drop
+    map_size: 100,
+    alienSpawns: {
+        level: {
+            min: 1,
+            max: 2
+        },
+        codes: [10, 11],
+        collectibles: [10, 11, 12, 20, 21, 41, 42, 90, 91],
+        crystals: {
+            min: 45,
+            max: 80
+        },
+        interval: 10, // in seconds
+        capacity: 30, // number of aliens should be on map at a time (including aliens spawned by abilities),
+        distanceFromBases: 30 // avoid spawning aliens <x> radius from the outer border of bases and control points
+    }
+});
+
+const CONTROL_POINT = {
+    neutral_color: "#fff", // color of control point when neutral, better don't change this
+    neutral_fill: "hsla(0, 0%, 0%, 0)", // this is for displaying bar point
+    position: {
+        x: 0,
+        y: 0
+    },
+    size: 65, // in radius
+    control_bar: {
+        percentage_increase: 3.5, // percentage of control point increased/decreased for each ship
+        controlling_percentage: 66, // % of control one team needs in order to be a winning team
+        dominating_percentage: 90 // % of control one team needs in order to dominate and gain points
+    },
+    score_increase: 0.15, // team points increases per sec for the dominating team
+    player_multiplier: false, // when set to true, the increase is per player per sec, and not per sec anymore
+    textures: [
+        {
+            url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/capture_area.png",
+            author: "Nexagon", // it's shown nowhere on the mod, but at least a token of respect
+            scale: 2.24
+        }
+    ]
+}
+
+const BASES = {
+    size: 45, // in radius
+    intrusion_damage: 145, // damage per sec if enemy enters the base
+    textures: [ // textures list to choose from (randomized)
+        {
+            url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_0.png",
+            author: "Nexagon", // it's shown nowhere on the mod, but at least a token of respect
+            scale: 2.24
+        },
+        {
+            url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_1.png",
+            author: "Nexagon",
+            scale: 2.24
+        },
+        {
+            url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_2.png",
+            author: "Caramel",
+            scale: 2.07
+        },
+        {
+            url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_3.png",
+            author: "Caramel",
+            scale: 2.07
+        },
+        {
+            url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_4.png",
+            author: "Caramel",
+            scale: 2.07
+        },
+        {
+            url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_5.png",
+            author: "Caramel",
+            scale: 2.07
+        },
+        {
+            url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_6.png",
+            author: "Caramel",
+            scale: 2.07
+        }
+    ]
+}
+
+GAME_OPTIONS.required_players = Math.trunc(Math.max(GAME_OPTIONS.required_players, 2)) || 2; // restriction
+CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POINT.control_bar.controlling_percentage, CONTROL_POINT.control_bar.dominating_percentage), 100) || 100;
+
+
+
+
+
+/* Imported from misc/Misc.js at Wed May 03 2023 23:54:24 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -5388,7 +5429,7 @@ const makeAlienSpawns = function () {
 
 
 
-/* Imported from misc/tickFunctions.js at Wed May 03 2023 22:50:26 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Wed May 03 2023 23:54:24 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -5860,7 +5901,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Wed May 03 2023 22:50:26 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Wed May 03 2023 23:54:24 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -5915,7 +5956,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Wed May 03 2023 22:50:26 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Wed May 03 2023 23:54:24 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
@@ -5943,7 +5984,6 @@ this.options = {
     max_level: 1,
     starting_ship: 800,
     vocabulary,
-    custom_map: MapManager.get(true).map,
     speed_mod: 1.2,
     radar_zoom: 1,
     weapons_store: false,
@@ -5955,13 +5995,10 @@ this.options = {
     mines_self_destroy: true,
     mines_destroy_delay: 5000,
     map_size: GAME_OPTIONS.map_size,
-    friendly_colors: GAME_OPTIONS.teams_count,
-    max_players: GAME_OPTIONS.max_players,
     ships: [
         '{"name":"Fly","level":1,"model":1,"size":1.05,"specs":{"shield":{"capacity":[75,100],"reload":[2,3]},"generator":{"capacity":[40,60],"reload":[10,15]},"ship":{"mass":60,"speed":[125,145],"rotation":[110,130],"acceleration":[100,120]}},"bodies":{"main":{"section_segments":12,"offset":{"x":0,"y":0,"z":10},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[-65,-60,-50,-20,10,30,55,75,60],"z":[0,0,0,0,0,0,0,0,0]},"width":[0,8,10,30,25,30,18,15,0],"height":[0,6,8,12,20,20,18,15,0],"propeller":true,"texture":[4,63,10,1,1,1,12,17]},"cockpit":{"section_segments":12,"offset":{"x":0,"y":0,"z":20},"position":{"x":[0,0,0,0,0,0,0],"y":[-15,0,20,30,60],"z":[0,0,0,0,0]},"width":[0,13,17,10,5],"height":[0,18,25,18,5],"propeller":false,"texture":[7,9,9,4,4]},"cannon":{"section_segments":6,"offset":{"x":0,"y":-15,"z":-10},"position":{"x":[0,0,0,0,0,0],"y":[-40,-50,-20,0,20,30],"z":[0,0,0,0,0,20]},"width":[0,5,8,11,7,0],"height":[0,5,8,11,10,0],"angle":0,"laser":{"damage":[5,6],"rate":4,"type":1,"speed":[160,180],"number":1,"error":2.5},"propeller":false,"texture":[3,3,10,3]}},"wings":{"main":{"length":[60,20],"width":[100,50,40],"angle":[-10,10],"position":[0,20,10],"doubleside":true,"offset":{"x":0,"y":10,"z":5},"bump":{"position":30,"size":20},"texture":[11,63]}},"typespec":{"name":"Fly","level":1,"model":1,"code":101,"specs":{"shield":{"capacity":[75,100],"reload":[2,3]},"generator":{"capacity":[40,60],"reload":[10,15]},"ship":{"mass":60,"speed":[125,145],"rotation":[110,130],"acceleration":[100,120]}},"shape":[1.368,1.368,1.093,0.965,0.883,0.827,0.791,0.767,0.758,0.777,0.847,0.951,1.092,1.667,1.707,1.776,1.856,1.827,1.744,1.687,1.525,1.415,1.335,1.606,1.603,1.578,1.603,1.606,1.335,1.415,1.525,1.687,1.744,1.827,1.856,1.776,1.707,1.667,1.654,0.951,0.847,0.777,0.758,0.767,0.791,0.827,0.883,0.965,1.093,1.368],"lasers":[{"x":0,"y":-1.365,"z":-0.21,"angle":0,"damage":[5,6],"rate":4,"type":1,"speed":[160,180],"number":1,"spread":0,"error":2.5,"recoil":0}],"radius":1.856}}',
         ...AbilityManager.getShipCodes()
-    ],
-    hues: TeamManager.getAll().map(e => e ? e.hue : 0)
+    ]
 }
 
 
