@@ -40,8 +40,8 @@ this.event = function (event, game) {
                 }
                 default:
                     if (HelperFunctions.canUseButtons(ship) && component.startsWith(UIData.shipUIs.shipSelectPrefix)) {
-                        UIData.assign(ship, component.replace(UIData.shipUIs.shipSelectPrefix, ""));
-                        UIData.shipUIs.toggleSelectMenu(ship);
+                        let shipName = component.replace(UIData.shipUIs.shipSelectPrefix, "");
+                        if (shipName !== ship.custom.shipName) UIData.assign(ship, shipName);
                     }
             }
     }
