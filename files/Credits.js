@@ -7,6 +7,7 @@ Arena Mod Remake/Recontinuation (v3.1.3 - v4.0+)
 - Maps: Supernova, Caramel, Bylolopro, Nerd69420, Megalodon, and others
 - Contributors: Tost, Caramel, Lexydrow, and others
 
+GitHub Repository: https://github.com/Bhpsngum/Arena-mod-remake
 
 Original Arena Mod (v1.0 - v3.1.2)
 - CEO: Noel
