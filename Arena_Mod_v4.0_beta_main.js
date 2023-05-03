@@ -92,7 +92,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config.js at Wed May 03 2023 12:13:46 GMT+0900 (Japan Standard Time) */
+/* Imported from Config.js at Wed May 03 2023 22:08:23 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -202,7 +202,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from Teams.js at Wed May 03 2023 12:13:46 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Wed May 03 2023 22:08:23 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -252,7 +252,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Wed May 03 2023 12:13:46 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Wed May 03 2023 22:08:23 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1944,7 +1944,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Wed May 03 2023 12:13:46 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Wed May 03 2023 22:08:23 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -3608,7 +3608,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Wed May 03 2023 12:13:46 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Wed May 03 2023 22:08:23 GMT+0900 (Japan Standard Time) */
 
 const MAKE_COMMANDS = function () {
     const { echo, error } = game.modding.terminal;
@@ -3840,7 +3840,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Wed May 03 2023 12:13:46 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Wed May 03 2023 22:08:23 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -3850,7 +3850,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Wed May 03 2023 12:13:46 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Wed May 03 2023 22:08:23 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4143,7 +4143,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Wed May 03 2023 12:13:46 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Wed May 03 2023 22:08:23 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -4673,11 +4673,11 @@ Press [${this.abilityShortcut}] to activate it.`
 
 
 
-/* Imported from misc/gameLogic.js at Wed May 03 2023 12:13:46 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Wed May 03 2023 22:08:23 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/Misc.js at Wed May 03 2023 12:13:46 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Wed May 03 2023 22:08:23 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -4955,6 +4955,27 @@ const UIData = {
             margin_scale_x: 1/8, // comparing to button width
             margin_scale_y: 1/6, // comparing to button height
         },
+        positionCache: {},
+        styles: {
+            selected: {
+                borderColor: "#AAFF00",
+                textColor: "#AAFF00",
+                borderWidth: 8,
+                bgColor: "rgba(170, 225, 0, 0.25)"
+            },
+            default: {
+                borderColor: "#FFFFFF",
+                textColor: "#FFFFFF",
+                borderWidth: 2,
+                bgColor: `rgba(68, 85, 102, 0.25)`
+            },
+            disabled: {
+                borderColor: "hsla(0, 100%, 50%, 1)",
+                textColor: "#fff",
+                borderWidth: 8,
+                bgColor: "hsla(0, 100%, 50%, 0.25)"
+            }
+        },
         openUI: function (ship, show) {
             HelperFunctions.sendUI(ship, {
                 id: this.toggleID,
@@ -4980,9 +5001,24 @@ const UIData = {
                 ship.custom.shipUIsPermaHidden = false;
                 ship.custom.lastSpawnedStep = game.step;
             }
+            let oldHidden = ship.custom.shipUIsHidden;
             ship.custom.shipUIsHidden = isHidden;
-            this.openUI(ship, !perma);
-            this.toggleSelectMenu(ship)
+            if (oldHidden !== isHidden || perma || firstOpen) this.openUI(ship, !perma);
+            if (oldHidden !== isHidden) this.toggleSelectMenu(ship);
+        },
+        sendIndividual: function (ship, position, name, stylePreset) {
+            let { bgColor, borderColor, borderWidth, textColor } = this.styles[stylePreset];
+            position = this.positionCache[name] = position == null ? this.positionCache[name] : position;
+            HelperFunctions.sendUI(ship, {
+                id: this.shipSelectPrefix + name,
+                position,
+                visible: true,
+                clickable: stylePreset == "default",
+                components: [
+                    { type: "box", position: [0, 0, 100, 100], fill: bgColor, stroke: borderColor,width: borderWidth},
+                    { type: "text", position: [0, 0, 100, 100], value: HelperFunctions.fill(name, this.shipSelectSize.textLength), color: textColor}
+                ]   
+            });
         },
         toggleSelectMenu: function (ship) {
             let visible = !ship.custom.shipUIsHidden;
@@ -5009,38 +5045,17 @@ const UIData = {
                 let row = Math.trunc(i / itemsPerLine), column = i % itemsPerLine;
                 let offsetX = row == itemsPerColumn - 1 ? lastLineXOffset : 0;
                 let usable = HelperFunctions.canUseButtons(ship) && AbilityManager.assign(ship, abil, true).success;
-                let color, strokeWidth, bg, bdColor;
-                if (ship.custom.shipName == abil) {
-                    bdColor = color = "#AAFF00";
-                    strokeWidth = 8;
-                    bg = "rgba(170, 225, 0, 0.25)";
-                }
-                else if (usable) {
-                    bdColor = color = "#FFFFFF";
-                    strokeWidth = 2;
-                    bg = `rgba(68, 85, 102, 0.25)`;
-                }
-                else {
-                    color = "#fff";
-                    bdColor = "hsla(0, 100%, 50%, 1)";
-                    strokeWidth = 8;
-                    bg = "hsla(0, 100%, 50%, 0.25)";
-                }
-                HelperFunctions.sendUI(ship, {
-                    id: this.shipSelectPrefix + abil,
-                    visible: true,
-                    clickable: usable,
-                    position: [
-                        offsetX + UISpec.xStart + column * width * (UISpec.margin_scale_x + 1),
-                        UISpec.yStart + row * height * (UISpec.margin_scale_y + 1),
-                        width,
-                        height
-                    ],
-                    components: [
-                        { type: "box", position: [0, 0, 100, 100], fill: bg,stroke: bdColor,width: strokeWidth},
-                        { type: "text", position: [0, 0, 100, 100], value: HelperFunctions.fill(abil, UISpec.textLength), color}
-                    ]     
-                });
+                let style = "";
+                if (ship.custom.shipName == abil) style = "selected";
+                else if (usable) style = "default";
+                else style = "disabled";
+
+                this.sendIndividual(ship, [
+                    offsetX + UISpec.xStart + column * width * (UISpec.margin_scale_x + 1),
+                    UISpec.yStart + row * height * (UISpec.margin_scale_y + 1),
+                    width,
+                    height
+                ], abil, style);
                 ++i;
             }
 
@@ -5246,13 +5261,37 @@ const UIData = {
         HelperFunctions.sendUI(ship, UIData.scores);
     },
     assign: function (ship, name) {
+        let oldName = ship.custom.shipName;
+        let oldList = [...AbilityManager.getAssignableShipsList(ship)];
         let res = AbilityManager.assign(ship, name);
         if (res.success) {
+            if (oldName == ship.custom.shipName) return;
+            this.shipUIs.sendIndividual(ship, null, ship.custom.shipName, "selected");
+            this.shipUIs.sendIndividual(ship, null, oldName, "default");
+            let newList = [...AbilityManager.getAssignableShipsList(ship)];
+
+            // compare old and new selectable list of that team
+            let i = 0;
+            while (i < oldList.length) {
+                let newIndex = newList.indexOf(oldList[i]);
+                if (newIndex < 0) ++i;
+                else {
+                    oldList.splice(i, 1);
+                    newList.splice(newIndex, 1);
+                } 
+            };
+            if (oldList.length == 0 && newList.length == 0) return; // nothing changed
+
+            // update ship UI status for that team
             let t = TeamManager.getDataFromShip(ship);
             for (let s of game.ships) {
                 if (s == null || s.id == null || s.custom.shipUIsPermaHidden || s.custom.shipUIsHidden) continue;
-                let x = TeamManager.getDataFromShip(s);
-                if (t.ghost ? x.ghost : t.id === x.id) this.shipUIs.toggleSelectMenu(s);
+                let x = TeamManager.getDataFromShip(s), playerShipName = s.custom.shipName;
+                if (t.ghost ? !x.ghost : t.id !== x.id) continue; // wrong team
+
+                // update ship usage limit UIs
+                for (let name of oldList) if (playerShipName != ship.custom.shipName) this.shipUIs.sendIndividual(s, null, name, "disabled");
+                for (let name of newList) if (playerShipName != ship.custom.shipName) this.shipUIs.sendIndividual(s, null, name, "default");
             }
         }
     }
@@ -5349,7 +5388,7 @@ const makeAlienSpawns = function () {
 
 
 
-/* Imported from misc/tickFunctions.js at Wed May 03 2023 12:13:46 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Wed May 03 2023 22:08:23 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -5821,7 +5860,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Wed May 03 2023 12:13:46 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Wed May 03 2023 22:08:23 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -5865,8 +5904,8 @@ this.event = function (event, game) {
                 }
                 default:
                     if (HelperFunctions.canUseButtons(ship) && component.startsWith(UIData.shipUIs.shipSelectPrefix)) {
-                        UIData.assign(ship, component.replace(UIData.shipUIs.shipSelectPrefix, ""));
-                        UIData.shipUIs.toggleSelectMenu(ship);
+                        let shipName = component.replace(UIData.shipUIs.shipSelectPrefix, "");
+                        if (shipName !== ship.custom.shipName) UIData.assign(ship, shipName);
                     }
             }
     }
@@ -5876,7 +5915,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Wed May 03 2023 12:13:46 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Wed May 03 2023 22:08:23 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
