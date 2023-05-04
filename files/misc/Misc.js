@@ -380,7 +380,7 @@ const UIData = {
                 id: "prev_ship",
                 visible: true,
                 clickable: true,
-                shortcut: "U",
+                shortcut: "[",
                 position: [
                     UISpec.xStart,
                     UISpec.yEnd + height * UISpec.margin_scale_y * 2,
@@ -389,7 +389,7 @@ const UIData = {
                 ],
                 components: [
                     { type: "box", position: [0, 0, 100, 100], fill:"rgba(68, 85, 102, 0.5)",stroke: "#fff",width:2},
-                    { type: "text", position: [0, 0, 100, 100], value: HelperFunctions.fill(`Previous ship [U]`, UISpec.textLength), color: "#fff"}
+                    { type: "text", position: [0, 0, 100, 100], value: HelperFunctions.fill(`[ Previous ship`, UISpec.textLength), color: "#fff"}
                 ]
             });
 
@@ -397,7 +397,7 @@ const UIData = {
                 id: "next_ship",
                 visible: true,
                 clickable: true,
-                shortcut: "K",
+                shortcut: "]",
                 position: [
                     UISpec.xEnd - width,
                     UISpec.yEnd + height * UISpec.margin_scale_y * 2,
@@ -406,7 +406,7 @@ const UIData = {
                 ],
                 components: [
                     { type: "box", position: [0, 0, 100, 100], fill:"rgba(68, 85, 102, 0.5)",stroke: "#fff",width:2},
-                    { type: "text", position: [0, 0, 100, 100], value: HelperFunctions.fill(`Next ship [K]`, UISpec.textLength), color: "#fff"}
+                    { type: "text", position: [0, 0, 100, 100], value: HelperFunctions.fill(`Next ship ]`, UISpec.textLength), color: "#fff"}
                 ]
             });
         }
