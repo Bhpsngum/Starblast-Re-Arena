@@ -380,7 +380,7 @@ const UIData = {
                 id: "prev_ship",
                 visible: true,
                 clickable: true,
-                shortcut: "[",
+                shortcut: String.fromCharCode(219),
                 position: [
                     UISpec.xStart,
                     UISpec.yEnd + height * UISpec.margin_scale_y * 2,
@@ -397,7 +397,7 @@ const UIData = {
                 id: "next_ship",
                 visible: true,
                 clickable: true,
-                shortcut: "]",
+                shortcut: String.fromCharCode(221),
                 position: [
                     UISpec.xEnd - width,
                     UISpec.yEnd + height * UISpec.margin_scale_y * 2,
