@@ -28,13 +28,11 @@ const GameHelperFunctions = {
             HelperFunctions.setPlaneOBJ({
                 id: "team_base_" + i,
                 position: {
-                    ...spawnpoint,
-                    z: GAME_OPTIONS.plane_3D_OBJ_Z_level
+                    ...spawnpoint
                 },
                 scale: {
                     x: scale,
-                    y: scale,
-                    z: 0
+                    y: scale
                 },
                 rotation: {
                     x: Math.PI,
@@ -71,13 +69,11 @@ const GameHelperFunctions = {
         HelperFunctions.setPlaneOBJ({
             id: "control_point_" + curState,
             position: {
-                ...CONTROL_POINT.position,
-                z: GAME_OPTIONS.plane_3D_OBJ_Z_level
+                ...CONTROL_POINT.position
             },
             scale: {
                 x: scale,
-                y: scale,
-                z: 0
+                y: scale
             },
             rotation: {
                 x: 0,

@@ -758,8 +758,7 @@ const ShipAbilities = {
                         id: "BFG_warning_" + ship.id,
                         scale: {
                             x: this.imgScale.x * this.scale.x * delta,
-                            y: this.imgScale.y * this.scale.y,
-                            z: 0
+                            y: this.imgScale.y * this.scale.y
                         },
                         rotation: {
                             x: Math.PI,
@@ -768,8 +767,7 @@ const ShipAbilities = {
                         },
                         position: {
                             x: ship.x + OBJCenterDistFromShip * Math.cos(shipR),
-                            y: ship.y + OBJCenterDistFromShip * Math.sin(shipR),
-                            z: 0
+                            y: ship.y + OBJCenterDistFromShip * Math.sin(shipR)
                         },
                         type: {
                             id: "BFG_warning_" + ship.team, 
@@ -1357,8 +1355,8 @@ const ShipAbilities = {
 
             HelperFunctions.setPlaneOBJ({
                 id: "healing_base_" + ship.id,
-                position: { x: ship.x, y: ship.y, z: 0},
-                scale: {x: this.range * this.objScale, y: this.range * this.objScale, z: 0},
+                position: { x: ship.x, y: ship.y },
+                scale: {x: this.range * this.objScale, y: this.range * this.objScale },
                 rotation: { x: 0, y: 0, z: 0 },
                 type: {
                     id: "healing_base_" + ship.team,

@@ -26,7 +26,8 @@ Press [${this.ability.shortcut}] to activate it.`
         // minimum depends on number of teams, max players and number of ability ships
         // maximum Infinity, you can also omit the limit to obtain same result
         // to define different limit for a certain ship, use `usageLimit` spec in ship template
-    }
+    },
+    plane_3D_OBJ_Z_level: -3 // z value of 3D Plane OBJ
 }
 
 // don't remove those

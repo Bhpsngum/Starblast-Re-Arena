@@ -29,6 +29,14 @@ const HelperFunctions = {
         options = options || {};
         this.setObject({
             ...options,
+            position: {
+                ...options.position,
+                z: GAME_OPTIONS.plane_3D_OBJ_Z_level
+            },
+            scale: {
+                ...options.scale,
+                z: 0
+            },
             type: {
                 ...(options.type || {}),
                 obj: RESOURCES.planeOBJ
