@@ -323,11 +323,13 @@ const UIData = {
         },
         sendIndividual: function (ship, position, name, stylePreset) {
             let { bgColor, borderColor, borderWidth, textColor } = this.styles[stylePreset];
+            let visible = true;
             position = this.positionCache[name] = position == null ? this.positionCache[name] : position;
+            if (position == null) visible = false;
             HelperFunctions.sendUI(ship, {
                 id: this.shipSelectPrefix + name,
                 position,
-                visible: true,
+                visible,
                 clickable: stylePreset == "default",
                 components: [
                     { type: "box", position: [0, 0, 100, 100], fill: bgColor, stroke: borderColor,width: borderWidth},
