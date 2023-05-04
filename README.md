@@ -10,8 +10,6 @@ This remake is only in the early stages, so do prepare for tons of hidden bugs, 
 
 But at least it should run as expected ~~I guess~~
 
-**P/S:** This won't be the final code since there will be more updates in the future. Also, since this remake is aiming for Modding Space (MS), a (very) large amount of inappropiate text will be removed beforehand. But that'll be done in the future. Bug fixing and updating are still the main focus for now.
-
 ## Credits
 
 ### Original Arena Mod (v1.0 - v3.1.2)
@@ -38,7 +36,9 @@ But at least it should run as expected ~~I guess~~
 In the root directory, you can also see other files:
 * **`README.md`**: This file
 * **`mergeFiles.js`**: This file is used to assemble the codes to create a complete mod file, only run in NodeJS
-* **(whatever its name)**: The compiled file, output of `mergeFile.js`
+* **{Name}_{Version}_Main.js**: The code that you can host as a normal Arena game
+* **{Name}_{Version}_MS.js**: Prepared code for future Modding Space release
+* **{Name}_{Version}_ShipTesting.js**: Purely a Ability Ships Tester code, use this to test your newly added ships.
 
 ## Q&A
 If you have any questions or feedbacks, please open an issue and I might include answers in this section.

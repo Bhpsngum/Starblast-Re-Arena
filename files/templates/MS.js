@@ -1,6 +1,6 @@
 /* import Notes.js notimestamp */
 
-/* import Config_Main.js */
+/* import Config_MS.js */
 
 /* import Teams.js */
 
