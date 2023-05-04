@@ -93,9 +93,9 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_Main.js at Thu May 04 2023 19:32:59 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_MS.js at Thu May 04 2023 19:32:59 GMT+0900 (Japan Standard Time) */
 
-const DEBUG = true; // if in debug phase
+const DEBUG = false; // if in debug phase
 
 // This is generic Ability System options only
 // for Arena game options please edit in misc/GameConfig.js

@@ -56,4 +56,8 @@ const compileMultipleFiles = async function (templates) {
     for (let template of templates) await compile(template);
 }
 
-compileMultipleFiles(process.argv.slice(2));
+let templates = process.argv.slice(2).filter(e => e.trim());
+
+if (templates.length < 1) templates = package.branches;
+
+compileMultipleFiles(templates);

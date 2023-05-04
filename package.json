@@ -1,6 +1,11 @@
 {
     "name": "Arena_Mod",
     "version": "4.0.0",
+    "branches": [
+        "Main",
+        "MS",
+        "ShipTesting"
+    ],
     "scripts": {
         "compile": "node mergeFiles.js"
     }

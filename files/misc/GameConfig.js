@@ -1,4 +1,4 @@
-const map_name = `Arena Mod v4.0 Beta`; // leave `null` if you want randomized map name
+const map_name = null; // leave `null` if you want randomized map name
 
 Object.assign(GAME_OPTIONS, {
     duration: 30 * 60, // game duration in seconds
