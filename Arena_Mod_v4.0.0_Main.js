@@ -93,7 +93,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config.js at Thu May 04 2023 09:02:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Config.js at Thu May 04 2023 14:05:20 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -135,7 +135,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Thu May 04 2023 09:02:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Thu May 04 2023 14:05:20 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -185,7 +185,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Thu May 04 2023 09:02:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Thu May 04 2023 14:05:20 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1659,7 +1659,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Thu May 04 2023 09:02:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Thu May 04 2023 14:05:20 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -3311,7 +3311,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Thu May 04 2023 09:02:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Thu May 04 2023 14:05:20 GMT+0900 (Japan Standard Time) */
 
 const MAKE_COMMANDS = function () {
     const { echo, error } = game.modding.terminal;
@@ -3542,7 +3542,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Thu May 04 2023 09:02:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Thu May 04 2023 14:05:20 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -3552,7 +3552,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Thu May 04 2023 09:02:10 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Thu May 04 2023 14:05:20 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -3853,7 +3853,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Thu May 04 2023 09:02:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Thu May 04 2023 14:05:20 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -4167,6 +4167,10 @@ const AbilityManager = {
         for (let ability of Object.values(this.abilities)) {
             if ("function" == typeof ability.globalTick) ability.globalTick(game);
         }
+        let oldList = game.custom.__ability_manager_players_list__;
+        if (!Array.isArray(oldList)) oldList = [];
+        let newList = [];
+
         for (let ship of game.ships) {
             if (ship.id == null) continue;
             if (!ship.custom.__ability__initialized__ && ship.alive) {
@@ -4182,8 +4186,20 @@ const AbilityManager = {
                 }
                 ship.custom.allowInstructor = false;
             }
-            if (ship.custom.__ability__initialized__) this.tick(ship);
+            if (ship.custom.__ability__initialized__) {
+                newList.push({ id: ship.id, team: TeamManager.getDataFromShip(ship) });
+                let oldIndex = oldList.findIndex(s => s.id === ship.id);
+                if (oldIndex >= 0) oldList.splice(oldIndex, 1);
+                this.tick(ship);
+            }
         }
+
+        if (oldList.length > 0) {
+            let teams = [...new Set(oldList.map(e => e.team))];
+            for (let team of teams) this.updateShipsList(team);
+        }
+
+        game.custom.__ability_manager_players_list__ = newList;
     },
     globalEvent: function (event, game) {
         let ship = event.ship;
@@ -4350,7 +4366,9 @@ const AbilityManager = {
         return teamData.ships_list
     },
     updateShipsList: function (team) {
+        let oldList = Array.isArray(team.ships_list) ? [...team.ships_list] : [];
         team.ships_list = [];
+        let newList = [];
         let data = {};
         for (let ship of game.ships) {
             if (ship == null || ship.id == null || ship.custom.abilitySystemDisabled) continue;
@@ -4360,8 +4378,19 @@ const AbilityManager = {
         }
 
         for (let abil of this.ships_list) {
-            if ((+data[abil] || 0) < AbilityManager.abilities[abil].usageLimit) team.ships_list.push(abil);
+            if ((+data[abil] || 0) < AbilityManager.abilities[abil].usageLimit) {
+                team.ships_list.push(abil);
+                let oldIndex = oldList.indexOf(abil);
+                if (oldIndex < 0) newList.push(abil);
+                else oldList.splice(oldIndex, 1);
+            }
         }
+
+        if ((oldList.length > 0 || newList.length > 0) && "function" == typeof this.onShipsListUpdate) this.onShipsListUpdate(team, newList, oldList);
+        // update func:
+        // team: team needs to be updated
+        // newList: new allowed ships
+        // oldList: new disabled ships
     },
     getShipCodes: function () {
         if (!Array.isArray(this.ship_codes)) this.initialize();
@@ -4390,11 +4419,11 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/gameLogic.js at Thu May 04 2023 09:02:10 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Thu May 04 2023 14:05:20 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/GameConfig.js at Thu May 04 2023 09:02:10 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Thu May 04 2023 14:05:20 GMT+0900 (Japan Standard Time) */
 
 const map_name = `Arena Mod v4.0 Beta`; // leave `null` if you want randomized map name
 
@@ -4498,7 +4527,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Thu May 04 2023 09:02:10 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Thu May 04 2023 14:05:20 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -5079,37 +5108,10 @@ const UIData = {
     },
     assign: function (ship, name) {
         let oldName = ship.custom.shipName;
-        let oldList = [...AbilityManager.getAssignableShipsList(ship)];
         let res = AbilityManager.assign(ship, name);
-        if (res.success) {
-            if (oldName == ship.custom.shipName) return;
+        if (res.success && oldName != ship.custom.shipName) {
             this.shipUIs.sendIndividual(ship, null, ship.custom.shipName, "selected");
-            this.shipUIs.sendIndividual(ship, null, oldName, "default");
-            let newList = [...AbilityManager.getAssignableShipsList(ship)];
-
-            // compare old and new selectable list of that team
-            let i = 0;
-            while (i < oldList.length) {
-                let newIndex = newList.indexOf(oldList[i]);
-                if (newIndex < 0) ++i;
-                else {
-                    oldList.splice(i, 1);
-                    newList.splice(newIndex, 1);
-                } 
-            };
-            if (oldList.length == 0 && newList.length == 0) return; // nothing changed
-
-            // update ship UI status for that team
-            let t = TeamManager.getDataFromShip(ship);
-            for (let s of game.ships) {
-                if (s == null || s.id == null || s.custom.shipUIsPermaHidden || s.custom.shipUIsHidden) continue;
-                let x = TeamManager.getDataFromShip(s), playerShipName = s.custom.shipName;
-                if (t.ghost ? !x.ghost : t.id !== x.id) continue; // wrong team
-
-                // update ship usage limit UIs
-                for (let name of oldList) if (playerShipName != ship.custom.shipName) this.shipUIs.sendIndividual(s, null, name, "disabled");
-                for (let name of newList) if (playerShipName != ship.custom.shipName) this.shipUIs.sendIndividual(s, null, name, "default");
-            }
+            this.shipUIs.sendIndividual(ship, null, oldName, AbilityManager.getAssignableShipsList(ship).includes(oldName) ? "default" : "disabled");
         }
     }
 }
@@ -5201,11 +5203,23 @@ const makeAlienSpawns = function () {
     AlienSpawns = map;
 }
 
+AbilityManager.onShipsListUpdate = function (team, newList, oldList) {
+    for (let s of game.ships) {
+        if (s == null || s.id == null || s.custom.shipUIsPermaHidden || s.custom.shipUIsHidden) continue;
+        let x = TeamManager.getDataFromShip(s), playerShipName = s.custom.shipName;
+        if (team.ghost ? !x.ghost : team.id !== x.id) continue; // wrong team
+
+        // update ship usage limit UIs
+        for (let name of oldList) if (playerShipName != name) UIData.shipUIs.sendIndividual(s, null, name, "disabled");
+        for (let name of newList) if (playerShipName != name) UIData.shipUIs.sendIndividual(s, null, name, "default");
+    }
+}
 
 
 
 
-/* Imported from misc/tickFunctions.js at Thu May 04 2023 09:02:10 GMT+0900 (Japan Standard Time) */
+
+/* Imported from misc/tickFunctions.js at Thu May 04 2023 14:05:20 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -5677,7 +5691,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Thu May 04 2023 09:02:10 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Thu May 04 2023 14:05:20 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -5732,7 +5746,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Thu May 04 2023 09:02:10 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Thu May 04 2023 14:05:20 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?

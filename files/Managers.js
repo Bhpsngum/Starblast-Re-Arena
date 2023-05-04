@@ -310,6 +310,10 @@ const AbilityManager = {
         for (let ability of Object.values(this.abilities)) {
             if ("function" == typeof ability.globalTick) ability.globalTick(game);
         }
+        let oldList = game.custom.__ability_manager_players_list__;
+        if (!Array.isArray(oldList)) oldList = [];
+        let newList = [];
+
         for (let ship of game.ships) {
             if (ship.id == null) continue;
             if (!ship.custom.__ability__initialized__ && ship.alive) {
@@ -325,8 +329,20 @@ const AbilityManager = {
                 }
                 ship.custom.allowInstructor = false;
             }
-            if (ship.custom.__ability__initialized__) this.tick(ship);
+            if (ship.custom.__ability__initialized__) {
+                newList.push({ id: ship.id, team: TeamManager.getDataFromShip(ship) });
+                let oldIndex = oldList.findIndex(s => s.id === ship.id);
+                if (oldIndex >= 0) oldList.splice(oldIndex, 1);
+                this.tick(ship);
+            }
         }
+
+        if (oldList.length > 0) {
+            let teams = [...new Set(oldList.map(e => e.team))];
+            for (let team of teams) this.updateShipsList(team);
+        }
+
+        game.custom.__ability_manager_players_list__ = newList;
     },
     globalEvent: function (event, game) {
         let ship = event.ship;
@@ -493,7 +509,9 @@ const AbilityManager = {
         return teamData.ships_list
     },
     updateShipsList: function (team) {
+        let oldList = Array.isArray(team.ships_list) ? [...team.ships_list] : [];
         team.ships_list = [];
+        let newList = [];
         let data = {};
         for (let ship of game.ships) {
             if (ship == null || ship.id == null || ship.custom.abilitySystemDisabled) continue;
@@ -503,8 +521,19 @@ const AbilityManager = {
         }
 
         for (let abil of this.ships_list) {
-            if ((+data[abil] || 0) < AbilityManager.abilities[abil].usageLimit) team.ships_list.push(abil);
+            if ((+data[abil] || 0) < AbilityManager.abilities[abil].usageLimit) {
+                team.ships_list.push(abil);
+                let oldIndex = oldList.indexOf(abil);
+                if (oldIndex < 0) newList.push(abil);
+                else oldList.splice(oldIndex, 1);
+            }
         }
+
+        if ((oldList.length > 0 || newList.length > 0) && "function" == typeof this.onShipsListUpdate) this.onShipsListUpdate(team, newList, oldList);
+        // update func:
+        // team: team needs to be updated
+        // newList: new allowed ships
+        // oldList: new disabled ships
     },
     getShipCodes: function () {
         if (!Array.isArray(this.ship_codes)) this.initialize();
