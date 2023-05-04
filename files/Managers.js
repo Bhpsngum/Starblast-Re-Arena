@@ -501,7 +501,7 @@ const AbilityManager = {
 
         if (this.ship_codes.length < 1) HelperFunctions.terminal.error(`No ships found. What the f*ck?`);
 
-        this.ships_list = Object.keys(this.abilities);
+        this.ships_list = Object.keys(this.abilities).sort();
     },
     getAssignableShipsList: function (ship, forceUpdate = false) {
         let teamData = TeamManager.getDataFromShip(ship);
