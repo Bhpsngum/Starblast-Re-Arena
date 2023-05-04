@@ -577,37 +577,10 @@ const UIData = {
     },
     assign: function (ship, name) {
         let oldName = ship.custom.shipName;
-        let oldList = [...AbilityManager.getAssignableShipsList(ship)];
         let res = AbilityManager.assign(ship, name);
-        if (res.success) {
-            if (oldName == ship.custom.shipName) return;
+        if (res.success && oldName != ship.custom.shipName) {
             this.shipUIs.sendIndividual(ship, null, ship.custom.shipName, "selected");
-            this.shipUIs.sendIndividual(ship, null, oldName, "default");
-            let newList = [...AbilityManager.getAssignableShipsList(ship)];
-
-            // compare old and new selectable list of that team
-            let i = 0;
-            while (i < oldList.length) {
-                let newIndex = newList.indexOf(oldList[i]);
-                if (newIndex < 0) ++i;
-                else {
-                    oldList.splice(i, 1);
-                    newList.splice(newIndex, 1);
-                } 
-            };
-            if (oldList.length == 0 && newList.length == 0) return; // nothing changed
-
-            // update ship UI status for that team
-            let t = TeamManager.getDataFromShip(ship);
-            for (let s of game.ships) {
-                if (s == null || s.id == null || s.custom.shipUIsPermaHidden || s.custom.shipUIsHidden) continue;
-                let x = TeamManager.getDataFromShip(s), playerShipName = s.custom.shipName;
-                if (t.ghost ? !x.ghost : t.id !== x.id) continue; // wrong team
-
-                // update ship usage limit UIs
-                for (let name of oldList) if (playerShipName != ship.custom.shipName) this.shipUIs.sendIndividual(s, null, name, "disabled");
-                for (let name of newList) if (playerShipName != ship.custom.shipName) this.shipUIs.sendIndividual(s, null, name, "default");
-            }
+            this.shipUIs.sendIndividual(ship, null, oldName, AbilityManager.getAssignableShipsList(ship).includes(oldName) ? "default" : "disabled");
         }
     }
 }
@@ -697,4 +670,16 @@ const makeAlienSpawns = function () {
     });
 
     AlienSpawns = map;
+}
+
+AbilityManager.onShipsListUpdate = function (team, newList, oldList) {
+    for (let s of game.ships) {
+        if (s == null || s.id == null || s.custom.shipUIsPermaHidden || s.custom.shipUIsHidden) continue;
+        let x = TeamManager.getDataFromShip(s), playerShipName = s.custom.shipName;
+        if (team.ghost ? !x.ghost : team.id !== x.id) continue; // wrong team
+
+        // update ship usage limit UIs
+        for (let name of oldList) if (playerShipName != name) UIData.shipUIs.sendIndividual(s, null, name, "disabled");
+        for (let name of newList) if (playerShipName != name) UIData.shipUIs.sendIndividual(s, null, name, "default");
+    }
 }
