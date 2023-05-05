@@ -290,7 +290,9 @@ const AbilityManager = {
             shield: 1e4,
             generator: shipAbil.generatorInit,
             stats: AbilityManager.maxStats,
-            crystals: shipAbil.crystals
+            crystals: shipAbil.crystals,
+            vx: 0,
+            vy: 0
         });
         shipAbil.initialize(ship);
         this.updateShipsList(TeamManager.getDataFromShip(ship));
