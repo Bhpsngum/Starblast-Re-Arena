@@ -90,7 +90,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_Main.js at Fri May 05 2023 21:01:23 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_Main.js at Fri May 05 2023 21:45:44 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -132,7 +132,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Fri May 05 2023 21:01:23 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Fri May 05 2023 21:45:44 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -182,7 +182,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Fri May 05 2023 21:01:23 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Fri May 05 2023 21:45:44 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1091,15 +1091,15 @@ const Maps = [
             "66695867687669965778679869967656679976857859585      58595875867997665676996897687756996678676859666\n"+
             "9999                            679976                        679976                            9999\n"+
             "8888                            679976                        679976                            8888\n"+
-            "7777               5             7997                          7997                       5     7777\n"+
+            "7777               5             7997                          7997                             7777\n"+
             "8888                       5     7997      5           3       7997              3              8888\n"+
-            "                      3          7997           9999           7997       9999                      \n"+
-            "                    93            99            9999        5   99     5  9999                      \n"+
-            "                     57           99            9999            99        9999                      \n"+
-            "                                  99       3   999999   3       99        99999                     \n"+
-            "7777                      3     5 99           999999           99         9999     5         3 7777\n"+
+            "7777                  3          7997           9999           7997       9999                  7777\n"+
+            "6666                93            99            9999        5   99     5  9999                  6666\n"+
+            "7777                 57           99            9999            99        9999                  7777\n"+
+            "8888                              99       3   999999   3       99        99999                 8888\n"+
+            "7777                      3     5 99           999999           99         9999     5           7777\n"+
             "6666                                           999999                      9999                 6666\n"+
-            "7777               3                3         89999998              3      99999         3      7777\n"+
+            "7777               3                3         89999998              3      99999                7777\n"+
             "8888                                    5     88999988                      99999               8888\n"+
             "8888      3                                  8888  8888     5   3           9999                8888\n"+
             "6666                      5                  8888  8888                      99                 6666\n"+
@@ -1173,11 +1173,11 @@ const Maps = [
             "7777                99999                     89999998                      3                   7777\n"+
             "6666            3    9999                      999999                                           6666\n"+
             "7777                 9999         99           999999   3       99                              7777\n"+
-            "            5        99999        99   3       999999           99          7                       \n"+
-            "                      9999        99            9999            99          37                      \n"+
-            "                      9999        99            9999            99         59   3                   \n"+
-            "         3            9999       7997      5    9999      5    7997      3                          \n"+
-            "8888           5                 7997                          7997                3            8888\n"+
+            "8888                 99999        99   3       999999           99          7                   8888\n"+
+            "7777                  9999        99            9999            99          37                  7777\n"+
+            "6666                  9999        99            9999            99         59   3               6666\n"+
+            "7777                  9999       7997      5    9999      5    7997      3                      7777\n"+
+            "8888                             7997                          7997                             8888\n"+
             "7777                             7997                3         7997                             7777\n"+
             "8888                            679976                        679976                            8888\n"+
             "9999                            679976                        679976                            9999\n"+
@@ -1656,7 +1656,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Fri May 05 2023 21:01:23 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Fri May 05 2023 21:45:44 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -3308,7 +3308,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Fri May 05 2023 21:01:23 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Fri May 05 2023 21:45:44 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -3541,7 +3541,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Fri May 05 2023 21:01:23 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Fri May 05 2023 21:45:44 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -3551,7 +3551,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Fri May 05 2023 21:01:23 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Fri May 05 2023 21:45:44 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -3852,7 +3852,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Fri May 05 2023 21:01:23 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Fri May 05 2023 21:45:44 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -4418,11 +4418,11 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/gameLogic.js at Fri May 05 2023 21:01:23 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Fri May 05 2023 21:45:44 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/GameConfig.js at Fri May 05 2023 21:01:23 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Fri May 05 2023 21:45:44 GMT+0900 (Japan Standard Time) */
 
 const map_name = null; // leave `null` if you want randomized map name
 
@@ -4526,7 +4526,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Fri May 05 2023 21:01:23 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Fri May 05 2023 21:45:44 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -5220,7 +5220,7 @@ AbilityManager.onShipsListUpdate = function (team, newList, oldList) {
 
 
 
-/* Imported from misc/tickFunctions.js at Fri May 05 2023 21:01:23 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Fri May 05 2023 21:45:44 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -5692,7 +5692,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Fri May 05 2023 21:01:23 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Fri May 05 2023 21:45:44 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -5748,7 +5748,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Fri May 05 2023 21:01:23 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Fri May 05 2023 21:45:44 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
