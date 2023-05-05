@@ -10,6 +10,7 @@ Object.assign(GAME_OPTIONS, {
     healing_ratio: 1, // better don't touch this
     crystal_drop: 0.5, // this.options.crystal_drop
     map_size: 100,
+    buttons_cooldown: 0.25, // must wait after x (seconds) before the same button can be triggered again
     alienSpawns: {
         level: {
             min: 1,
