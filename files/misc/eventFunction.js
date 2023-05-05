@@ -19,7 +19,7 @@ this.event = function (event, game) {
             break;
         case "ui_component_clicked":
             if (UIData.blockers.has(event.id)) break;
-            if (ship.custom.lastClickedStep != null && game.step - ship.custom.lastClickedStep <= 0.2 * 60) break;
+            if (ship.custom.lastClickedStep != null && game.step - ship.custom.lastClickedStep < GAME_OPTIONS.buttons_cooldown * 60) break;
             ship.custom.lastClickedStep = game.step;
             let component = event.id;
             switch (component) {
