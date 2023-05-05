@@ -21,9 +21,6 @@ The files below are recommended and better don't touch other files unless you kn
 
 3. Paste your current's mod code in the templates/gameLogic.js file
 Consider the things below:
-// Make some terminal commands (optional)
-// It's made automatically when DEBUG = true, but if you want to manually make it anyway
-MAKE_COMMANDS();
 
 // to initialize the Ability System (required):
 AbilityManager.initialize()

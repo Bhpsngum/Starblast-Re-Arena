@@ -1,4 +1,6 @@
+// only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
+    if (!DEBUG) return;
     const { echo, error } = game.modding.terminal;
     let gameCommands = game.modding.commands;
 

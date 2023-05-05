@@ -44,5 +44,6 @@ this.event = function (event, game) {
                         if (shipName !== ship.custom.shipName) UIData.assign(ship, shipName);
                     }
             }
+            break;
     }
 }
