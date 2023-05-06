@@ -90,7 +90,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_Main.js at Fri May 05 2023 22:56:59 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_Main.js at Sat May 06 2023 16:17:55 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -132,7 +132,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Fri May 05 2023 22:56:59 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Sat May 06 2023 16:17:55 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -182,7 +182,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Fri May 05 2023 22:56:59 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Sat May 06 2023 16:17:55 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1649,6 +1649,129 @@ const Maps = [
             "  999753    999999    99999533599999999999999999999999999999999999999533599999    999999    357999  \n"+
             "         99  9999  77  9995    5996  69999999999999999999999996  6995    5999  77  9999  99         \n"+
             "        9999 9999 7777 9993 77 499 77 999999999999999999999999 77 994 77 3999 7777 9999 9999        "
+    },
+    {
+        name: "Waves",
+        author: "Caramel",
+        spawnpoints: [
+            { x: 390, y: -390 },
+            { x: -390, y: 390 },
+            { x: 390, y: 390 },
+            { x: -390, y: -390 },
+            { x: 0, y: -390 },
+            { x: 0, y: 390 },
+            { x: -390, y: 0 },
+            { x: 390, y: 0 }
+        ],
+        pairings: [
+            [0, 1],
+            [2, 3],
+            [4, 5],
+            [6, 7],
+            [0, 1, 2, 3],
+            [4, 5, 6, 7]
+        ],
+        map:
+            "7779686678877668688868686887768676876887776786667667666876777886786768677886868688868667788766869777\n"+
+            "6867677768668788878766787789999999997667877767678668767677787667999999999877876678788878668677767686\n"+
+            "6777668668786788878788886999887777788999886777766776677776889998877777889996888878788876878668667776\n"+
+            "86777866688797687678789997             7998676886886886768997             79998787678679788666877768\n"+
+            "76876779999999999999975                  799866866668668997                  57999999999999997767867\n"+
+            "8766679                                    57999999999975                                    9766678\n"+
+            "667869                         3                                    3                         968766\n"+
+            "67669                                                                                          96676\n"+
+            "87769                      7                                            7                      96778\n"+
+            "66669                              5                            5                              96666\n"+
+            "67787               3                                                          3               78776\n"+
+            "78776                                                                                          67787\n"+
+            "76669                                   35796          69753                                   96667\n"+
+            "68789                                   35777          77753                                   98786\n"+
+            "76689                        9          335796        697533          9                        98667\n"+
+            "77769                                    356795      597653                                    96777\n"+
+            "77669              5     5               335679764467976533               5     5              96677\n"+
+            "88777                               7     3355779999775533     7                               77788\n"+
+            "68775                                      33557777775533                                      57786\n"+
+            "6689       5                 5              333555555333              5                 5       9866\n"+
+            "6769                                          33333333                                          9676\n"+
+            "6879                 7                                                        7                 9786\n"+
+            "7877                                                                                            7787\n"+
+            "7775        5                               3          3                               5        5777\n"+
+            "869                         965      7                        7      569                         968\n"+
+            "689                        98753                                    35789                        986\n"+
+            "769              9        9877532                                  2357789        9              967\n"+
+            "889      7               98765                                        56789               7      988\n"+
+            "869                     98765                6999999996                56789                     968\n"+
+            "879          3         98775                887777777788                57789         3          978\n"+
+            "789                    6765                 765555555567                 5676                    987\n"+
+            "689                    555                  543333333345                  555                    986\n"+
+            "769                     33                  3          3                  33                     967\n"+
+            "7795             7       2      9     5                      5     9      2       7             5977\n"+
+            "6697      9                                                                              9      7966\n"+
+            "6869                    5                                                  5                    9686\n"+
+            "86895                                          3    3                                          59868\n"+
+            "87697                                                                                          79678\n"+
+            "86679                                    96              69                                    97668\n"+
+            "76669                                   9864            4689                                   96667\n"+
+            "88689       333       9         5      9865              5689      5         9       333       98688\n"+
+            "87889       53333                     9865      8888      5689                     33335       98878\n"+
+            "87889       755333                    665       7777       566                    333557       98878\n"+
+            "768795      9755333                    4        5555        4                    3335579      597867\n"+
+            "888797      67955333     3   8753                                  3578   3     33355976      797888\n"+
+            "778689        696533        6753                                    3576        335696        986877\n"+
+            "766679         595533       9753  3                              3  3579       335595         976667\n"+
+            "877679          77753       9753                                    3579       35777          976778\n"+
+            "777789          69753       9753         875            578         3579       35796          987777\n"+
+            "786869          49753       9753         875            578         3579       35794          968687\n"+
+            "786869          49753       9753         875            578         3579       35794          968687\n"+
+            "777789          69753       9753         875            578         3579       35796          987777\n"+
+            "877679          77753       9753                                    3579       35777          976778\n"+
+            "766679         595533       9753  3                              3  3579       335595         976667\n"+
+            "778689        696533        6753                                    3576        335696        986877\n"+
+            "888797      67955333     3   8753                                  3578   3     33355976      797888\n"+
+            "768795      9755333                    4        5555        4                    3335579      597867\n"+
+            "87889       755333                    665       7777       566                    333557       98878\n"+
+            "87889       53333                     9865      8888      5689                     33335       98878\n"+
+            "88689       333       9         5      9865              5689      5         9       333       98688\n"+
+            "76669                                   9864            4689                                   96667\n"+
+            "86679                                    96              69                                    97668\n"+
+            "87697                                                                                          79678\n"+
+            "86895                                          3    3                                          59868\n"+
+            "6869                    5                                                  5                    9686\n"+
+            "6697      9                                                                              9      7966\n"+
+            "7795             7       2      9     5                      5     9      2       7             5977\n"+
+            "769                     33                  3          3                  33                     967\n"+
+            "689                    555                  543333333345                  555                    986\n"+
+            "789                    6765                 765555555567                 5676                    987\n"+
+            "879          3         98775                887777777788                57789         3          978\n"+
+            "869                     98765                6999999996                56789                     968\n"+
+            "889      7               98765                                        56789               7      988\n"+
+            "769              9        9877532                                  2357789        9              967\n"+
+            "689                        98753                                    35789                        986\n"+
+            "869                         965      7                        7      569                         968\n"+
+            "7775        5                               3          3                               5        5777\n"+
+            "7877                                                                                            7787\n"+
+            "6879                 7                                                        7                 9786\n"+
+            "6769                                          33333333                                          9676\n"+
+            "6689       5                 5              333555555333              5                 5       9866\n"+
+            "68775                                      33557777775533                                      57786\n"+
+            "88777                               7     3355779999775533     7                               77788\n"+
+            "77669              5     5               335679764467976533               5     5              96677\n"+
+            "77769                                    356795      597653                                    96777\n"+
+            "76689                        9          335796        697533          9                        98667\n"+
+            "68789                                   35777          77753                                   98786\n"+
+            "76669                                   35796          69753                                   96667\n"+
+            "78776                                                                                          67787\n"+
+            "67787               3                                                          3               78776\n"+
+            "66669                              5                            5                              96666\n"+
+            "87769                      7                                            7                      96778\n"+
+            "67669                                                                                          96676\n"+
+            "667869                         3                                    3                         968766\n"+
+            "8766679                                    57999999999975                                    9766678\n"+
+            "76876779999999999999975                  799866866668668997                  57999999999999997767867\n"+
+            "86777866688797687678789997             7998676886886886768997             79998787678679788666877768\n"+
+            "6777668668786788878788886999887777788999886777766776677776889998877777889996888878788876878668667776\n"+
+            "6867677768668788878766787789999999997667877767678668767677787667999999999877876678788878668677767686\n"+
+            "7779686678877668688868686887768676876887776786667667666876777886786768677886868688868667788766869777"
     }
 ];
 
@@ -1656,7 +1779,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Fri May 05 2023 22:56:59 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Sat May 06 2023 16:17:55 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -1902,7 +2025,7 @@ const ShipAbilities = {
         customEndcondition: true,
         generatorInit: 0,
 
-        asteroidSize: 30,
+        asteroidSize: 35,
         frontDistance: 5,
         asteroidSpeed: 2.5,
 
@@ -2169,8 +2292,8 @@ const ShipAbilities = {
     },
     "Intervention": {
         models: {
-            default: '{"name":"Intervention","level":6,"model":15,"size":2.55,"specs":{"shield":{"capacity":[360,360],"reload":[6,8]},"generator":{"capacity":[150,180],"reload":[45,50]},"ship":{"mass":420,"speed":[60,65],"rotation":[52,56],"acceleration":[115,125]}},"bodies":{"main":{"section_segments":[35,55,125,145,215,235,305,325,395],"offset":{"x":0,"y":25,"z":0},"position":{"x":[0,0,0,0,0,0,0],"y":[0,0,0,25,50,40],"z":[0,0,0,0,0,0,0]},"width":[0,10,40,40,20,0],"height":[0,5,20,15,15,0],"propeller":1,"texture":[1,1,4,3,17]},"cannon":{"section_segments":12,"offset":{"x":0,"y":25,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0,0,0,0,0],"y":[-145,-145,-150,-140,-130,-100,-90,-90,-50,0,30,35,40],"z":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},"width":[0,10,15,20,15,15,20,25,20,20,25,25,0],"height":[0,10,15,20,15,15,20,25,25,25,20,20,0],"propeller":false,"texture":[17,4,63,3,8,3,3,4,2],"laser":{"damage":[60,60],"rate":1,"type":1,"speed":[250,300],"number":2,"error":0}},"cockpit":{"section_segments":6,"offset":{"x":0,"y":-25,"z":24},"position":{"x":[0,0,0,0,0,0],"y":[-15,-15,10,40,70,70],"z":[-1,-1,-1,0,0,0]},"width":[0,7,12,12,8,0],"height":[0,4,6,5,3,0],"propeller":false,"texture":[7,9,8.2,4]},"detail11":{"section_segments":6,"offset":{"x":0,"y":-25,"z":20},"position":{"x":[0,0,0,0,0,0],"y":[-18,-18,10,40,70,70],"z":[-1,-1,-1,0,0,0]},"width":[0,10,15,15,10,0],"height":[0,4,8,5,5,0],"propeller":false,"texture":[4]},"shield":{"section_segments":12,"offset":{"x":30,"y":-55,"z":0},"position":{"x":[0,0,0,-10,-10],"y":[-30,-30,0,20,20],"z":[0,0,0,0,0]},"width":[0,8,8,5,0],"height":[0,30,25,10,0],"texture":4,"angle":90},"sideconnector":{"section_segments":[35,65,105,145,215,325],"offset":{"x":-20,"y":25,"z":0},"position":{"x":[0,0,0,0,0],"y":[-70,-70,-65,0,0],"z":[0,0,0,0,0]},"width":[0,4,7,20,0],"height":[0,6,10,16,0],"texture":[4,63,11]},"detail23":{"section_segments":[45,135,225,315],"offset":{"x":20,"y":13,"z":0},"position":{"x":[0,0,0,0,0,0],"y":[-7,-7,6,7,5,5],"z":[0,0,0,0,0,0]},"width":[0,10,10,6,4,0],"height":[0,25,25,20,24,0],"texture":[15,15,4,4,17],"vertical":true,"angle":40},"siderails":{"section_segments":8,"angle":175,"offset":{"x":25,"y":-5,"z":0},"position":{"x":[0,0,0,0],"y":[-5,-5,45,45],"z":[0,0,0,0]},"width":[0,5,5,0],"height":[0,5,5,0],"texture":[2]},"sidedetail":{"section_segments":8,"angle":95,"offset":{"x":35,"y":25,"z":0},"position":{"x":[0,0,0,0,0,0],"y":[-5,-5,5,5,5,5],"z":[0,0,0,0,0,0]},"width":[0,25,20,15,10,0],"height":[0,10,10,10,5,0],"texture":[2,63,63,17,5]},"legs":{"section_segments":6,"angle":-144,"offset":{"x":10,"y":35,"z":0},"position":{"x":[15,15,5,0,0,0],"y":[-60,-60,-50,-40,0,0],"z":[-20,-20,-20,-5,0,0]},"width":[0,5,9,10,20,0],"height":[0,4,6,6,9,0],"texture":[3.9,63,12.9,3.9]},"barrelrings":{"vertical":1,"section_segments":8,"offset":{"x":8,"y":0,"z":90},"position":{"x":[0,0,0,0,0],"y":[-5,5,5,-5,-5],"z":[0,0,0,0,0]},"width":[20,20,15,15,20],"height":[25,25,20,20,25],"texture":[63]}},"wings":{"I000l":{"length":[46],"width":[30,15],"angle":[10,0],"position":[0,50],"doubleside":true,"texture":[63],"offset":{"x":-5,"y":-70,"z":-5},"bump":{"position":30,"size":20}}},"typespec":{"name":"Intervention","level":6,"model":15,"code":615,"specs":{"shield":{"capacity":[360,360],"reload":[6,8]},"generator":{"capacity":[150,180],"reload":[45,50]},"ship":{"mass":420,"speed":[60,65],"rotation":[52,56],"acceleration":[115,125]}},"shape":[6.387,6.421,5.629,3.552,3.559,3.55,3.606,3.498,2.488,2.344,2.21,1.729,1.756,1.966,2.038,2.15,2.312,2.547,2.884,3.111,3.873,4.657,5.051,5.07,3.894,3.832,3.894,5.07,5.051,4.657,3.873,3.111,2.884,2.547,2.312,2.15,2.038,1.966,1.756,1.729,2.21,2.344,2.488,3.498,3.606,3.55,3.559,3.552,5.629,6.421],"lasers":[{"x":0,"y":-6.375,"z":0,"angle":0,"damage":[60,60],"rate":1,"type":1,"speed":[250,300],"number":2,"spread":0,"error":0,"recoil":0}],"radius":6.421}}',
-            ability: '{"name":"Intervention","level":6,"model":15,"size":2.55,"specs":{"shield":{"capacity":[360,360],"reload":[6,8]},"generator":{"capacity":[150,180],"reload":[45,50]},"ship":{"mass":420,"speed":[60,65],"rotation":[52,56],"acceleration":[115,125]}},"bodies":{"main":{"section_segments":[35,55,125,145,215,235,305,325,395],"offset":{"x":0,"y":25,"z":0},"position":{"x":[0,0,0,0,0,0,0],"y":[0,0,0,25,50,40],"z":[0,0,0,0,0,0,0]},"width":[0,10,40,40,20,0],"height":[0,5,20,15,15,0],"propeller":1,"texture":[1,1,4,3,17]},"cannon":{"section_segments":12,"offset":{"x":0,"y":25,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0,0,0,0,0],"y":[-145,-145,-150,-140,-130,-100,-90,-90,-50,0,30,35,40],"z":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},"width":[0,10,15,20,15,15,20,25,20,20,25,25,0],"height":[0,10,15,20,15,15,20,25,25,25,20,20,0],"propeller":false,"texture":[17,4,63,3,8,3,3,4,2],"laser":{"damage":[60,60],"rate":1,"type":2,"speed":[250,300],"number":2,"error":0}},"cockpit":{"section_segments":6,"offset":{"x":0,"y":-25,"z":24},"position":{"x":[0,0,0,0,0,0],"y":[-15,-15,10,40,70,70],"z":[-1,-1,-1,0,0,0]},"width":[0,7,12,12,8,0],"height":[0,4,6,5,3,0],"propeller":false,"texture":[7,9,8.2,4],"laser":{"damage":[120,120],"rate":1,"type":2,"speed":[1,1],"number":100,"error":0,"recoil":0}},"detail11":{"section_segments":6,"offset":{"x":0,"y":-25,"z":20},"position":{"x":[0,0,0,0,0,0],"y":[-18,-18,10,40,70,70],"z":[-1,-1,-1,0,0,0]},"width":[0,10,15,15,10,0],"height":[0,4,8,5,5,0],"propeller":false,"texture":[4]},"shield":{"section_segments":12,"offset":{"x":30,"y":-55,"z":0},"position":{"x":[0,0,0,-10,-10],"y":[-30,-30,0,20,20],"z":[0,0,0,0,0]},"width":[0,8,8,5,0],"height":[0,30,25,10,0],"texture":4,"angle":90},"sideconnector":{"section_segments":[35,65,105,145,215,325],"offset":{"x":-20,"y":25,"z":0},"position":{"x":[0,0,0,0,0],"y":[-70,-70,-65,0,0],"z":[0,0,0,0,0]},"width":[0,4,7,20,0],"height":[0,6,10,16,0],"texture":[4,63,11]},"detail23":{"section_segments":[45,135,225,315],"offset":{"x":20,"y":13,"z":0},"position":{"x":[0,0,0,0,0,0],"y":[-7,-7,6,7,5,5],"z":[0,0,0,0,0,0]},"width":[0,10,10,6,4,0],"height":[0,25,25,20,24,0],"texture":[15,15,4,4,17],"vertical":true,"angle":40},"siderails":{"section_segments":8,"angle":175,"offset":{"x":25,"y":-5,"z":0},"position":{"x":[0,0,0,0],"y":[-5,-5,45,45],"z":[0,0,0,0]},"width":[0,5,5,0],"height":[0,5,5,0],"texture":[2]},"sidedetail":{"section_segments":8,"angle":95,"offset":{"x":35,"y":25,"z":0},"position":{"x":[0,0,0,0,0,0],"y":[-5,-5,5,5,5,5],"z":[0,0,0,0,0,0]},"width":[0,25,20,15,10,0],"height":[0,10,10,10,5,0],"texture":[2,63,63,17,5]},"legs":{"section_segments":6,"angle":-144,"offset":{"x":10,"y":35,"z":0},"position":{"x":[15,15,5,0,0,0],"y":[-60,-60,-50,-40,0,0],"z":[-20,-20,-20,-5,0,0]},"width":[0,5,9,10,20,0],"height":[0,4,6,6,9,0],"texture":[3.9,63,12.9,3.9]},"barrelrings":{"vertical":1,"section_segments":8,"offset":{"x":8,"y":0,"z":90},"position":{"x":[0,0,0,0,0],"y":[-5,5,5,-5,-5],"z":[0,0,0,0,0]},"width":[20,20,15,15,20],"height":[25,25,20,20,25],"texture":[63]}},"wings":{"I000l":{"length":[46],"width":[30,15],"angle":[10,0],"position":[0,50],"doubleside":true,"texture":[63],"offset":{"x":-5,"y":-70,"z":-5},"bump":{"position":30,"size":20}}},"typespec":{"name":"Intervention","level":6,"model":15,"code":615,"specs":{"shield":{"capacity":[360,360],"reload":[6,8]},"generator":{"capacity":[150,180],"reload":[45,50]},"ship":{"mass":420,"speed":[60,65],"rotation":[52,56],"acceleration":[115,125]}},"shape":[6.387,6.421,5.629,3.552,3.559,3.55,3.606,3.498,2.488,2.344,2.21,1.729,1.756,1.966,2.038,2.15,2.312,2.547,2.884,3.111,3.873,4.657,5.051,5.07,3.894,3.832,3.894,5.07,5.051,4.657,3.873,3.111,2.884,2.547,2.312,2.15,2.038,1.966,1.756,1.729,2.21,2.344,2.488,3.498,3.606,3.55,3.559,3.552,5.629,6.421],"lasers":[{"x":0,"y":-6.375,"z":0,"angle":0,"damage":[60,60],"rate":1,"type":2,"speed":[250,300],"number":2,"spread":0,"error":0,"recoil":0},{"x":0,"y":-2.04,"z":1.224,"angle":0,"damage":[120,120],"rate":1,"type":2,"speed":[1,1],"number":100,"spread":0,"error":0,"recoil":0}],"radius":6.421}}'
+            default: '{"name":"Intervention","level":6,"model":15,"size":2.55,"specs":{"shield":{"capacity":[360,360],"reload":[6,8]},"generator":{"capacity":[150,180],"reload":[45,50]},"ship":{"mass":420,"speed":[60,65],"rotation":[52,56],"acceleration":[115,125]}},"bodies":{"main":{"section_segments":[35,55,125,145,215,235,305,325,395],"offset":{"x":0,"y":25,"z":0},"position":{"x":[0,0,0,0,0,0,0],"y":[0,0,0,25,50,40],"z":[0,0,0,0,0,0,0]},"width":[0,10,40,40,20,0],"height":[0,5,20,15,15,0],"propeller":1,"texture":[1,1,4,3,17]},"cannon":{"section_segments":12,"offset":{"x":0,"y":25,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0,0,0,0,0],"y":[-145,-145,-150,-140,-130,-100,-90,-90,-50,0,30,35,40],"z":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},"width":[0,10,15,20,15,15,20,25,20,20,25,25,0],"height":[0,10,15,20,15,15,20,25,25,25,20,20,0],"propeller":false,"texture":[17,4,63,3,8,3,3,4,2],"laser":{"damage":[60,60],"rate":1,"type":2,"speed":[250,300],"number":2,"error":0}},"cockpit":{"section_segments":6,"offset":{"x":0,"y":-25,"z":24},"position":{"x":[0,0,0,0,0,0],"y":[-15,-15,10,40,70,70],"z":[-1,-1,-1,0,0,0]},"width":[0,7,12,12,8,0],"height":[0,4,6,5,3,0],"propeller":false,"texture":[7,9,8.2,4],"laser":{"damage":[120,120],"rate":1,"type":2,"speed":[1,1],"number":100,"error":0,"recoil":0}},"detail11":{"section_segments":6,"offset":{"x":0,"y":-25,"z":20},"position":{"x":[0,0,0,0,0,0],"y":[-18,-18,10,40,70,70],"z":[-1,-1,-1,0,0,0]},"width":[0,10,15,15,10,0],"height":[0,4,8,5,5,0],"propeller":false,"texture":[4]},"shield":{"section_segments":12,"offset":{"x":30,"y":-55,"z":0},"position":{"x":[0,0,0,-10,-10],"y":[-30,-30,0,20,20],"z":[0,0,0,0,0]},"width":[0,8,8,5,0],"height":[0,30,25,10,0],"texture":4,"angle":90},"sideconnector":{"section_segments":[35,65,105,145,215,325],"offset":{"x":-20,"y":25,"z":0},"position":{"x":[0,0,0,0,0],"y":[-70,-70,-65,0,0],"z":[0,0,0,0,0]},"width":[0,4,7,20,0],"height":[0,6,10,16,0],"texture":[4,63,11]},"detail23":{"section_segments":[45,135,225,315],"offset":{"x":20,"y":13,"z":0},"position":{"x":[0,0,0,0,0,0],"y":[-7,-7,6,7,5,5],"z":[0,0,0,0,0,0]},"width":[0,10,10,6,4,0],"height":[0,25,25,20,24,0],"texture":[15,15,4,4,17],"vertical":true,"angle":40},"siderails":{"section_segments":8,"angle":175,"offset":{"x":25,"y":-5,"z":0},"position":{"x":[0,0,0,0],"y":[-5,-5,45,45],"z":[0,0,0,0]},"width":[0,5,5,0],"height":[0,5,5,0],"texture":[2]},"sidedetail":{"section_segments":8,"angle":95,"offset":{"x":35,"y":25,"z":0},"position":{"x":[0,0,0,0,0,0],"y":[-5,-5,5,5,5,5],"z":[0,0,0,0,0,0]},"width":[0,25,20,15,10,0],"height":[0,10,10,10,5,0],"texture":[2,63,63,17,5]},"legs":{"section_segments":6,"angle":-144,"offset":{"x":10,"y":35,"z":0},"position":{"x":[15,15,5,0,0,0],"y":[-60,-60,-50,-40,0,0],"z":[-20,-20,-20,-5,0,0]},"width":[0,5,9,10,20,0],"height":[0,4,6,6,9,0],"texture":[3.9,63,12.9,3.9]},"barrelrings":{"vertical":1,"section_segments":8,"offset":{"x":8,"y":0,"z":90},"position":{"x":[0,0,0,0,0],"y":[-5,5,5,-5,-5],"z":[0,0,0,0,0]},"width":[20,20,15,15,20],"height":[25,25,20,20,25],"texture":[63]}},"wings":{"I000l":{"length":[46],"width":[30,15],"angle":[10,0],"position":[0,50],"doubleside":true,"texture":[63],"offset":{"x":-5,"y":-70,"z":-5},"bump":{"position":30,"size":20}}},"typespec":{"name":"Intervention","level":6,"model":15,"code":615,"specs":{"shield":{"capacity":[360,360],"reload":[6,8]},"generator":{"capacity":[150,180],"reload":[45,50]},"ship":{"mass":420,"speed":[60,65],"rotation":[52,56],"acceleration":[115,125]}},"shape":[6.387,6.421,5.629,3.552,3.559,3.55,3.606,3.498,2.488,2.344,2.21,1.729,1.756,1.966,2.038,2.15,2.312,2.547,2.884,3.111,3.873,4.657,5.051,5.07,3.894,3.832,3.894,5.07,5.051,4.657,3.873,3.111,2.884,2.547,2.312,2.15,2.038,1.966,1.756,1.729,2.21,2.344,2.488,3.498,3.606,3.55,3.559,3.552,5.629,6.421],"lasers":[{"x":0,"y":-6.375,"z":0,"angle":0,"damage":[60,60],"rate":1,"type":2,"speed":[250,300],"number":2,"spread":0,"error":0,"recoil":0},{"x":0,"y":-2.04,"z":1.224,"angle":0,"damage":[120,120],"rate":1,"type":2,"speed":[1,1],"number":100,"spread":0,"error":0,"recoil":0}],"radius":6.421}}',
+            ability: '{"name":"Intervention","level":7,"model":15,"size":2.65,"zoom":0.7,"specs":{"shield":{"capacity":[300,300],"reload":[1,1]},"generator":{"capacity":[500,500],"reload":[150,150]},"ship":{"mass":2000,"speed":[3,3],"rotation":[10,10],"acceleration":[200,200]}},"bodies":{"main":{"section_segments":[35,55,125,145,215,235,305,325,395],"offset":{"x":0,"y":100,"z":0},"position":{"x":[0,0,0,0,0,0,0],"y":[0,0,0,25,50,40],"z":[0,0,0,0,0,0,0]},"width":[0,10,40,40,20,0],"height":[0,5,20,15,15,0],"propeller":0,"texture":[1,1,4,3,17],"laser":{"damage":[500,500],"rate":1,"type":2,"speed":[1,1],"number":100,"error":0}},"cannon":{"section_segments":12,"offset":{"x":0,"y":100,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"y":[-100,-100,-300,-300,-175,-150,-140,-130,-100,-90,-90,-50,0,30,35,40],"z":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},"width":[0,5,5,10,10,15,20,15,15,20,25,20,20,25,25,0],"height":[0,5,5,10,10,15,20,15,15,20,25,25,25,20,20,0],"propeller":false,"texture":[17,6,2,15,8,63,3,8,3,3,4,2],"laser":{"damage":[50,50],"rate":0.9,"type":1,"speed":[450,450],"number":10,"error":0}},"cannonringconnector":{"section_segments":12,"offset":{"x":0,"y":100,"z":0},"position":{"x":[0,0],"y":[-285,-200],"z":[0,0]},"width":[4,4],"height":[11,11],"propeller":false,"texture":[63,63]},"cannonringconnector2":{"section_segments":12,"offset":{"x":0,"y":100,"z":0},"position":{"x":[0,0],"y":[-285,-200],"z":[0,0]},"width":[11,11],"height":[4,4],"propeller":false,"texture":[63,63]},"brake":{"section_segments":[35,55,125,145,215,235,305,325,395],"offset":{"x":0,"y":-240,"z":0},"position":{"x":[0,0,0,0,0,0,0,0],"y":[35,35,10,10,25,40,40],"z":[0,0,0,0,0,0,0,0]},"width":[5,12,12,22,22,12,10],"height":[5,7,7,12,12,12,10],"propeller":false,"texture":[6,6,1,4,3,17]},"shield":{"section_segments":12,"offset":{"x":30,"y":20,"z":0},"position":{"x":[0,0,0,-10,-10],"y":[-30,-30,0,20,20],"z":[0,0,0,0,0]},"width":[0,8,8,5,0],"height":[0,30,25,10,0],"texture":4,"angle":90},"sideconnector":{"section_segments":[35,65,105,145,215,325],"offset":{"x":-20,"y":100,"z":0},"position":{"x":[0,0,0,0,0],"y":[-70,-70,-65,0,0],"z":[0,0,0,0,0]},"width":[0,4,7,20,0],"height":[0,6,10,16,0],"texture":[4,63,11]},"scope":{"section_segments":8,"offset":{"x":0,"y":75,"z":40},"position":{"x":[0,0,0,0,0,0,0,0],"y":[-50,-50,-50,-20,10,35,35,35],"z":[0,0,0,0,0,0,0,0]},"width":[0,8,12,8,8,10,6,0],"height":[0,8,12,8,8,10,6,0],"texture":[7,4,3,10,3,3,7],"angle":0},"detail23":{"section_segments":[45,135,225,315],"offset":{"x":20,"y":13,"z":-75},"position":{"x":[0,0,0,0,0,0],"y":[-7,-7,6,7,5,5],"z":[0,0,0,0,0,0]},"width":[0,10,10,6,4,0],"height":[0,25,25,20,24,0],"texture":[15,15,4,4,17],"vertical":true,"angle":40},"scopeholder":{"section_segments":6,"angle":0,"offset":{"x":0,"y":53,"z":40},"position":{"x":[0,0,0,0],"y":[-5,-5,5,5],"z":[0,0,0,0]},"width":[0,11,11,0],"height":[0,11,11,0],"texture":[3.9]},"scopeholder1":{"section_segments":6,"angle":0,"offset":{"x":0,"y":85,"z":40},"position":{"x":[0,0,0,0],"y":[-5,-5,5,5],"z":[0,0,0,0]},"width":[0,11,11,0],"height":[0,11,11,0],"texture":[3.9]},"scopeholder2":{"vertical":true,"section_segments":6,"angle":0,"offset":{"x":0,"y":25,"z":-53.7},"position":{"x":[0,0,0,0],"y":[-8,-8,8,8],"z":[0,0,0,0]},"width":[0,5,5,0],"height":[0,5,5,0],"texture":[3.9]},"scopeholder3":{"vertical":true,"section_segments":6,"angle":0,"offset":{"x":0,"y":25,"z":-85},"position":{"x":[0,0,0,0],"y":[-8,-8,8,8],"z":[0,0,0,0]},"width":[0,5,5,0],"height":[0,5,5,0],"texture":[3.9]},"siderails":{"section_segments":8,"angle":175,"offset":{"x":25,"y":70,"z":0},"position":{"x":[0,0,0,0],"y":[-5,-5,45,45],"z":[0,0,0,0]},"width":[0,5,5,0],"height":[0,5,5,0],"texture":[2]},"sidedetail":{"section_segments":8,"angle":95,"offset":{"x":35,"y":100,"z":0},"position":{"x":[0,0,0,0,0,0],"y":[-5,-5,5,5,10,10],"z":[0,0,0,0,0,0]},"width":[0,25,20,15,10,0],"height":[0,10,10,10,5,0],"texture":[2,63,63,17,5]},"legs":{"section_segments":6,"angle":-144,"offset":{"x":10,"y":110,"z":0},"position":{"x":[-5,5,10,0,0,0],"y":[-110,-110,-90,-50,0,0],"z":[-20,-20,-20,-5,0,0]},"width":[0,5,9,10,20,0],"height":[0,4,6,6,9,0],"texture":[3.9,63,12.9,3.9]},"barrelrings":{"vertical":1,"section_segments":8,"offset":{"x":8,"y":0,"z":15},"position":{"x":[0,0,0,0,0],"y":[-5,5,5,-5,-5],"z":[0,0,0,0,0]},"width":[20,20,15,15,20],"height":[25,25,20,20,25],"texture":[63]},"barrelrings2":{"section_segments":8,"offset":{"x":0,"y":-100,"z":0},"position":{"x":[0,0,0,0,0],"y":[-5,5,5,-5,-5],"z":[0,0,0,0,0]},"width":[12,12,7,7,12],"height":[12,12,7,7,12],"texture":[63]},"barrelrings3":{"section_segments":8,"offset":{"x":0,"y":-180,"z":0},"position":{"x":[0,0,0,0,0],"y":[-5,5,5,-5,-5],"z":[0,0,0,0,0]},"width":[12,12,7,7,12],"height":[12,12,7,7,12],"texture":[63]}},"wings":{"I000l":{"length":[46],"width":[30,15],"angle":[10,0],"position":[0,50],"doubleside":true,"texture":[63],"offset":{"x":-5,"y":5,"z":-5},"bump":{"position":30,"size":20}}},"typespec":{"name":"Intervention","level":7,"model":15,"code":715,"specs":{"shield":{"capacity":[300,300],"reload":[1,1]},"generator":{"capacity":[500,500],"reload":[150,150]},"ship":{"mass":2000,"speed":[3,3],"rotation":[10,10],"acceleration":[200,200]}},"shape":[12.214,12.227,3.441,2.698,2.414,2.092,1.957,1.825,1.74,1.685,1.508,1.374,1.283,1.22,1.168,1.066,3.024,3.235,3.041,3.35,3.941,5.547,11.406,11.362,8.199,7.966,8.199,11.362,11.406,5.547,3.941,3.35,3.041,3.235,3.024,1.066,1.168,1.22,1.283,1.374,1.508,1.685,1.74,1.825,1.957,2.092,2.414,2.698,3.441,12.227],"lasers":[{"x":0,"y":5.3,"z":0,"angle":0,"damage":[500,500],"rate":1,"type":2,"speed":[1,1],"number":100,"spread":0,"error":0,"recoil":0},{"x":0,"y":-10.6,"z":0,"angle":0,"damage":[50,50],"rate":0.9,"type":1,"speed":[450,450],"number":10,"spread":0,"error":0,"recoil":0}],"radius":12.227}}'
         },
         name: "Deploy",
         cooldown: 42 * 60,
@@ -3285,7 +3408,7 @@ const ShipAbilities = {
     "Valence": {
         models: {
             default: '{"name":"Valence-2","level":6,"model":45,"size":1.8,"zoom":0.85,"specs":{"shield":{"capacity":[270,270],"reload":[8.5,8.5]},"generator":{"capacity":[240,240],"reload":[60,60]},"ship":{"mass":200,"speed":[175,175],"rotation":[110,110],"acceleration":[120,120]}},"bodies":{"body_main":{"section_segments":12,"offset":{"x":0,"y":0,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0,0,0],"y":[-110,-107,-64,-49,-30,-15,5,25,40,35],"z":[0,0,0,0,0,0,0,0,0,0,0]},"width":[0,8,20,18,19,20,22,21,20,0],"height":[0,5,15,19,22,24,24,24,24,27,0],"texture":[63,2,2,13,3,4,18,12,17],"propeller":true},"body_cockpit":{"section_segments":6,"offset":{"x":0,"y":-80,"z":10},"position":{"x":[0,0,0,0,0,0,0,0,0],"y":[-15,-10,5,16,24,36,48,50,57],"z":[-3,0,0,0,0,0,3,5,5]},"width":[0,6,11,13,12,11,10,10,0],"height":[0,2,9,12,13,14,14,13,0],"texture":[9,9,9,4,63,4,4],"propeller":false},"cannons_front":{"section_segments":12,"offset":{"x":62,"y":-59,"z":-10},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[-45,-28,-23,-10,5,20,30,38,41,38],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[0,3,9,11,11,11,11,9,8,0],"height":[0,2,8,10,10,10,10,9,8,0],"angle":2.1,"laser":{"damage":[15,15],"rate":4,"type":1,"speed":[220,220],"number":1,"angle":0,"error":0},"propeller":true,"texture":[6,3,12,4,8,4,13,2,17]},"cannons_back":{"section_segments":12,"offset":{"x":40,"y":50,"z":20},"position":{"x":[0,0,0,0,0,0,0,0],"y":[-60,-45,-40,-29,-10,0,10,5],"z":[0,0,0,0,0,0,0,0]},"width":[0,3,11,13,13,11,9,0],"height":[0,3,11,13,13,11,9,0],"texture":[6,12,4,8,4,13,17],"propeller":true,"angle":1.4,"laser":{"damage":[15,15],"rate":4,"type":1,"speed":[220,220],"number":1,"angle":0,"error":0}}},"wings":{"wings_primary_outer":{"offset":{"x":0,"y":0,"z":-13},"length":[30,30,5],"width":[80,75,65,65],"texture":[3,4,4],"angle":[0,0,0],"position":[0,-20,-50,-82],"doubleside":true,"bump":{"position":-35,"size":5}},"wing_primary_inner":{"offset":{"x":0,"y":-83.5,"z":-6},"length":[20,25,15],"width":[60,50,35,30],"angle":[0,0,0],"position":[80,69,48,36],"texture":[4,8,3],"doubleside":true,"bump":{"position":10,"size":0}},"wings_back":{"offset":{"x":0,"y":0,"z":15},"length":[45],"width":[40,20],"angle":[10],"position":[5,45],"texture":[63],"doubleside":true,"bump":{"position":-3,"size":10}},"winglet_body_outline":{"offset":{"x":6,"y":-83,"z":0},"length":[20,15],"width":[65,10],"texture":[63],"angle":[0,0],"position":[-15,20],"doubleside":true,"bump":{"size":0}},"winglets_cannon_front":{"offset":{"x":70,"y":-34,"z":-5},"length":[20],"width":[54,0],"angle":[35],"position":[-10,29],"texture":[63],"doubleside":true,"bump":{"position":10,"size":5}},"winglets_cannon_back":{"offset":{"x":51,"y":47,"z":25},"length":[20],"width":[44,0],"angle":[35],"position":[-10,29],"texture":[63],"doubleside":true,"bump":{"position":10,"size":5}},"connector_cannon_front_body":{"offset":{"x":0,"y":-54,"z":15},"length":[60],"width":[24,12],"angle":[-15],"position":[50,9],"texture":[63],"doubleside":true,"bump":{"position":-10,"size":10}}},"typespec":{"name":"Valence-2","level":6,"model":45,"code":645,"specs":{"shield":{"capacity":[270,270],"reload":[8.5,8.5]},"generator":{"capacity":[240,240],"reload":[60,60]},"ship":{"mass":200,"speed":[175,175],"rotation":[110,110],"acceleration":[120,120]}},"shape":[4.703,4.482,3.41,2.79,4.74,4.359,3.893,3.588,3.302,3.163,3.088,3.082,3.115,1.62,1.883,2.028,2.263,2.581,3.1,3.657,2.788,2.56,1.591,1.513,1.466,1.443,1.466,1.513,1.591,2.56,2.788,3.657,3.1,2.581,2.263,2.028,1.883,1.609,3.115,3.082,3.088,3.163,3.302,3.588,3.893,4.359,4.74,2.79,3.41,4.482],"lasers":[{"x":2.173,"y":-3.743,"z":-0.36,"angle":2.1,"damage":[15,15],"rate":4,"type":1,"speed":[220,220],"number":1,"spread":0,"error":0,"recoil":0},{"x":-2.173,"y":-3.743,"z":-0.36,"angle":-2.1,"damage":[15,15],"rate":4,"type":1,"speed":[220,220],"number":1,"spread":0,"error":0,"recoil":0},{"x":1.387,"y":-0.359,"z":0.72,"angle":1.4,"damage":[15,15],"rate":4,"type":1,"speed":[220,220],"number":1,"spread":0,"error":0,"recoil":0},{"x":-1.387,"y":-0.359,"z":0.72,"angle":-1.4,"damage":[15,15],"rate":4,"type":1,"speed":[220,220],"number":1,"spread":0,"error":0,"recoil":0}],"radius":4.74}}',
-            ability: '{"name":"Valence_2","level":7,"model":45,"size":1.7,"zoom":0.8,"specs":{"shield":{"capacity":[250,250],"reload":[1,1]},"generator":{"capacity":[3200,3200],"reload":[1,1]},"ship":{"mass":300,"speed":[250,250],"rotation":[20,20],"acceleration":[0.1,0.1]}},"bodies":{"body_main":{"section_segments":12,"offset":{"x":0,"y":0,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0,0,0],"y":[-110,-107,-64,-49,-30,-15,5,25,40,35],"z":[0,0,0,0,0,0,0,0,0,0,0]},"width":[0,8,20,18,19,20,22,21,20,0],"height":[0,5,15,19,22,24,24,24,24,27,0],"texture":[63,2,2,13,3,4,18,12,17],"propeller":true},"body_cockpit":{"section_segments":6,"offset":{"x":0,"y":-80,"z":10},"position":{"x":[0,0,0,0,0,0,0,0,0],"y":[-15,-10,5,16,24,36,48,50,57],"z":[-3,0,0,0,0,0,3,5,5]},"width":[0,6,11,13,12,11,10,10,0],"height":[0,2,9,12,13,14,14,13,0],"texture":[9,9,9,4,63,4,4],"propeller":false},"thruster_back":{"section_segments":12,"offset":{"x":45,"y":50,"z":22},"position":{"x":[0,0,0,0,0,0,0],"y":[-50,-40,-25,-5,12,22,17],"z":[0,0,0,0,0,0,0]},"width":[0,13,15,15,13,10,0],"height":[0,15,15,15,17,12,0],"angle":0,"propeller":true,"texture":[63,4,8,63,13,17]},"decoration_cannons_front":{"section_segments":12,"offset":{"x":78,"y":-39,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[-45,-28,-23,-10,5,20,30,38,41,38],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[0,3,9,11,11,11,11,9,8,0],"height":[0,2,8,10,10,10,10,9,8,0],"angle":2.2,"texture":[6,3,12,4,8,4,12,3,17],"propeller":true},"cannons_1_invis":{"section_segments":12,"offset":{"x":16,"y":-100,"z":-19.3},"position":{"x":[0,0,0],"y":[4,0,-4],"z":[0,0,0]},"width":[0,0],"height":[0,0],"angle":0,"laser":{"damage":[25,25],"rate":8,"type":1,"speed":[-100,-100],"number":1,"angle":0,"error":0},"propeller":false,"texture":[17]},"cannons_2_invis":{"section_segments":12,"offset":{"x":46,"y":-60,"z":-19.3},"position":{"x":[0,0,0],"y":[4,0,-4],"z":[0,0,0]},"width":[0,0],"height":[0,0],"angle":0,"laser":{"damage":[25,25],"rate":8,"type":1,"speed":[-100,-100],"number":1,"angle":0,"error":0},"propeller":false,"texture":[17]},"cannons_3_invis":{"section_segments":12,"offset":{"x":76,"y":-20,"z":-19.3},"position":{"x":[0,0,0],"y":[4,0,-4],"z":[0,0,0]},"width":[0,0],"height":[0,0],"angle":0,"laser":{"damage":[25,25],"rate":8,"type":1,"speed":[-100,-100],"number":1,"angle":0,"error":0},"propeller":false,"texture":[17]},"cannons_4_invis":{"section_segments":12,"offset":{"x":106,"y":20,"z":-19.3},"position":{"x":[0,0,0],"y":[4,0,-4],"z":[0,0,0]},"width":[0,0],"height":[0,0],"angle":0,"laser":{"damage":[25,25],"rate":8,"type":1,"speed":[-100,-100],"number":1,"angle":0,"error":0},"propeller":false,"texture":[17]}},"wings":{"wings_primary_outer":{"offset":{"x":0,"y":0,"z":-13},"length":[30,30,15,15],"width":[80,75,65,65],"texture":[3,4,4],"angle":[0,0,0,0],"position":[0,-20,-30,-30],"doubleside":true,"bump":{"position":-35,"size":5}},"wing_primary_inner":{"offset":{"x":0,"y":-83.5,"z":-6},"length":[20,25,25],"width":[60,50,35,34],"angle":[0,0,0],"position":[80,69,58,50],"texture":[4,8,3],"doubleside":true,"bump":{"position":10,"size":0}},"wings_back":{"offset":{"x":0,"y":0,"z":15},"length":[45],"width":[40,20],"angle":[10],"position":[5,45],"texture":[63],"doubleside":true,"bump":{"position":-3,"size":10}},"winglets_cannon_front":{"offset":{"x":85,"y":-20,"z":5},"length":[25],"width":[54,0],"angle":[35],"position":[-10,29],"texture":[63],"doubleside":true,"bump":{"position":10,"size":5}},"winglet_body_outline":{"offset":{"x":6,"y":-83,"z":0},"length":[20,15],"width":[65,10],"texture":[63],"angle":[0,0],"position":[-15,20],"doubleside":true,"bump":{"size":0}},"connector_cannon_front_body":{"offset":{"x":0,"y":-52,"z":15},"length":[40,40],"width":[24,20,16],"angle":[-15,-15],"position":[40,30,14],"texture":[63],"doubleside":true,"bump":{"position":10,"size":0}}},"typespec":{"name":"Valence","level":7,"model":44,"code":744,"specs":{"shield":{"capacity":[250,250],"reload":[1,1]},"generator":{"capacity":[3200,3200],"reload":[1,1]},"ship":{"mass":300,"speed":[250,250],"rotation":[20,20],"acceleration":[0.1,0.1]}},"shape":[4.442,4.233,3.221,2.635,2.363,2.68,3.857,3.66,3.614,3.438,3.343,3.385,3.489,3.599,3.695,2.187,2.325,2.518,2.742,2.997,3.081,2.899,1.503,1.429,1.384,1.363,1.384,1.429,1.503,2.899,3.081,2.997,2.742,2.518,2.325,2.187,3.695,3.599,3.489,3.385,3.343,3.438,3.614,3.66,3.857,2.68,2.363,2.635,3.221,4.233],"lasers":[{"x":0.544,"y":-3.536,"z":-0.656,"angle":0,"damage":[25,25],"rate":8,"type":1,"speed":[-100,-100],"number":1,"spread":0,"error":0,"recoil":0},{"x":-0.544,"y":-3.536,"z":-0.656,"angle":0,"damage":[25,25],"rate":8,"type":1,"speed":[-100,-100],"number":1,"spread":0,"error":0,"recoil":0},{"x":1.564,"y":-2.176,"z":-0.656,"angle":0,"damage":[25,25],"rate":8,"type":1,"speed":[-100,-100],"number":1,"spread":0,"error":0,"recoil":0},{"x":-1.564,"y":-2.176,"z":-0.656,"angle":0,"damage":[25,25],"rate":8,"type":1,"speed":[-100,-100],"number":1,"spread":0,"error":0,"recoil":0},{"x":2.584,"y":-0.816,"z":-0.656,"angle":0,"damage":[25,25],"rate":8,"type":1,"speed":[-100,-100],"number":1,"spread":0,"error":0,"recoil":0},{"x":-2.584,"y":-0.816,"z":-0.656,"angle":0,"damage":[25,25],"rate":8,"type":1,"speed":[-100,-100],"number":1,"spread":0,"error":0,"recoil":0},{"x":3.604,"y":0.544,"z":-0.656,"angle":0,"damage":[25,25],"rate":8,"type":1,"speed":[-100,-100],"number":1,"spread":0,"error":0,"recoil":0},{"x":-3.604,"y":0.544,"z":-0.656,"angle":0,"damage":[25,25],"rate":8,"type":1,"speed":[-100,-100],"number":1,"spread":0,"error":0,"recoil":0}],"radius":4.442}}'
+            ability: '{"name":"Valence_2","level":7,"model":45,"size":1.7,"zoom":0.8,"specs":{"shield":{"capacity":[250,250],"reload":[1,1]},"generator":{"capacity":[3200,3200],"reload":[1,1]},"ship":{"mass":300,"speed":[250,250],"rotation":[50,50],"acceleration":[0.1,0.1]}},"bodies":{"body_main":{"section_segments":12,"offset":{"x":0,"y":0,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0,0,0],"y":[-110,-107,-64,-49,-30,-15,5,25,40,35],"z":[0,0,0,0,0,0,0,0,0,0,0]},"width":[0,8,20,18,19,20,22,21,20,0],"height":[0,5,15,19,22,24,24,24,24,27,0],"texture":[63,2,2,13,3,4,18,12,17],"propeller":true},"body_cockpit":{"section_segments":6,"offset":{"x":0,"y":-80,"z":10},"position":{"x":[0,0,0,0,0,0,0,0,0],"y":[-15,-10,5,16,24,36,48,50,57],"z":[-3,0,0,0,0,0,3,5,5]},"width":[0,6,11,13,12,11,10,10,0],"height":[0,2,9,12,13,14,14,13,0],"texture":[9,9,9,4,63,4,4],"propeller":false},"thruster_back":{"section_segments":12,"offset":{"x":45,"y":50,"z":22},"position":{"x":[0,0,0,0,0,0,0],"y":[-50,-40,-25,-5,12,22,17],"z":[0,0,0,0,0,0,0]},"width":[0,13,15,15,13,10,0],"height":[0,15,15,15,17,12,0],"angle":0,"propeller":true,"texture":[63,4,8,63,13,17]},"decoration_cannons_front":{"section_segments":12,"offset":{"x":78,"y":-39,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[-45,-28,-23,-10,5,20,30,38,41,38],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[0,3,9,11,11,11,11,9,8,0],"height":[0,2,8,10,10,10,10,9,8,0],"angle":2.2,"texture":[6,3,12,4,8,4,12,3,17],"propeller":true},"cannons_1_invis":{"section_segments":12,"offset":{"x":16,"y":-100,"z":-19.3},"position":{"x":[0,0,0],"y":[4,0,-4],"z":[0,0,0]},"width":[0,0],"height":[0,0],"angle":0,"laser":{"damage":[25,25],"rate":8,"type":1,"speed":[-100,-100],"number":1,"angle":0,"error":0},"propeller":false,"texture":[17]},"cannons_2_invis":{"section_segments":12,"offset":{"x":46,"y":-60,"z":-19.3},"position":{"x":[0,0,0],"y":[4,0,-4],"z":[0,0,0]},"width":[0,0],"height":[0,0],"angle":0,"laser":{"damage":[25,25],"rate":8,"type":1,"speed":[-100,-100],"number":1,"angle":0,"error":0},"propeller":false,"texture":[17]},"cannons_3_invis":{"section_segments":12,"offset":{"x":76,"y":-20,"z":-19.3},"position":{"x":[0,0,0],"y":[4,0,-4],"z":[0,0,0]},"width":[0,0],"height":[0,0],"angle":0,"laser":{"damage":[25,25],"rate":8,"type":1,"speed":[-100,-100],"number":1,"angle":0,"error":0},"propeller":false,"texture":[17]},"cannons_4_invis":{"section_segments":12,"offset":{"x":106,"y":20,"z":-19.3},"position":{"x":[0,0,0],"y":[4,0,-4],"z":[0,0,0]},"width":[0,0],"height":[0,0],"angle":0,"laser":{"damage":[25,25],"rate":8,"type":1,"speed":[-100,-100],"number":1,"angle":0,"error":0},"propeller":false,"texture":[17]}},"wings":{"wings_primary_outer":{"offset":{"x":0,"y":0,"z":-13},"length":[30,30,15,15],"width":[80,75,65,65],"texture":[3,4,4],"angle":[0,0,0,0],"position":[0,-20,-30,-30],"doubleside":true,"bump":{"position":-35,"size":5}},"wing_primary_inner":{"offset":{"x":0,"y":-83.5,"z":-6},"length":[20,25,25],"width":[60,50,35,34],"angle":[0,0,0],"position":[80,69,58,50],"texture":[4,8,3],"doubleside":true,"bump":{"position":10,"size":0}},"wings_back":{"offset":{"x":0,"y":0,"z":15},"length":[45],"width":[40,20],"angle":[10],"position":[5,45],"texture":[63],"doubleside":true,"bump":{"position":-3,"size":10}},"winglets_cannon_front":{"offset":{"x":85,"y":-20,"z":5},"length":[25],"width":[54,0],"angle":[35],"position":[-10,29],"texture":[63],"doubleside":true,"bump":{"position":10,"size":5}},"winglet_body_outline":{"offset":{"x":6,"y":-83,"z":0},"length":[20,15],"width":[65,10],"texture":[63],"angle":[0,0],"position":[-15,20],"doubleside":true,"bump":{"size":0}},"connector_cannon_front_body":{"offset":{"x":0,"y":-52,"z":15},"length":[40,40],"width":[24,20,16],"angle":[-15,-15],"position":[40,30,14],"texture":[63],"doubleside":true,"bump":{"position":10,"size":0}}},"typespec":{"name":"Valence_2","level":7,"model":45,"code":745,"specs":{"shield":{"capacity":[250,250],"reload":[1,1]},"generator":{"capacity":[3200,3200],"reload":[1,1]},"ship":{"mass":300,"speed":[250,250],"rotation":[50,50],"acceleration":[0.1,0.1]}},"shape":[4.442,4.233,3.221,2.635,2.363,2.68,3.857,3.66,3.614,3.438,3.343,3.385,3.489,3.599,3.695,2.187,2.325,2.518,2.742,2.997,3.081,2.899,1.503,1.429,1.384,1.363,1.384,1.429,1.503,2.899,3.081,2.997,2.742,2.518,2.325,2.187,3.695,3.599,3.489,3.385,3.343,3.438,3.614,3.66,3.857,2.68,2.363,2.635,3.221,4.233],"lasers":[{"x":0.544,"y":-3.536,"z":-0.656,"angle":0,"damage":[25,25],"rate":8,"type":1,"speed":[-100,-100],"number":1,"spread":0,"error":0,"recoil":0},{"x":-0.544,"y":-3.536,"z":-0.656,"angle":0,"damage":[25,25],"rate":8,"type":1,"speed":[-100,-100],"number":1,"spread":0,"error":0,"recoil":0},{"x":1.564,"y":-2.176,"z":-0.656,"angle":0,"damage":[25,25],"rate":8,"type":1,"speed":[-100,-100],"number":1,"spread":0,"error":0,"recoil":0},{"x":-1.564,"y":-2.176,"z":-0.656,"angle":0,"damage":[25,25],"rate":8,"type":1,"speed":[-100,-100],"number":1,"spread":0,"error":0,"recoil":0},{"x":2.584,"y":-0.816,"z":-0.656,"angle":0,"damage":[25,25],"rate":8,"type":1,"speed":[-100,-100],"number":1,"spread":0,"error":0,"recoil":0},{"x":-2.584,"y":-0.816,"z":-0.656,"angle":0,"damage":[25,25],"rate":8,"type":1,"speed":[-100,-100],"number":1,"spread":0,"error":0,"recoil":0},{"x":3.604,"y":0.544,"z":-0.656,"angle":0,"damage":[25,25],"rate":8,"type":1,"speed":[-100,-100],"number":1,"spread":0,"error":0,"recoil":0},{"x":-3.604,"y":0.544,"z":-0.656,"angle":0,"damage":[25,25],"rate":8,"type":1,"speed":[-100,-100],"number":1,"spread":0,"error":0,"recoil":0}],"radius":4.442}}'
         },
         name: "Divebomb",
         cooldown: 32 * 60,
@@ -3308,7 +3431,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Fri May 05 2023 22:56:59 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Sat May 06 2023 16:17:55 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -3541,7 +3664,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Fri May 05 2023 22:56:59 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Sat May 06 2023 16:17:55 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -3551,7 +3674,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Fri May 05 2023 22:56:59 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Sat May 06 2023 16:17:55 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -3852,7 +3975,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Fri May 05 2023 22:56:59 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Sat May 06 2023 16:17:55 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -4420,11 +4543,11 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/gameLogic.js at Fri May 05 2023 22:56:59 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Sat May 06 2023 16:17:55 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/GameConfig.js at Fri May 05 2023 22:56:59 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Sat May 06 2023 16:17:55 GMT+0900 (Japan Standard Time) */
 
 const map_name = null; // leave `null` if you want randomized map name
 
@@ -4529,7 +4652,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Fri May 05 2023 22:56:59 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Sat May 06 2023 16:17:55 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -5223,7 +5346,7 @@ AbilityManager.onShipsListUpdate = function (team, newList, oldList) {
 
 
 
-/* Imported from misc/tickFunctions.js at Fri May 05 2023 22:56:59 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Sat May 06 2023 16:17:55 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -5695,7 +5818,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Fri May 05 2023 22:56:59 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Sat May 06 2023 16:17:55 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -5751,7 +5874,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Fri May 05 2023 22:56:59 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Sat May 06 2023 16:17:55 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
