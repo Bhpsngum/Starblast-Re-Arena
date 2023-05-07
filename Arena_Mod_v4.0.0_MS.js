@@ -90,7 +90,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_MS.js at Sun May 07 2023 09:48:34 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_MS.js at Mon May 08 2023 08:05:09 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = false; // if in debug phase
 
@@ -99,6 +99,7 @@ const DEBUG = false; // if in debug phase
 const GAME_OPTIONS = {
     teams_count: 2, // number of teams
     max_players: 80, // number of max players, used to define minimum ship usage limit
+    map_preset_name: null, // the name of the map used in this match (e.g Genesis or Deathwing), leave null for a randomized map
     ability: {
         include_rings_on_model: false, // the individual ship's ring model inclusion are only checked if this one is `true`
         shortcut: "X", // ability activation shortcut
@@ -132,7 +133,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Sun May 07 2023 09:48:34 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Mon May 08 2023 08:05:09 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -182,7 +183,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Sun May 07 2023 09:48:34 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Mon May 08 2023 08:05:09 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1779,7 +1780,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Sun May 07 2023 09:48:34 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Mon May 08 2023 08:05:09 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -3434,7 +3435,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Sun May 07 2023 09:48:34 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Mon May 08 2023 08:05:09 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -3667,7 +3668,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Sun May 07 2023 09:48:34 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Mon May 08 2023 08:05:09 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -3677,7 +3678,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Sun May 07 2023 09:48:34 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Mon May 08 2023 08:05:09 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -3978,7 +3979,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Sun May 07 2023 09:48:34 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Mon May 08 2023 08:05:09 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -4034,9 +4035,19 @@ const TeamManager = {
 }
 
 const MapManager = {
-    maps: Maps.filter(e => e.spawnpoints.length >= GAME_OPTIONS.teams_count),
+    maps: (function() {
+        let spawnpoints_count = TeamManager.getAll().filter(t => t.need_spawnpoint).length + !!TeamManager.ghostTeam.need_spawnpoint;
+        return Maps.filter(e => e.spawnpoints.length >= spawnpoints_count)
+    })(),
+    search: function (nameOrIndex) {
+        if (nameOrIndex == null) return null;
+        return this.maps[nameOrIndex] || this.maps.find(m => m.name.toLowerCase() == String(nameOrIndex).toLowerCase());
+    },
     get: function (set = false, forceReset = false) {
-        if (this.map == null || forceReset) this.map = HelperFunctions.randomItem(this.maps).value;
+        if (this.map == null || forceReset) {
+            this.map = this.search(GAME_OPTIONS.map_preset_name);
+            if (this.map == null) this.map = HelperFunctions.randomItem(this.maps).value;
+        }
         if (this.map == null) {
             HelperFunctions.terminal.error(`Can't find any maps for ${GAME_OPTIONS.teams_count} team(s)? Are you sure?`);
             this.map = { name: "Unknown", author: "Unknown", map: "", spawnpoints: []}
@@ -4058,7 +4069,7 @@ const MapManager = {
         }); // no invalid pairs
     },
     assignSpawnpoints: function () {
-        let teams = TeamManager.getAll(), { spawnpoints, pairings } = this.get();
+        let teams = [...TeamManager.getAll(), TeamManager.ghostTeam], { spawnpoints, pairings } = this.get();
 
         if (!Array.isArray(spawnpoints) || spawnpoints.length < 1) return;
 
@@ -4105,7 +4116,7 @@ const MapManager = {
         if (game.custom.abilitySystemEnabled) UIData.shipUIs.toggle(ship, false, true);
     },
     set: function (nameOrIndex, set = false) {
-        this.map = this.maps[nameOrIndex] || this.maps.find(m => m.name.toLowerCase() == String(nameOrIndex).toLowerCase());
+        this.map = this.search(nameOrIndex);
         return this.get(set);
     }
 }
@@ -4546,11 +4557,11 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/gameLogic.js at Sun May 07 2023 09:48:34 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Mon May 08 2023 08:05:09 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/GameConfig.js at Sun May 07 2023 09:48:34 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Mon May 08 2023 08:05:09 GMT+0900 (Japan Standard Time) */
 
 const map_name = null; // leave `null` if you want randomized map name
 
@@ -4655,7 +4666,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Sun May 07 2023 09:48:34 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Mon May 08 2023 08:05:09 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -4871,6 +4882,9 @@ const WeightCalculator = {
         })
     },
     joinBalanceTeam: function (ship) {
+        // disable team balance for team-based root mode because modding works weird for mods with root mode "team"
+        if (game.options.root_mode == "team") return;
+
         TeamManager.set(ship, this.getTeamsWeights()[0].id, true, true);
     }
 }
@@ -5366,7 +5380,7 @@ AbilityManager.onShipsListUpdate = function (team, newList, oldList) {
 
 
 
-/* Imported from misc/tickFunctions.js at Sun May 07 2023 09:48:34 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Mon May 08 2023 08:05:09 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -5832,7 +5846,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Sun May 07 2023 09:48:34 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Mon May 08 2023 08:05:09 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -5888,7 +5902,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Sun May 07 2023 09:48:34 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Mon May 08 2023 08:05:09 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
