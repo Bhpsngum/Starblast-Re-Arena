@@ -34,27 +34,21 @@ const alwaysTick = function (game) {
 
         IDs.push(ship.id);
 
-        if (BASES.intrusion_damage <= 0 || !ship.alive) continue;
-
-        for (let i = 0; i < teams.length; ++i) {
-            let { spawnpoint } = teams[i] || {};
-            if (i == TeamManager.getDataFromShip(ship).id || spawnpoint == null) continue;
-            if (HelperFunctions.distance(spawnpoint, ship).distance <= BASES.size) {
-                if (ship.custom.intrudedEnemyBaseStart == null) {
-                    ship.custom.intrudedEnemyBaseStart = game.step;
-                    HelperFunctions.sendUI(ship, {
-                        id: "intrusion_warning",
-                        position: [20, 20, 60, 5],
-                        components: [
-                            { type: "text", position: [0, 0, 100, 100], value: "WARNING! ENEMY BASE INTRUSION WILL CAUSE DAMAGE TO YOUR OWN SHIP!", color: "#ffff00" }
-                        ]
-                    });
-                }
-                else if ((game.step - ship.custom.intrudedEnemyBaseStart) % 60 === 0) HelperFunctions.damage(ship, BASES.intrusion_damage);
-                break;
+        let intruded = HelperFunctions.intrudedOtherTeamBase(ship);
+        if (intruded) {
+            if (ship.custom.intrudedEnemyBaseStart == null) {
+                ship.custom.intrudedEnemyBaseStart = game.step;
+                HelperFunctions.sendUI(ship, {
+                    id: "intrusion_warning",
+                    position: [20, 20, 60, 5],
+                    components: [
+                        { type: "text", position: [0, 0, 100, 100], value: "WARNING! ENEMY BASE INTRUSION WILL CAUSE DAMAGE TO YOUR OWN SHIP!", color: "#ffff00" }
+                    ]
+                });
             }
-            else if (ship.custom.intrudedEnemyBaseStart != null) HelperFunctions.resetIntrusionWarningMSG(ship);
+            else if ((game.step - ship.custom.intrudedEnemyBaseStart) % 60 === 0) HelperFunctions.damage(ship, BASES.intrusion_damage);
         }
+        else if (ship.custom.intrudedEnemyBaseStart != null) HelperFunctions.resetIntrusionWarningMSG(ship);
     }
 
     let arIDs = [...IDs];

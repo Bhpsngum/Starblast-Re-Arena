@@ -161,6 +161,23 @@ const GameHelperFunctions = {
     },
     canUseButtons: function (ship) {
         return !ship.custom.shipUIsHidden;
+    },
+    intrudedOtherTeamBase: function (ship) {
+        if (BASES.intrusion_damage <= 0 || !ship.alive) return false;
+
+        let teams = TeamManager.getAll();
+        let shipTeamID = TeamManager.getDataFromShip(ship).id;
+
+        for (let team of teams) {
+            if (team == null || team.id === shipTeamID) continue;
+            let { spawnpoint } = team;
+            if (spawnpoint == null) continue;
+            if (HelperFunctions.distance(spawnpoint, ship).distance <= BASES.size) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
 
