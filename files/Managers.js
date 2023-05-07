@@ -52,9 +52,19 @@ const TeamManager = {
 }
 
 const MapManager = {
-    maps: Maps.filter(e => e.spawnpoints.length >= GAME_OPTIONS.teams_count),
+    maps: (function() {
+        let spawnpoints_count = TeamManager.getAll().filter(t => t.need_spawnpoint).length + !!TeamManager.ghostTeam.need_spawnpoint;
+        return Maps.filter(e => e.spawnpoints.length >= spawnpoints_count)
+    })(),
+    search: function (nameOrIndex) {
+        if (nameOrIndex == null) return null;
+        return this.maps[nameOrIndex] || this.maps.find(m => m.name.toLowerCase() == String(nameOrIndex).toLowerCase());
+    },
     get: function (set = false, forceReset = false) {
-        if (this.map == null || forceReset) this.map = HelperFunctions.randomItem(this.maps).value;
+        if (this.map == null || forceReset) {
+            this.map = this.search(GAME_OPTIONS.map_preset_name);
+            if (this.map == null) this.map = HelperFunctions.randomItem(this.maps).value;
+        }
         if (this.map == null) {
             HelperFunctions.terminal.error(`Can't find any maps for ${GAME_OPTIONS.teams_count} team(s)? Are you sure?`);
             this.map = { name: "Unknown", author: "Unknown", map: "", spawnpoints: []}
@@ -76,7 +86,7 @@ const MapManager = {
         }); // no invalid pairs
     },
     assignSpawnpoints: function () {
-        let teams = TeamManager.getAll(), { spawnpoints, pairings } = this.get();
+        let teams = [...TeamManager.getAll(), TeamManager.ghostTeam], { spawnpoints, pairings } = this.get();
 
         if (!Array.isArray(spawnpoints) || spawnpoints.length < 1) return;
 
@@ -123,7 +133,7 @@ const MapManager = {
         if (game.custom.abilitySystemEnabled) UIData.shipUIs.toggle(ship, false, true);
     },
     set: function (nameOrIndex, set = false) {
-        this.map = this.maps[nameOrIndex] || this.maps.find(m => m.name.toLowerCase() == String(nameOrIndex).toLowerCase());
+        this.map = this.search(nameOrIndex);
         return this.get(set);
     }
 }

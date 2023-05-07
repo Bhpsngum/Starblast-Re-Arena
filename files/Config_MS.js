@@ -5,6 +5,7 @@ const DEBUG = false; // if in debug phase
 const GAME_OPTIONS = {
     teams_count: 2, // number of teams
     max_players: 80, // number of max players, used to define minimum ship usage limit
+    map_preset_name: null, // the name of the map used in this match (e.g Genesis or Deathwing), leave null for a randomized map
     ability: {
         include_rings_on_model: false, // the individual ship's ring model inclusion are only checked if this one is `true`
         shortcut: "X", // ability activation shortcut

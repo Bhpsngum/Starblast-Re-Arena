@@ -212,6 +212,9 @@ const WeightCalculator = {
         })
     },
     joinBalanceTeam: function (ship) {
+        // disable team balance for team-based root mode because modding works weird for mods with root mode "team"
+        if (game.options.root_mode == "team") return;
+
         TeamManager.set(ship, this.getTeamsWeights()[0].id, true, true);
     }
 }
