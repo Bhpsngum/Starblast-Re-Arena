@@ -42,3 +42,24 @@ In the root directory, you can also see other files:
 
 ## Q&A
 If you have any questions or feedbacks, please open an issue and I might include answers in this section.
+
+### Why so many files and not a single file?
+Welp, actually at first, the remade was conducted only on a single file as usual, but when it reached 5k+ lines, i had some problems with it:
+* Navigating between parts of codes takes a long while and it's inconvenient
+* This remake is intended for everyone to be able to edit the ship abilities and some other configurations. Editing on 5k+ lines is actually a true pain
+* Creating different versions with it and updating them at the same time takes too many braincells (even more than the only braincell i have)
+* I hate putting everything on just a single file (based developer moment)
+
+To deal with it, at first I decided to load files like how libraries and packages works on NodeJS. BUT, since I was also publishing mods to MS before, there was a time I did tried loading Rumble maps like that, and Gilles said:
+
+> "Please include everything in a single file"
+
+So, the library-loading way surely doesn't work
+
+But then, I had a look over Starblast Prototypes (SP) by UranusOrbiter (It's actually insane, you guys should [check it as well](https://github.com/Bhpsngum/Uranus-Starblast-Prototypes)). What he did to deal with the files was to create a "taper" to assemble code parts into a single file.
+
+Yep, that works.
+
+But uh, I can't just yoink the "taping" code from him because SP is not AMR and vice versa. So I created a custom "taper" by myself.
+
+And based on that, I made mod templates, which are basically "Ability System" but can be used to create mods on your preferences. You can take a look [here](/files/templates/).
