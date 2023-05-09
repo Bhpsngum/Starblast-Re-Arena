@@ -149,6 +149,7 @@ const AbilityManager = {
     maxStats: GAME_OPTIONS.ability.max_stats,
     crystals: GAME_OPTIONS.ability.crystals,
     usageLimit: GAME_OPTIONS.ability.usage_limit,
+    updateDelay: 5, // technical spec, don't touch if you don't know what it does
     _this: this,
     echo: DEBUG ? (window || global).echo || game.modding.terminal.echo : function () {},
     ring_model: {
@@ -178,11 +179,21 @@ const AbilityManager = {
             }
         }
     },
+    requestEntitiesInfoUpdate: function () {
+        // request ship info updates so it could be available on the next ticks
+        if (!game.custom.abilityCustom.entitiesUpdateRequested) {
+            for (let ship of game.ships) {
+                if (ship != null && ship.id != null) ship.set({});
+            }
+            game.custom.abilityCustom.entitiesUpdateRequested = true;
+        }
+    },
     tick: function (ship) {
         this.updateUI(ship);
         let ability = ship.custom.ability;
         if (!ship.custom.inAbility || ability == null) return;
-        if ((game.step - ship.custom.lastTriggered) % ability.tickInterval === 0) ability.tick(ship);
+        let timePassed = game.step - ship.custom.lastTriggered
+        if (timePassed % ability.tickInterval === 0) ability.tick(ship, timePassed);
         if (ability.customEndcondition && (ship.custom.forceEnd || ability.canEnd(ship))) this.end(ship);
     },
     end: function (ship) {
@@ -192,7 +203,7 @@ const AbilityManager = {
         ship.custom.forceEnd = false;
         HelperFunctions.TimeManager.clearTimeout(ability.ships.get(ship.id));
         ability.ships.delete(ship.id);
-        if (ability.cooldownRestartOnEnd) ship.custom.lastTriggered = game.step;
+        if (ability.cooldownRestartOnEnd) ability.unload(ship);
         ability.end(ship);
     },
     canStart: function (ship) {
@@ -290,7 +301,7 @@ const AbilityManager = {
         ship.custom.ability = shipAbil;
         ship.custom.inAbility = false;
         ship.custom.forceEnd = false;
-        ship.custom.lastTriggered = game.step;
+        ship.custom.ability.unload(ship);
         ship.custom.abilityCustom = {};
         ship.custom.lastUI = {};
         ship.set({
@@ -318,6 +329,7 @@ const AbilityManager = {
         this.globalTick(game);
     },
     globalTick2: function (game) {
+        game.custom.abilityCustom.entitiesUpdateRequested = false;
         HelperFunctions.TimeManager.tick();
         for (let ability of Object.values(this.abilities)) {
             if ("function" == typeof ability.globalTick) ability.globalTick(game);
@@ -358,7 +370,7 @@ const AbilityManager = {
     },
     globalEvent: function (event, game) {
         let ship = event.ship;
-        if (ship == null || !ship.custom.__ability__initialized__) return;
+        if (ship == null || ship.id == null || !ship.custom.__ability__initialized__ || ship.custom.ability == null) return;
         switch (event.name) {
             case "ui_component_clicked":
                 let component = event.id;
@@ -370,7 +382,7 @@ const AbilityManager = {
                 break;
             case "ship_spawned":
                 ship.set({crystals: ship.custom.ability.crystals});
-                if (ship.custom.ability && ship.custom.ability.endOnDeath) ship.custom.lastTriggered = game.step;
+                if (!ship.custom.inAbility || ship.custom.ability.endOnDeath) ship.custom.ability.unload(ship);
                 break;
         }
         AbilityManager.event(event, ship);
@@ -392,6 +404,8 @@ const AbilityManager = {
         }
 
         game.custom.AbilityManager = AbilityManager;
+
+        if (game.custom.abilityCustom == null) game.custom.abilityCustom = {};
 
         if (DEBUG) {
             let gb = window || global;
@@ -456,6 +470,8 @@ const AbilityManager = {
             if ("function" != typeof ability.requirementsText) ability.requirementsText = templates.requirementsText;
 
             if ("function" != typeof ability.reload) ability.reload = templates.reload;
+
+            if ("function" != typeof ability.unload) ability.unload = templates.unload;
 
             if ("function" != typeof ability.abilityName) ability.abilityName = templates.abilityName;
 

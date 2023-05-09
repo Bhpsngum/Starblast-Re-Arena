@@ -85,7 +85,8 @@ const ShipAbilities = {
 
         // tick function if you want to do special stuff while on duration
         // optional, do nothing
-        tick: function (ship) {
+        // duration: Current duration of the ability
+        tick: function (ship, duration) {
 
         },
 
@@ -103,6 +104,7 @@ const ShipAbilities = {
 
         // tick function executed on (this.tick), independent with ships
         // optional, do nothing
+        // Please note that this function will run before individual tick functions for ships
         globalTick: function (game) {
 
         },
@@ -113,10 +115,16 @@ const ShipAbilities = {
 
         },
 
-        // function used for skipping cooldown, used in DEBUG phase only
+        // function used for skipping cooldown
         // optional, erase cooldown time
         reload: function (ship) {
             ship.custom.lastTriggered = game.step - this.cooldown;
+        },
+
+        // function used for restarting cooldown on ships
+        // optional, recount cooldown time
+        unload: function (ship) {
+            ship.custom.lastTriggered = game.step;
         }
     },
     // the first 10
@@ -1059,7 +1067,7 @@ const ShipAbilities = {
         duration: 6.5 * 60,
         endOnDeath: true,
 
-        tickInterval: 1 * 60 + 8, // don't set lower because modding's updating speed is really slow
+        pullInterval: 1 * 60,
 
         range: 55,
         includeRingOnModel: true,
@@ -1076,9 +1084,17 @@ const ShipAbilities = {
             ship.set({ idle: false });
         },
 
-        tick: function (ship) {
-            let targets = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, false, false, true);
-            for (let target of targets) HelperFunctions.accelerateToTarget(target, ship, this.pullStrength);
+        tick: function (ship, duration) {
+            if (this.pullInterval > AbilityManager.updateDelay && duration % this.pullInterval == (this.pullInterval - AbilityManager.updateDelay)) {
+                // request to update info before pull
+                AbilityManager.requestEntitiesInfoUpdate();
+            }
+
+            if (duration % this.pullInterval == 0) {
+                // each pull interval => pull ships
+                let targets = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, true, true, true);
+                for (let target of targets) HelperFunctions.accelerateToTarget(target, ship, this.pullStrength);
+            }
         }
     },
     "Viking": {
@@ -1172,7 +1188,7 @@ const ShipAbilities = {
                 stats: AbilityManager.maxStats,
                 generator: 250
             });
-            ship.custom.abilityCustom.kills = 0;
+            this.unload(ship);
         },
 
         event: function (event, ship) {
@@ -1184,6 +1200,10 @@ const ShipAbilities = {
 
         reload: function (ship) {
             ++ship.custom.abilityCustom.kills
+        },
+
+        unload: function (ship) {
+            ship.custom.abilityCustom.kills = 0;
         }
     },
     "Thunder": {
@@ -1553,7 +1573,7 @@ const ShipAbilities = {
 
         start: function (ship) {
             ship.set({generator:1000,type:this.codes.ability,stats: AbilityManager.maxStats,invulnerable:100});
-            ship.custom.abilityCustom.kills = 0;
+            this.unload(ship);
         },
 
         event: function (event, ship) {
@@ -1565,6 +1585,10 @@ const ShipAbilities = {
 
         reload: function (ship) {
             ship.custom.abilityCustom.kills = this.killsRequired;
+        },
+
+        unload: function (ship) {
+            ship.custom.abilityCustom.kills = 0;
         }
 
     },
@@ -1591,7 +1615,7 @@ const ShipAbilities = {
 
         start: function (ship) {
             ship.set({generator:1000,type:this.codes.ability,stats: AbilityManager.maxStats,invulnerable:100});
-            ship.custom.abilityCustom.kills = 0;
+            this.unload(ship);
         },
 
         event: function (event, ship) {
@@ -1603,6 +1627,10 @@ const ShipAbilities = {
 
         reload: function (ship) {
             ship.custom.abilityCustom.kills = this.killsRequired;
+        },
+
+        unload: function (ship) {
+            ship.custom.abilityCustom.kills = 0;
         }
     },
     "Chimera": {
