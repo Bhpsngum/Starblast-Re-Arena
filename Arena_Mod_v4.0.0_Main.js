@@ -90,7 +90,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_Main.js at Tue May 09 2023 21:48:43 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_Main.js at Wed May 10 2023 03:21:24 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -133,7 +133,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Tue May 09 2023 21:48:43 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Wed May 10 2023 03:21:24 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -183,7 +183,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Tue May 09 2023 21:48:43 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Wed May 10 2023 03:21:24 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1780,7 +1780,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Tue May 09 2023 21:48:43 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Wed May 10 2023 03:21:24 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -1869,7 +1869,8 @@ const ShipAbilities = {
 
         // tick function if you want to do special stuff while on duration
         // optional, do nothing
-        tick: function (ship) {
+        // duration: Current duration of the ability
+        tick: function (ship, duration) {
 
         },
 
@@ -1887,6 +1888,7 @@ const ShipAbilities = {
 
         // tick function executed on (this.tick), independent with ships
         // optional, do nothing
+        // Please note that this function will run before individual tick functions for ships
         globalTick: function (game) {
 
         },
@@ -1897,10 +1899,16 @@ const ShipAbilities = {
 
         },
 
-        // function used for skipping cooldown, used in DEBUG phase only
+        // function used for skipping cooldown
         // optional, erase cooldown time
         reload: function (ship) {
             ship.custom.lastTriggered = game.step - this.cooldown;
+        },
+
+        // function used for restarting cooldown on ships
+        // optional, recount cooldown time
+        unload: function (ship) {
+            ship.custom.lastTriggered = game.step;
         }
     },
     // the first 10
@@ -2843,7 +2851,7 @@ const ShipAbilities = {
         duration: 6.5 * 60,
         endOnDeath: true,
 
-        tickInterval: 1 * 60 + 8, // don't set lower because modding's updating speed is really slow
+        pullInterval: 1 * 60,
 
         range: 55,
         includeRingOnModel: true,
@@ -2860,9 +2868,17 @@ const ShipAbilities = {
             ship.set({ idle: false });
         },
 
-        tick: function (ship) {
-            let targets = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, false, false, true);
-            for (let target of targets) HelperFunctions.accelerateToTarget(target, ship, this.pullStrength);
+        tick: function (ship, duration) {
+            if (this.pullInterval > AbilityManager.updateDelay && duration % this.pullInterval == (this.pullInterval - AbilityManager.updateDelay)) {
+                // request to update info before pull
+                AbilityManager.requestEntitiesInfoUpdate();
+            }
+
+            if (duration % this.pullInterval == 0) {
+                // each pull interval => pull ships
+                let targets = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, true, true, true);
+                for (let target of targets) HelperFunctions.accelerateToTarget(target, ship, this.pullStrength);
+            }
         }
     },
     "Viking": {
@@ -2956,7 +2972,7 @@ const ShipAbilities = {
                 stats: AbilityManager.maxStats,
                 generator: 250
             });
-            ship.custom.abilityCustom.kills = 0;
+            this.unload(ship);
         },
 
         event: function (event, ship) {
@@ -2968,6 +2984,10 @@ const ShipAbilities = {
 
         reload: function (ship) {
             ++ship.custom.abilityCustom.kills
+        },
+
+        unload: function (ship) {
+            ship.custom.abilityCustom.kills = 0;
         }
     },
     "Thunder": {
@@ -3337,7 +3357,7 @@ const ShipAbilities = {
 
         start: function (ship) {
             ship.set({generator:1000,type:this.codes.ability,stats: AbilityManager.maxStats,invulnerable:100});
-            ship.custom.abilityCustom.kills = 0;
+            this.unload(ship);
         },
 
         event: function (event, ship) {
@@ -3349,6 +3369,10 @@ const ShipAbilities = {
 
         reload: function (ship) {
             ship.custom.abilityCustom.kills = this.killsRequired;
+        },
+
+        unload: function (ship) {
+            ship.custom.abilityCustom.kills = 0;
         }
 
     },
@@ -3375,7 +3399,7 @@ const ShipAbilities = {
 
         start: function (ship) {
             ship.set({generator:1000,type:this.codes.ability,stats: AbilityManager.maxStats,invulnerable:100});
-            ship.custom.abilityCustom.kills = 0;
+            this.unload(ship);
         },
 
         event: function (event, ship) {
@@ -3387,6 +3411,10 @@ const ShipAbilities = {
 
         reload: function (ship) {
             ship.custom.abilityCustom.kills = this.killsRequired;
+        },
+
+        unload: function (ship) {
+            ship.custom.abilityCustom.kills = 0;
         }
     },
     "Chimera": {
@@ -3435,7 +3463,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Tue May 09 2023 21:48:43 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Wed May 10 2023 03:21:24 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -3668,7 +3696,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Tue May 09 2023 21:48:43 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Wed May 10 2023 03:21:24 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -3678,7 +3706,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Tue May 09 2023 21:48:43 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Wed May 10 2023 03:21:24 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -3961,6 +3989,10 @@ const HelperFunctions = {
 
         reload: function (ship) {
             ship.custom.lastTriggered = game.step - this.cooldown;
+        },
+
+        unload: function (ship) {
+            ship.custom.lastTriggered = game.step;
         }
     },
     terminal: {
@@ -3979,7 +4011,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Tue May 09 2023 21:48:43 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Wed May 10 2023 03:21:24 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -4132,6 +4164,7 @@ const AbilityManager = {
     maxStats: GAME_OPTIONS.ability.max_stats,
     crystals: GAME_OPTIONS.ability.crystals,
     usageLimit: GAME_OPTIONS.ability.usage_limit,
+    updateDelay: 5, // technical spec, don't touch if you don't know what it does
     _this: this,
     echo: DEBUG ? (window || global).echo || game.modding.terminal.echo : function () {},
     ring_model: {
@@ -4161,11 +4194,21 @@ const AbilityManager = {
             }
         }
     },
+    requestEntitiesInfoUpdate: function () {
+        // request ship info updates so it could be available on the next ticks
+        if (!game.custom.abilityCustom.entitiesUpdateRequested) {
+            for (let ship of game.ships) {
+                if (ship != null && ship.id != null) ship.set({});
+            }
+            game.custom.abilityCustom.entitiesUpdateRequested = true;
+        }
+    },
     tick: function (ship) {
         this.updateUI(ship);
         let ability = ship.custom.ability;
         if (!ship.custom.inAbility || ability == null) return;
-        if ((game.step - ship.custom.lastTriggered) % ability.tickInterval === 0) ability.tick(ship);
+        let timePassed = game.step - ship.custom.lastTriggered
+        if (timePassed % ability.tickInterval === 0) ability.tick(ship, timePassed);
         if (ability.customEndcondition && (ship.custom.forceEnd || ability.canEnd(ship))) this.end(ship);
     },
     end: function (ship) {
@@ -4175,7 +4218,7 @@ const AbilityManager = {
         ship.custom.forceEnd = false;
         HelperFunctions.TimeManager.clearTimeout(ability.ships.get(ship.id));
         ability.ships.delete(ship.id);
-        if (ability.cooldownRestartOnEnd) ship.custom.lastTriggered = game.step;
+        if (ability.cooldownRestartOnEnd) ability.unload(ship);
         ability.end(ship);
     },
     canStart: function (ship) {
@@ -4273,7 +4316,7 @@ const AbilityManager = {
         ship.custom.ability = shipAbil;
         ship.custom.inAbility = false;
         ship.custom.forceEnd = false;
-        ship.custom.lastTriggered = game.step;
+        ship.custom.ability.unload(ship);
         ship.custom.abilityCustom = {};
         ship.custom.lastUI = {};
         ship.set({
@@ -4301,6 +4344,7 @@ const AbilityManager = {
         this.globalTick(game);
     },
     globalTick2: function (game) {
+        game.custom.abilityCustom.entitiesUpdateRequested = false;
         HelperFunctions.TimeManager.tick();
         for (let ability of Object.values(this.abilities)) {
             if ("function" == typeof ability.globalTick) ability.globalTick(game);
@@ -4341,7 +4385,7 @@ const AbilityManager = {
     },
     globalEvent: function (event, game) {
         let ship = event.ship;
-        if (ship == null || !ship.custom.__ability__initialized__) return;
+        if (ship == null || ship.id == null || !ship.custom.__ability__initialized__ || ship.custom.ability == null) return;
         switch (event.name) {
             case "ui_component_clicked":
                 let component = event.id;
@@ -4353,7 +4397,7 @@ const AbilityManager = {
                 break;
             case "ship_spawned":
                 ship.set({crystals: ship.custom.ability.crystals});
-                if (ship.custom.ability && ship.custom.ability.endOnDeath) ship.custom.lastTriggered = game.step;
+                if (!ship.custom.inAbility || ship.custom.ability.endOnDeath) ship.custom.ability.unload(ship);
                 break;
         }
         AbilityManager.event(event, ship);
@@ -4375,6 +4419,8 @@ const AbilityManager = {
         }
 
         game.custom.AbilityManager = AbilityManager;
+
+        if (game.custom.abilityCustom == null) game.custom.abilityCustom = {};
 
         if (DEBUG) {
             let gb = window || global;
@@ -4439,6 +4485,8 @@ const AbilityManager = {
             if ("function" != typeof ability.requirementsText) ability.requirementsText = templates.requirementsText;
 
             if ("function" != typeof ability.reload) ability.reload = templates.reload;
+
+            if ("function" != typeof ability.unload) ability.unload = templates.unload;
 
             if ("function" != typeof ability.abilityName) ability.abilityName = templates.abilityName;
 
@@ -4557,11 +4605,11 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/gameLogic.js at Tue May 09 2023 21:48:43 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Wed May 10 2023 03:21:24 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/GameConfig.js at Tue May 09 2023 21:48:43 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Wed May 10 2023 03:21:24 GMT+0900 (Japan Standard Time) */
 
 const map_name = null; // leave `null` if you want randomized map name
 
@@ -4666,7 +4714,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Tue May 09 2023 21:48:43 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Wed May 10 2023 03:21:24 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -5380,7 +5428,7 @@ AbilityManager.onShipsListUpdate = function (team, newList, oldList) {
 
 
 
-/* Imported from misc/tickFunctions.js at Tue May 09 2023 21:48:43 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Wed May 10 2023 03:21:24 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -5845,7 +5893,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Tue May 09 2023 21:48:43 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Wed May 10 2023 03:21:24 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -5901,7 +5949,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Tue May 09 2023 21:48:43 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Wed May 10 2023 03:21:24 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?

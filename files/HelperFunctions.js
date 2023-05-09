@@ -279,6 +279,10 @@ const HelperFunctions = {
 
         reload: function (ship) {
             ship.custom.lastTriggered = game.step - this.cooldown;
+        },
+
+        unload: function (ship) {
+            ship.custom.lastTriggered = game.step;
         }
     },
     terminal: {
