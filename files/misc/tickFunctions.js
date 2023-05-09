@@ -1,6 +1,5 @@
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
-    let teams = TeamManager.getAll();
     let IDs = [];
     for (let ship of game.ships) {
         if (ship == null || ship.id == null) continue;
@@ -22,15 +21,15 @@ const alwaysTick = function (game) {
         }
 
         let spawnpoint, stepDifference = game.step - ship.custom.lastSpawnedStep;
-        if (!ship.custom.shipUIsPermaHidden &&
-            (stepDifference > GAME_OPTIONS.ship_ui_timeout * 60 ||
-                (stepDifference > 1 * 60 && 
-                    (spawnpoint = TeamManager.getDataFromShip(ship).spawnpoint) != null 
-                    && HelperFunctions.distance(spawnpoint, ship).distance > BASES.size
+        if ( // Don't ask why
+            !ship.custom.shipUIsPermaHidden && (
+                stepDifference > GAME_OPTIONS.ship_ui_timeout * 60 || (
+                    stepDifference > 1 * 60 &&
+                    (spawnpoint = TeamManager.getDataFromShip(ship).spawnpoint) != null &&
+                    HelperFunctions.distance(spawnpoint, ship).distance > BASES.size
                 )
-            )) {
-            UIData.shipUIs.toggle(ship, true);
-        }
+            )
+        ) UIData.shipUIs.toggle(ship, true);
 
         IDs.push(ship.id);
 

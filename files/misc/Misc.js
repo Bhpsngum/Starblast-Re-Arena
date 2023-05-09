@@ -160,7 +160,7 @@ const GameHelperFunctions = {
         return `${hours}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
     },
     canUseButtons: function (ship) {
-        return !ship.custom.shipUIsHidden;
+        return !ship.custom.kicked && !ship.custom.shipUIsHidden;
     },
     intrudedOtherTeamBase: function (ship) {
         if (BASES.intrusion_damage <= 0 || !ship.alive) return false;
