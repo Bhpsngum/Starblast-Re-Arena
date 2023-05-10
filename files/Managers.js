@@ -396,8 +396,19 @@ const AbilityManager = {
         this.compileAbilities();
         
         // for debug issues
-        if (game.custom.AbilityManager) {
+        let oldAbilityManager = game.custom.AbilityManager;
+        if (oldAbilityManager != null) {
+            // preserve ability templates so it won't break
+            for (let abil in oldAbilityManager.abilities) {
+                let ability = oldAbilityManager.abilities[abil], newAbility = AbilityManager.abilities[abil];
+                if (newAbility != null) newAbility.ships = ability.ships;
+                ability.onCodeChanged(newAbility);
+            }
+
+            // reset abilities on ships
             for (let ship of game.ships) {
+                if (ship.custom.abilityCustom == null) ship.custom.abilityCustom = {};
+                oldAbilityManager.end(ship);
                 let ability = AbilityManager.abilities[ship.custom.shipName];
                 if (ability != null) ship.custom.ability = ability;
                 else AbilityManager.random(ship);
@@ -462,6 +473,8 @@ const AbilityManager = {
                 needAbilityShip = true;
             }
 
+            // don't ask why
+
             if ("function" != typeof ability.end) ability.end = templates.end;
 
             if ("function" != typeof ability.tick) ability.tick = templates.tick;
@@ -477,6 +490,8 @@ const AbilityManager = {
             if ("function" != typeof ability.abilityName) ability.abilityName = templates.abilityName;
 
             if ("function" != typeof ability.initialize) ability.initialize = templates.initialize;
+
+            if ("function" != typeof ability.onCodeChanged) ability.onCodeChanged = templates.onCodeChanged;
 
             // pre-compile
             if ("function" == typeof ability.compile) try {

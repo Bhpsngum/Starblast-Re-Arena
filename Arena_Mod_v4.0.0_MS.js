@@ -90,7 +90,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_MS.js at Wed May 10 2023 15:56:36 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_MS.js at Wed May 10 2023 20:39:14 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = false; // if in debug phase
 
@@ -133,7 +133,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Wed May 10 2023 15:56:36 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Wed May 10 2023 20:39:14 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -183,7 +183,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Wed May 10 2023 15:56:36 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Wed May 10 2023 20:39:14 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1780,7 +1780,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Wed May 10 2023 15:56:36 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Wed May 10 2023 20:39:14 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -1909,6 +1909,14 @@ const ShipAbilities = {
         // optional, recount cooldown time
         unload: function (ship) {
             ship.custom.lastTriggered = game.step;
+        },
+
+        // function used when the code changes (this should only happen on Mod Editor only)
+        // optional, do nothing
+        // newTemplate: that new ship template after code changes, `null` if the template is removed on new code
+        // Note: this function runs after initial compilation (ships and templates compilation)
+        onCodeChanged: function (newTemplate) {
+
         }
     },
     // the first 10
@@ -3147,16 +3155,13 @@ const ShipAbilities = {
 
         activeRings: new Map(),
 
-        addActiveRing: function (ship, timeout) {
-            let oldValue = this.activeRings.get(ship.id);
-            if (oldValue && oldValue.timeout != null) HelperFunctions.TimeManager.clearTimeout(oldValue.timeout);
+        addActiveRing: function (ship) {
             this.activeRings.set(ship.id, {
                 start: game.step,
                 x: ship.x,
                 y: ship.y,
                 team: ship.team,
-                ship,
-                timeout
+                ship
             });
 
             HelperFunctions.setPlaneOBJ({
@@ -3206,9 +3211,7 @@ const ShipAbilities = {
             HelperFunctions.templates.start.call(this, ship);
             ship.set({healing: false});
 
-            this.addActiveRing(ship, HelperFunctions.TimeManager.setTimeout(function () {
-                this.removeActiveRing(ship);
-            }.bind(this), this.healingRingDuration));
+            this.addActiveRing(ship);
         },
 
         end: function (ship) {
@@ -3218,11 +3221,22 @@ const ShipAbilities = {
 
         globalTick: function (game) {
             for (let ring of this.activeRings.values()) {
-                if ((game.step - ring.start) % this.healTick !== 0) continue;
-                let nearestShips = HelperFunctions.findEntitiesInRange(ring, this.range, true, false, false, false, true);
-                for (let ship of nearestShips) ship.set({shield: ship.shield + this.healAmount});
+                let duration = game.step - ring.start;
+                if (duration % this.healTick === 0) {
+                    let nearestShips = HelperFunctions.findEntitiesInRange(ring, this.range, true, false, false, false, true);
+                    for (let ship of nearestShips) ship.set({shield: ship.shield + this.healAmount});
+                }
+                if (duration > this.healingRingDuration) this.removeActiveRing(ring.ship);
             }
-        }
+        },
+
+        onCodeChanged: function (newTemplate) {
+            if (newTemplate == null) {
+                for (let ring of this.activeRings.values()) this.removeActiveRing(ring.ship);
+                return;
+            }
+            newTemplate.activeRings = this.activeRings;
+        },
     },
     "Spitfire": {
         models: {
@@ -3462,7 +3476,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Wed May 10 2023 15:56:36 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Wed May 10 2023 20:39:14 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -3695,7 +3709,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Wed May 10 2023 15:56:36 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Wed May 10 2023 20:39:14 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -3705,7 +3719,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Wed May 10 2023 15:56:36 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Wed May 10 2023 20:39:14 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -3992,7 +4006,9 @@ const HelperFunctions = {
 
         unload: function (ship) {
             ship.custom.lastTriggered = game.step;
-        }
+        },
+
+        onCodeChanged: function () {}
     },
     terminal: {
         errors: 0,
@@ -4010,7 +4026,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Wed May 10 2023 15:56:36 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Wed May 10 2023 20:39:14 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -4410,8 +4426,19 @@ const AbilityManager = {
         this.compileAbilities();
         
         // for debug issues
-        if (game.custom.AbilityManager) {
+        let oldAbilityManager = game.custom.AbilityManager;
+        if (oldAbilityManager != null) {
+            // preserve ability templates so it won't break
+            for (let abil in oldAbilityManager.abilities) {
+                let ability = oldAbilityManager.abilities[abil], newAbility = AbilityManager.abilities[abil];
+                if (newAbility != null) newAbility.ships = ability.ships;
+                ability.onCodeChanged(newAbility);
+            }
+
+            // reset abilities on ships
             for (let ship of game.ships) {
+                if (ship.custom.abilityCustom == null) ship.custom.abilityCustom = {};
+                oldAbilityManager.end(ship);
                 let ability = AbilityManager.abilities[ship.custom.shipName];
                 if (ability != null) ship.custom.ability = ability;
                 else AbilityManager.random(ship);
@@ -4476,6 +4503,8 @@ const AbilityManager = {
                 needAbilityShip = true;
             }
 
+            // don't ask why
+
             if ("function" != typeof ability.end) ability.end = templates.end;
 
             if ("function" != typeof ability.tick) ability.tick = templates.tick;
@@ -4491,6 +4520,8 @@ const AbilityManager = {
             if ("function" != typeof ability.abilityName) ability.abilityName = templates.abilityName;
 
             if ("function" != typeof ability.initialize) ability.initialize = templates.initialize;
+
+            if ("function" != typeof ability.onCodeChanged) ability.onCodeChanged = templates.onCodeChanged;
 
             // pre-compile
             if ("function" == typeof ability.compile) try {
@@ -4605,11 +4636,11 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/gameLogic.js at Wed May 10 2023 15:56:36 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Wed May 10 2023 20:39:14 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/GameConfig.js at Wed May 10 2023 15:56:36 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Wed May 10 2023 20:39:14 GMT+0900 (Japan Standard Time) */
 
 const map_name = null; // leave `null` if you want randomized map name
 
@@ -4714,7 +4745,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Wed May 10 2023 15:56:36 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Wed May 10 2023 20:39:14 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -5428,7 +5459,7 @@ AbilityManager.onShipsListUpdate = function (team, newList, oldList) {
 
 
 
-/* Imported from misc/tickFunctions.js at Wed May 10 2023 15:56:36 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Wed May 10 2023 20:39:14 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -5893,7 +5924,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Wed May 10 2023 15:56:36 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Wed May 10 2023 20:39:14 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -5949,7 +5980,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Wed May 10 2023 15:56:36 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Wed May 10 2023 20:39:14 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
