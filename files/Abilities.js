@@ -1264,7 +1264,6 @@ const ShipAbilities = {
             HelperFunctions.templates.start.call(this, ship);
             ship.set({ invulnerable: this.abilityInvulnerability});
             HelperFunctions.accelerate(ship, this.knockbackSpeed, ship.r - Math.PI);
-            let aliens = [];
             for (let i = 0; i < this.aliens.amount; ++i) {
                 let angle = ship.r + (Math.random() * 2 - 1) * this.spreadAngle;
                 let alien = game.addAlien({
