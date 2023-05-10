@@ -283,7 +283,9 @@ const HelperFunctions = {
 
         unload: function (ship) {
             ship.custom.lastTriggered = game.step;
-        }
+        },
+
+        onCodeChanged: function () {}
     },
     terminal: {
         errors: 0,

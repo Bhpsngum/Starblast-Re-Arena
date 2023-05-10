@@ -125,6 +125,14 @@ const ShipAbilities = {
         // optional, recount cooldown time
         unload: function (ship) {
             ship.custom.lastTriggered = game.step;
+        },
+
+        // function used when the code changes (this should only happen on Mod Editor only)
+        // optional, do nothing
+        // newTemplate: that new ship template after code changes, `null` if the template is removed on new code
+        // Note: this function runs after initial compilation (ships and templates compilation)
+        onCodeChanged: function (newTemplate) {
+
         }
     },
     // the first 10
@@ -1363,16 +1371,13 @@ const ShipAbilities = {
 
         activeRings: new Map(),
 
-        addActiveRing: function (ship, timeout) {
-            let oldValue = this.activeRings.get(ship.id);
-            if (oldValue && oldValue.timeout != null) HelperFunctions.TimeManager.clearTimeout(oldValue.timeout);
+        addActiveRing: function (ship) {
             this.activeRings.set(ship.id, {
                 start: game.step,
                 x: ship.x,
                 y: ship.y,
                 team: ship.team,
-                ship,
-                timeout
+                ship
             });
 
             HelperFunctions.setPlaneOBJ({
@@ -1422,9 +1427,7 @@ const ShipAbilities = {
             HelperFunctions.templates.start.call(this, ship);
             ship.set({healing: false});
 
-            this.addActiveRing(ship, HelperFunctions.TimeManager.setTimeout(function () {
-                this.removeActiveRing(ship);
-            }.bind(this), this.healingRingDuration));
+            this.addActiveRing(ship);
         },
 
         end: function (ship) {
@@ -1434,11 +1437,22 @@ const ShipAbilities = {
 
         globalTick: function (game) {
             for (let ring of this.activeRings.values()) {
-                if ((game.step - ring.start) % this.healTick !== 0) continue;
-                let nearestShips = HelperFunctions.findEntitiesInRange(ring, this.range, true, false, false, false, true);
-                for (let ship of nearestShips) ship.set({shield: ship.shield + this.healAmount});
+                let duration = game.step - ring.start;
+                if (duration % this.healTick === 0) {
+                    let nearestShips = HelperFunctions.findEntitiesInRange(ring, this.range, true, false, false, false, true);
+                    for (let ship of nearestShips) ship.set({shield: ship.shield + this.healAmount});
+                }
+                if (duration > this.healingRingDuration) this.removeActiveRing(ring.ship);
             }
-        }
+        },
+
+        onCodeChanged: function (newTemplate) {
+            if (newTemplate == null) {
+                for (let ring of this.activeRings.values()) this.removeActiveRing(ring.ship);
+                return;
+            }
+            newTemplate.activeRings = this.activeRings;
+        },
     },
     "Spitfire": {
         models: {
