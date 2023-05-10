@@ -180,10 +180,11 @@ const AbilityManager = {
         }
     },
     requestEntitiesInfoUpdate: function () {
-        // request ship info updates so it could be available on the next ticks
+        // request entities info updates so they could be available on the next ticks
         if (!game.custom.abilityCustom.entitiesUpdateRequested) {
-            for (let ship of game.ships) {
-                if (ship != null && ship.id != null) ship.set({});
+            let entities = [...game.ships, ...game.aliens, ...game.asteroids];
+            for (let entity of entities) {
+                if (entity != null && entity.id != null && entity.id != -1) entity.set({});
             }
             game.custom.abilityCustom.entitiesUpdateRequested = true;
         }

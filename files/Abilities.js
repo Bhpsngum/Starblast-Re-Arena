@@ -1278,19 +1278,19 @@ const ShipAbilities = {
                     points: 0
                 });
 
-                alien.custom.fromAbility = true;
+                alien.custom.fromGhoulAbility = true;
                 alien.custom.abilityEnd = game.step + this.aliens.lifespan;
             }
         },
 
         globalTick: function (game) {
             for (let alien of game.aliens) {
-                if (!alien.custom.fromAbility || alien.id < 0) continue;
+                if (!alien.custom.fromGhoulAbility || alien.id < 0) continue;
                 if (!alien.custom.init) {
                     alien.set({
                         damage: 40 * (alien.level + 1),
                         rate: 1,
-                        laser_speed: 100
+                        laser_speed: 200
                     });
                     alien.custom.init = true;
                 }

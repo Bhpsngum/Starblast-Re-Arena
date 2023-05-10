@@ -90,7 +90,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_ShipTesting.js at Wed May 10 2023 03:21:24 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_ShipTesting.js at Wed May 10 2023 15:50:29 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -133,7 +133,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Wed May 10 2023 03:21:24 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Wed May 10 2023 15:50:29 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -183,7 +183,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Wed May 10 2023 03:21:24 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Wed May 10 2023 15:50:29 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1780,7 +1780,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Wed May 10 2023 03:21:24 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Wed May 10 2023 15:50:29 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -3062,19 +3062,19 @@ const ShipAbilities = {
                     points: 0
                 });
 
-                alien.custom.fromAbility = true;
+                alien.custom.fromGhoulAbility = true;
                 alien.custom.abilityEnd = game.step + this.aliens.lifespan;
             }
         },
 
         globalTick: function (game) {
             for (let alien of game.aliens) {
-                if (!alien.custom.fromAbility || alien.id < 0) continue;
+                if (!alien.custom.fromGhoulAbility || alien.id < 0) continue;
                 if (!alien.custom.init) {
                     alien.set({
                         damage: 40 * (alien.level + 1),
                         rate: 1,
-                        laser_speed: 100
+                        laser_speed: 200
                     });
                     alien.custom.init = true;
                 }
@@ -3463,7 +3463,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Wed May 10 2023 03:21:24 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Wed May 10 2023 15:50:29 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -3696,7 +3696,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Wed May 10 2023 03:21:24 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Wed May 10 2023 15:50:29 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -3706,7 +3706,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Wed May 10 2023 03:21:24 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Wed May 10 2023 15:50:29 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4011,7 +4011,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Wed May 10 2023 03:21:24 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Wed May 10 2023 15:50:29 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -4195,10 +4195,11 @@ const AbilityManager = {
         }
     },
     requestEntitiesInfoUpdate: function () {
-        // request ship info updates so it could be available on the next ticks
+        // request entities info updates so they could be available on the next ticks
         if (!game.custom.abilityCustom.entitiesUpdateRequested) {
-            for (let ship of game.ships) {
-                if (ship != null && ship.id != null) ship.set({});
+            let entities = [...game.ships, ...game.aliens, ...game.asteroids];
+            for (let entity of entities) {
+                if (entity != null && entity.id != null && entity.id != -1) entity.set({});
             }
             game.custom.abilityCustom.entitiesUpdateRequested = true;
         }
