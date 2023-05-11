@@ -153,21 +153,51 @@ const HelperFunctions = {
         this.accelerate(ship, strength, accelAngle);
     },
     satisfies: function (ship1, ship2, teammate, enemy) {
-        // check if ship statisfies condition
+        // check if ship2 statisfies condition with ship1
         if (teammate && enemy) return true;
         if (teammate && this.isTeam(ship1, ship2)) return true;
         if (enemy && !this.isTeam(ship1, ship2)) return true;
         return false;
     },
-    findEntitiesInRange: function (ship, range, teammate = false, enemy = false, alien = false, asteroid = false, dontSort = false, includeSelf = false) {
-        // find all entities in range, set `donSort` to `true` if you want it to ignore the sorting
+    findEntitiesInRange: function (entity, range, teammate = false, enemy = false, alien = false, asteroid = false, dontSort = false, includeSelf = false) {
+        // Find all entities in range
+        // Set `donSort` to `true` if you want it to ignore the sorting
+        // Set `includeSelf` to `true` if you want to include the entity (if condition matches)
+        // Note that please pass `entity` as a ship, asteroid or alien object if neccessary (in case for `includeSelf` to match)
+        // or else, just pass this object to `entity`:
+        // {
+        //     x: Number,
+        //     y: Number,
+        //     team: any // it will try to find any ships with the same/different team as the defined team ID (if condition matches)
+        // }
+
         let data = [];
-        if (ship == null || ship.id == null) return data;
-        if (alien) data.push(...game.aliens.filter(al => this.distance(ship, al).distance <= range));
-        if (asteroid) data.push(...game.asteroids.filter(al => this.distance(ship, al).distance <= range));
-        if (teammate || enemy) data.push(...game.ships.filter(e => e.id != null && (includeSelf || e.id !== ship.id) && e.alive && !e.custom.spectator && this.satisfies(ship, e, teammate, enemy) && this.distance(ship, e).distance <= range));
+
+        if (entity == null) return data;
+
+        if (alien) {
+            let isAlien = game.aliens.includes(entity);
+            // Only find aliens if:
+            // - Given entity is an alien --> teammate =?= true
+            // - Given entity is not an alien --> enemy =?= true
+            if (isAlien ? teammate : enemy) data.push(...game.aliens.filter(alien => alien != null && alien.id != -1 && (includeSelf || !isAlien || alien !== entity) && this.distance(entity, alien).distance <= range))
+        }
+        
+        if (asteroid) {
+            let isAsteroid = game.asteroids.includes(entity);
+            // Only find asteroids if:
+            // - Given entity is an asteroid --> at least `teammate` or `enemy` is `true` (since we don't know if asteroids are friends or foes to each other?)
+            // - Given entity is not an asteroid --> enemy =?= true
+            if (isAsteroid ? (teammate || enemy) : enemy) data.push(...game.asteroids.filter(asteroid => asteroid != null && asteroid.id != -1 && (includeSelf || !isAsteroid || asteroid !== entity) && this.distance(entity, asteroid).distance <= range));
+        }
+
+        // Only find ships if either `teammate` or `enemy` is `true`
+
+        if (teammate || enemy) data.push(...game.ships.filter(ship => (ship || {}).id != null && this.satisfies(entity, ship, teammate, enemy) && this.distance(entity, ship).distance <= range));
+        
         if (dontSort) return data;
-        return data.sort((a, b) => this.distance(ship, a).distance - this.distance(ship, b).distance);
+
+        return data.sort((a, b) => this.distance(entity, a).distance - this.distance(entity, b).distance);
     },
     damage: function (ship,num) {
         // damage ship by `num` HP
