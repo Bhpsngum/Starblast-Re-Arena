@@ -90,7 +90,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_Main.js at Thu May 11 2023 18:19:37 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_Main.js at Fri May 12 2023 00:28:36 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -133,7 +133,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Thu May 11 2023 18:19:37 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Fri May 12 2023 00:28:36 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -183,7 +183,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Thu May 11 2023 18:19:37 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Fri May 12 2023 00:28:36 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1780,7 +1780,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Thu May 11 2023 18:19:37 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Fri May 12 2023 00:28:36 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -3692,7 +3692,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Thu May 11 2023 18:19:37 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Fri May 12 2023 00:28:36 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -3925,7 +3925,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Thu May 11 2023 18:19:37 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Fri May 12 2023 00:28:36 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -3935,7 +3935,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Thu May 11 2023 18:19:37 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Fri May 12 2023 00:28:36 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4092,21 +4092,51 @@ const HelperFunctions = {
         this.accelerate(ship, strength, accelAngle);
     },
     satisfies: function (ship1, ship2, teammate, enemy) {
-        // check if ship statisfies condition
+        // check if ship2 statisfies condition with ship1
         if (teammate && enemy) return true;
         if (teammate && this.isTeam(ship1, ship2)) return true;
         if (enemy && !this.isTeam(ship1, ship2)) return true;
         return false;
     },
-    findEntitiesInRange: function (ship, range, teammate = false, enemy = false, alien = false, asteroid = false, dontSort = false, includeSelf = false) {
-        // find all entities in range, set `donSort` to `true` if you want it to ignore the sorting
+    findEntitiesInRange: function (entity, range, teammate = false, enemy = false, alien = false, asteroid = false, dontSort = false, includeSelf = false) {
+        // Find all entities in range
+        // Set `donSort` to `true` if you want it to ignore the sorting
+        // Set `includeSelf` to `true` if you want to include the entity (if condition matches)
+        // Note that please pass `entity` as a ship, asteroid or alien object if neccessary (in case for `includeSelf` to match)
+        // or else, just pass this object to `entity`:
+        // {
+        //     x: Number,
+        //     y: Number,
+        //     team: any // it will try to find any ships with the same/different team as the defined team ID (if condition matches)
+        // }
+
         let data = [];
-        if (ship == null || ship.id == null) return data;
-        if (alien) data.push(...game.aliens.filter(al => this.distance(ship, al).distance <= range));
-        if (asteroid) data.push(...game.asteroids.filter(al => this.distance(ship, al).distance <= range));
-        if (teammate || enemy) data.push(...game.ships.filter(e => e.id != null && (includeSelf || e.id !== ship.id) && e.alive && !e.custom.spectator && this.satisfies(ship, e, teammate, enemy) && this.distance(ship, e).distance <= range));
+
+        if (entity == null) return data;
+
+        if (alien) {
+            let isAlien = game.aliens.includes(entity);
+            // Only find aliens if:
+            // - Given entity is an alien --> teammate =?= true
+            // - Given entity is not an alien --> enemy =?= true
+            if (isAlien ? teammate : enemy) data.push(...game.aliens.filter(alien => alien != null && alien.id != -1 && (includeSelf || !isAlien || alien !== entity) && this.distance(entity, alien).distance <= range))
+        }
+        
+        if (asteroid) {
+            let isAsteroid = game.asteroids.includes(entity);
+            // Only find asteroids if:
+            // - Given entity is an asteroid --> at least `teammate` or `enemy` is `true` (since we don't know if asteroids are friends or foes to each other?)
+            // - Given entity is not an asteroid --> enemy =?= true
+            if (isAsteroid ? (teammate || enemy) : enemy) data.push(...game.asteroids.filter(asteroid => asteroid != null && asteroid.id != -1 && (includeSelf || !isAsteroid || asteroid !== entity) && this.distance(entity, asteroid).distance <= range));
+        }
+
+        // Only find ships if either `teammate` or `enemy` is `true`
+
+        if (teammate || enemy) data.push(...game.ships.filter(ship => (ship || {}).id != null && this.satisfies(entity, ship, teammate, enemy) && this.distance(entity, ship).distance <= range));
+        
         if (dontSort) return data;
-        return data.sort((a, b) => this.distance(ship, a).distance - this.distance(ship, b).distance);
+
+        return data.sort((a, b) => this.distance(entity, a).distance - this.distance(entity, b).distance);
     },
     damage: function (ship,num) {
         // damage ship by `num` HP
@@ -4249,7 +4279,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Thu May 11 2023 18:19:37 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Fri May 12 2023 00:28:36 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -4863,11 +4893,11 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/gameLogic.js at Thu May 11 2023 18:19:37 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Fri May 12 2023 00:28:36 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/GameConfig.js at Thu May 11 2023 18:19:37 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Fri May 12 2023 00:28:36 GMT+0900 (Japan Standard Time) */
 
 const map_name = null; // leave `null` if you want randomized map name
 
@@ -4972,7 +5002,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Thu May 11 2023 18:19:37 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Fri May 12 2023 00:28:36 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -5694,7 +5724,7 @@ AbilityManager.onAbilityStart = function (ship, inAbilityBeforeStart) {
 
 
 
-/* Imported from misc/tickFunctions.js at Thu May 11 2023 18:19:37 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Fri May 12 2023 00:28:36 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -6159,7 +6189,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Thu May 11 2023 18:19:37 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Fri May 12 2023 00:28:36 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -6215,7 +6245,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Thu May 11 2023 18:19:37 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Fri May 12 2023 00:28:36 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
