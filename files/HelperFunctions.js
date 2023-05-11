@@ -136,9 +136,10 @@ const HelperFunctions = {
             angle: shortestAngle
         }
     },
-    accelerate: function (ship, speed, angle = null) {
+    accelerate: function (ship, speed, angle = null, initial_dependency = 0) {
         // accelerate ship with speed and angle (or ship angle)
         if (angle == null) angle = ship.r;
+        if (initial_dependency) speed += Math.sqrt(ship.vx ** 2 + ship.vy ** 2) * initial_dependency;
         ship.set({
             vx: speed * Math.cos(angle),
             vy: speed * Math.sin(angle)
