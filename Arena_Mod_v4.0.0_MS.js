@@ -90,7 +90,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_MS.js at Thu May 11 2023 10:18:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_MS.js at Thu May 11 2023 18:19:37 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = false; // if in debug phase
 
@@ -133,7 +133,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Thu May 11 2023 10:18:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Thu May 11 2023 18:19:37 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -183,7 +183,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Thu May 11 2023 10:18:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Thu May 11 2023 18:19:37 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1780,7 +1780,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Thu May 11 2023 10:18:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Thu May 11 2023 18:19:37 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -2017,10 +2017,11 @@ const ShipAbilities = {
         },
         name: "Quickdrive",
         cooldown: 6 * 60,
-        duration: 0.3 * 60,
+        duration: 0.14 * 60,
 
         TPDistance: 5,
-        speed: 1.25,
+        speed: 0.7,
+        initial_dependency: 1 / 1.5, // addition of part of the initial speed
 
         start: function (ship) {
             ship.set({
@@ -2029,7 +2030,7 @@ const ShipAbilities = {
                 y: ship.y + this.TPDistance * Math.sin(ship.r),
                 collider: false,
             });
-            HelperFunctions.accelerate(ship, this.speed);
+            HelperFunctions.accelerate(ship, this.speed, null, this.initial_dependency);
         },
         end: function (ship) { ship.set({collider: true}) }
     },
@@ -3261,7 +3262,8 @@ const ShipAbilities = {
             level: {
                 min: 0,
                 max: 2
-            }
+            },
+            repellingSpeed: 1 // how fast the alien will move far from the Ghoul upon creation
         },
 
         start: function (ship) {
@@ -3270,11 +3272,12 @@ const ShipAbilities = {
             HelperFunctions.accelerate(ship, this.knockbackSpeed, ship.r - Math.PI);
             for (let i = 0; i < this.aliens.amount; ++i) {
                 let angle = ship.r + (Math.random() * 2 - 1) * this.spreadAngle;
+                let cosAngle = Math.cos(angle), sinAngle = Math.sin(angle);
                 let alien = game.addAlien({
-                    x: ship.x + this.range * Math.cos(angle),
-                    y: ship.y + this.range * Math.sin(angle),
-                    vx: Math.cos(angle - Math.PI),
-                    vy: Math.sin(angle - Math.PI),
+                    x: ship.x + this.range * cosAngle,
+                    y: ship.y + this.range * sinAngle,
+                    vx: this.aliens.repellingSpeed * cosAngle,
+                    vy: this.aliens.repellingSpeed * sinAngle,
                     code: HelperFunctions.randomItem(this.aliens.codes).value,
                     level: HelperFunctions.randIntInRange(this.aliens.level.min, this.aliens.level.max + 1),
                     crystal_drop: 0,
@@ -3463,7 +3466,7 @@ const ShipAbilities = {
     },
     "Mosquit": {
         models: {
-            default: '{"name":"Mosquit","level":6,"model":37,"size":1.45,"specs":{"shield":{"capacity":[100,100],"reload":[15,15]},"generator":{"capacity":[120,120],"reload":[70,70]},"ship":{"mass":120,"speed":[152,152],"rotation":[150,150],"acceleration":[160,160]}},"bodies":{"main":{"section_segments":12,"offset":{"x":0,"y":0,"z":10},"position":{"x":[0,0,0,0,0,0,0,0,0,0,0],"y":[-65,-60,-50,-20,0,10,30,55,75,60],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[0,8,10,30,25,25,30,18,15,0],"height":[0,6,8,12,18,20,20,18,15,0],"propeller":true,"texture":[4,63,10,2,63,3,2,12,17]},"props":{"section_segments":8,"offset":{"x":20,"y":-5,"z":-12},"position":{"x":[-15,-10,0,0,0,0,0,0,0,0],"y":[-60,-45,-30,10,20,25,30,40,70,60],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[0,10,15,15,15,10,10,15,12,0],"height":[0,5,10,10,15,10,10,15,15,0],"texture":[63,3,63,4,5,5,63,8,17],"propeller":true},"cockpit":{"section_segments":12,"offset":{"x":0,"y":0,"z":20},"position":{"x":[0,0,0,0,0,0,0],"y":[-15,-5,15,30,60],"z":[0,0,0,0,0]},"width":[0,8,15,10,5],"height":[0,15,20,15,5],"propeller":false,"texture":[4,9,9,4,4]},"cannons":{"section_segments":8,"offset":{"x":0,"y":-110,"z":-10},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[5,0,23,27,62,62,97,102,163],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[0,5,5,7,7,4,4,7,7],"height":[0,5,5,7,7,4,4,7,7],"texture":[12,13,4,8,4,4,3,8],"propeller":false,"laser":{"damage":[35,35],"rate":4,"type":1,"speed":[255,255],"number":1}},"side":{"section_segments":12,"offset":{"x":60,"y":40,"z":-15},"position":{"x":[0,0,0,0,0,0,0],"y":[-50,-45,-20,-10,0,10,15],"z":[0,0,0,0,0,0,0]},"width":[0,5,10,10,10,10,0],"height":[0,5,10,10,10,5,0],"angle":0,"propeller":false,"texture":[6,4,10,4,63,4]}},"wings":{"main":{"length":[60,20],"width":[100,50,40],"angle":[-10,10],"position":[0,20,10],"doubleside":true,"offset":{"x":0,"y":10,"z":5},"bump":{"position":30,"size":20},"texture":[11,63]},"main2":{"length":[41,12,0],"width":[60,28,28,0],"angle":[-10,-20,0],"position":[6,20,21,20],"doubleside":true,"offset":{"x":0,"y":10,"z":14},"bump":{"position":30,"size":20},"texture":[63]}},"typespec":{"name":"Mosquit","level":6,"model":37,"code":637,"specs":{"shield":{"capacity":[100,100],"reload":[15,15]},"generator":{"capacity":[120,120],"reload":[70,70]},"ship":{"mass":120,"speed":[152,152],"rotation":[150,150],"acceleration":[160,160]}},"shape":[3.193,2.502,1.734,1.609,1.526,1.471,1.442,1.387,1.254,1.155,1.17,1.815,1.913,2.302,2.357,2.453,2.562,2.523,2.484,2.329,2.106,2.101,2.083,2.218,2.214,2.179,2.214,2.218,2.083,2.101,2.106,2.329,2.484,2.523,2.562,2.453,2.357,2.302,2.285,1.815,1.17,1.155,1.254,1.387,1.442,1.471,1.526,1.609,1.734,2.502],"lasers":[{"x":0,"y":-3.19,"z":-0.29,"angle":0,"damage":[35,35],"rate":4,"type":1,"speed":[255,255],"number":1,"spread":0,"error":0,"recoil":0}],"radius":3.193}}',
+            default: '{"name":"Mosquit","level":6,"model":37,"size":1.45,"specs":{"shield":{"capacity":[100,100],"reload":[15,15]},"generator":{"capacity":[120,120],"reload":[62,62]},"ship":{"mass":120,"speed":[152,152],"rotation":[150,150],"acceleration":[160,160]}},"bodies":{"main":{"section_segments":12,"offset":{"x":0,"y":0,"z":10},"position":{"x":[0,0,0,0,0,0,0,0,0,0,0],"y":[-65,-60,-50,-20,0,10,30,55,75,60],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[0,8,10,30,25,25,30,18,15,0],"height":[0,6,8,12,18,20,20,18,15,0],"propeller":true,"texture":[4,63,10,2,63,3,2,12,17]},"props":{"section_segments":8,"offset":{"x":20,"y":-5,"z":-12},"position":{"x":[-15,-10,0,0,0,0,0,0,0,0],"y":[-60,-45,-30,10,20,25,30,40,70,60],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[0,10,15,15,15,10,10,15,12,0],"height":[0,5,10,10,15,10,10,15,15,0],"texture":[63,3,63,4,5,5,63,8,17],"propeller":true},"cockpit":{"section_segments":12,"offset":{"x":0,"y":0,"z":20},"position":{"x":[0,0,0,0,0,0,0],"y":[-15,-5,15,30,60],"z":[0,0,0,0,0]},"width":[0,8,15,10,5],"height":[0,15,20,15,5],"propeller":false,"texture":[4,9,9,4,4]},"cannons":{"section_segments":8,"offset":{"x":0,"y":-110,"z":-10},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[5,0,23,27,62,62,97,102,163],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[0,5,5,7,7,4,4,7,7],"height":[0,5,5,7,7,4,4,7,7],"texture":[12,13,4,8,4,4,3,8],"propeller":false,"laser":{"damage":[35,35],"rate":4,"type":1,"speed":[255,255],"number":1}},"side":{"section_segments":12,"offset":{"x":60,"y":40,"z":-15},"position":{"x":[0,0,0,0,0,0,0],"y":[-50,-45,-20,-10,0,10,15],"z":[0,0,0,0,0,0,0]},"width":[0,5,10,10,10,10,0],"height":[0,5,10,10,10,5,0],"angle":0,"propeller":false,"texture":[6,4,10,4,63,4]}},"wings":{"main":{"length":[60,20],"width":[100,50,40],"angle":[-10,10],"position":[0,20,10],"doubleside":true,"offset":{"x":0,"y":10,"z":5},"bump":{"position":30,"size":20},"texture":[11,63]},"main2":{"length":[41,12,0],"width":[60,28,28,0],"angle":[-10,-20,0],"position":[6,20,21,20],"doubleside":true,"offset":{"x":0,"y":10,"z":14},"bump":{"position":30,"size":20},"texture":[63]}},"typespec":{"name":"Mosquit","level":6,"model":37,"code":637,"specs":{"shield":{"capacity":[100,100],"reload":[15,15]},"generator":{"capacity":[120,120],"reload":[62,62]},"ship":{"mass":120,"speed":[152,152],"rotation":[150,150],"acceleration":[160,160]}},"shape":[3.193,2.502,1.734,1.609,1.526,1.471,1.442,1.387,1.254,1.155,1.17,1.815,1.913,2.302,2.357,2.453,2.562,2.523,2.484,2.329,2.106,2.101,2.083,2.218,2.214,2.179,2.214,2.218,2.083,2.101,2.106,2.329,2.484,2.523,2.562,2.453,2.357,2.302,2.285,1.815,1.17,1.155,1.254,1.387,1.442,1.471,1.526,1.609,1.734,2.502],"lasers":[{"x":0,"y":-3.19,"z":-0.29,"angle":0,"damage":[35,35],"rate":4,"type":1,"speed":[255,255],"number":1,"spread":0,"error":0,"recoil":0}],"radius":3.193}}',
             ability: '{"name":"God","level":7,"model":37,"size":3,"specs":{"shield":{"capacity":[400,400],"reload":[25,25]},"generator":{"capacity":[200,200],"reload":[50,50]},"ship":{"mass":1500,"speed":[150,150],"rotation":[25,25],"acceleration":[120,120],"dash":{"rate":1,"burst_speed":[250,250],"speed":[180,180],"acceleration":[200,200],"initial_energy":[100,100],"energy":[100,100]}}},"bodies":{"main":{"section_segments":56,"offset":{"x":0,"y":30,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"y":[-125,-120,-110,-95,-80,-25,0,10,15,25,35,50,55,50,50],"z":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},"width":[0,20,35,45,50,50,50,50,40,40,50,50,40,30,0],"height":[0,20,35,45,50,50,50,50,40,40,50,50,40,30,0],"propeller":1,"texture":[63,4,4,4,4,4,4,3,8,3,4,63,5,17]},"top_propulsor":{"section_segments":15,"offset":{"x":0,"y":-20,"z":0},"position":{"x":[0,0,0,0],"y":[80,95,100,90],"z":[0,0,0,0]},"width":[5,20,44,0],"height":[5,15,5,0],"propeller":true,"texture":[1,63,12]},"top_propulsor2":{"section_segments":15,"offset":{"x":0,"y":-20,"z":0},"position":{"x":[0,0,0,0],"y":[80,95,100,90],"z":[0,0,0,0]},"width":[5,20,44,0],"height":[5,15,5,0],"propeller":true,"texture":[1,63,12]},"logo":{"vertical":1,"section_segments":20,"offset":{"x":0,"y":50,"z":0},"position":{"x":[0,0,0,0,0,0],"y":[-5,5,5,2.1,2.1,2.1],"z":[0,0,0,0,0,0]},"width":[20,20,16,16,12,0],"height":[20,20,16,16,12,0],"texture":[63,63,63,17,5]},"logo2":{"vertical":1,"section_segments":20,"offset":{"x":50,"y":0,"z":0},"position":{"x":[0,0,0,0,0,0],"y":[-5,5,5,2.1,2.1,2.1],"z":[0,0,0,0,0,0]},"width":[20,20,16,16,12,0],"height":[20,20,16,16,12,0],"texture":[63,63,63,17,5],"angle":90},"logo3":{"vertical":1,"section_segments":20,"offset":{"x":0,"y":-50,"z":0},"position":{"x":[0,0,0,0,0,0],"y":[-5,5,5,2.1,2.1,2.1],"z":[0,0,0,0,0,0]},"width":[20,20,16,16,12,0],"height":[20,20,16,16,12,0],"texture":[63,63,63,17,5],"angle":180},"connector":{"section_segments":56,"offset":{"x":0,"y":0,"z":0},"position":{"x":[0,0,0,0,0],"y":[-5,5,5,-5,-5],"z":[0,0,0,0,0]},"width":[52,52,16,16,52],"height":[52,52,16,16,52],"texture":[63],"angle":0},"x":{"section_segments":[45,135,225,315],"offset":{"x":0,"y":0,"z":51},"position":{"x":[4,0,-4],"y":[-4,0,4],"z":[0,0,0]},"width":[2,2,2],"height":[2,2,2],"texture":[63],"angle":0},"x2":{"section_segments":[45,135,225,315],"offset":{"x":0,"y":0,"z":51},"position":{"x":[-4,0,4],"y":[-4,0,4],"z":[0,0,0]},"width":[2,2,2],"height":[2,2,2],"texture":[63],"angle":0},"x3":{"vertical":1,"section_segments":[45,135,225,315],"offset":{"x":51,"y":0,"z":0},"position":{"x":[0,0,0],"y":[-4,0,4],"z":[-4,0,4]},"width":[2,2,2],"height":[2,2,2],"texture":[63],"angle":0},"x4":{"vertical":1,"section_segments":[45,135,225,315],"offset":{"x":51,"y":0,"z":0},"position":{"x":[0,0,0],"y":[-4,0,4],"z":[4,0,-4]},"width":[2,2,2],"height":[2,2,2],"texture":[63],"angle":0},"x5":{"section_segments":[45,135,225,315],"offset":{"x":0,"y":0,"z":-51},"position":{"x":[4,0,-4],"y":[-4,0,4],"z":[0,0,0]},"width":[2,2,2],"height":[2,2,2],"texture":[63],"angle":0},"x6":{"section_segments":[45,135,225,315],"offset":{"x":0,"y":0,"z":-51},"position":{"x":[-4,0,4],"y":[-4,0,4],"z":[0,0,0]},"width":[2,2,2],"height":[2,2,2],"texture":[63],"angle":0}},"typespec":{"name":"God","level":7,"model":37,"code":737,"specs":{"shield":{"capacity":[400,400],"reload":[25,25]},"generator":{"capacity":[200,200],"reload":[50,50]},"ship":{"mass":1500,"speed":[150,150],"rotation":[25,25],"acceleration":[120,120],"dash":{"rate":1,"burst_speed":[250,250],"speed":[180,180],"acceleration":[200,200],"initial_energy":[100,100],"energy":[100,100]}}},"shape":[5.7,5.622,5.538,5.357,5.148,4.823,4.47,4.105,3.705,3.422,3.511,3.407,3.326,3.326,3.407,3.511,3.417,3.707,3.842,3.763,5.592,5.66,5.636,5.362,5.192,5.11,5.192,5.362,5.636,5.66,5.592,3.763,3.842,3.707,3.417,3.511,3.407,3.326,3.326,3.407,3.511,3.422,3.705,4.105,4.47,4.823,5.148,5.357,5.538,5.622],"lasers":[],"radius":5.7}}'
         },
         name: "Meteor",
@@ -3689,7 +3692,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Thu May 11 2023 10:18:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Thu May 11 2023 18:19:37 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -3922,7 +3925,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Thu May 11 2023 10:18:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Thu May 11 2023 18:19:37 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -3932,7 +3935,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Thu May 11 2023 10:18:10 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Thu May 11 2023 18:19:37 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4072,9 +4075,10 @@ const HelperFunctions = {
             angle: shortestAngle
         }
     },
-    accelerate: function (ship, speed, angle = null) {
+    accelerate: function (ship, speed, angle = null, initial_dependency = 0) {
         // accelerate ship with speed and angle (or ship angle)
         if (angle == null) angle = ship.r;
+        if (initial_dependency) speed += Math.sqrt(ship.vx ** 2 + ship.vy ** 2) * initial_dependency;
         ship.set({
             vx: speed * Math.cos(angle),
             vy: speed * Math.sin(angle)
@@ -4245,7 +4249,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Thu May 11 2023 10:18:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Thu May 11 2023 18:19:37 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -4859,11 +4863,11 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/gameLogic.js at Thu May 11 2023 10:18:10 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Thu May 11 2023 18:19:37 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/GameConfig.js at Thu May 11 2023 10:18:10 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Thu May 11 2023 18:19:37 GMT+0900 (Japan Standard Time) */
 
 const map_name = null; // leave `null` if you want randomized map name
 
@@ -4968,7 +4972,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Thu May 11 2023 10:18:10 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Thu May 11 2023 18:19:37 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -5690,7 +5694,7 @@ AbilityManager.onAbilityStart = function (ship, inAbilityBeforeStart) {
 
 
 
-/* Imported from misc/tickFunctions.js at Thu May 11 2023 10:18:10 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Thu May 11 2023 18:19:37 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -6155,7 +6159,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Thu May 11 2023 10:18:10 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Thu May 11 2023 18:19:37 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -6211,7 +6215,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Thu May 11 2023 10:18:10 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Thu May 11 2023 18:19:37 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
