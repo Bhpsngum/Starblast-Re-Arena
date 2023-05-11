@@ -239,15 +239,15 @@ const ShipAbilities = {
         speed: 1.25,
 
         start: function (ship) {
-            HelperFunctions.accelerate(ship, this.speed);
             ship.set({
                 invulnerable: 120,
                 x: ship.x + this.TPDistance * Math.cos(ship.r),
                 y: ship.y + this.TPDistance * Math.sin(ship.r),
                 collider: false,
             });
+            HelperFunctions.accelerate(ship, this.speed);
         },
-        end: function (ship) { ship.set({collider: true})}
+        end: function (ship) { ship.set({collider: true}) }
     },
     "Rock-Tower": {
         models: {
@@ -1589,6 +1589,7 @@ const ShipAbilities = {
                 x: ship.x,
                 y: ship.y,
                 team: ship.team,
+                id: ship.id,
                 ship
             });
 
@@ -1651,7 +1652,7 @@ const ShipAbilities = {
             for (let ring of this.activeRings.values()) {
                 let duration = game.step - ring.start;
                 if (duration % this.healTick === 0) {
-                    let nearestShips = HelperFunctions.findEntitiesInRange(ring, this.range, true, false, false, false, true);
+                    let nearestShips = HelperFunctions.findEntitiesInRange(ring, this.range, true, false, false, false, true, true);
                     for (let ship of nearestShips) ship.set({shield: ship.shield + this.healAmount});
                 }
                 if (duration > this.healingRingDuration) this.removeActiveRing(ring.ship);
