@@ -206,6 +206,7 @@ const AbilityManager = {
         ability.ships.delete(ship.id);
         if (ability.cooldownRestartOnEnd) ability.unload(ship);
         ability.end(ship);
+        if ("function" == typeof this.onAbilityEnd) this.onAbilityEnd(ship);
     },
     canStart: function (ship) {
         return game.custom.abilitySystemEnabled && !ship.custom.abilitySystemDisabled && ship.alive && !this.isActionBlocked(ship).blocked && ship.custom.ability.canStart(ship);
@@ -217,6 +218,7 @@ const AbilityManager = {
         ship.custom.lastTriggered = game.step;
         ship.custom.forceEnd = false;
         ability.start(ship);
+        let lastStatus = ship.custom.inAbility;
         ship.custom.inAbility = true;
         if (ability.duration != null) {
             let oldTimeout = ability.ships.get(ship.id);
@@ -225,6 +227,8 @@ const AbilityManager = {
                 this.end(ship);
             }.bind(this), ability.duration));
         }
+
+        if ("function" == typeof this.onAbilityStart) this.onAbilityStart(ship, lastStatus);
     },
     requirementsInfo: function (ship) {
         if (!game.custom.abilitySystemEnabled || ship == null || ship.custom.abilitySystemDisabled || !ship.alive) return { ready: false, text: "Disabled" }

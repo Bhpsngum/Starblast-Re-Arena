@@ -83,7 +83,12 @@ const HelperFunctions = {
     isTeam: function (ship1, ship2) {
         // check if ship2 is on the same team with ship1
         let team1 = TeamManager.getDataFromShip(ship1), team2 = TeamManager.getDataFromShip(ship2);
-        return !team1.ghost && team1.id === team2.id;
+        
+        // if ship1 on ghost team or there are no teams, only itself belongs to its team
+        if (team1.ghost || GAME_OPTIONS.teams_count < 1) return ship1.id === ship2.id;
+
+        // else
+        return team1.id === team2.id;
     },
     simpleDistance: function (ship = {x: 0, y: 0}, target = {x: 0, y: 0}) {
         // @description simple distance function, just regular math
@@ -153,12 +158,13 @@ const HelperFunctions = {
         if (enemy && !this.isTeam(ship1, ship2)) return true;
         return false;
     },
-    findEntitiesInRange: function (ship, range, teammate = false, enemy = false, alien = false, asteroid = false, dontSort = false) {
+    findEntitiesInRange: function (ship, range, teammate = false, enemy = false, alien = false, asteroid = false, dontSort = false, includeSelf = false) {
         // find all entities in range, set `donSort` to `true` if you want it to ignore the sorting
         let data = [];
+        if (ship == null || ship.id == null) return data;
         if (alien) data.push(...game.aliens.filter(al => this.distance(ship, al).distance <= range));
         if (asteroid) data.push(...game.asteroids.filter(al => this.distance(ship, al).distance <= range));
-        if (teammate || enemy) data.push(...game.ships.filter(e => e !== ship && e.alive && !e.custom.spectator && this.satisfies(ship, e, teammate, enemy) && this.distance(ship, e).distance <= range));
+        if (teammate || enemy) data.push(...game.ships.filter(e => e.id != null && (includeSelf || e.id !== ship.id) && e.alive && !e.custom.spectator && this.satisfies(ship, e, teammate, enemy) && this.distance(ship, e).distance <= range));
         if (dontSort) return data;
         return data.sort((a, b) => this.distance(ship, a).distance - this.distance(ship, b).distance);
     },

@@ -90,7 +90,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_ShipTesting.js at Wed May 10 2023 21:33:49 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_ShipTesting.js at Thu May 11 2023 10:18:10 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -133,7 +133,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Wed May 10 2023 21:33:49 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Thu May 11 2023 10:18:10 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -183,7 +183,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Wed May 10 2023 21:33:49 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Thu May 11 2023 10:18:10 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1780,7 +1780,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Wed May 10 2023 21:33:49 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Thu May 11 2023 10:18:10 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -2023,15 +2023,15 @@ const ShipAbilities = {
         speed: 1.25,
 
         start: function (ship) {
-            HelperFunctions.accelerate(ship, this.speed);
             ship.set({
                 invulnerable: 120,
                 x: ship.x + this.TPDistance * Math.cos(ship.r),
                 y: ship.y + this.TPDistance * Math.sin(ship.r),
                 collider: false,
             });
+            HelperFunctions.accelerate(ship, this.speed);
         },
-        end: function (ship) { ship.set({collider: true})}
+        end: function (ship) { ship.set({collider: true}) }
     },
     "Rock-Tower": {
         models: {
@@ -3373,6 +3373,7 @@ const ShipAbilities = {
                 x: ship.x,
                 y: ship.y,
                 team: ship.team,
+                id: ship.id,
                 ship
             });
 
@@ -3435,7 +3436,7 @@ const ShipAbilities = {
             for (let ring of this.activeRings.values()) {
                 let duration = game.step - ring.start;
                 if (duration % this.healTick === 0) {
-                    let nearestShips = HelperFunctions.findEntitiesInRange(ring, this.range, true, false, false, false, true);
+                    let nearestShips = HelperFunctions.findEntitiesInRange(ring, this.range, true, false, false, false, true, true);
                     for (let ship of nearestShips) ship.set({shield: ship.shield + this.healAmount});
                 }
                 if (duration > this.healingRingDuration) this.removeActiveRing(ring.ship);
@@ -3688,7 +3689,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Wed May 10 2023 21:33:49 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Thu May 11 2023 10:18:10 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -3921,7 +3922,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Wed May 10 2023 21:33:49 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Thu May 11 2023 10:18:10 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -3931,7 +3932,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Wed May 10 2023 21:33:49 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Thu May 11 2023 10:18:10 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4018,7 +4019,12 @@ const HelperFunctions = {
     isTeam: function (ship1, ship2) {
         // check if ship2 is on the same team with ship1
         let team1 = TeamManager.getDataFromShip(ship1), team2 = TeamManager.getDataFromShip(ship2);
-        return !team1.ghost && team1.id === team2.id;
+        
+        // if ship1 on ghost team or there are no teams, only itself belongs to its team
+        if (team1.ghost || GAME_OPTIONS.teams_count < 1) return ship1.id === ship2.id;
+
+        // else
+        return team1.id === team2.id;
     },
     simpleDistance: function (ship = {x: 0, y: 0}, target = {x: 0, y: 0}) {
         // @description simple distance function, just regular math
@@ -4088,12 +4094,13 @@ const HelperFunctions = {
         if (enemy && !this.isTeam(ship1, ship2)) return true;
         return false;
     },
-    findEntitiesInRange: function (ship, range, teammate = false, enemy = false, alien = false, asteroid = false, dontSort = false) {
+    findEntitiesInRange: function (ship, range, teammate = false, enemy = false, alien = false, asteroid = false, dontSort = false, includeSelf = false) {
         // find all entities in range, set `donSort` to `true` if you want it to ignore the sorting
         let data = [];
+        if (ship == null || ship.id == null) return data;
         if (alien) data.push(...game.aliens.filter(al => this.distance(ship, al).distance <= range));
         if (asteroid) data.push(...game.asteroids.filter(al => this.distance(ship, al).distance <= range));
-        if (teammate || enemy) data.push(...game.ships.filter(e => e !== ship && e.alive && !e.custom.spectator && this.satisfies(ship, e, teammate, enemy) && this.distance(ship, e).distance <= range));
+        if (teammate || enemy) data.push(...game.ships.filter(e => e.id != null && (includeSelf || e.id !== ship.id) && e.alive && !e.custom.spectator && this.satisfies(ship, e, teammate, enemy) && this.distance(ship, e).distance <= range));
         if (dontSort) return data;
         return data.sort((a, b) => this.distance(ship, a).distance - this.distance(ship, b).distance);
     },
@@ -4238,7 +4245,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Wed May 10 2023 21:33:49 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Thu May 11 2023 10:18:10 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -4448,6 +4455,7 @@ const AbilityManager = {
         ability.ships.delete(ship.id);
         if (ability.cooldownRestartOnEnd) ability.unload(ship);
         ability.end(ship);
+        if ("function" == typeof this.onAbilityEnd) this.onAbilityEnd(ship);
     },
     canStart: function (ship) {
         return game.custom.abilitySystemEnabled && !ship.custom.abilitySystemDisabled && ship.alive && !this.isActionBlocked(ship).blocked && ship.custom.ability.canStart(ship);
@@ -4459,6 +4467,7 @@ const AbilityManager = {
         ship.custom.lastTriggered = game.step;
         ship.custom.forceEnd = false;
         ability.start(ship);
+        let lastStatus = ship.custom.inAbility;
         ship.custom.inAbility = true;
         if (ability.duration != null) {
             let oldTimeout = ability.ships.get(ship.id);
@@ -4467,6 +4476,8 @@ const AbilityManager = {
                 this.end(ship);
             }.bind(this), ability.duration));
         }
+
+        if ("function" == typeof this.onAbilityStart) this.onAbilityStart(ship, lastStatus);
     },
     requirementsInfo: function (ship) {
         if (!game.custom.abilitySystemEnabled || ship == null || ship.custom.abilitySystemDisabled || !ship.alive) return { ready: false, text: "Disabled" }
