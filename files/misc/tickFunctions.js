@@ -162,8 +162,7 @@ const main_phase = function (game) {
     if ((game.step - game.custom.startedStep) % 60 === 0) {
         // game logic should be inside here
         // find all players inside the ring
-        let players = HelperFunctions.findEntitiesInRange(CONTROL_POINT.position, CONTROL_POINT.size, true, true, false, false, true)
-        .filter(ship => ship.id != null);
+        let players = HelperFunctions.findEntitiesInRange(CONTROL_POINT.position, CONTROL_POINT.size, true, true, { ships: true }, true);
 
         let increment = CONTROL_POINT.control_bar.percentage_increase;
 
