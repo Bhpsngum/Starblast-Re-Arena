@@ -164,7 +164,7 @@ const ShipAbilities = {
         },
 
         start: function (ship) {
-            let EMPaffectedPlayers = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, false, false, true);
+            let EMPaffectedPlayers = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true }, true);
             for (let victim of EMPaffectedPlayers) {
                 if (victim.custom.lastEMP != null) HelperFunctions.TimeManager.clearTimeout(victim.custom.lastEMP);
                 victim.custom.EMP = true;
@@ -291,7 +291,7 @@ const ShipAbilities = {
         pullStrength: 2,
 
         start: function (ship) {
-            let ships = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, false, false, true);
+            let ships = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true }, true);
             for (let affectedShip of ships) HelperFunctions.accelerateToTarget(affectedShip, ship, this.pullStrength);
         },
 
@@ -350,7 +350,7 @@ const ShipAbilities = {
 
         end: function (ship) {
             if (ship.custom.ability !== this) return;
-            let ships = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, false, false, true);
+            let ships = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true }, true);
             for (let victim of ships) {
                 let affectionRatio = 1 - (HelperFunctions.distance(ship, victim).distance / this.range);
                 let shipMass = this.shipMasses.get(victim.type) || 1;
@@ -515,7 +515,7 @@ const ShipAbilities = {
             ship.set({ generator: this.energy_capacities.ability, invulnerable: 180 });
             ship.emptyWeapons();
             HelperFunctions.spawnCollectibles(ship, Array(6).fill(this.attackPodCode));
-            let targets = HelperFunctions.findEntitiesInRange(ship, this.range, true, false, false, false, true);
+            let targets = HelperFunctions.findEntitiesInRange(ship, this.range, true, false, { ships: true }, true);
             for (let target of targets) HelperFunctions.spawnCollectibles(target, Array(3).fill(this.attackPodCode));
         },
 
@@ -616,7 +616,7 @@ const ShipAbilities = {
         range: 60,
 
         start: function (ship) {
-            let target = HelperFunctions.findEntitiesInRange(ship, this.range, false, true)[0];
+            let target = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true })[0];
             if (target != null) {
                 ship.set({x: target.x, y: target.y, vx: target.vx, vy: target.vy, angle: target.r * 180 / Math.PI});
                 target.set({x: ship.x, y: ship.y, vx: ship.vx, vy: ship.vy, angle: ship.r * 180 / Math.PI});
@@ -1127,7 +1127,7 @@ const ShipAbilities = {
         },
 
         start: function (ship) {
-            let player = HelperFunctions.findEntitiesInRange(ship, this.range, false, true)[0];
+            let player = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true })[0];
             if (player == null) ship.custom.forceEnd = true;
             else {
                 if (player.custom.inAbility) AbilityManager.end(player);
@@ -1230,7 +1230,7 @@ const ShipAbilities = {
         healingRatio: 1, // HP recovered for Wasp for each damage unit applied to enemy
 
         start: function (ship) {
-            let target = HelperFunctions.findEntitiesInRange(ship, this.range, false, true)[0];
+            let target = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true })[0];
 
             if (target != null) {
                 ship.custom.abilityCustom.hasPlayers = true;
@@ -1313,7 +1313,7 @@ const ShipAbilities = {
 
             if (duration % this.pullInterval == 0) {
                 // each pull interval => pull ships
-                let targets = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, true, true, true);
+                let targets = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true, aliens: true, asteroids: true }, true);
                 for (let target of targets) HelperFunctions.accelerateToTarget(target, ship, this.pullStrength);
             }
         }
@@ -1549,7 +1549,7 @@ const ShipAbilities = {
 
         start: function (ship) {
             ship.set({invulnerable: 100});
-            let targets = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, false, false, true);
+            let targets = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true, aliens: true, asteroids: true }, true);
             for (let target of targets) {
                 HelperFunctions.accelerateToTarget(target, ship, this.pushStrength, true);
             }
@@ -1655,7 +1655,7 @@ const ShipAbilities = {
             for (let ring of this.activeRings.values()) {
                 let duration = game.step - ring.start;
                 if (duration % this.healTick === 0) {
-                    let nearestShips = HelperFunctions.findEntitiesInRange(ring, this.range, true, false, false, false, true, true);
+                    let nearestShips = HelperFunctions.findEntitiesInRange(ring, this.range, true, false, { ships: true, self: true }, true);
                     for (let ship of nearestShips) ship.set({shield: ship.shield + this.healAmount});
                 }
                 if (duration > this.healingRingDuration) this.removeActiveRing(ring.ship);
@@ -1709,7 +1709,7 @@ const ShipAbilities = {
             HelperFunctions.templates.start.call(this, ship);
             ship.emptyWeapons();
             HelperFunctions.spawnCollectibles(ship, Array(6).fill(this.defencePodCode));
-            let targets = HelperFunctions.findEntitiesInRange(ship, this.range, true, false, false, false, true);
+            let targets = HelperFunctions.findEntitiesInRange(ship, this.range, true, false, { ships: true }, true);
             for (let target of targets) HelperFunctions.spawnCollectibles(target, Array(3).fill(this.defencePodCode));
         },
 
@@ -1737,7 +1737,7 @@ const ShipAbilities = {
 
         start: function (ship) {
             ship.set({invulnerable: 200});
-            let target = HelperFunctions.findEntitiesInRange(ship, this.range, false, true)[0];
+            let target = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true })[0];
             if (target != null) {
                 HelperFunctions.accelerateToTarget(target, ship, 0.1, true);
                 HelperFunctions.TimeManager.setTimeout(function () {

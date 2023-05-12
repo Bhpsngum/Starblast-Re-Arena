@@ -90,7 +90,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_Main.js at Fri May 12 2023 00:28:36 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_Main.js at Fri May 12 2023 10:56:23 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -133,7 +133,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Fri May 12 2023 00:28:36 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Fri May 12 2023 10:56:23 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -183,7 +183,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Fri May 12 2023 00:28:36 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Fri May 12 2023 10:56:23 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1780,7 +1780,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Fri May 12 2023 00:28:36 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Fri May 12 2023 10:56:23 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -1948,7 +1948,7 @@ const ShipAbilities = {
         },
 
         start: function (ship) {
-            let EMPaffectedPlayers = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, false, false, true);
+            let EMPaffectedPlayers = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true }, true);
             for (let victim of EMPaffectedPlayers) {
                 if (victim.custom.lastEMP != null) HelperFunctions.TimeManager.clearTimeout(victim.custom.lastEMP);
                 victim.custom.EMP = true;
@@ -2075,7 +2075,7 @@ const ShipAbilities = {
         pullStrength: 2,
 
         start: function (ship) {
-            let ships = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, false, false, true);
+            let ships = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true }, true);
             for (let affectedShip of ships) HelperFunctions.accelerateToTarget(affectedShip, ship, this.pullStrength);
         },
 
@@ -2134,7 +2134,7 @@ const ShipAbilities = {
 
         end: function (ship) {
             if (ship.custom.ability !== this) return;
-            let ships = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, false, false, true);
+            let ships = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true }, true);
             for (let victim of ships) {
                 let affectionRatio = 1 - (HelperFunctions.distance(ship, victim).distance / this.range);
                 let shipMass = this.shipMasses.get(victim.type) || 1;
@@ -2299,7 +2299,7 @@ const ShipAbilities = {
             ship.set({ generator: this.energy_capacities.ability, invulnerable: 180 });
             ship.emptyWeapons();
             HelperFunctions.spawnCollectibles(ship, Array(6).fill(this.attackPodCode));
-            let targets = HelperFunctions.findEntitiesInRange(ship, this.range, true, false, false, false, true);
+            let targets = HelperFunctions.findEntitiesInRange(ship, this.range, true, false, { ships: true }, true);
             for (let target of targets) HelperFunctions.spawnCollectibles(target, Array(3).fill(this.attackPodCode));
         },
 
@@ -2400,7 +2400,7 @@ const ShipAbilities = {
         range: 60,
 
         start: function (ship) {
-            let target = HelperFunctions.findEntitiesInRange(ship, this.range, false, true)[0];
+            let target = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true })[0];
             if (target != null) {
                 ship.set({x: target.x, y: target.y, vx: target.vx, vy: target.vy, angle: target.r * 180 / Math.PI});
                 target.set({x: ship.x, y: ship.y, vx: ship.vx, vy: ship.vy, angle: ship.r * 180 / Math.PI});
@@ -2911,7 +2911,7 @@ const ShipAbilities = {
         },
 
         start: function (ship) {
-            let player = HelperFunctions.findEntitiesInRange(ship, this.range, false, true)[0];
+            let player = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true })[0];
             if (player == null) ship.custom.forceEnd = true;
             else {
                 if (player.custom.inAbility) AbilityManager.end(player);
@@ -3014,7 +3014,7 @@ const ShipAbilities = {
         healingRatio: 1, // HP recovered for Wasp for each damage unit applied to enemy
 
         start: function (ship) {
-            let target = HelperFunctions.findEntitiesInRange(ship, this.range, false, true)[0];
+            let target = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true })[0];
 
             if (target != null) {
                 ship.custom.abilityCustom.hasPlayers = true;
@@ -3097,7 +3097,7 @@ const ShipAbilities = {
 
             if (duration % this.pullInterval == 0) {
                 // each pull interval => pull ships
-                let targets = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, true, true, true);
+                let targets = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true, aliens: true, asteroids: true }, true);
                 for (let target of targets) HelperFunctions.accelerateToTarget(target, ship, this.pullStrength);
             }
         }
@@ -3333,7 +3333,7 @@ const ShipAbilities = {
 
         start: function (ship) {
             ship.set({invulnerable: 100});
-            let targets = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, false, false, true);
+            let targets = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true, aliens: true, asteroids: true }, true);
             for (let target of targets) {
                 HelperFunctions.accelerateToTarget(target, ship, this.pushStrength, true);
             }
@@ -3439,7 +3439,7 @@ const ShipAbilities = {
             for (let ring of this.activeRings.values()) {
                 let duration = game.step - ring.start;
                 if (duration % this.healTick === 0) {
-                    let nearestShips = HelperFunctions.findEntitiesInRange(ring, this.range, true, false, false, false, true, true);
+                    let nearestShips = HelperFunctions.findEntitiesInRange(ring, this.range, true, false, { ships: true, self: true }, true);
                     for (let ship of nearestShips) ship.set({shield: ship.shield + this.healAmount});
                 }
                 if (duration > this.healingRingDuration) this.removeActiveRing(ring.ship);
@@ -3493,7 +3493,7 @@ const ShipAbilities = {
             HelperFunctions.templates.start.call(this, ship);
             ship.emptyWeapons();
             HelperFunctions.spawnCollectibles(ship, Array(6).fill(this.defencePodCode));
-            let targets = HelperFunctions.findEntitiesInRange(ship, this.range, true, false, false, false, true);
+            let targets = HelperFunctions.findEntitiesInRange(ship, this.range, true, false, { ships: true }, true);
             for (let target of targets) HelperFunctions.spawnCollectibles(target, Array(3).fill(this.defencePodCode));
         },
 
@@ -3521,7 +3521,7 @@ const ShipAbilities = {
 
         start: function (ship) {
             ship.set({invulnerable: 200});
-            let target = HelperFunctions.findEntitiesInRange(ship, this.range, false, true)[0];
+            let target = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true })[0];
             if (target != null) {
                 HelperFunctions.accelerateToTarget(target, ship, 0.1, true);
                 HelperFunctions.TimeManager.setTimeout(function () {
@@ -3692,7 +3692,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Fri May 12 2023 00:28:36 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Fri May 12 2023 10:56:23 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -3925,7 +3925,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Fri May 12 2023 00:28:36 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Fri May 12 2023 10:56:23 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -3935,7 +3935,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Fri May 12 2023 00:28:36 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Fri May 12 2023 10:56:23 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4098,7 +4098,12 @@ const HelperFunctions = {
         if (enemy && !this.isTeam(ship1, ship2)) return true;
         return false;
     },
-    findEntitiesInRange: function (entity, range, teammate = false, enemy = false, alien = false, asteroid = false, dontSort = false, includeSelf = false) {
+    findEntitiesInRange: function (entity, range, teammate = false, enemy = false, includes = {
+        aliens: false, // include aliens
+        ships: false, // include asteroids
+        asteroids: false, // include ships
+        self: false // include itself (see notes below)
+    }, dontSort = false) {
         // Find all entities in range
         // Set `donSort` to `true` if you want it to ignore the sorting
         // Set `includeSelf` to `true` if you want to include the entity (if condition matches)
@@ -4110,29 +4115,31 @@ const HelperFunctions = {
         //     team: any // it will try to find any ships with the same/different team as the defined team ID (if condition matches)
         // }
 
+        includes = includes || {};
+
         let data = [];
 
-        if (entity == null) return data;
+        if (entity == null || !["aliens", "asteroids", "ships", "self"].find(a => includes[a])) return data;
 
-        if (alien) {
+        if (includes.aliens) {
             let isAlien = game.aliens.includes(entity);
             // Only find aliens if:
             // - Given entity is an alien --> teammate =?= true
             // - Given entity is not an alien --> enemy =?= true
-            if (isAlien ? teammate : enemy) data.push(...game.aliens.filter(alien => alien != null && alien.id != -1 && (includeSelf || !isAlien || alien !== entity) && this.distance(entity, alien).distance <= range))
+            if (isAlien ? teammate : enemy) data.push(...game.aliens.filter(alien => alien != null && alien.id != -1 && (includes.self || !isAlien || alien !== entity) && this.distance(entity, alien).distance <= range))
         }
         
-        if (asteroid) {
+        if (includes.asteroids) {
             let isAsteroid = game.asteroids.includes(entity);
             // Only find asteroids if:
             // - Given entity is an asteroid --> at least `teammate` or `enemy` is `true` (since we don't know if asteroids are friends or foes to each other?)
             // - Given entity is not an asteroid --> enemy =?= true
-            if (isAsteroid ? (teammate || enemy) : enemy) data.push(...game.asteroids.filter(asteroid => asteroid != null && asteroid.id != -1 && (includeSelf || !isAsteroid || asteroid !== entity) && this.distance(entity, asteroid).distance <= range));
+            if (isAsteroid ? (teammate || enemy) : enemy) data.push(...game.asteroids.filter(asteroid => asteroid != null && asteroid.id != -1 && (includes.self || !isAsteroid || asteroid !== entity) && this.distance(entity, asteroid).distance <= range));
         }
 
         // Only find ships if either `teammate` or `enemy` is `true`
 
-        if (teammate || enemy) data.push(...game.ships.filter(ship => (ship || {}).id != null && this.satisfies(entity, ship, teammate, enemy) && this.distance(entity, ship).distance <= range));
+        if (includes.ships && (teammate || enemy)) data.push(...game.ships.filter(ship => (ship || {}).id != null && (includes.self || ship !== entity) && this.satisfies(entity, ship, teammate, enemy) && this.distance(entity, ship).distance <= range));
         
         if (dontSort) return data;
 
@@ -4279,7 +4286,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Fri May 12 2023 00:28:36 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Fri May 12 2023 10:56:23 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -4893,11 +4900,11 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/gameLogic.js at Fri May 12 2023 00:28:36 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Fri May 12 2023 10:56:23 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/GameConfig.js at Fri May 12 2023 00:28:36 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Fri May 12 2023 10:56:23 GMT+0900 (Japan Standard Time) */
 
 const map_name = null; // leave `null` if you want randomized map name
 
@@ -5002,7 +5009,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Fri May 12 2023 00:28:36 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Fri May 12 2023 10:56:23 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -5724,7 +5731,7 @@ AbilityManager.onAbilityStart = function (ship, inAbilityBeforeStart) {
 
 
 
-/* Imported from misc/tickFunctions.js at Fri May 12 2023 00:28:36 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Fri May 12 2023 10:56:23 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -5890,8 +5897,7 @@ const main_phase = function (game) {
     if ((game.step - game.custom.startedStep) % 60 === 0) {
         // game logic should be inside here
         // find all players inside the ring
-        let players = HelperFunctions.findEntitiesInRange(CONTROL_POINT.position, CONTROL_POINT.size, true, true, false, false, true)
-        .filter(ship => ship.id != null);
+        let players = HelperFunctions.findEntitiesInRange(CONTROL_POINT.position, CONTROL_POINT.size, true, true, { ships: true }, true);
 
         let increment = CONTROL_POINT.control_bar.percentage_increase;
 
@@ -6189,7 +6195,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Fri May 12 2023 00:28:36 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Fri May 12 2023 10:56:23 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -6245,7 +6251,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Fri May 12 2023 00:28:36 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Fri May 12 2023 10:56:23 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
