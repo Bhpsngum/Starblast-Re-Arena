@@ -443,6 +443,7 @@ const im_here_just_to_kick_every_players_out_of_the_game = function (game) {
             endInfo["Your deaths"] = (+ship.custom.deaths || 0).toString();
             ship.gameover(endInfo);
             ship.custom.kicked = true;
+            ship.custom.abilitySystemDisabled = true;
         }
     }
 }
