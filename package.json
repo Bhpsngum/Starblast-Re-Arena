@@ -4,7 +4,8 @@
     "branches": [
         "Main",
         "MS",
-        "ShipTesting"
+        "ShipTesting",
+        "Battlefield"
     ],
     "scripts": {
         "compile": "node mergeFiles.js"

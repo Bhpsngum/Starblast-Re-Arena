@@ -112,7 +112,7 @@ const Maps = [
     },
     {
         name: "Flames",
-        author: "Noel",
+        author: "Nex",
         spawnpoints: [
             { x: 390, y: -390},
             { x: -390, y: 390 }
@@ -221,7 +221,7 @@ const Maps = [
     },
     {
         name: "Nebula",
-        author: "Noel",
+        author: "Nex",
         spawnpoints: [
             { x: 390, y: -390 },
             { x: -390, y: 390 }
@@ -330,7 +330,7 @@ const Maps = [
     },
     {
         name: "Blockchain",
-        author: "Noel",
+        author: "Nex",
         spawnpoints: [
             { x: 390, y: 0},
             { x: -390, y: 0}
