@@ -1,5 +1,5 @@
-# Arena-mod-remake
-Remake of Arena mod (aka Arena Mod Recontinuation)
+# Re:Arena
+Remake of Arena Mod (aka Arena Mod Recontinuation)
 
 ## What's this?
 This is the remake of Arena Mod, after development was stopped by the original developers.
@@ -13,14 +13,14 @@ But at least it should run as expected ~~I guess~~
 ## Credits
 
 ### Original Arena Mod (v1.0 - v3.1.2)
-* **CEO:** Noel
+* **CEO:** Nexagon
 * **Coding:** Nexagon
-* **Textures:** Noel, and others
-* **Ships:** Noel, Nexagon, Edward, Supernova, and others
-* **Maps:** Noel, Carme, Caramel, Nerd69420, and others
+* **Textures:** Nexagon, and others
+* **Ships:** Nexagon, Edward, Supernova, and others
+* **Maps:** Nexagon, Carme, Caramel, Nerd69420, and others
 * **Contributors:** Lexydrow, Boris, Thuliux, Bylolopro, Caramel, Duschi, Edward, Megalodon, Supernova, ThirdToeMan, Madness, Slayer, and others
 
-### Arena Mod Remake/Recontinuation (v3.1.3 - v4.0+)
+### Re:Arena - Arena Mod Remake/Recontinuation (v3.1.3 - v4.0+)
 * **CEO:** Tost
 * **Coding:** Bhpsngum
 * **Textures:** Caramel
