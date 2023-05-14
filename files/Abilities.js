@@ -1474,6 +1474,7 @@ const ShipAbilities = {
         aliens: {
             lifespan: 5 * 60,
             amount: 10,
+            dmg_per_level: 25,
             codes: [10],
             level: {
                 min: 0,
@@ -1510,7 +1511,7 @@ const ShipAbilities = {
                 if (!alien.custom.fromGhoulAbility || alien.id < 0) continue;
                 if (!alien.custom.init) {
                     alien.set({
-                        damage: 40 * (alien.level + 1),
+                        damage: this.aliens.dmg_per_level * (alien.level + 1),
                         rate: 1,
                         laser_speed: 200
                     });
