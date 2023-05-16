@@ -1124,7 +1124,15 @@ const ShipAbilities = {
 
         removePuck: function (player) {
             if (player.custom.pucked != null) {
-                AbilityManager.assign(player, player.custom.shipName, false, true);
+                this.actionBlocker.clear(player);
+                let abil = player.custom.ability;
+                if (abil != null) {
+                    player.set({
+                        type: abil.codes.default,
+                        stats: AbilityManager.maxStats
+                    });
+                    abil.unload(player);
+                }
             }
         },
 

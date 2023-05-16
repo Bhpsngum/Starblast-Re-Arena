@@ -90,7 +90,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_ShipTesting.js at Tue May 16 2023 11:48:18 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_ShipTesting.js at Tue May 16 2023 12:33:37 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -133,7 +133,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Tue May 16 2023 11:48:18 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Tue May 16 2023 12:33:37 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -183,7 +183,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Tue May 16 2023 11:48:18 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Tue May 16 2023 12:33:37 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1780,7 +1780,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Tue May 16 2023 11:48:18 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Tue May 16 2023 12:33:37 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -2908,7 +2908,15 @@ const ShipAbilities = {
 
         removePuck: function (player) {
             if (player.custom.pucked != null) {
-                AbilityManager.assign(player, player.custom.shipName, false, true);
+                this.actionBlocker.clear(player);
+                let abil = player.custom.ability;
+                if (abil != null) {
+                    player.set({
+                        type: abil.codes.default,
+                        stats: AbilityManager.maxStats
+                    });
+                    abil.unload(player);
+                }
             }
         },
 
@@ -3699,7 +3707,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Tue May 16 2023 11:48:18 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Tue May 16 2023 12:33:37 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -3943,7 +3951,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Tue May 16 2023 11:48:18 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Tue May 16 2023 12:33:37 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -3953,7 +3961,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Tue May 16 2023 11:48:18 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Tue May 16 2023 12:33:37 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4304,7 +4312,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Tue May 16 2023 11:48:18 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Tue May 16 2023 12:33:37 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
