@@ -11,6 +11,7 @@ Object.assign(GAME_OPTIONS, {
     crystal_drop: 0.5, // this.options.crystal_drop
     map_size: 100,
     buttons_cooldown: 0.25, // must wait after x (seconds) before the same button can be triggered again
+    duplicate_choose_limit: 5, // immediately close the ship menu after a single ship has been choosen x times
     alienSpawns: {
         level: {
             min: 1,
