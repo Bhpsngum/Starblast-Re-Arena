@@ -37,6 +37,7 @@ const ShipAbilities = {
             // block a certain ship from starting abilities or changing to other ships
             // only include this object if needed
             checker: function (ship) { return false }, // whether the ship will be blocked or not
+            clear: function (ship) { }, // clear the blocker on the ship
             reason: "Ship is being affected by this ability", // Reason
             abilityDisabledText: "DISABLED" // text shown on the ability cooldown
         },
@@ -152,15 +153,18 @@ const ShipAbilities = {
             checker: function (ship) {
                 return ship.custom.EMP
             },
+            clear: function (ship) {
+                ship.custom.EMP = false;
+                ship.custom.lastEMP = null;
+                HelperFunctions.TimeManager.clearTimeout(ship.custom.lastEMP);
+            },
             reason: "Ship is being blocked by EMP Shockwave",
             abilityDisabledText: "EMP-Shocked"
         },
 
         removeEMP: function (ship) {
             ship.set({idle: false});
-            ship.custom.EMP = false;
-            ship.custom.lastEMP = null;
-            HelperFunctions.TimeManager.clearTimeout(ship.custom.lastEMP);
+            this.actionBlocker.clear(ship);
         },
 
         start: function (ship) {
@@ -1110,15 +1114,17 @@ const ShipAbilities = {
             checker: function (ship) {
                 return ship.custom.pucked != null
             },
+            clear: function (ship) {
+                HelperFunctions.TimeManager.clearTimeout(ship.custom.pucked);
+                ship.custom.pucked = null;
+            },
             reason: "Ship is being Pucked",
             abilityDisabledText: "PUCKED"
         },
 
         removePuck: function (player) {
             if (player.custom.pucked != null) {
-                HelperFunctions.TimeManager.clearTimeout(player.custom.pucked);
-                AbilityManager.assign(player, player.custom.shipName);
-                player.custom.pucked = null;
+                AbilityManager.assign(player, player.custom.shipName, false, true);
             }
         },
 

@@ -90,7 +90,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_MS.js at Tue May 16 2023 11:07:48 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_MS.js at Tue May 16 2023 11:48:18 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = false; // if in debug phase
 
@@ -133,7 +133,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Tue May 16 2023 11:07:48 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Tue May 16 2023 11:48:18 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -183,7 +183,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Tue May 16 2023 11:07:48 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Tue May 16 2023 11:48:18 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1780,7 +1780,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Tue May 16 2023 11:07:48 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Tue May 16 2023 11:48:18 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -1821,6 +1821,7 @@ const ShipAbilities = {
             // block a certain ship from starting abilities or changing to other ships
             // only include this object if needed
             checker: function (ship) { return false }, // whether the ship will be blocked or not
+            clear: function (ship) { }, // clear the blocker on the ship
             reason: "Ship is being affected by this ability", // Reason
             abilityDisabledText: "DISABLED" // text shown on the ability cooldown
         },
@@ -1936,15 +1937,18 @@ const ShipAbilities = {
             checker: function (ship) {
                 return ship.custom.EMP
             },
+            clear: function (ship) {
+                ship.custom.EMP = false;
+                ship.custom.lastEMP = null;
+                HelperFunctions.TimeManager.clearTimeout(ship.custom.lastEMP);
+            },
             reason: "Ship is being blocked by EMP Shockwave",
             abilityDisabledText: "EMP-Shocked"
         },
 
         removeEMP: function (ship) {
             ship.set({idle: false});
-            ship.custom.EMP = false;
-            ship.custom.lastEMP = null;
-            HelperFunctions.TimeManager.clearTimeout(ship.custom.lastEMP);
+            this.actionBlocker.clear(ship);
         },
 
         start: function (ship) {
@@ -2894,15 +2898,17 @@ const ShipAbilities = {
             checker: function (ship) {
                 return ship.custom.pucked != null
             },
+            clear: function (ship) {
+                HelperFunctions.TimeManager.clearTimeout(ship.custom.pucked);
+                ship.custom.pucked = null;
+            },
             reason: "Ship is being Pucked",
             abilityDisabledText: "PUCKED"
         },
 
         removePuck: function (player) {
             if (player.custom.pucked != null) {
-                HelperFunctions.TimeManager.clearTimeout(player.custom.pucked);
-                AbilityManager.assign(player, player.custom.shipName);
-                player.custom.pucked = null;
+                AbilityManager.assign(player, player.custom.shipName, false, true);
             }
         },
 
@@ -3693,7 +3699,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Tue May 16 2023 11:07:48 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Tue May 16 2023 11:48:18 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -3847,6 +3853,17 @@ const MAKE_COMMANDS = function () {
         description: "Set a ship to a specific ability ship, leave ship name blank for random assignment"
     });
 
+    addShipCommand('forceassign', function (ship, id, args) {
+        let result = AbilityManager.assign(ship, args.slice(2).join(' ').trim(), false, true);
+        if (result.success) return `%s has been set to ${ship.custom.shipName}`
+        return `Failed to set %s to another ship\nReason: ${result.reason || "No reason has been provided."}`;
+    }, '%r', {
+        arguments: [
+            { name: "ship_name", required: false }
+        ],
+        description: "Force set a ship to a specific ability ship (bypassing checks)"
+    });
+
     addShipCommand('reload', function (ship, id, args) {
         AbilityManager.reload(ship);
     }, 'Skipped cooldown for %s', {
@@ -3926,7 +3943,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Tue May 16 2023 11:07:48 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Tue May 16 2023 11:48:18 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -3936,7 +3953,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Tue May 16 2023 11:07:48 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Tue May 16 2023 11:48:18 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4287,7 +4304,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Tue May 16 2023 11:07:48 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Tue May 16 2023 11:48:18 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -4574,35 +4591,44 @@ const AbilityManager = {
 
         return { blocked: false }
     },
+    clearAllActionBlockers: function (ship) {
+        for (let actionBlocker of this.shipActionBlockers) {
+            if ("function" == typeof actionBlocker.clear) actionBlocker.clear(ship);
+        }
+    },
     limitExceeded: function (shipName, ship) {
         return this.abilities[shipName] != null && shipName != ship.custom.shipName && !this.getAssignableShipsList(ship).includes(shipName);
     },
-    assign: function (ship, abilityShip, dontAssign = false) {
-        if (ship.custom.inAbility) return { success: false, reason: "Ship is still in ability" }
-        let isActionBlocked = this.isActionBlocked(ship);
-        if (isActionBlocked.blocked) return {
-            success: false,
-            reason: isActionBlocked.blocker.reason || "No reason was provided"
+    assign: function (ship, abilityShip, dontAssign = false, forced = false) {
+        if (!forced) {
+            if (ship.custom.inAbility) return { success: false, reason: "Ship is still in ability" }
+            let isActionBlocked = this.isActionBlocked(ship);
+            if (isActionBlocked.blocked) return {
+                success: false,
+                reason: isActionBlocked.blocker.reason || "No reason was provided"
+            }
         }
+        else if (ship.custom.inAbility) this.end(ship);
         let shipAbil = this.abilities[abilityShip];
         if (shipAbil == null) {
             let requestedName = String(abilityShip).toLowerCase().replace(/[^a-z0-9]/gi, "");
             let foundName = this.ships_list.find(name => name.toLowerCase().replace(/[^a-z0-9]/gi, "") == requestedName);
             if (foundName != null) shipAbil = this.abilities[abilityShip = foundName];
         }
-        if (this.limitExceeded(abilityShip, ship)) return { success: false, reason: "Ship limit exceeded" }
+        if (!forced && this.limitExceeded(abilityShip, ship)) return { success: false, reason: "Ship limit exceeded" }
         if (dontAssign) return { success: true }
-        if (shipAbil == null) return this.random(ship);
+        if (shipAbil == null) return this.random(ship, forced);
+        this.clearAllActionBlockers(ship);
         ship.custom.shipName = abilityShip;
         ship.custom.ability = shipAbil;
         ship.custom.inAbility = false;
         ship.custom.forceEnd = false;
-        ship.custom.ability.unload(ship);
         ship.custom.abilityCustom = {};
         ship.custom.lastUI = {};
         ship.set({
             healing: false,
             collider: true,
+            idle: false,
             type: shipAbil.codes.default,
             shield: 1e4,
             generator: shipAbil.generatorInit,
@@ -4612,6 +4638,7 @@ const AbilityManager = {
             vy: 0
         });
         shipAbil.initialize(ship);
+        shipAbil.unload(ship);
         this.updateShipsList(TeamManager.getDataFromShip(ship));
         return { success: true };
     },
@@ -4637,7 +4664,7 @@ const AbilityManager = {
         for (let ship of game.ships) {
             if (ship.id == null) continue;
             if (!ship.custom.__ability__initialized__ && ship.alive) {
-                this.random(ship);
+                this.random(ship, true);
                 ship.custom.__ability__initialized__ = true;
             }
             if (this.showAbilityNotice && ship.custom.allowInstructor) {
@@ -4706,7 +4733,7 @@ const AbilityManager = {
                 oldAbilityManager.end(ship);
                 let ability = AbilityManager.abilities[ship.custom.shipName];
                 if (ability != null) ship.custom.ability = ability;
-                else AbilityManager.random(ship);
+                else AbilityManager.random(ship, true);
             }
         }
 
@@ -4878,9 +4905,9 @@ const AbilityManager = {
         if (!Array.isArray(this.ship_codes)) this.initialize();
         return this.ship_codes;
     },
-    random: function (ship) {
+    random: function (ship, forced = false) {
         // select random ship
-        return this.assign(ship, HelperFunctions.randomItem(this.getAssignableShipsList(ship)).value);
+        return this.assign(ship, HelperFunctions.randomItem(this.getAssignableShipsList(ship)).value, false, forced);
     },
     abilities: ShipAbilities
 }
@@ -4901,11 +4928,11 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/gameLogic.js at Tue May 16 2023 11:07:48 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Tue May 16 2023 11:48:18 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/GameConfig.js at Tue May 16 2023 11:07:48 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Tue May 16 2023 11:48:18 GMT+0900 (Japan Standard Time) */
 
 const map_name = null; // leave `null` if you want randomized map name
 
@@ -5010,7 +5037,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Tue May 16 2023 11:07:48 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Tue May 16 2023 11:48:18 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -5732,7 +5759,7 @@ AbilityManager.onAbilityStart = function (ship, inAbilityBeforeStart) {
 
 
 
-/* Imported from misc/tickFunctions.js at Tue May 16 2023 11:07:48 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Tue May 16 2023 11:48:18 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -6197,7 +6224,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Tue May 16 2023 11:07:48 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Tue May 16 2023 11:48:18 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -6253,7 +6280,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Tue May 16 2023 11:07:48 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Tue May 16 2023 11:48:18 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?

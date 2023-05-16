@@ -150,6 +150,17 @@ const MAKE_COMMANDS = function () {
         description: "Set a ship to a specific ability ship, leave ship name blank for random assignment"
     });
 
+    addShipCommand('forceassign', function (ship, id, args) {
+        let result = AbilityManager.assign(ship, args.slice(2).join(' ').trim(), false, true);
+        if (result.success) return `%s has been set to ${ship.custom.shipName}`
+        return `Failed to set %s to another ship\nReason: ${result.reason || "No reason has been provided."}`;
+    }, '%r', {
+        arguments: [
+            { name: "ship_name", required: false }
+        ],
+        description: "Force set a ship to a specific ability ship (bypassing checks)"
+    });
+
     addShipCommand('reload', function (ship, id, args) {
         AbilityManager.reload(ship);
     }, 'Skipped cooldown for %s', {

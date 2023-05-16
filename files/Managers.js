@@ -283,35 +283,44 @@ const AbilityManager = {
 
         return { blocked: false }
     },
+    clearAllActionBlockers: function (ship) {
+        for (let actionBlocker of this.shipActionBlockers) {
+            if ("function" == typeof actionBlocker.clear) actionBlocker.clear(ship);
+        }
+    },
     limitExceeded: function (shipName, ship) {
         return this.abilities[shipName] != null && shipName != ship.custom.shipName && !this.getAssignableShipsList(ship).includes(shipName);
     },
-    assign: function (ship, abilityShip, dontAssign = false) {
-        if (ship.custom.inAbility) return { success: false, reason: "Ship is still in ability" }
-        let isActionBlocked = this.isActionBlocked(ship);
-        if (isActionBlocked.blocked) return {
-            success: false,
-            reason: isActionBlocked.blocker.reason || "No reason was provided"
+    assign: function (ship, abilityShip, dontAssign = false, forced = false) {
+        if (!forced) {
+            if (ship.custom.inAbility) return { success: false, reason: "Ship is still in ability" }
+            let isActionBlocked = this.isActionBlocked(ship);
+            if (isActionBlocked.blocked) return {
+                success: false,
+                reason: isActionBlocked.blocker.reason || "No reason was provided"
+            }
         }
+        else if (ship.custom.inAbility) this.end(ship);
         let shipAbil = this.abilities[abilityShip];
         if (shipAbil == null) {
             let requestedName = String(abilityShip).toLowerCase().replace(/[^a-z0-9]/gi, "");
             let foundName = this.ships_list.find(name => name.toLowerCase().replace(/[^a-z0-9]/gi, "") == requestedName);
             if (foundName != null) shipAbil = this.abilities[abilityShip = foundName];
         }
-        if (this.limitExceeded(abilityShip, ship)) return { success: false, reason: "Ship limit exceeded" }
+        if (!forced && this.limitExceeded(abilityShip, ship)) return { success: false, reason: "Ship limit exceeded" }
         if (dontAssign) return { success: true }
-        if (shipAbil == null) return this.random(ship);
+        if (shipAbil == null) return this.random(ship, forced);
+        this.clearAllActionBlockers(ship);
         ship.custom.shipName = abilityShip;
         ship.custom.ability = shipAbil;
         ship.custom.inAbility = false;
         ship.custom.forceEnd = false;
-        ship.custom.ability.unload(ship);
         ship.custom.abilityCustom = {};
         ship.custom.lastUI = {};
         ship.set({
             healing: false,
             collider: true,
+            idle: false,
             type: shipAbil.codes.default,
             shield: 1e4,
             generator: shipAbil.generatorInit,
@@ -321,6 +330,7 @@ const AbilityManager = {
             vy: 0
         });
         shipAbil.initialize(ship);
+        shipAbil.unload(ship);
         this.updateShipsList(TeamManager.getDataFromShip(ship));
         return { success: true };
     },
@@ -346,7 +356,7 @@ const AbilityManager = {
         for (let ship of game.ships) {
             if (ship.id == null) continue;
             if (!ship.custom.__ability__initialized__ && ship.alive) {
-                this.random(ship);
+                this.random(ship, true);
                 ship.custom.__ability__initialized__ = true;
             }
             if (this.showAbilityNotice && ship.custom.allowInstructor) {
@@ -415,7 +425,7 @@ const AbilityManager = {
                 oldAbilityManager.end(ship);
                 let ability = AbilityManager.abilities[ship.custom.shipName];
                 if (ability != null) ship.custom.ability = ability;
-                else AbilityManager.random(ship);
+                else AbilityManager.random(ship, true);
             }
         }
 
@@ -587,9 +597,9 @@ const AbilityManager = {
         if (!Array.isArray(this.ship_codes)) this.initialize();
         return this.ship_codes;
     },
-    random: function (ship) {
+    random: function (ship, forced = false) {
         // select random ship
-        return this.assign(ship, HelperFunctions.randomItem(this.getAssignableShipsList(ship)).value);
+        return this.assign(ship, HelperFunctions.randomItem(this.getAssignableShipsList(ship)).value, false, forced);
     },
     abilities: ShipAbilities
 }
