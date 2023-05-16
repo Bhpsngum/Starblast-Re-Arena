@@ -1148,7 +1148,8 @@ const ShipAbilities = {
                 player.set({type: this.codes.ability, stats: AbilityManager.maxStats});
                 ship.set({
                     type: player.custom.ability === this ? player.type : player.custom.ability.codes.default,
-                    stats: AbilityManager.maxStats
+                    stats: AbilityManager.maxStats,
+                    generator: player.custom.ability.energy_capacities.default
                 });
                 if (player.custom.pucked != null) HelperFunctions.TimeManager.clearTimeout(player.custom.pucked);
 
