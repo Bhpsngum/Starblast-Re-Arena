@@ -17,6 +17,8 @@ const alwaysTick = function (game) {
                 ship.set({ idle: true, collider: false, vx: 0, vy: 0 });
             }
             ship.custom.kills = ship.custom.deaths = 0;
+            ship.custom.chooseTimes = {};
+            if (game.custom.abilitySystemEnabled && !ship.custom.abilitySystemDisabled) UIData.shipUIs.toggle(ship, false, true);
             ship.custom.joined = true;
         }
 

@@ -7,6 +7,8 @@ this.event = function (event, game) {
             TeamManager.set(ship, void 0, false, true);
             HelperFunctions.resetIntrusionWarningMSG(ship);
             UIData.updateScoreboard(game);
+            ship.custom.chooseTimes = {};
+            if (game.custom.abilitySystemEnabled && !ship.custom.abilitySystemDisabled) UIData.shipUIs.toggle(ship, false, true);
             break;
         case "ship_destroyed":
             HelperFunctions.resetIntrusionWarningMSG(ship);

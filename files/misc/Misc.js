@@ -600,9 +600,14 @@ const UIData = {
     assign: function (ship, name) {
         let oldName = ship.custom.shipName;
         let res = AbilityManager.assign(ship, name);
-        if (res.success && oldName != ship.custom.shipName) {
-            this.shipUIs.sendIndividual(ship, null, ship.custom.shipName, "selected");
-            this.shipUIs.sendIndividual(ship, null, oldName, AbilityManager.getAssignableShipsList(ship).includes(oldName) ? "default" : "disabled");
+        if (res.success) {
+            let x = (ship.custom.chooseTimes[ship.custom.shipName] || 0) + 1;
+            if (x >= GAME_OPTIONS.duplicate_choose_limit) return this.shipUIs.toggle(ship, true);
+            ship.custom.chooseTimes[ship.custom.shipName] = x;
+            if (oldName != ship.custom.shipName) {
+                this.shipUIs.sendIndividual(ship, null, ship.custom.shipName, "selected");
+                this.shipUIs.sendIndividual(ship, null, oldName, AbilityManager.getAssignableShipsList(ship).includes(oldName) ? "default" : "disabled");
+            }
         }
     }
 }

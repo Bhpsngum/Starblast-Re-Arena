@@ -130,7 +130,6 @@ const MapManager = {
                 y: spawnpoint.y + distance * Math.sin(angle)
             });
         }
-        if (game.custom.abilitySystemEnabled) UIData.shipUIs.toggle(ship, false, true);
     },
     set: function (nameOrIndex, set = false) {
         this.map = this.search(nameOrIndex);
