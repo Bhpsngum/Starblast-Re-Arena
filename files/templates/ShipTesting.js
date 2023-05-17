@@ -64,15 +64,18 @@ this.event = function (event, game) {
             switch (component) {
                 case "random":
                     AbilityManager.random(ship);
+                    AbilityManager.restore(ship);
                     break;
                 case "next": {
                     let pos = AbilityManager.ships_list.indexOf(ship.custom.shipName) + 1;
-                    AbilityManager.assign(ship, AbilityManager.ships_list[pos] || AbilityManager.ships_list[0]);
+                    let res = AbilityManager.assign(ship, AbilityManager.ships_list[pos] || AbilityManager.ships_list[0]);
+                    if (res.success) AbilityManager.restore(ship);
                     break;
                 }
                 case "prev": {
                     let pos = AbilityManager.ships_list.lastIndexOf(ship.custom.shipName) - 1;
-                    AbilityManager.assign(ship, AbilityManager.ships_list.at(pos));
+                    let res = AbilityManager.assign(ship, AbilityManager.ships_list.at(pos));
+                    if (res.success) AbilityManager.restore(ship);
                     break;
                 }
                 case "reload":
