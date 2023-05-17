@@ -90,7 +90,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_MS.js at Tue May 16 2023 22:57:36 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_MS.js at Wed May 17 2023 10:49:45 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = false; // if in debug phase
 
@@ -133,7 +133,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Tue May 16 2023 22:57:36 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Wed May 17 2023 10:49:45 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -183,7 +183,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Tue May 16 2023 22:57:36 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Wed May 17 2023 10:49:45 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1780,7 +1780,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Tue May 16 2023 22:57:36 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Wed May 17 2023 10:49:45 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -1817,14 +1817,26 @@ const ShipAbilities = {
         usageLimit: 69, // Maximum number of players on one team that are allowed to use this ship
         // default `AbilityManager.usageLimit`
 
-        actionBlocker: {
-            // block a certain ship from starting abilities or changing to other ships
+        abilityBlocker: {
+            // block a certain ship from starting abilities
             // only include this object if needed
             checker: function (ship) { return false }, // whether the ship will be blocked or not
             clear: function (ship) { }, // clear the blocker on the ship
             reason: "Ship is being affected by this ability", // Reason
             abilityDisabledText: "DISABLED" // text shown on the ability cooldown
         },
+
+        shipChangeBlocker: {
+            // block a certain ship from changing to other ships
+            // only include this object if needed
+            checker: function (ship) { return false }, // whether the ship will be blocked or not
+            clear: function (ship) { }, // clear the blocker on the ship
+            reason: "Ship is being affected by this ability" // Reason
+        },
+
+        // additionally, declearing `actionBlocker` object will let the compiler know that
+        // both `shipChangeBlocker` and `abilityBlocker` will use the `actionBlocker` object
+        // Note that `actionBlocker` will override the 2 others, so please handle with care.
 
         // Displaying text for ability when it can't be activated (e.g "2/3 kills")
         // optional, returns cooldown time left (in seconds)
@@ -1852,7 +1864,7 @@ const ShipAbilities = {
 
         // start the ability
         // optional, set ship to ability ship (models.ability --> codes.ability)
-        start: function (ship) {
+        start: function (ship, lastAbilityStatus) {
             ship.set({invulnerable: 100, type: this.codes.ability, stats: AbilityManager.maxStats, generator: 0});
         },
 
@@ -2131,8 +2143,8 @@ const ShipAbilities = {
             return ship.custom.inAbility ? HelperFunctions.timeLeft(ship.custom.lastTriggered + this.detonateCooldown) : HelperFunctions.templates.requirementsText.call(this, ship);
         },
 
-        start: function (ship) {
-            if (ship.custom.inAbility) ship.custom.forceEnd = true;
+        start: function (ship, lastStatus) {
+            if (lastStatus) ship.custom.forceEnd = true;
             else ship.set({type: this.codes.ability, stats: AbilityManager.maxStats, shield: 1000, generator: 0, crystals: 0});
         },
 
@@ -2255,8 +2267,8 @@ const ShipAbilities = {
             return ship.custom.inAbility ? this.endName : this.name;
         },
 
-        start: function (ship) {
-            if (ship.custom.inAbility) ship.custom.forceEnd = true;
+        start: function (ship, lastStatus) {
+            if (lastStatus) ship.custom.forceEnd = true;
             else {
                 HelperFunctions.accelerate(ship, Math.sqrt(ship.vx ** 2 + ship.vy ** 2) + 0.1);
                 ship.set({
@@ -2888,13 +2900,15 @@ const ShipAbilities = {
             ability: false
         },
         cooldown: 40 * 60,
-        duration: 25 * 60,
+        
+        controlDuration: 25 * 60,
+
         cooldownRestartOnEnd: true,
         customEndcondition: true,
 
         puckedDuration: 12.5 * 60,
 
-        actionBlocker: {
+        abilityBlocker: {
             checker: function (ship) {
                 return ship.custom.pucked != null
             },
@@ -2906,9 +2920,30 @@ const ShipAbilities = {
             abilityDisabledText: "PUCKED"
         },
 
+        shipChangeBlocker: {
+            checker: function (ship) {
+                return ship.custom.abilityCustom != null && ship.custom.abilityCustom.puckTriggered != null;
+            },
+            clear: function (ship) {
+                if (this.checker(ship)) ship.custom.abilityCustom.puckTriggered == null;
+            },
+            reason: "Ship is pucking other ships"
+        },
+
+        addPuck: function (player) {
+            AbilityManager.end(player);
+            player.set({type: this.codes.ability, stats: AbilityManager.maxStats});
+
+            if (player.custom.pucked != null) HelperFunctions.TimeManager.clearTimeout(player.custom.pucked);
+            
+            player.custom.pucked = HelperFunctions.TimeManager.setTimeout(function () {
+                this.removePuck(player);
+            }.bind(this), this.puckedDuration);
+        },
+
         removePuck: function (player) {
             if (player.custom.pucked != null) {
-                this.actionBlocker.clear(player);
+                this.abilityBlocker.clear(player);
                 let abil = player.custom.ability;
                 if (abil != null) {
                     player.set({
@@ -2926,30 +2961,29 @@ const ShipAbilities = {
 
         start: function (ship) {
             let player = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true })[0];
-            if (player == null) ship.custom.forceEnd = true;
-            else {
-                if (player.custom.inAbility) AbilityManager.end(player);
-                player.set({type: this.codes.ability, stats: AbilityManager.maxStats});
-                ship.set({
-                    type: player.custom.ability === this ? player.type : player.custom.ability.codes.default,
-                    stats: AbilityManager.maxStats,
-                    generator: player.custom.ability.energy_capacities.default
-                });
-                if (player.custom.pucked != null) HelperFunctions.TimeManager.clearTimeout(player.custom.pucked);
+            if (player != null) {
+                if (player.custom.ability === this || this.abilityBlocker.checker(player)) this.addPuck(ship, true);
+                else {
+                    AbilityManager.assign(ship, player.custom.shipName, false, true);
+                    AbilityManager.reload(ship);
 
-                player.custom.pucked = HelperFunctions.TimeManager.setTimeout(function () {
-                    this.removePuck(player);
-                }.bind(this), this.puckedDuration);
+                    ship.custom.abilityCustom.puckTriggered = game.step;
+                }
+
+                this.addPuck(player);
             }
-            ship.custom.abilityCustom.puckTriggered = game.step
-        },
-
-        canEnd: function (ship) {
-            return HelperFunctions.timeExceeded(ship.custom.abilityCustom.puckTriggered, this.duration);
         },
 
         globalEvent: function (event) {
             if (event.name == "ship_destroyed" && event.ship != null) this.removePuck(event.ship);
+        },
+
+        globalTick: function (game) {
+            for (let ship of game.ships) {
+                if (ship != null && ship.id != null && this.shipChangeBlocker.checker(ship) && game.step - ship.custom.abilityCustom.puckTriggered > this.controlDuration) {
+                    AbilityManager.assign(ship, this.shipName, false, true);
+                }
+            }
         }
     },
     "Sigma": {
@@ -3437,8 +3471,8 @@ const ShipAbilities = {
             return ship.custom.inAbility ? this.enoughHealing(ship) : HelperFunctions.templates.canStart.call(this, ship);
         },
 
-        start: function (ship) {
-            if (ship.custom.inAbility) return ship.custom.forceEnd = true;
+        start: function (ship, lastStatus) {
+            if (lastStatus) return ship.custom.forceEnd = true;
 
             HelperFunctions.templates.start.call(this, ship);
             ship.set({healing: false});
@@ -3573,8 +3607,8 @@ const ShipAbilities = {
             return ship.custom.inAbility ? this.endName : this.name;
         },
 
-        start: function (ship) {
-            if (ship.custom.inAbility) ship.custom.forceEnd = true;
+        start: function (ship, lastStatus) {
+            if (lastStatus) ship.custom.forceEnd = true;
             else ship.set({type:this.codes.ability,generator:500,stats:AbilityManager.maxStats});
         },
 
@@ -3708,7 +3742,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Tue May 16 2023 22:57:36 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Wed May 17 2023 10:49:45 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -3952,7 +3986,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Tue May 16 2023 22:57:36 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Wed May 17 2023 10:49:45 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -3962,7 +3996,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Tue May 16 2023 22:57:36 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Wed May 17 2023 10:49:45 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4313,7 +4347,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Tue May 16 2023 22:57:36 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Wed May 17 2023 10:49:45 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -4525,7 +4559,7 @@ const AbilityManager = {
         if ("function" == typeof this.onAbilityEnd) this.onAbilityEnd(ship);
     },
     canStart: function (ship) {
-        return game.custom.abilitySystemEnabled && !ship.custom.abilitySystemDisabled && ship.alive && !this.isActionBlocked(ship).blocked && ship.custom.ability.canStart(ship);
+        return game.custom.abilitySystemEnabled && !ship.custom.abilitySystemDisabled && ship.alive && !this.isAbilityBlocked(ship).blocked && ship.custom.ability.canStart(ship);
     },
     start: function (ship) {
         let ability = ship.custom.ability;
@@ -4533,9 +4567,9 @@ const AbilityManager = {
 
         ship.custom.lastTriggered = game.step;
         ship.custom.forceEnd = false;
-        ability.start(ship);
         let lastStatus = ship.custom.inAbility;
         ship.custom.inAbility = true;
+        ability.start(ship, lastStatus);
         if (ability.duration != null) {
             let oldTimeout = ability.ships.get(ship.id);
             if (oldTimeout != null) HelperFunctions.TimeManager.clearTimeout(oldTimeout);
@@ -4549,7 +4583,7 @@ const AbilityManager = {
     requirementsInfo: function (ship) {
         if (!game.custom.abilitySystemEnabled || ship == null || ship.custom.abilitySystemDisabled || !ship.alive) return { ready: false, text: "Disabled" }
         let ability = ship.custom.ability;
-        let isActionBlocked = this.isActionBlocked(ship);
+        let isActionBlocked = this.isAbilityBlocked(ship);
         if (isActionBlocked.blocked) return { ready: false, text: isActionBlocked.blocker.abilityDisabledText || "Disabled" };
         if (ability == null) return { ready: false, text: "Disabled" };
         let ready = this.canStart(ship);
@@ -4591,9 +4625,27 @@ const AbilityManager = {
     isActionBlocked: function (ship) {
         // check if there are any ship effects blocking this ship from taking actions
         for (let actionBlocker of this.shipActionBlockers) {
-            if ("function" == typeof actionBlocker.checker && actionBlocker.checker(ship)) return {
+            let { ability, shipChange } = actionBlocker;
+            if ("function" == typeof ability.checker && ability.checker(ship))  return {
                 blocked: true,
-                blocker: actionBlocker
+                blocker: ability
+            }
+
+            if ("function" == typeof shipChange.checker && shipChange.checker(ship))  return {
+                blocked: true,
+                blocker: shipChange
+            }
+        }
+
+        return { blocked: false }
+    },
+    isAbilityBlocked: function (ship) {
+        // check if there are any ship effects blocking this ship from starting abilities
+        for (let actionBlocker of this.shipActionBlockers) {
+            let { ability } = actionBlocker;
+            if ("function" == typeof ability.checker && ability.checker(ship))  return {
+                blocked: true,
+                blocker: ability
             }
         }
 
@@ -4601,7 +4653,9 @@ const AbilityManager = {
     },
     clearAllActionBlockers: function (ship) {
         for (let actionBlocker of this.shipActionBlockers) {
-            if ("function" == typeof actionBlocker.clear) actionBlocker.clear(ship);
+            let { ability, shipChange } = actionBlocker;
+            if ("function" == typeof ability.clear) ability.clear(ship);
+            if ("function" == typeof shipChange.clear) shipChange.clear(ship);
         }
     },
     limitExceeded: function (shipName, ship) {
@@ -4781,7 +4835,20 @@ const AbilityManager = {
             }
             // functions and properties polyfill
 
-            if (ability.actionBlocker != null) this.shipActionBlockers.push(ability.actionBlocker);
+            ability.shipName = shipName;
+
+            let actionBlocker = {};
+            if (ability.actionBlocker != null) actionBlocker.shipChange = actionBlocker.ability = ability.actionBlocker;
+            else {
+                actionBlocker.shipChange = ability.shipChangeBlocker;
+                actionBlocker.ability = ability.abilityBlocker;
+            }
+
+            if (actionBlocker.shipChange != null || actionBlocker.ability != null) {
+                actionBlocker.shipChange = actionBlocker.shipChange || {};
+                actionBlocker.ability = actionBlocker.ability || {};
+                this.shipActionBlockers.push(actionBlocker);
+            }
 
             ability.ships = new Map();
 
@@ -4936,11 +5003,11 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/gameLogic.js at Tue May 16 2023 22:57:36 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Wed May 17 2023 10:49:45 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/GameConfig.js at Tue May 16 2023 22:57:36 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Wed May 17 2023 10:49:45 GMT+0900 (Japan Standard Time) */
 
 const map_name = null; // leave `null` if you want randomized map name
 
@@ -5046,7 +5113,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Tue May 16 2023 22:57:36 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Wed May 17 2023 10:49:45 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -5773,7 +5840,7 @@ AbilityManager.onAbilityStart = function (ship, inAbilityBeforeStart) {
 
 
 
-/* Imported from misc/tickFunctions.js at Tue May 16 2023 22:57:36 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Wed May 17 2023 10:49:45 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -6240,7 +6307,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Tue May 16 2023 22:57:36 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Wed May 17 2023 10:49:45 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -6298,7 +6365,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Tue May 16 2023 22:57:36 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Wed May 17 2023 10:49:45 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
