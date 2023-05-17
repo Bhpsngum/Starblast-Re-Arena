@@ -1188,6 +1188,7 @@ const ShipAbilities = {
 
                 this.addPuck(player);
             }
+            else ship.custom.forceEnd = true;
         },
 
         globalEvent: function (event) {
