@@ -9,6 +9,7 @@ const alwaysTick = function (game) {
             control_point_data.renderData(ship, false);
             UIData.renderTeamScores(ship);
             HelperFunctions.sendUI(ship, UIData.radar);
+            AbilityManager.restore(ship);
             if (game.custom.started) {
                 ship.custom.allowInstructor = true;
             }
