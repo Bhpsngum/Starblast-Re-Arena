@@ -310,26 +310,68 @@ const AbilityManager = {
     limitExceeded: function (shipName, ship) {
         return this.abilities[shipName] != null && shipName != ship.custom.shipName && !this.getAssignableShipsList(ship).includes(shipName);
     },
-    assign: function (ship, abilityShip, dontAssign = false, forced = false) {
+    assignStatus: {
+        limitExceeded: {
+            code: "SHIP_LIMIT_EXCEEDED",
+            message: "Ship limit exceeded"
+        },
+        actionBlocked: {
+            code: "SHIP_ACTION_BLOCKED"
+        },
+        inAbility: {
+            code: "IN_ABILITY",
+            reason: "Ship is still in ability"
+        },
+        success: {
+            code: "SUCCESS"
+        },
+        sixtyNine: {
+            code: "69",
+            reason: "Nice"
+        }
+    },
+    assign: function (ship, abilityShip, dontAssign = false, bypass = {
+        // object used to bypass checks (set to `true` to take effect)
+        ability: false, // bypass ability checks
+        blocker: false, // bypass action blocker checks
+        limit: false // bypass ship limit checks
+        // additionally, you can set `bypass` to `true` to basically bypass everything
+        // (basically a forced set)
+    }, ignoreReset = {
+        // ignore reset options
+        blocker: false // ignore clearing blockers when set, this might be the only option available
+    }) {
+        bypass = bypass || {};
+        let forced = bypass === true;
         if (!forced) {
-            if (ship.custom.inAbility) return { success: false, reason: "Ship is still in ability" }
-            let isActionBlocked = this.isActionBlocked(ship);
+            if (!bypass.ability && ship.custom.inAbility) return { success: false, ...this.assignStatus.inAbility }
+            let isActionBlocked = bypass.blocker ? { blocked: false } : this.isActionBlocked(ship);
             if (isActionBlocked.blocked) return {
                 success: false,
+                ...this.assignStatus.actionBlocked,
                 reason: isActionBlocked.blocker.reason || "No reason was provided"
             }
         }
-        else if (ship.custom.inAbility) this.end(ship);
         let shipAbil = this.abilities[abilityShip];
         if (shipAbil == null) {
             let requestedName = String(abilityShip).toLowerCase().replace(/[^a-z0-9]/gi, "");
             let foundName = this.ships_list.find(name => name.toLowerCase().replace(/[^a-z0-9]/gi, "") == requestedName);
             if (foundName != null) shipAbil = this.abilities[abilityShip = foundName];
         }
-        if (!forced && this.limitExceeded(abilityShip, ship)) return { success: false, reason: "Ship limit exceeded" }
-        if (dontAssign) return { success: true }
+        if (!forced && !bypass.limit && this.limitExceeded(abilityShip, ship)) return { success: false, ...this.assignStatus.limitExceeded }
+        if (dontAssign) return { success: true, ...this.assignStatus.success }
         if (shipAbil == null) return this.random(ship, forced);
-        this.clearAllActionBlockers(ship);
+        this.end(ship);
+        ignoreReset = ignoreReset || {};
+        let ignoreAll = ignoreReset === true;
+        if (!ignoreAll && !ignoreReset.blocker) {
+            this.clearAllActionBlockers(ship);
+            ship.set({
+                healing: false,
+                collider: true,
+                idle: false
+            });
+        }
         ship.custom.shipName = abilityShip;
         ship.custom.ability = shipAbil;
         ship.custom.inAbility = false;
@@ -337,9 +379,6 @@ const AbilityManager = {
         ship.custom.abilityCustom = {};
         ship.custom.lastUI = {};
         ship.set({
-            healing: false,
-            collider: true,
-            idle: false,
             type: shipAbil.codes.default,
             generator: shipAbil.generatorInit,
             stats: AbilityManager.maxStats,

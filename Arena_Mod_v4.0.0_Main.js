@@ -90,7 +90,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_Main.js at Wed May 17 2023 12:36:02 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_Main.js at Wed May 17 2023 22:22:20 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -133,7 +133,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Wed May 17 2023 12:36:02 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Wed May 17 2023 22:22:20 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -183,7 +183,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Wed May 17 2023 12:36:02 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Wed May 17 2023 22:22:20 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1780,7 +1780,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Wed May 17 2023 12:36:02 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Wed May 17 2023 22:22:20 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -2962,19 +2962,47 @@ const ShipAbilities = {
         },
 
         start: function (ship) {
-            let player = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true })[0];
-            if (player != null) {
-                if (player.custom.ability === this || this.abilityBlocker.checker(player)) this.addPuck(ship, true);
-                else {
-                    AbilityManager.assign(ship, player.custom.shipName, false, true);
-                    AbilityManager.reload(ship);
+            // ABILITY THEORY
+            // Puck will only choose ships within the range and that ship doesn't exceed the ship limit of the puck's team
+            // 
+            // Puck will prioritize ship to puck based on this order:
+            // - Non-puck ship
+            // - Puck or a pucked ship
+            // 
+            // When the victim has been selected, this ability will
+            // 1. Puck the victim
+            // 2. If the victim
+            //   - is a puck or is still being pucked --> Puck the user as well
+            //   - otherwise --> Assign victim's ship to puck and add puck timeout (to swap back to old ship)
+            // 3. If there are no such victims found --> ends the ability and do nothing
+            // 
+            // The puck then can instantly use the ability,
+            // and after that ability ends, they can still use that ship or retrigger its ability
+            // (if the puck duration isn't over yet)
 
-                    ship.custom.abilityCustom.puckTriggered = game.step;
+            let shipsList = AbilityManager.getAssignableShipsList(ship);
+            let players = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true }).filter(s => shipsList.includes(s.custom.shipName));
+            let puckVictim = null;
+            for (let player of players) {
+                if (player.custom.ability === this || this.abilityBlocker.checker(player)) {
+                    puckVictim = player;
+                    continue;
                 }
 
+                AbilityManager.assign(ship, player.custom.shipName, false, true);
+                AbilityManager.reload(ship);
+
+                ship.custom.abilityCustom.puckTriggered = game.step;
+
                 this.addPuck(player);
+                return;
             }
-            else ship.custom.forceEnd = true;
+            
+            if (puckVictim == null) ship.custom.forceEnd = true;
+            else {
+                this.addPuck(ship);
+                this.addPuck(puckVictim);
+            }
         },
 
         globalEvent: function (event) {
@@ -2982,10 +3010,16 @@ const ShipAbilities = {
         },
 
         globalTick: function (game) {
+            // When a puck's mirror duration is over:
+            // - if the puck reaches that team's limit --> do nothing (means that they will keep that ship forever until they changes on spawn)
+            // - otherwise, if the ship can't be assigned by other reasons (excluding in ability), just fake-assign back the model and ability
+            // - otherwise re-assign the Puck template to the ship (this means resetting as well)
             for (let ship of game.ships) {
                 if (ship != null && ship.id != null && this.shipChangeBlocker.checker(ship) && game.step - ship.custom.abilityCustom.puckTriggered > this.controlDuration) {
-                    if (this.abilityBlocker.checker(ship)) ship.custom.abilityCustom.puckTriggered = null;
-                    else AbilityManager.assign(ship, this.shipName, false, true);
+                    ship.custom.abilityCustom.puckTriggered = null;
+                    let res = AbilityManager.assign(ship, this.shipName, true, { ability: true });
+                    if (res.success) AbilityManager.assign(ship, this.shipName, false, true);
+                    else if (res.code != AbilityManager.assignStatus.limitExceeded.code) AbilityManager.assign(ship, this.shipName, false, true, { blocker: true });
                 }
             }
         }
@@ -3070,21 +3104,15 @@ const ShipAbilities = {
             let target = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true })[0];
 
             if (target != null) {
-                ship.custom.abilityCustom.hasPlayers = true;
                 target.custom.poisonousStart = game.step - 1;
                 target.custom.poisonousShip = ship;
             }
-            else {
-                ship.custom.abilityCustom.hasPlayers = false;
-                this.reload(ship);
-            }
+            else this.reload(ship);
 
             ship.custom.forceEnd = true;
         },
 
-        end: function (ship) {
-            if (ship.custom.ability === this && ship.custom.abilityCustom.hasPlayers) ship.set({type: this.codes.default, stats: AbilityManager.maxStats, generator: 0});
-        },
+        end: function () {},
 
         globalTick: function (game) {
             for (let ship of game.ships) {
@@ -3746,7 +3774,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Wed May 17 2023 12:36:02 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Wed May 17 2023 22:22:20 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -3985,7 +4013,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Wed May 17 2023 12:36:02 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Wed May 17 2023 22:22:20 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -3995,7 +4023,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Wed May 17 2023 12:36:02 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Wed May 17 2023 22:22:20 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4346,7 +4374,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Wed May 17 2023 12:36:02 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Wed May 17 2023 22:22:20 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -4660,26 +4688,68 @@ const AbilityManager = {
     limitExceeded: function (shipName, ship) {
         return this.abilities[shipName] != null && shipName != ship.custom.shipName && !this.getAssignableShipsList(ship).includes(shipName);
     },
-    assign: function (ship, abilityShip, dontAssign = false, forced = false) {
+    assignStatus: {
+        limitExceeded: {
+            code: "SHIP_LIMIT_EXCEEDED",
+            message: "Ship limit exceeded"
+        },
+        actionBlocked: {
+            code: "SHIP_ACTION_BLOCKED"
+        },
+        inAbility: {
+            code: "IN_ABILITY",
+            reason: "Ship is still in ability"
+        },
+        success: {
+            code: "SUCCESS"
+        },
+        sixtyNine: {
+            code: "69",
+            reason: "Nice"
+        }
+    },
+    assign: function (ship, abilityShip, dontAssign = false, bypass = {
+        // object used to bypass checks (set to `true` to take effect)
+        ability: false, // bypass ability checks
+        blocker: false, // bypass action blocker checks
+        limit: false // bypass ship limit checks
+        // additionally, you can set `bypass` to `true` to basically bypass everything
+        // (basically a forced set)
+    }, ignoreReset = {
+        // ignore reset options
+        blocker: false // ignore clearing blockers when set, this might be the only option available
+    }) {
+        bypass = bypass || {};
+        let forced = bypass === true;
         if (!forced) {
-            if (ship.custom.inAbility) return { success: false, reason: "Ship is still in ability" }
-            let isActionBlocked = this.isActionBlocked(ship);
+            if (!bypass.ability && ship.custom.inAbility) return { success: false, ...this.assignStatus.inAbility }
+            let isActionBlocked = bypass.blocker ? { blocked: false } : this.isActionBlocked(ship);
             if (isActionBlocked.blocked) return {
                 success: false,
+                ...this.assignStatus.actionBlocked,
                 reason: isActionBlocked.blocker.reason || "No reason was provided"
             }
         }
-        else if (ship.custom.inAbility) this.end(ship);
         let shipAbil = this.abilities[abilityShip];
         if (shipAbil == null) {
             let requestedName = String(abilityShip).toLowerCase().replace(/[^a-z0-9]/gi, "");
             let foundName = this.ships_list.find(name => name.toLowerCase().replace(/[^a-z0-9]/gi, "") == requestedName);
             if (foundName != null) shipAbil = this.abilities[abilityShip = foundName];
         }
-        if (!forced && this.limitExceeded(abilityShip, ship)) return { success: false, reason: "Ship limit exceeded" }
-        if (dontAssign) return { success: true }
+        if (!forced && !bypass.limit && this.limitExceeded(abilityShip, ship)) return { success: false, ...this.assignStatus.limitExceeded }
+        if (dontAssign) return { success: true, ...this.assignStatus.success }
         if (shipAbil == null) return this.random(ship, forced);
-        this.clearAllActionBlockers(ship);
+        this.end(ship);
+        ignoreReset = ignoreReset || {};
+        let ignoreAll = ignoreReset === true;
+        if (!ignoreAll && !ignoreReset.blocker) {
+            this.clearAllActionBlockers(ship);
+            ship.set({
+                healing: false,
+                collider: true,
+                idle: false
+            });
+        }
         ship.custom.shipName = abilityShip;
         ship.custom.ability = shipAbil;
         ship.custom.inAbility = false;
@@ -4687,9 +4757,6 @@ const AbilityManager = {
         ship.custom.abilityCustom = {};
         ship.custom.lastUI = {};
         ship.set({
-            healing: false,
-            collider: true,
-            idle: false,
             type: shipAbil.codes.default,
             generator: shipAbil.generatorInit,
             stats: AbilityManager.maxStats,
@@ -5007,11 +5074,11 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/gameLogic.js at Wed May 17 2023 12:36:02 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Wed May 17 2023 22:22:20 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/GameConfig.js at Wed May 17 2023 12:36:02 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Wed May 17 2023 22:22:20 GMT+0900 (Japan Standard Time) */
 
 const map_name = null; // leave `null` if you want randomized map name
 
@@ -5117,7 +5184,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Wed May 17 2023 12:36:02 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Wed May 17 2023 22:22:20 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -5845,7 +5912,7 @@ AbilityManager.onAbilityStart = function (ship, inAbilityBeforeStart) {
 
 
 
-/* Imported from misc/tickFunctions.js at Wed May 17 2023 12:36:02 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Wed May 17 2023 22:22:20 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -6313,7 +6380,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Wed May 17 2023 12:36:02 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Wed May 17 2023 22:22:20 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -6372,7 +6439,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Wed May 17 2023 12:36:02 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Wed May 17 2023 22:22:20 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?

@@ -1178,19 +1178,47 @@ const ShipAbilities = {
         },
 
         start: function (ship) {
-            let player = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true })[0];
-            if (player != null) {
-                if (player.custom.ability === this || this.abilityBlocker.checker(player)) this.addPuck(ship, true);
-                else {
-                    AbilityManager.assign(ship, player.custom.shipName, false, true);
-                    AbilityManager.reload(ship);
+            // ABILITY THEORY
+            // Puck will only choose ships within the range and that ship doesn't exceed the ship limit of the puck's team
+            // 
+            // Puck will prioritize ship to puck based on this order:
+            // - Non-puck ship
+            // - Puck or a pucked ship
+            // 
+            // When the victim has been selected, this ability will
+            // 1. Puck the victim
+            // 2. If the victim
+            //   - is a puck or is still being pucked --> Puck the user as well
+            //   - otherwise --> Assign victim's ship to puck and add puck timeout (to swap back to old ship)
+            // 3. If there are no such victims found --> ends the ability and do nothing
+            // 
+            // The puck then can instantly use the ability,
+            // and after that ability ends, they can still use that ship or retrigger its ability
+            // (if the puck duration isn't over yet)
 
-                    ship.custom.abilityCustom.puckTriggered = game.step;
+            let shipsList = AbilityManager.getAssignableShipsList(ship);
+            let players = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true }).filter(s => shipsList.includes(s.custom.shipName));
+            let puckVictim = null;
+            for (let player of players) {
+                if (player.custom.ability === this || this.abilityBlocker.checker(player)) {
+                    puckVictim = player;
+                    continue;
                 }
 
+                AbilityManager.assign(ship, player.custom.shipName, false, true);
+                AbilityManager.reload(ship);
+
+                ship.custom.abilityCustom.puckTriggered = game.step;
+
                 this.addPuck(player);
+                return;
             }
-            else ship.custom.forceEnd = true;
+            
+            if (puckVictim == null) ship.custom.forceEnd = true;
+            else {
+                this.addPuck(ship);
+                this.addPuck(puckVictim);
+            }
         },
 
         globalEvent: function (event) {
@@ -1198,10 +1226,16 @@ const ShipAbilities = {
         },
 
         globalTick: function (game) {
+            // When a puck's mirror duration is over:
+            // - if the puck reaches that team's limit --> do nothing (means that they will keep that ship forever until they changes on spawn)
+            // - otherwise, if the ship can't be assigned by other reasons (excluding in ability), just fake-assign back the model and ability
+            // - otherwise re-assign the Puck template to the ship (this means resetting as well)
             for (let ship of game.ships) {
                 if (ship != null && ship.id != null && this.shipChangeBlocker.checker(ship) && game.step - ship.custom.abilityCustom.puckTriggered > this.controlDuration) {
-                    if (this.abilityBlocker.checker(ship)) ship.custom.abilityCustom.puckTriggered = null;
-                    else AbilityManager.assign(ship, this.shipName, false, true);
+                    ship.custom.abilityCustom.puckTriggered = null;
+                    let res = AbilityManager.assign(ship, this.shipName, true, { ability: true });
+                    if (res.success) AbilityManager.assign(ship, this.shipName, false, true);
+                    else if (res.code != AbilityManager.assignStatus.limitExceeded.code) AbilityManager.assign(ship, this.shipName, false, true, { blocker: true });
                 }
             }
         }
@@ -1286,21 +1320,15 @@ const ShipAbilities = {
             let target = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true })[0];
 
             if (target != null) {
-                ship.custom.abilityCustom.hasPlayers = true;
                 target.custom.poisonousStart = game.step - 1;
                 target.custom.poisonousShip = ship;
             }
-            else {
-                ship.custom.abilityCustom.hasPlayers = false;
-                this.reload(ship);
-            }
+            else this.reload(ship);
 
             ship.custom.forceEnd = true;
         },
 
-        end: function (ship) {
-            if (ship.custom.ability === this && ship.custom.abilityCustom.hasPlayers) ship.set({type: this.codes.default, stats: AbilityManager.maxStats, generator: 0});
-        },
+        end: function () {},
 
         globalTick: function (game) {
             for (let ship of game.ships) {
