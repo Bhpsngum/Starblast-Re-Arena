@@ -1198,7 +1198,8 @@ const ShipAbilities = {
         globalTick: function (game) {
             for (let ship of game.ships) {
                 if (ship != null && ship.id != null && this.shipChangeBlocker.checker(ship) && game.step - ship.custom.abilityCustom.puckTriggered > this.controlDuration) {
-                    AbilityManager.assign(ship, this.shipName, false, true);
+                    if (this.abilityBlocker.checker(ship)) ship.custom.abilityCustom.puckTriggered = null;
+                    else AbilityManager.assign(ship, this.shipName, false, true);
                 }
             }
         }
