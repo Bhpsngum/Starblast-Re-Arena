@@ -341,10 +341,8 @@ const AbilityManager = {
             collider: true,
             idle: false,
             type: shipAbil.codes.default,
-            shield: 1e4,
             generator: shipAbil.generatorInit,
             stats: AbilityManager.maxStats,
-            crystals: shipAbil.crystals,
             vx: 0,
             vy: 0
         });
@@ -352,6 +350,13 @@ const AbilityManager = {
         shipAbil.unload(ship);
         this.updateShipsList(TeamManager.getDataFromShip(ship));
         return { success: true };
+    },
+    restore: function (ship) {
+        let abil = ship.custom.ability || {};
+        if (ship != null) ship.set({
+            shield: 1e4,
+            crystals: abil.crystals || 0
+        });
     },
     globalTick: function (game) {
         if (DEBUG && game.step == 0 && HelperFunctions.terminal.errors > 0) {

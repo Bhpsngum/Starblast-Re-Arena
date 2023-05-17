@@ -129,12 +129,7 @@ const MAKE_COMMANDS = function () {
     }); 
 
     addShipCommand('restore', function (ship, id, args) {
-        let abil = ship.custom.ability;
-        ship.set({
-            shield: 1e4,
-            crystals: (abil != null ? abil : AbilityManager).crystals,
-            stats: AbilityManager.maxStats
-        });
+        AbilityManager.restore(ship);
     }, '%s has been restored', {
         description: "Restore a ship's health and crystals"
     });

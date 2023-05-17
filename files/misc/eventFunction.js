@@ -5,6 +5,7 @@ this.event = function (event, game) {
     switch (event.name) {
         case "ship_spawned":
             TeamManager.set(ship, void 0, false, true);
+            AbilityManager.restore(ship);
             HelperFunctions.resetIntrusionWarningMSG(ship);
             UIData.updateScoreboard(game);
             ship.custom.chooseTimes = {};

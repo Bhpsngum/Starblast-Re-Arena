@@ -90,7 +90,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_Main.js at Wed May 17 2023 11:16:37 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_Main.js at Wed May 17 2023 11:48:49 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -133,7 +133,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Wed May 17 2023 11:16:37 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Wed May 17 2023 11:48:49 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -183,7 +183,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Wed May 17 2023 11:16:37 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Wed May 17 2023 11:48:49 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1780,7 +1780,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Wed May 17 2023 11:16:37 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Wed May 17 2023 11:48:49 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -3743,7 +3743,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Wed May 17 2023 11:16:37 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Wed May 17 2023 11:48:49 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -3876,12 +3876,7 @@ const MAKE_COMMANDS = function () {
     }); 
 
     addShipCommand('restore', function (ship, id, args) {
-        let abil = ship.custom.ability;
-        ship.set({
-            shield: 1e4,
-            crystals: (abil != null ? abil : AbilityManager).crystals,
-            stats: AbilityManager.maxStats
-        });
+        AbilityManager.restore(ship);
     }, '%s has been restored', {
         description: "Restore a ship's health and crystals"
     });
@@ -3987,7 +3982,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Wed May 17 2023 11:16:37 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Wed May 17 2023 11:48:49 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -3997,7 +3992,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Wed May 17 2023 11:16:37 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Wed May 17 2023 11:48:49 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4348,7 +4343,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Wed May 17 2023 11:16:37 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Wed May 17 2023 11:48:49 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -4693,10 +4688,8 @@ const AbilityManager = {
             collider: true,
             idle: false,
             type: shipAbil.codes.default,
-            shield: 1e4,
             generator: shipAbil.generatorInit,
             stats: AbilityManager.maxStats,
-            crystals: shipAbil.crystals,
             vx: 0,
             vy: 0
         });
@@ -4704,6 +4697,13 @@ const AbilityManager = {
         shipAbil.unload(ship);
         this.updateShipsList(TeamManager.getDataFromShip(ship));
         return { success: true };
+    },
+    restore: function (ship) {
+        let abil = ship.custom.ability || {};
+        if (ship != null) ship.set({
+            shield: 1e4,
+            crystals: abil.crystals || 0
+        });
     },
     globalTick: function (game) {
         if (DEBUG && game.step == 0 && HelperFunctions.terminal.errors > 0) {
@@ -5004,11 +5004,11 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/gameLogic.js at Wed May 17 2023 11:16:37 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Wed May 17 2023 11:48:49 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/GameConfig.js at Wed May 17 2023 11:16:37 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Wed May 17 2023 11:48:49 GMT+0900 (Japan Standard Time) */
 
 const map_name = null; // leave `null` if you want randomized map name
 
@@ -5114,7 +5114,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Wed May 17 2023 11:16:37 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Wed May 17 2023 11:48:49 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -5719,6 +5719,7 @@ const UIData = {
         let oldName = ship.custom.shipName;
         let res = AbilityManager.assign(ship, name);
         if (res.success) {
+            AbilityManager.restore(ship);
             let x = (ship.custom.chooseTimes[ship.custom.shipName] || 0) + 1;
             if (x >= GAME_OPTIONS.duplicate_choose_limit) return this.shipUIs.toggle(ship, true);
             ship.custom.chooseTimes[ship.custom.shipName] = x;
@@ -5841,7 +5842,7 @@ AbilityManager.onAbilityStart = function (ship, inAbilityBeforeStart) {
 
 
 
-/* Imported from misc/tickFunctions.js at Wed May 17 2023 11:16:37 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Wed May 17 2023 11:48:49 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -5854,6 +5855,7 @@ const alwaysTick = function (game) {
             control_point_data.renderData(ship, false);
             UIData.renderTeamScores(ship);
             HelperFunctions.sendUI(ship, UIData.radar);
+            AbilityManager.restore(ship);
             if (game.custom.started) {
                 ship.custom.allowInstructor = true;
             }
@@ -6308,7 +6310,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Wed May 17 2023 11:16:37 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Wed May 17 2023 11:48:49 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -6317,6 +6319,7 @@ this.event = function (event, game) {
     switch (event.name) {
         case "ship_spawned":
             TeamManager.set(ship, void 0, false, true);
+            AbilityManager.restore(ship);
             HelperFunctions.resetIntrusionWarningMSG(ship);
             UIData.updateScoreboard(game);
             ship.custom.chooseTimes = {};
@@ -6366,7 +6369,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Wed May 17 2023 11:16:37 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Wed May 17 2023 11:48:49 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?

@@ -601,6 +601,7 @@ const UIData = {
         let oldName = ship.custom.shipName;
         let res = AbilityManager.assign(ship, name);
         if (res.success) {
+            AbilityManager.restore(ship);
             let x = (ship.custom.chooseTimes[ship.custom.shipName] || 0) + 1;
             if (x >= GAME_OPTIONS.duplicate_choose_limit) return this.shipUIs.toggle(ship, true);
             ship.custom.chooseTimes[ship.custom.shipName] = x;
