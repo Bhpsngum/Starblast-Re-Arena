@@ -1150,6 +1150,8 @@ const ShipAbilities = {
             AbilityManager.end(player);
             player.set({type: this.codes.ability, stats: AbilityManager.maxStats});
 
+            if (player.custom.abilityCustom != null) player.custom.abilityCustom.puckTriggered = null;
+
             if (player.custom.pucked != null) HelperFunctions.TimeManager.clearTimeout(player.custom.pucked);
             
             player.custom.pucked = HelperFunctions.TimeManager.setTimeout(function () {
