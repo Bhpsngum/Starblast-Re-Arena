@@ -1147,7 +1147,7 @@ const ShipAbilities = {
         },
 
         addPuck: function (player) {
-            AbilityManager.end(player);
+            if (player.custom.inAbility) AbilityManager.end(player);
             player.set({type: this.codes.ability, stats: AbilityManager.maxStats});
 
             if (player.custom.abilityCustom != null) player.custom.abilityCustom.puckTriggered = null;
@@ -1168,7 +1168,6 @@ const ShipAbilities = {
                         type: abil.codes.default,
                         stats: AbilityManager.maxStats
                     });
-                    abil.unload(player);
                 }
             }
         },
