@@ -208,7 +208,7 @@ const AbilityManager = {
         if ("function" == typeof this.onAbilityEnd) this.onAbilityEnd(ship);
     },
     canStart: function (ship) {
-        return game.custom.abilitySystemEnabled && !ship.custom.abilitySystemDisabled && ship.alive && !this.isActionBlocked(ship).blocked && ship.custom.ability.canStart(ship);
+        return game.custom.abilitySystemEnabled && !ship.custom.abilitySystemDisabled && ship.alive && !this.isAbilityBlocked(ship).blocked && ship.custom.ability.canStart(ship);
     },
     start: function (ship) {
         let ability = ship.custom.ability;
@@ -216,9 +216,9 @@ const AbilityManager = {
 
         ship.custom.lastTriggered = game.step;
         ship.custom.forceEnd = false;
-        ability.start(ship);
         let lastStatus = ship.custom.inAbility;
         ship.custom.inAbility = true;
+        ability.start(ship, lastStatus);
         if (ability.duration != null) {
             let oldTimeout = ability.ships.get(ship.id);
             if (oldTimeout != null) HelperFunctions.TimeManager.clearTimeout(oldTimeout);
@@ -232,7 +232,7 @@ const AbilityManager = {
     requirementsInfo: function (ship) {
         if (!game.custom.abilitySystemEnabled || ship == null || ship.custom.abilitySystemDisabled || !ship.alive) return { ready: false, text: "Disabled" }
         let ability = ship.custom.ability;
-        let isActionBlocked = this.isActionBlocked(ship);
+        let isActionBlocked = this.isAbilityBlocked(ship);
         if (isActionBlocked.blocked) return { ready: false, text: isActionBlocked.blocker.abilityDisabledText || "Disabled" };
         if (ability == null) return { ready: false, text: "Disabled" };
         let ready = this.canStart(ship);
@@ -274,9 +274,27 @@ const AbilityManager = {
     isActionBlocked: function (ship) {
         // check if there are any ship effects blocking this ship from taking actions
         for (let actionBlocker of this.shipActionBlockers) {
-            if ("function" == typeof actionBlocker.checker && actionBlocker.checker(ship)) return {
+            let { ability, shipChange } = actionBlocker;
+            if ("function" == typeof ability.checker && ability.checker(ship))  return {
                 blocked: true,
-                blocker: actionBlocker
+                blocker: ability
+            }
+
+            if ("function" == typeof shipChange.checker && shipChange.checker(ship))  return {
+                blocked: true,
+                blocker: shipChange
+            }
+        }
+
+        return { blocked: false }
+    },
+    isAbilityBlocked: function (ship) {
+        // check if there are any ship effects blocking this ship from starting abilities
+        for (let actionBlocker of this.shipActionBlockers) {
+            let { ability } = actionBlocker;
+            if ("function" == typeof ability.checker && ability.checker(ship))  return {
+                blocked: true,
+                blocker: ability
             }
         }
 
@@ -284,7 +302,9 @@ const AbilityManager = {
     },
     clearAllActionBlockers: function (ship) {
         for (let actionBlocker of this.shipActionBlockers) {
-            if ("function" == typeof actionBlocker.clear) actionBlocker.clear(ship);
+            let { ability, shipChange } = actionBlocker;
+            if ("function" == typeof ability.clear) ability.clear(ship);
+            if ("function" == typeof shipChange.clear) shipChange.clear(ship);
         }
     },
     limitExceeded: function (shipName, ship) {
@@ -464,7 +484,20 @@ const AbilityManager = {
             }
             // functions and properties polyfill
 
-            if (ability.actionBlocker != null) this.shipActionBlockers.push(ability.actionBlocker);
+            ability.shipName = shipName;
+
+            let actionBlocker = {};
+            if (ability.actionBlocker != null) actionBlocker.shipChange = actionBlocker.ability = ability.actionBlocker;
+            else {
+                actionBlocker.shipChange = ability.shipChangeBlocker;
+                actionBlocker.ability = ability.abilityBlocker;
+            }
+
+            if (actionBlocker.shipChange != null || actionBlocker.ability != null) {
+                actionBlocker.shipChange = actionBlocker.shipChange || {};
+                actionBlocker.ability = actionBlocker.ability || {};
+                this.shipActionBlockers.push(actionBlocker);
+            }
 
             ability.ships = new Map();
 
