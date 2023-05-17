@@ -381,9 +381,7 @@ const AbilityManager = {
         ship.set({
             type: shipAbil.codes.default,
             generator: shipAbil.generatorInit,
-            stats: AbilityManager.maxStats,
-            vx: 0,
-            vy: 0
+            stats: AbilityManager.maxStats
         });
         shipAbil.initialize(ship);
         shipAbil.unload(ship);
