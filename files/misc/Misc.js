@@ -246,6 +246,36 @@ const UIData = {
         visible: false
     },
     blockers: {
+        rebuild: function () {
+            // rebuild score block
+            let buildHue = parseInt(__ABILITY_SYSTEM_INFO__.buildID, 16) % 360, scoreBlock = {
+                id: "score_block",
+                position: [4,3,12,6],
+                components:[
+                    {type:'box',position:[0,0,100,100],fill:"black", stroke: HelperFunctions.toHSLA(buildHue), width: 2},
+                    {type:'box',position:[0,0,100,100],fill: HelperFunctions.toHSLA(buildHue, 0.25)},
+                    {type: "text", position: [5,5,90,45], value: `Re:Arena (${__ABILITY_SYSTEM_INFO__.branch}) v${__ABILITY_SYSTEM_INFO__.version}`, color: HelperFunctions.toHSLA(buildHue)},
+                    {type: "text", position: [5,50,90,45], value: `Build ID: ${__ABILITY_SYSTEM_INFO__.buildID}`, color: HelperFunctions.toHSLA(buildHue)}
+                ]
+            };
+            let index = this.list.findIndex(ui => ui.id == "score_block");
+            if (index == -1) this.list.push(scoreBlock);
+            else this.list[index] = scoreBlock;
+
+            // rebuild map info
+            let map = MapManager.get();
+            let mapInfo = {
+                id: "map_info",
+                position: [70 - 1, 90, 10, 5],
+                components: [
+                    {type: "text", position: [0,0,100,50], value: `${map.name} Map`, color: '#cde', align: "right"},
+                    {type: "text", position: [0,50,100,50], value: `By ${map.author}`, color: '#cde', align: "right"}
+                ]
+            };
+            let mapIndex = this.list.findIndex(ui => ui.id == "map_info");
+            if (mapIndex == -1) this.list.push(mapInfo);
+            else this.list[mapIndex] = mapInfo;
+        },
         list: [
             {
                 id: "buy_lives_blocker",
@@ -256,20 +286,17 @@ const UIData = {
                 components: []
             },
             {
-                id: "score_block",
-                position: [4,3,12,6],
-                components:[
-                    {type:'box',position:[0,0,100,100],fill:"#cde"},
-                    {type: "text", position: [0,0,100,100], value: "We don't use points here.", color: "black"}
-                ]
-            },
-            {
                 id: "steam_exit_block",
                 position:[0,95,20,5],
                 clickable: true
             }
         ],
-        set: function (ship) {
+        initialized: false,
+        set: function (ship, forceRebuild) {
+            if (forceRebuild || !this.initialized) {
+                this.rebuild();
+                this.initialized = true;
+            }
             if (ship != null) for (let ui of this.list) HelperFunctions.sendUI(ship, ui)
         },
         has: function (id) {
@@ -327,6 +354,10 @@ const UIData = {
         toggle: function (ship, perma = false, firstOpen = false) {
             // perma means also hides the choose ship button
             // first open to assign starting tick
+            if (!game.custom.started || !game.custom.abilitySystemEnabled || ship.custom.abilitySystemDisabled) {
+                firstOpen = false;
+                perma = true;
+            }
             if (!firstOpen && ship.custom.shipUIsPermaHidden) return;
             let isHidden = perma || firstOpen || !ship.custom.shipUIsHidden;
             if (perma) {

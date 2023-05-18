@@ -2,7 +2,14 @@
 
 const fs = require("fs").promises;
 const package = require("./package.json");
-let credits;
+let date = new Date(), buildID = (+date).toString(16);
+let credits, abilitySystemInfo = function (tmpl_name) {
+    return `const __ABILITY_SYSTEM_INFO__ = {
+        branch: "${tmpl_name}",
+        version: "${package.version}",
+        buildID: "${buildID}"
+    }\n\n`;
+};
 
 const getContent = async function (fileName) {
     let content;
@@ -15,14 +22,14 @@ const getContent = async function (fileName) {
         let index = match.index;
         let len = match[0].length;
         let args = String(match[1]).split(" "), file = args.shift();
-        content = content.slice(0, index) + "\n\n" + (args.map(e => e.toLowerCase()).includes("notimestamp") ? "" : `/* Imported from ${file} at ${new Date().toString()} */\n\n`) + await getContent(file) + "\n\n" + content.slice(index + len, content.length);
+        content = content.slice(0, index) + "\n\n" + (args.map(e => e.toLowerCase()).includes("notimestamp") ? "" : `/* Imported from ${file} at ${date.toString()} */\n\n`) + await getContent(file) + "\n\n" + content.slice(index + len, content.length);
     }
     return content;
 }
 
 const getTemplateContent = async function (template_name) {
     try {
-        return await getContent("templates/" + template_name + ".js");
+        return await getContent("templates/" + template_name + ".js", template_name);
     }
     catch (e) {
         if ("notexists" == e) throw `Can't find template named '${template_name}'`;
@@ -45,7 +52,7 @@ const compile = async function (template_name) {
     if (credits == null) credits = await fs.readFile("./files/Credits.js", "utf-8");
     
     try {
-        await fs.writeFile("./" + outputFileName, credits + "\n\n" + content);
+        await fs.writeFile("./" + outputFileName, credits + "\n\n" + abilitySystemInfo(template_name) + content);
     }
     catch (e) { return console.error(`Failed to write to file '${outputFileName}'. Caught`, e) }
 
