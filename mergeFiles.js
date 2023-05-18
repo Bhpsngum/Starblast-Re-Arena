@@ -5,10 +5,10 @@ const package = require("./package.json");
 let date = new Date(), buildID = (+date).toString(16);
 let credits, abilitySystemInfo = function (tmpl_name) {
     return `const __ABILITY_SYSTEM_INFO__ = {
-        branch: "${tmpl_name}",
-        version: "${package.version}",
-        buildID: "${buildID}"
-    }\n\n`;
+    branch: "${tmpl_name}",
+    version: "${package.version}",
+    buildID: "${buildID}"
+};\n\n`;
 };
 
 const getContent = async function (fileName) {
