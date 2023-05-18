@@ -372,15 +372,17 @@ const UIData = {
             if (oldHidden !== isHidden || perma || firstOpen) this.openUI(ship, !perma);
             if (oldHidden !== isHidden) this.toggleSelectMenu(ship);
         },
-        sendIndividual: function (ship, position, name, stylePreset) {
+        sendIndividual: function (ship, position, name, stylePreset, id = null, shortcut = null) {
             let { bgColor, borderColor, borderWidth, textColor } = this.styles[stylePreset];
+            if (!id) id = this.shipSelectPrefix + name;
             let visible = true;
             position = this.positionCache[name] = position == null ? this.positionCache[name] : position;
             if (position == null) visible = false;
             HelperFunctions.sendUI(ship, {
-                id: this.shipSelectPrefix + name,
+                id,
                 position,
                 visible,
+                shortcut,
                 clickable: stylePreset == "default",
                 components: [
                     { type: "box", position: [0, 0, 100, 100], fill: bgColor, stroke: borderColor,width: borderWidth},
@@ -409,10 +411,12 @@ const UIData = {
             let lastLineXOffset = (itemsPerLine - (abilities.length % itemsPerLine || itemsPerLine)) * width * (1 + UISpec.margin_scale_x) / 2;
 
             let i = 0;
+            let canUseUI = HelperFunctions.canUseButtons(ship) && !AbilityManager.isActionBlocked(ship).blocked;
+
             for (let abil of abilities) {
                 let row = Math.trunc(i / itemsPerLine), column = i % itemsPerLine;
                 let offsetX = row == itemsPerColumn - 1 ? lastLineXOffset : 0;
-                let usable = HelperFunctions.canUseButtons(ship) && AbilityManager.assign(ship, abil, true).success;
+                let usable = canUseUI && AbilityManager.assign(ship, abil, true).success;
                 let style = "";
                 if (ship.custom.shipName == abil) style = "selected";
                 else if (usable) style = "default";
@@ -427,39 +431,19 @@ const UIData = {
                 ++i;
             }
 
-            HelperFunctions.sendUI(ship, {
-                id: "prev_ship",
-                visible: true,
-                clickable: true,
-                shortcut: String.fromCharCode(219),
-                position: [
-                    UISpec.xStart,
-                    UISpec.yEnd + height * UISpec.margin_scale_y * 2,
-                    width,
-                    95 - (UISpec.yEnd + height * UISpec.margin_scale_y * 2)
-                ],
-                components: [
-                    { type: "box", position: [0, 0, 100, 100], fill:"rgba(68, 85, 102, 0.5)",stroke: "#fff",width:2},
-                    { type: "text", position: [0, 0, 100, 100], value: HelperFunctions.fill(`[ Previous ship`, UISpec.textLength), color: "#fff"}
-                ]
-            });
+            this.sendIndividual(ship, [
+                UISpec.xStart,
+                UISpec.yEnd + height * UISpec.margin_scale_y * 2,
+                width,
+                95 - (UISpec.yEnd + height * UISpec.margin_scale_y * 2)
+            ], "[ Previous ship", canUseUI ? "default" : "disabled", "prev_ship", String.fromCharCode(219));
 
-            HelperFunctions.sendUI(ship, {
-                id: "next_ship",
-                visible: true,
-                clickable: true,
-                shortcut: String.fromCharCode(221),
-                position: [
-                    UISpec.xEnd - width,
-                    UISpec.yEnd + height * UISpec.margin_scale_y * 2,
-                    width,
-                    95 - (UISpec.yEnd + height * UISpec.margin_scale_y * 2)
-                ],
-                components: [
-                    { type: "box", position: [0, 0, 100, 100], fill:"rgba(68, 85, 102, 0.5)",stroke: "#fff",width:2},
-                    { type: "text", position: [0, 0, 100, 100], value: HelperFunctions.fill(`Next ship ]`, UISpec.textLength), color: "#fff"}
-                ]
-            });
+            this.sendIndividual(ship, [
+                UISpec.xEnd - width,
+                UISpec.yEnd + height * UISpec.margin_scale_y * 2,
+                width,
+                95 - (UISpec.yEnd + height * UISpec.margin_scale_y * 2)
+            ], "Next ship ]", canUseUI ? "default" : "disabled", "next_ship", String.fromCharCode(221));
         }
     },
     updatePlayerCount: function (game) {
@@ -734,11 +718,12 @@ const makeAlienSpawns = function () {
 
 AbilityManager.onShipsListUpdate = function (team, newList, oldList) {
     for (let s of game.ships) {
-        if (s == null || s.id == null || s.custom.shipUIsPermaHidden || s.custom.shipUIsHidden) continue;
+        if (s == null || s.id == null || s.custom.shipUIsPermaHidden || s.custom.shipUIsHidden || s.custom.inAbility || AbilityManager.isAbilityBlocked(s).blocked) continue;
         let x = TeamManager.getDataFromShip(s), playerShipName = s.custom.shipName;
         if (team.ghost ? !x.ghost : team.id !== x.id) continue; // wrong team
 
         // update ship usage limit UIs
+        
         for (let name of oldList) if (playerShipName != name) UIData.shipUIs.sendIndividual(s, null, name, "disabled");
         for (let name of newList) if (playerShipName != name) UIData.shipUIs.sendIndividual(s, null, name, "default");
     }
@@ -750,4 +735,8 @@ AbilityManager.onAbilityEnd = function (ship) {
 
 AbilityManager.onAbilityStart = function (ship, inAbilityBeforeStart) {
     if (!inAbilityBeforeStart && !ship.custom.shipUIsHidden) UIData.shipUIs.toggleSelectMenu(ship);
+}
+
+AbilityManager.onActionBlockStateChange = function (ship) {
+    if (!ship.custom.shipUIsHidden) UIData.shipUIs.toggleSelectMenu(ship);
 }
