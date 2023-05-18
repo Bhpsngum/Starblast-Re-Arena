@@ -19,7 +19,7 @@ const alwaysTick = function (game) {
             }
             ship.custom.kills = ship.custom.deaths = 0;
             ship.custom.chooseTimes = {};
-            if (game.custom.abilitySystemEnabled && !ship.custom.abilitySystemDisabled) UIData.shipUIs.toggle(ship, false, true);
+            UIData.shipUIs.toggle(ship, false, true);
             ship.custom.joined = true;
         }
 
@@ -108,6 +108,8 @@ const initialization = function (game, dontChangeTick = false) {
     HelperFunctions.updateRadar();
 
     makeAlienSpawns();
+
+    UIData.blockers.set(game, true);
 
     game.custom.last_map = MapManager.get();
 

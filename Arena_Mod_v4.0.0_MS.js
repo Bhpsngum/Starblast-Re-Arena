@@ -18,6 +18,12 @@ Original Arena Mod (v1.0 - v3.1.2)
 - Contributors: Lexydrow, Boris, Thuliux, Bylolopro, Caramel, Duschi, Edward, Megalodon, Supernova, ThirdToeMan, Madness, Slayer, and others
 */
 
+const __ABILITY_SYSTEM_INFO__ = {
+        branch: "MS",
+        version: "4.0.0",
+        buildID: "1882d0508df"
+    }
+
 
 
 /* Dev's note
@@ -90,7 +96,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_MS.js at Thu May 18 2023 11:35:06 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_MS.js at Thu May 18 2023 13:01:24 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = false; // if in debug phase
 
@@ -133,7 +139,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Thu May 18 2023 11:35:06 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Thu May 18 2023 13:01:24 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -183,7 +189,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Thu May 18 2023 11:35:06 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Thu May 18 2023 13:01:24 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1780,7 +1786,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Thu May 18 2023 11:35:06 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Thu May 18 2023 13:01:24 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -3771,7 +3777,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Thu May 18 2023 11:35:06 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Thu May 18 2023 13:01:24 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -4010,7 +4016,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Thu May 18 2023 11:35:06 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Thu May 18 2023 13:01:24 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -4020,7 +4026,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Thu May 18 2023 11:35:06 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Thu May 18 2023 13:01:24 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4371,7 +4377,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Thu May 18 2023 11:35:06 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Thu May 18 2023 13:01:24 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -5069,11 +5075,11 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/gameLogic.js at Thu May 18 2023 11:35:06 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Thu May 18 2023 13:01:24 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/GameConfig.js at Thu May 18 2023 11:35:06 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Thu May 18 2023 13:01:24 GMT+0900 (Japan Standard Time) */
 
 const map_name = null; // leave `null` if you want randomized map name
 
@@ -5179,7 +5185,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Thu May 18 2023 11:35:06 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Thu May 18 2023 13:01:24 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -5429,6 +5435,36 @@ const UIData = {
         visible: false
     },
     blockers: {
+        rebuild: function () {
+            // rebuild score block
+            let buildHue = parseInt(__ABILITY_SYSTEM_INFO__.buildID, 16) % 360, scoreBlock = {
+                id: "score_block",
+                position: [4,3,12,6],
+                components:[
+                    {type:'box',position:[0,0,100,100],fill:"black", stroke: HelperFunctions.toHSLA(buildHue), width: 2},
+                    {type:'box',position:[0,0,100,100],fill: HelperFunctions.toHSLA(buildHue, 0.25)},
+                    {type: "text", position: [5,5,90,45], value: `Re:Arena (${__ABILITY_SYSTEM_INFO__.branch}) v${__ABILITY_SYSTEM_INFO__.version}`, color: HelperFunctions.toHSLA(buildHue)},
+                    {type: "text", position: [5,50,90,45], value: `Build ID: ${__ABILITY_SYSTEM_INFO__.buildID}`, color: HelperFunctions.toHSLA(buildHue)}
+                ]
+            };
+            let index = this.list.findIndex(ui => ui.id == "score_block");
+            if (index == -1) this.list.push(scoreBlock);
+            else this.list[index] = scoreBlock;
+
+            // rebuild map info
+            let map = MapManager.get();
+            let mapInfo = {
+                id: "map_info",
+                position: [70 - 1, 90, 10, 5],
+                components: [
+                    {type: "text", position: [0,0,100,50], value: `${map.name} Map`, color: '#cde', align: "right"},
+                    {type: "text", position: [0,50,100,50], value: `By ${map.author}`, color: '#cde', align: "right"}
+                ]
+            };
+            let mapIndex = this.list.findIndex(ui => ui.id == "map_info");
+            if (mapIndex == -1) this.list.push(mapInfo);
+            else this.list[mapIndex] = mapInfo;
+        },
         list: [
             {
                 id: "buy_lives_blocker",
@@ -5439,20 +5475,17 @@ const UIData = {
                 components: []
             },
             {
-                id: "score_block",
-                position: [4,3,12,6],
-                components:[
-                    {type:'box',position:[0,0,100,100],fill:"#cde"},
-                    {type: "text", position: [0,0,100,100], value: "We don't use points here.", color: "black"}
-                ]
-            },
-            {
                 id: "steam_exit_block",
                 position:[0,95,20,5],
                 clickable: true
             }
         ],
-        set: function (ship) {
+        initialized: false,
+        set: function (ship, forceRebuild) {
+            if (forceRebuild || !this.initialized) {
+                this.rebuild();
+                this.initialized = true;
+            }
             if (ship != null) for (let ui of this.list) HelperFunctions.sendUI(ship, ui)
         },
         has: function (id) {
@@ -5510,6 +5543,10 @@ const UIData = {
         toggle: function (ship, perma = false, firstOpen = false) {
             // perma means also hides the choose ship button
             // first open to assign starting tick
+            if (!game.custom.started || !game.custom.abilitySystemEnabled || ship.custom.abilitySystemDisabled) {
+                firstOpen = false;
+                perma = true;
+            }
             if (!firstOpen && ship.custom.shipUIsPermaHidden) return;
             let isHidden = perma || firstOpen || !ship.custom.shipUIsHidden;
             if (perma) {
@@ -5908,7 +5945,7 @@ AbilityManager.onAbilityStart = function (ship, inAbilityBeforeStart) {
 
 
 
-/* Imported from misc/tickFunctions.js at Thu May 18 2023 11:35:06 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Thu May 18 2023 13:01:24 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -5931,7 +5968,7 @@ const alwaysTick = function (game) {
             }
             ship.custom.kills = ship.custom.deaths = 0;
             ship.custom.chooseTimes = {};
-            if (game.custom.abilitySystemEnabled && !ship.custom.abilitySystemDisabled) UIData.shipUIs.toggle(ship, false, true);
+            UIData.shipUIs.toggle(ship, false, true);
             ship.custom.joined = true;
         }
 
@@ -6020,6 +6057,8 @@ const initialization = function (game, dontChangeTick = false) {
     HelperFunctions.updateRadar();
 
     makeAlienSpawns();
+
+    UIData.blockers.set(game, true);
 
     game.custom.last_map = MapManager.get();
 
@@ -6376,7 +6415,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Thu May 18 2023 11:35:06 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Thu May 18 2023 13:01:24 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -6435,7 +6474,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Thu May 18 2023 11:35:06 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Thu May 18 2023 13:01:24 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
