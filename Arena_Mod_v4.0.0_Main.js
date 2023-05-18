@@ -21,7 +21,7 @@ Original Arena Mod (v1.0 - v3.1.2)
 const __ABILITY_SYSTEM_INFO__ = {
     branch: "Main",
     version: "4.0.0",
-    buildID: "1882d4dc82f"
+    buildID: "1882f43bbd5"
 };
 
 
@@ -96,7 +96,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_Main.js at Thu May 18 2023 14:20:52 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_Main.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -139,7 +139,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Thu May 18 2023 14:20:52 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -189,7 +189,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Thu May 18 2023 14:20:52 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1786,7 +1786,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Thu May 18 2023 14:20:52 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -2133,7 +2133,7 @@ const ShipAbilities = {
             return HelperFunctions.timeExceeded(ship.custom.lastTriggered, this.detonateCooldown);
         },
 
-        range: 74,
+        range: 75,
 
         endName: "Detonate",
         
@@ -3777,7 +3777,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Thu May 18 2023 14:20:52 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -4016,7 +4016,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Thu May 18 2023 14:20:52 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -4026,7 +4026,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Thu May 18 2023 14:20:52 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4377,7 +4377,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Thu May 18 2023 14:20:52 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -4742,7 +4742,7 @@ const AbilityManager = {
         if (!forced && !bypass.limit && this.limitExceeded(abilityShip, ship)) return { success: false, ...this.assignStatus.limitExceeded }
         if (dontAssign) return { success: true, ...this.assignStatus.success }
         if (shipAbil == null) return this.random(ship, forced);
-        this.end(ship);
+        if (ship.custom.inAbility) this.end(ship);
         ignoreReset = ignoreReset || {};
         let ignoreAll = ignoreReset === true;
         if (!ignoreAll && !ignoreReset.blocker) {
@@ -4816,6 +4816,10 @@ const AbilityManager = {
                 if (oldIndex >= 0) oldList.splice(oldIndex, 1);
                 this.tick(ship);
             }
+            let lastStatus = !!ship.custom.lastActionBlockerStatus;
+            let currentStatus = AbilityManager.isActionBlocked(ship).blocked;
+            if ("function" == typeof this.onActionBlockStateChange && lastStatus != currentStatus) this.onActionBlockStateChange(ship);
+            ship.custom.lastActionBlockerStatus = currentStatus;
         }
 
         if (oldList.length > 0) {
@@ -5075,11 +5079,11 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/gameLogic.js at Thu May 18 2023 14:20:52 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/GameConfig.js at Thu May 18 2023 14:20:52 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
 
 const map_name = null; // leave `null` if you want randomized map name
 
@@ -5185,7 +5189,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Thu May 18 2023 14:20:52 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -5561,15 +5565,17 @@ const UIData = {
             if (oldHidden !== isHidden || perma || firstOpen) this.openUI(ship, !perma);
             if (oldHidden !== isHidden) this.toggleSelectMenu(ship);
         },
-        sendIndividual: function (ship, position, name, stylePreset) {
+        sendIndividual: function (ship, position, name, stylePreset, id = null, shortcut = null) {
             let { bgColor, borderColor, borderWidth, textColor } = this.styles[stylePreset];
+            if (!id) id = this.shipSelectPrefix + name;
             let visible = true;
             position = this.positionCache[name] = position == null ? this.positionCache[name] : position;
             if (position == null) visible = false;
             HelperFunctions.sendUI(ship, {
-                id: this.shipSelectPrefix + name,
+                id,
                 position,
                 visible,
+                shortcut,
                 clickable: stylePreset == "default",
                 components: [
                     { type: "box", position: [0, 0, 100, 100], fill: bgColor, stroke: borderColor,width: borderWidth},
@@ -5598,10 +5604,12 @@ const UIData = {
             let lastLineXOffset = (itemsPerLine - (abilities.length % itemsPerLine || itemsPerLine)) * width * (1 + UISpec.margin_scale_x) / 2;
 
             let i = 0;
+            let canUseUI = HelperFunctions.canUseButtons(ship) && !AbilityManager.isActionBlocked(ship).blocked;
+
             for (let abil of abilities) {
                 let row = Math.trunc(i / itemsPerLine), column = i % itemsPerLine;
                 let offsetX = row == itemsPerColumn - 1 ? lastLineXOffset : 0;
-                let usable = HelperFunctions.canUseButtons(ship) && AbilityManager.assign(ship, abil, true).success;
+                let usable = canUseUI && AbilityManager.assign(ship, abil, true).success;
                 let style = "";
                 if (ship.custom.shipName == abil) style = "selected";
                 else if (usable) style = "default";
@@ -5616,39 +5624,19 @@ const UIData = {
                 ++i;
             }
 
-            HelperFunctions.sendUI(ship, {
-                id: "prev_ship",
-                visible: true,
-                clickable: true,
-                shortcut: String.fromCharCode(219),
-                position: [
-                    UISpec.xStart,
-                    UISpec.yEnd + height * UISpec.margin_scale_y * 2,
-                    width,
-                    95 - (UISpec.yEnd + height * UISpec.margin_scale_y * 2)
-                ],
-                components: [
-                    { type: "box", position: [0, 0, 100, 100], fill:"rgba(68, 85, 102, 0.5)",stroke: "#fff",width:2},
-                    { type: "text", position: [0, 0, 100, 100], value: HelperFunctions.fill(`[ Previous ship`, UISpec.textLength), color: "#fff"}
-                ]
-            });
+            this.sendIndividual(ship, [
+                UISpec.xStart,
+                UISpec.yEnd + height * UISpec.margin_scale_y * 2,
+                width,
+                95 - (UISpec.yEnd + height * UISpec.margin_scale_y * 2)
+            ], "[ Previous ship", canUseUI ? "default" : "disabled", "prev_ship", String.fromCharCode(219));
 
-            HelperFunctions.sendUI(ship, {
-                id: "next_ship",
-                visible: true,
-                clickable: true,
-                shortcut: String.fromCharCode(221),
-                position: [
-                    UISpec.xEnd - width,
-                    UISpec.yEnd + height * UISpec.margin_scale_y * 2,
-                    width,
-                    95 - (UISpec.yEnd + height * UISpec.margin_scale_y * 2)
-                ],
-                components: [
-                    { type: "box", position: [0, 0, 100, 100], fill:"rgba(68, 85, 102, 0.5)",stroke: "#fff",width:2},
-                    { type: "text", position: [0, 0, 100, 100], value: HelperFunctions.fill(`Next ship ]`, UISpec.textLength), color: "#fff"}
-                ]
-            });
+            this.sendIndividual(ship, [
+                UISpec.xEnd - width,
+                UISpec.yEnd + height * UISpec.margin_scale_y * 2,
+                width,
+                95 - (UISpec.yEnd + height * UISpec.margin_scale_y * 2)
+            ], "Next ship ]", canUseUI ? "default" : "disabled", "next_ship", String.fromCharCode(221));
         }
     },
     updatePlayerCount: function (game) {
@@ -5923,11 +5911,12 @@ const makeAlienSpawns = function () {
 
 AbilityManager.onShipsListUpdate = function (team, newList, oldList) {
     for (let s of game.ships) {
-        if (s == null || s.id == null || s.custom.shipUIsPermaHidden || s.custom.shipUIsHidden) continue;
+        if (s == null || s.id == null || s.custom.shipUIsPermaHidden || s.custom.shipUIsHidden || s.custom.inAbility || AbilityManager.isAbilityBlocked(s).blocked) continue;
         let x = TeamManager.getDataFromShip(s), playerShipName = s.custom.shipName;
         if (team.ghost ? !x.ghost : team.id !== x.id) continue; // wrong team
 
         // update ship usage limit UIs
+        
         for (let name of oldList) if (playerShipName != name) UIData.shipUIs.sendIndividual(s, null, name, "disabled");
         for (let name of newList) if (playerShipName != name) UIData.shipUIs.sendIndividual(s, null, name, "default");
     }
@@ -5941,11 +5930,15 @@ AbilityManager.onAbilityStart = function (ship, inAbilityBeforeStart) {
     if (!inAbilityBeforeStart && !ship.custom.shipUIsHidden) UIData.shipUIs.toggleSelectMenu(ship);
 }
 
+AbilityManager.onActionBlockStateChange = function (ship) {
+    if (!ship.custom.shipUIsHidden) UIData.shipUIs.toggleSelectMenu(ship);
+}
 
 
 
 
-/* Imported from misc/tickFunctions.js at Thu May 18 2023 14:20:52 GMT+0900 (Japan Standard Time) */
+
+/* Imported from misc/tickFunctions.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -6415,7 +6408,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Thu May 18 2023 14:20:52 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -6474,7 +6467,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Thu May 18 2023 14:20:52 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?

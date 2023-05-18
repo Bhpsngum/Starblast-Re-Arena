@@ -343,7 +343,7 @@ const ShipAbilities = {
             return HelperFunctions.timeExceeded(ship.custom.lastTriggered, this.detonateCooldown);
         },
 
-        range: 74,
+        range: 75,
 
         endName: "Detonate",
         

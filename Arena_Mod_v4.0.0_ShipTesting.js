@@ -21,7 +21,7 @@ Original Arena Mod (v1.0 - v3.1.2)
 const __ABILITY_SYSTEM_INFO__ = {
     branch: "ShipTesting",
     version: "4.0.0",
-    buildID: "1882d4dc82f"
+    buildID: "1882f43bbd5"
 };
 
 
@@ -96,7 +96,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_ShipTesting.js at Thu May 18 2023 14:20:52 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_ShipTesting.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -139,7 +139,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Thu May 18 2023 14:20:52 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -189,7 +189,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Thu May 18 2023 14:20:52 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1786,7 +1786,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Thu May 18 2023 14:20:52 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -2133,7 +2133,7 @@ const ShipAbilities = {
             return HelperFunctions.timeExceeded(ship.custom.lastTriggered, this.detonateCooldown);
         },
 
-        range: 74,
+        range: 75,
 
         endName: "Detonate",
         
@@ -3777,7 +3777,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Thu May 18 2023 14:20:52 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -4016,7 +4016,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Thu May 18 2023 14:20:52 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -4026,7 +4026,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Thu May 18 2023 14:20:52 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4377,7 +4377,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Thu May 18 2023 14:20:52 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -4742,7 +4742,7 @@ const AbilityManager = {
         if (!forced && !bypass.limit && this.limitExceeded(abilityShip, ship)) return { success: false, ...this.assignStatus.limitExceeded }
         if (dontAssign) return { success: true, ...this.assignStatus.success }
         if (shipAbil == null) return this.random(ship, forced);
-        this.end(ship);
+        if (ship.custom.inAbility) this.end(ship);
         ignoreReset = ignoreReset || {};
         let ignoreAll = ignoreReset === true;
         if (!ignoreAll && !ignoreReset.blocker) {
@@ -4816,6 +4816,10 @@ const AbilityManager = {
                 if (oldIndex >= 0) oldList.splice(oldIndex, 1);
                 this.tick(ship);
             }
+            let lastStatus = !!ship.custom.lastActionBlockerStatus;
+            let currentStatus = AbilityManager.isActionBlocked(ship).blocked;
+            if ("function" == typeof this.onActionBlockStateChange && lastStatus != currentStatus) this.onActionBlockStateChange(ship);
+            ship.custom.lastActionBlockerStatus = currentStatus;
         }
 
         if (oldList.length > 0) {

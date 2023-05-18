@@ -361,7 +361,7 @@ const AbilityManager = {
         if (!forced && !bypass.limit && this.limitExceeded(abilityShip, ship)) return { success: false, ...this.assignStatus.limitExceeded }
         if (dontAssign) return { success: true, ...this.assignStatus.success }
         if (shipAbil == null) return this.random(ship, forced);
-        this.end(ship);
+        if (ship.custom.inAbility) this.end(ship);
         ignoreReset = ignoreReset || {};
         let ignoreAll = ignoreReset === true;
         if (!ignoreAll && !ignoreReset.blocker) {
@@ -435,6 +435,10 @@ const AbilityManager = {
                 if (oldIndex >= 0) oldList.splice(oldIndex, 1);
                 this.tick(ship);
             }
+            let lastStatus = !!ship.custom.lastActionBlockerStatus;
+            let currentStatus = AbilityManager.isActionBlocked(ship).blocked;
+            if ("function" == typeof this.onActionBlockStateChange && lastStatus != currentStatus) this.onActionBlockStateChange(ship);
+            ship.custom.lastActionBlockerStatus = currentStatus;
         }
 
         if (oldList.length > 0) {
