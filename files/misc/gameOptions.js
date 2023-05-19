@@ -25,7 +25,7 @@ this.options = {
     starting_ship: 800,
     vocabulary,
     speed_mod: 1.2,
-    radar_zoom: 1,
+    radar_zoom: GAME_OPTIONS.radar_zoom,
     weapons_store: false,
     crystal_value: 0,
     crystal_drop: GAME_OPTIONS.crystal_drop,
