@@ -21,7 +21,7 @@ Original Arena Mod (v1.0 - v3.1.2)
 const __ABILITY_SYSTEM_INFO__ = {
     branch: "MS",
     version: "4.0.0",
-    buildID: "1882f43bbd5"
+    buildID: "1883164aa0a"
 };
 
 
@@ -96,7 +96,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_MS.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_MS.js at Fri May 19 2023 09:24:20 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = false; // if in debug phase
 
@@ -139,7 +139,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Fri May 19 2023 09:24:20 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -189,7 +189,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Fri May 19 2023 09:24:20 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1786,7 +1786,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Fri May 19 2023 09:24:20 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -3777,7 +3777,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Fri May 19 2023 09:24:20 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -4016,7 +4016,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Fri May 19 2023 09:24:20 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -4026,7 +4026,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Fri May 19 2023 09:24:20 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4377,7 +4377,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Fri May 19 2023 09:24:20 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -5079,11 +5079,11 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/gameLogic.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Fri May 19 2023 09:24:20 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/GameConfig.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Fri May 19 2023 09:24:20 GMT+0900 (Japan Standard Time) */
 
 const map_name = null; // leave `null` if you want randomized map name
 
@@ -5189,7 +5189,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Fri May 19 2023 09:24:20 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -5459,10 +5459,10 @@ const UIData = {
             let map = MapManager.get();
             let mapInfo = {
                 id: "map_info",
-                position: [70 - 1, 90, 10, 5],
+                position: [1, 90, 10, 5],
                 components: [
-                    {type: "text", position: [0,0,100,50], value: `${map.name} Map`, color: '#cde', align: "right"},
-                    {type: "text", position: [0,50,100,50], value: `By ${map.author}`, color: '#cde', align: "right"}
+                    {type: "text", position: [0,0,100,50], value: `${map.name} Map`, color: '#cde', align: "left"},
+                    {type: "text", position: [0,50,100,50], value: `By ${map.author}`, color: '#cde', align: "left"}
                 ]
             };
             let mapIndex = this.list.findIndex(ui => ui.id == "map_info");
@@ -5938,7 +5938,7 @@ AbilityManager.onActionBlockStateChange = function (ship) {
 
 
 
-/* Imported from misc/tickFunctions.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Fri May 19 2023 09:24:20 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -6408,7 +6408,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Fri May 19 2023 09:24:20 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -6467,7 +6467,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Thu May 18 2023 23:29:08 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Fri May 19 2023 09:24:20 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
