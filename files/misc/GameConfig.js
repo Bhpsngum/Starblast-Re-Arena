@@ -10,6 +10,7 @@ Object.assign(GAME_OPTIONS, {
     healing_ratio: 1, // better don't touch this
     crystal_drop: 0.5, // this.options.crystal_drop
     map_size: 100,
+    radar_zoom: 1,
     buttons_cooldown: 0.25, // must wait after x (seconds) before the same button can be triggered again
     duplicate_choose_limit: 5, // immediately close the ship menu after a single ship has been choosen x times
     alienSpawns: {
@@ -17,7 +18,7 @@ Object.assign(GAME_OPTIONS, {
             min: 1,
             max: 2
         },
-        codes: [10, 11],
+        codes: [10, 11, 13, 14, 16, 17, 18],
         collectibles: [10, 11, 12, 20, 21, 41, 42, 90, 91],
         crystals: {
             min: 45,

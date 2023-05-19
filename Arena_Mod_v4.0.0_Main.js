@@ -21,7 +21,7 @@ Original Arena Mod (v1.0 - v3.1.2)
 const __ABILITY_SYSTEM_INFO__ = {
     branch: "Main",
     version: "4.0.0",
-    buildID: "1883164aa0a"
+    buildID: "1883451a7e6"
 };
 
 
@@ -96,7 +96,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_Main.js at Fri May 19 2023 09:24:20 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_Main.js at Fri May 19 2023 23:02:26 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -139,7 +139,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Fri May 19 2023 09:24:20 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Fri May 19 2023 23:02:26 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -189,7 +189,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Fri May 19 2023 09:24:20 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Fri May 19 2023 23:02:26 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1786,7 +1786,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Fri May 19 2023 09:24:20 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Fri May 19 2023 23:02:26 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -3777,7 +3777,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Fri May 19 2023 09:24:20 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Fri May 19 2023 23:02:26 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -4016,7 +4016,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Fri May 19 2023 09:24:20 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Fri May 19 2023 23:02:26 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -4026,7 +4026,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Fri May 19 2023 09:24:20 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Fri May 19 2023 23:02:26 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4377,7 +4377,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Fri May 19 2023 09:24:20 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Fri May 19 2023 23:02:26 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -5079,11 +5079,11 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/gameLogic.js at Fri May 19 2023 09:24:20 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Fri May 19 2023 23:02:26 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/GameConfig.js at Fri May 19 2023 09:24:20 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Fri May 19 2023 23:02:26 GMT+0900 (Japan Standard Time) */
 
 const map_name = null; // leave `null` if you want randomized map name
 
@@ -5097,6 +5097,7 @@ Object.assign(GAME_OPTIONS, {
     healing_ratio: 1, // better don't touch this
     crystal_drop: 0.5, // this.options.crystal_drop
     map_size: 100,
+    radar_zoom: 1,
     buttons_cooldown: 0.25, // must wait after x (seconds) before the same button can be triggered again
     duplicate_choose_limit: 5, // immediately close the ship menu after a single ship has been choosen x times
     alienSpawns: {
@@ -5104,7 +5105,7 @@ Object.assign(GAME_OPTIONS, {
             min: 1,
             max: 2
         },
-        codes: [10, 11],
+        codes: [10, 11, 13, 14, 16, 17, 18],
         collectibles: [10, 11, 12, 20, 21, 41, 42, 90, 91],
         crystals: {
             min: 45,
@@ -5189,7 +5190,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Fri May 19 2023 09:24:20 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Fri May 19 2023 23:02:26 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -5938,7 +5939,7 @@ AbilityManager.onActionBlockStateChange = function (ship) {
 
 
 
-/* Imported from misc/tickFunctions.js at Fri May 19 2023 09:24:20 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Fri May 19 2023 23:02:26 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -6408,7 +6409,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Fri May 19 2023 09:24:20 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Fri May 19 2023 23:02:26 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -6467,7 +6468,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Fri May 19 2023 09:24:20 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Fri May 19 2023 23:02:26 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
@@ -6496,7 +6497,7 @@ this.options = {
     starting_ship: 800,
     vocabulary,
     speed_mod: 1.2,
-    radar_zoom: 1,
+    radar_zoom: GAME_OPTIONS.radar_zoom,
     weapons_store: false,
     crystal_value: 0,
     crystal_drop: GAME_OPTIONS.crystal_drop,
