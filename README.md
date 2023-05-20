@@ -43,6 +43,9 @@ In the root directory, you can also see other files:
 ## Q&A
 If you have any questions or feedbacks, please open an issue and I might include answers in this section.
 
+### Discord server invite link?
+https://discord.gg/arena-mod (or https://discord.gg/697sdMJwKj if the vanity invite doesn't work)
+
 ### Why so many files and not a single file?
 Welp, actually at first, the remade was conducted only on a single file as usual, but when it reached 5k+ lines, i had some problems with it:
 * Navigating between parts of codes takes a long while and it's inconvenient
