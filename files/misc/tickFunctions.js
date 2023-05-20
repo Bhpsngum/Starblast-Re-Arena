@@ -231,15 +231,21 @@ const main_phase = function (game) {
 
                 // benefit!
                 for (let ship of players) {
-                    if (Math.ceil(ship.team) === ship.team) control_point_data.teams[ship.team] += increment;
+                    let TeamData = TeamManager.getDataFromShip(ship);
+                    if (!TeamData.ghost) control_point_data.teams[TeamData.id] += increment;
                     else control_point_data.ghost += increment;
                 }
             }
             else {
                 // just let teams steal control from each other
 
-                // first, calculate number of ships and previous points on each team
-                let teamControls = [
+                // first, calculate number of ships and previous control % on each team
+                let ghostData = {
+                    index: "ghost",
+                    control: control_point_data.ghost,
+                    steal_amount: increment,
+                    ships: 0
+                }, teamControls = [
                     ...control_point_data.teams.map((control, index) => ({
                         index,
                         control,
@@ -247,21 +253,17 @@ const main_phase = function (game) {
                         // later the value above would be lower if the "cake" is too small
                         ships: 0
                     })),
-                    {
-                        index: "ghost",
-                        control: control_point_data.ghost,
-                        steal_amount: increment,
-                        ships: 0
-                    }
+                    ghostData
                 ];
                 for (let ship of players) {
-                    if (Math.ceil(ship.team) === ship.team) ++teamControls[ship.team].ships;
-                    else ++teamControls.slice(-1)[0].ships
+                    let TeamData = TeamManager.getDataFromShip(ship);
+                    if (!TeamData.ghost) ++teamControls[TeamData.id].ships;
+                    else ++ghostData.ships
                 }
 
                 // sorting from smallest team to largest team (by ship count)
                 // also filter out teams with 0% control and 0 ships
-                teamControls = teamControls.filter(team => team.control > 0 || team.ships > 0).sort((a, b) => b.ships - a.ships);
+                teamControls = teamControls.filter(team => team.control > 0 || team.ships > 0).sort((a, b) => a.ships - b.ships);
 
                 // stealing time
                 // yes, this part's time complexity is O(n^2) where n is number of teams
@@ -272,7 +274,7 @@ const main_phase = function (game) {
                     let ships_disadvantage = 0; // later you'll know why
                     for (let team of teamControls) {
                         // skip its own team or teams with same count, of course
-                        // or you can comment the line above, i won't judge
+                        // or you can comment the line below, i won't judge
                         if (team.index == teamControl.index || team.ships == teamControl.ships) continue;
                         let ships_difference = team.ships - teamControl.ships;
                         
