@@ -326,6 +326,7 @@ const main_phase = function (game) {
         // that team is winning
         if (maxControl >= CONTROL_POINT.control_bar.controlling_percentage && maxControlTeam.length == 1) {
             let winningTeam = maxControlTeam[0];
+            HelperFunctions.setControlPointOBJ(false, winningTeam);
             if (maxControl >= CONTROL_POINT.control_bar.dominating_percentage) {
                 scoreIncreased = true;
                 let mult = 1;
@@ -337,7 +338,6 @@ const main_phase = function (game) {
                 if (winningTeam == "ghost") control_point_data.ghostScore += increaseAmount;
                 else control_point_data.scores[winningTeam] += increaseAmount;
             }
-            HelperFunctions.setControlPointOBJ(false, winningTeam);
         }
         else HelperFunctions.setControlPointOBJ(true); // or else it's still neutral
 
