@@ -21,7 +21,7 @@ Original Arena Mod (v1.0 - v3.1.2)
 const __ABILITY_SYSTEM_INFO__ = {
     branch: "Main",
     version: "4.0.0",
-    buildID: "1883451a7e6"
+    buildID: "188372360ab"
 };
 
 
@@ -96,7 +96,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_Main.js at Fri May 19 2023 23:02:26 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_Main.js at Sat May 20 2023 12:10:45 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -139,7 +139,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Fri May 19 2023 23:02:26 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Sat May 20 2023 12:10:45 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -189,7 +189,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Fri May 19 2023 23:02:26 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Sat May 20 2023 12:10:45 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1786,7 +1786,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Fri May 19 2023 23:02:26 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Sat May 20 2023 12:10:45 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -2960,6 +2960,17 @@ const ShipAbilities = {
             }
         },
 
+        endPuckPhase: function (ship) {
+            // When a puck's mirror duration is over:
+            // - if the puck reaches that team's limit --> do nothing (means that they will keep that ship forever until they changes on spawn)
+            // - otherwise, if the ship can't be assigned by other reasons (excluding in ability), just fake-assign back the model and ability
+            // - otherwise re-assign the Puck template to the ship (this means resetting as well)
+            ship.custom.abilityCustom.puckTriggered = null;
+            let res = AbilityManager.assign(ship, this.shipName, true, { ability: true });
+            if (res.success) AbilityManager.assign(ship, this.shipName, false, true);
+            else if (res.code != AbilityManager.assignStatus.limitExceeded.code) AbilityManager.assign(ship, this.shipName, false, true, { blocker: true });
+        },
+
         requirementsText: function (ship) {
             return HelperFunctions.templates.requirementsText.call(this, ship);
         },
@@ -3009,20 +3020,17 @@ const ShipAbilities = {
         },
 
         globalEvent: function (event) {
-            if (event.name == "ship_destroyed" && event.ship != null) this.removePuck(event.ship);
+            let ship;
+            if (event.name == "ship_destroyed" && (ship = event.ship) != null) {
+                this.removePuck(ship);
+                if (this.shipChangeBlocker.checker(ship)) this.endPuckPhase(ship);
+            }
         },
 
         globalTick: function (game) {
-            // When a puck's mirror duration is over:
-            // - if the puck reaches that team's limit --> do nothing (means that they will keep that ship forever until they changes on spawn)
-            // - otherwise, if the ship can't be assigned by other reasons (excluding in ability), just fake-assign back the model and ability
-            // - otherwise re-assign the Puck template to the ship (this means resetting as well)
             for (let ship of game.ships) {
                 if (ship != null && ship.id != null && this.shipChangeBlocker.checker(ship) && game.step - ship.custom.abilityCustom.puckTriggered > this.controlDuration) {
-                    ship.custom.abilityCustom.puckTriggered = null;
-                    let res = AbilityManager.assign(ship, this.shipName, true, { ability: true });
-                    if (res.success) AbilityManager.assign(ship, this.shipName, false, true);
-                    else if (res.code != AbilityManager.assignStatus.limitExceeded.code) AbilityManager.assign(ship, this.shipName, false, true, { blocker: true });
+                    this.endPuckPhase(ship);
                 }
             }
         }
@@ -3777,7 +3785,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Fri May 19 2023 23:02:26 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Sat May 20 2023 12:10:45 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -4016,7 +4024,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Fri May 19 2023 23:02:26 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Sat May 20 2023 12:10:45 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -4026,7 +4034,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Fri May 19 2023 23:02:26 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Sat May 20 2023 12:10:45 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4377,7 +4385,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Fri May 19 2023 23:02:26 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Sat May 20 2023 12:10:45 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -5079,11 +5087,11 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/gameLogic.js at Fri May 19 2023 23:02:26 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Sat May 20 2023 12:10:45 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/GameConfig.js at Fri May 19 2023 23:02:26 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Sat May 20 2023 12:10:45 GMT+0900 (Japan Standard Time) */
 
 const map_name = null; // leave `null` if you want randomized map name
 
@@ -5190,7 +5198,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Fri May 19 2023 23:02:26 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Sat May 20 2023 12:10:45 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -5939,7 +5947,7 @@ AbilityManager.onActionBlockStateChange = function (ship) {
 
 
 
-/* Imported from misc/tickFunctions.js at Fri May 19 2023 23:02:26 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Sat May 20 2023 12:10:45 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -6409,7 +6417,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Fri May 19 2023 23:02:26 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Sat May 20 2023 12:10:45 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -6468,7 +6476,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Fri May 19 2023 23:02:26 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Sat May 20 2023 12:10:45 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?

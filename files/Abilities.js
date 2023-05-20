@@ -1170,6 +1170,17 @@ const ShipAbilities = {
             }
         },
 
+        endPuckPhase: function (ship) {
+            // When a puck's mirror duration is over:
+            // - if the puck reaches that team's limit --> do nothing (means that they will keep that ship forever until they changes on spawn)
+            // - otherwise, if the ship can't be assigned by other reasons (excluding in ability), just fake-assign back the model and ability
+            // - otherwise re-assign the Puck template to the ship (this means resetting as well)
+            ship.custom.abilityCustom.puckTriggered = null;
+            let res = AbilityManager.assign(ship, this.shipName, true, { ability: true });
+            if (res.success) AbilityManager.assign(ship, this.shipName, false, true);
+            else if (res.code != AbilityManager.assignStatus.limitExceeded.code) AbilityManager.assign(ship, this.shipName, false, true, { blocker: true });
+        },
+
         requirementsText: function (ship) {
             return HelperFunctions.templates.requirementsText.call(this, ship);
         },
@@ -1219,20 +1230,17 @@ const ShipAbilities = {
         },
 
         globalEvent: function (event) {
-            if (event.name == "ship_destroyed" && event.ship != null) this.removePuck(event.ship);
+            let ship;
+            if (event.name == "ship_destroyed" && (ship = event.ship) != null) {
+                this.removePuck(ship);
+                if (this.shipChangeBlocker.checker(ship)) this.endPuckPhase(ship);
+            }
         },
 
         globalTick: function (game) {
-            // When a puck's mirror duration is over:
-            // - if the puck reaches that team's limit --> do nothing (means that they will keep that ship forever until they changes on spawn)
-            // - otherwise, if the ship can't be assigned by other reasons (excluding in ability), just fake-assign back the model and ability
-            // - otherwise re-assign the Puck template to the ship (this means resetting as well)
             for (let ship of game.ships) {
                 if (ship != null && ship.id != null && this.shipChangeBlocker.checker(ship) && game.step - ship.custom.abilityCustom.puckTriggered > this.controlDuration) {
-                    ship.custom.abilityCustom.puckTriggered = null;
-                    let res = AbilityManager.assign(ship, this.shipName, true, { ability: true });
-                    if (res.success) AbilityManager.assign(ship, this.shipName, false, true);
-                    else if (res.code != AbilityManager.assignStatus.limitExceeded.code) AbilityManager.assign(ship, this.shipName, false, true, { blocker: true });
+                    this.endPuckPhase(ship);
                 }
             }
         }
