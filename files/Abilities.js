@@ -106,7 +106,7 @@ const ShipAbilities = {
         // event function if you want to do special stuff while there's an event on duration
         // optional, end the ability when the ship dies (if `endOnDeath` is true)
         event: function (event, ship) {
-            if (event.name == "ship_destroyed" && event.ship == ship && this.endOnDeath) AbilityManager.end(ship);
+            if (event.name == "ship_destroyed" && event.ship == ship && this.endOnDeath && ship.custom.inAbility) AbilityManager.end(ship);
         },
 
         // event to be executed globally (and indepently on ships)

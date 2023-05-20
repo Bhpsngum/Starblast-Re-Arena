@@ -310,7 +310,7 @@ const HelperFunctions = {
         initialize: function () {},
 
         event: function (event, ship) {
-            if (event.name == "ship_destroyed" && event.ship == ship && this.endOnDeath) AbilityManager.end(ship);
+            if (event.name == "ship_destroyed" && event.ship == ship && this.endOnDeath && ship.custom.inAbility) AbilityManager.end(ship);
         },
 
         requirementsText: function (ship) {
