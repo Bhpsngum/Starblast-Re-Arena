@@ -21,7 +21,7 @@ Original Arena Mod (v1.0 - v3.1.2)
 const __ABILITY_SYSTEM_INFO__ = {
     branch: "MS",
     version: "4.0.0",
-    buildID: "188390a04c0"
+    buildID: "1883a482084"
 };
 
 
@@ -96,7 +96,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_MS.js at Sat May 20 2023 21:02:17 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_MS.js at Sun May 21 2023 02:49:45 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = false; // if in debug phase
 
@@ -139,7 +139,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Sat May 20 2023 21:02:17 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Sun May 21 2023 02:49:45 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -189,7 +189,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Sat May 20 2023 21:02:17 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Sun May 21 2023 02:49:45 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1786,7 +1786,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Sat May 20 2023 21:02:17 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Sun May 21 2023 02:49:45 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -3785,7 +3785,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Sat May 20 2023 21:02:17 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Sun May 21 2023 02:49:45 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -4024,7 +4024,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Sat May 20 2023 21:02:17 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Sun May 21 2023 02:49:45 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -4034,7 +4034,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Sat May 20 2023 21:02:17 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Sun May 21 2023 02:49:45 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4385,7 +4385,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Sat May 20 2023 21:02:17 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Sun May 21 2023 02:49:45 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -5087,11 +5087,11 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/gameLogic.js at Sat May 20 2023 21:02:17 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Sun May 21 2023 02:49:45 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/GameConfig.js at Sat May 20 2023 21:02:17 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Sun May 21 2023 02:49:45 GMT+0900 (Japan Standard Time) */
 
 const map_name = null; // leave `null` if you want randomized map name
 
@@ -5198,7 +5198,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Sat May 20 2023 21:02:17 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Sun May 21 2023 02:49:45 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -5784,13 +5784,14 @@ const UIData = {
             let width = 100 / UI_counts;
             let dash = { type: "text", value: "-", color: "#fff"};
             let index = 0;
+            let scoreTeams = 1 / ((UI_counts + 1) / 2 + 1);
             UIData.scores.components = control_point_data.scores.map((score, id) => {
                 let color = HelperFunctions.toHSLA(TeamManager.getDataFromID(id).hue, 1, 100, this.colorTextLightness);
                 let data = [
                     { type: "text", position: [index * width, 0, width, 100], value: Math.floor(score), color}
                 ];
                 if (game.custom.scoreIncreased && id === game.custom.winner) data.push(
-                    { type: "text", position: [(index + 3/4) * width, 0, width * 1 / 4, 50], value: "+" + increaseAmount, color}
+                    { type: "text", position: [(index + (1 - scoreTeams)) * width, 0, width * scoreTeams, 50], value: "+" + increaseAmount, color}
                 );
 
                 data.push( { ...dash, position: [(index + 1) * width, 0, width, 100]});
@@ -5947,7 +5948,7 @@ AbilityManager.onActionBlockStateChange = function (ship) {
 
 
 
-/* Imported from misc/tickFunctions.js at Sat May 20 2023 21:02:17 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Sun May 21 2023 02:49:45 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -6182,15 +6183,21 @@ const main_phase = function (game) {
 
                 // benefit!
                 for (let ship of players) {
-                    if (Math.ceil(ship.team) === ship.team) control_point_data.teams[ship.team] += increment;
+                    let TeamData = TeamManager.getDataFromShip(ship);
+                    if (!TeamData.ghost) control_point_data.teams[TeamData.id] += increment;
                     else control_point_data.ghost += increment;
                 }
             }
             else {
                 // just let teams steal control from each other
 
-                // first, calculate number of ships and previous points on each team
-                let teamControls = [
+                // first, calculate number of ships and previous control % on each team
+                let ghostData = {
+                    index: "ghost",
+                    control: control_point_data.ghost,
+                    steal_amount: increment,
+                    ships: 0
+                }, teamControls = [
                     ...control_point_data.teams.map((control, index) => ({
                         index,
                         control,
@@ -6198,21 +6205,17 @@ const main_phase = function (game) {
                         // later the value above would be lower if the "cake" is too small
                         ships: 0
                     })),
-                    {
-                        index: "ghost",
-                        control: control_point_data.ghost,
-                        steal_amount: increment,
-                        ships: 0
-                    }
+                    ghostData
                 ];
                 for (let ship of players) {
-                    if (Math.ceil(ship.team) === ship.team) ++teamControls[ship.team].ships;
-                    else ++teamControls.slice(-1)[0].ships
+                    let TeamData = TeamManager.getDataFromShip(ship);
+                    if (!TeamData.ghost) ++teamControls[TeamData.id].ships;
+                    else ++ghostData.ships
                 }
 
                 // sorting from smallest team to largest team (by ship count)
                 // also filter out teams with 0% control and 0 ships
-                teamControls = teamControls.filter(team => team.control > 0 || team.ships > 0).sort((a, b) => b.ships - a.ships);
+                teamControls = teamControls.filter(team => team.control > 0 || team.ships > 0).sort((a, b) => a.ships - b.ships);
 
                 // stealing time
                 // yes, this part's time complexity is O(n^2) where n is number of teams
@@ -6223,7 +6226,7 @@ const main_phase = function (game) {
                     let ships_disadvantage = 0; // later you'll know why
                     for (let team of teamControls) {
                         // skip its own team or teams with same count, of course
-                        // or you can comment the line above, i won't judge
+                        // or you can comment the line below, i won't judge
                         if (team.index == teamControl.index || team.ships == teamControl.ships) continue;
                         let ships_difference = team.ships - teamControl.ships;
                         
@@ -6417,7 +6420,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Sat May 20 2023 21:02:17 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Sun May 21 2023 02:49:45 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -6476,7 +6479,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Sat May 20 2023 21:02:17 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Sun May 21 2023 02:49:45 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
