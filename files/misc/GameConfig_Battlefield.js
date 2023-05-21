@@ -28,7 +28,8 @@ Object.assign(GAME_OPTIONS, {
         interval: 5, // in seconds
         capacity: 200, // number of aliens should be on map at a time (including aliens spawned by abilities),
         distanceFromBases: 30 // avoid spawning aliens <x> radius from the outer border of bases and control points
-    }
+    },
+    nerd: 1 // 🤓
 });
 
 const CONTROL_POINT = {

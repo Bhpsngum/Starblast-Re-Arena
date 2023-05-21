@@ -21,7 +21,7 @@ Original Arena Mod (v1.0 - v3.1.2)
 const __ABILITY_SYSTEM_INFO__ = {
     branch: "Main",
     version: "4.0.0",
-    buildID: "1883ca4bf7d"
+    buildID: "1883cf884a2"
 };
 
 
@@ -96,7 +96,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_Main.js at Sun May 21 2023 13:50:09 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_Main.js at Sun May 21 2023 15:21:39 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -139,7 +139,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Sun May 21 2023 13:50:09 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Sun May 21 2023 15:21:39 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -189,7 +189,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Sun May 21 2023 13:50:09 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Sun May 21 2023 15:21:39 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1786,7 +1786,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Sun May 21 2023 13:50:09 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Sun May 21 2023 15:21:39 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -3785,7 +3785,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Sun May 21 2023 13:50:09 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Sun May 21 2023 15:21:39 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -4024,7 +4024,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Sun May 21 2023 13:50:09 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Sun May 21 2023 15:21:39 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -4034,7 +4034,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Sun May 21 2023 13:50:09 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Sun May 21 2023 15:21:39 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4385,7 +4385,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Sun May 21 2023 13:50:09 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Sun May 21 2023 15:21:39 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -5087,11 +5087,11 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/gameLogic.js at Sun May 21 2023 13:50:09 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Sun May 21 2023 15:21:39 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/GameConfig.js at Sun May 21 2023 13:50:09 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Sun May 21 2023 15:21:39 GMT+0900 (Japan Standard Time) */
 
 const map_name = null; // leave `null` if you want randomized map name
 
@@ -5122,7 +5122,8 @@ Object.assign(GAME_OPTIONS, {
         interval: 10, // in seconds
         capacity: 30, // number of aliens should be on map at a time (including aliens spawned by abilities),
         distanceFromBases: 30 // avoid spawning aliens <x> radius from the outer border of bases and control points
-    }
+    },
+    nerd: 10 // 🤓
 });
 
 const CONTROL_POINT = {
@@ -5198,7 +5199,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Sun May 21 2023 13:50:09 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Sun May 21 2023 15:21:39 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -5948,7 +5949,7 @@ AbilityManager.onActionBlockStateChange = function (ship) {
 
 
 
-/* Imported from misc/tickFunctions.js at Sun May 21 2023 13:50:09 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Sun May 21 2023 15:21:39 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -6027,24 +6028,36 @@ const alwaysTick = function (game) {
 }
 
 const initialization = function (game, dontChangeTick = false) {
-    var lost_sector_aries = {
-        id: "lost_sector_aries",
-        obj: "https://starblast.io/lost_sector/LostSector_Aries_HardEdges.obj",
-        diffuse: "https://starblast.io/lost_sector/LostSector_Aries_LostSector_Aries_Diffuse.jpg",//"https://raw.githubusercontent.com/atherixibis/alittlebitof/main/gkou.png",//"https://starblast.io/lost_sector/LostSector_Aries_LostSector_Aries_Diffuse.jpg",
-        bump: "https://starblast.io/lost_sector/LostSector_Aries_LostSector_Aries_Height.jpg",
-        specular: "https://starblast.io/lost_sector/LostSector_Aries_LostSector_Aries_Specular.jpg",
-        shininess: 0,
-        emissiveColor: 0,
-        specularColor: 0x3fcf00,
-        transparent: false
+    var center_obj = HelperFunctions.randInt(GAME_OPTIONS.nerd) ? {
+        scale: {x:4, y:4, z:4},
+        rotation: {x:0, y:0, z:0},
+        type: {
+            id: "lost_sector_aries",
+            obj: "https://starblast.io/lost_sector/LostSector_Aries_HardEdges.obj",
+            diffuse: "https://starblast.io/lost_sector/LostSector_Aries_LostSector_Aries_Diffuse.jpg",
+            bump: "https://starblast.io/lost_sector/LostSector_Aries_LostSector_Aries_Height.jpg",
+            specular: "https://starblast.io/lost_sector/LostSector_Aries_LostSector_Aries_Specular.jpg",
+            shininess: 0,
+            emissiveColor: 0,
+            specularColor: 0x3fcf00,
+            transparent: false
+        }
+    } : {
+        scale: {x: 10, y:10, z:10},
+        rotation: {x: -Math.PI/4, y: -Math.PI/4, z: 0},
+        type: {
+            id: "nerd_vibraphone",
+            obj: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/objs/nerd_vibraphone.obj",
+            diffuse: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/ship_lambert_texture.png",
+            emissive: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/ship_emissive_texture.png",
+            transparent: false
+        }
     };
 
     HelperFunctions.setObject({
-        id: "lost_sector_aries",
-        type: lost_sector_aries,
+        id: "center_obj",
         position: {x:0, y:0, z:-90},
-        scale: {x:4, y:4, z:4},
-        rotation: {x:0, y:0, z:0}
+        ...center_obj
     });
 
     let texture = control_point_data.texture;
@@ -6420,7 +6433,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Sun May 21 2023 13:50:09 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Sun May 21 2023 15:21:39 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -6479,7 +6492,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Sun May 21 2023 13:50:09 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Sun May 21 2023 15:21:39 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
