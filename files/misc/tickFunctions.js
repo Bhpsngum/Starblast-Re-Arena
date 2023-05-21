@@ -90,7 +90,7 @@ const initialization = function (game, dontChangeTick = false) {
             transparent: false
         }
     } : {
-        scale: {x: 10, y:10, z:10},
+        scale: {x: 20, y: 20, z: 20},
         rotation: {x: -Math.PI/4, y: -Math.PI/4, z: 0},
         type: {
             id: "nerd_vibraphone",
