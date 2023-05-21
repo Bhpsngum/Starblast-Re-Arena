@@ -242,7 +242,7 @@ const AbilityManager = {
         };
         return {
             ready: false,
-            text: ship.custom.inAbility && ability.cooldownRestartOnEnd && !ability.customDisabledText ? "In Ability" : ability.requirementsText(ship)
+            text: ship.custom.inAbility && ability.cooldownRestartOnEnd && !ability.customInAbilityText ? "In Ability" : ability.requirementsText(ship)
         }
     },
     updateUI: function (ship) {
