@@ -1,5 +1,5 @@
 /*
-Arena Mod Remake/Recontinuation (v3.1.3 - v4.0+)
+Re:Arena - Arena Mod Remake/Recontinuation (v3.1.3 - v4.0+)
 - CEO: Tost
 - Coding: Bhpsngum
 - Textures: Caramel
