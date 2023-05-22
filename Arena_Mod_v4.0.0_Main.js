@@ -21,7 +21,7 @@ Original Arena Mod (v1.0 - v3.1.2)
 const __ABILITY_SYSTEM_INFO__ = {
     branch: "Main",
     version: "4.0.0",
-    buildID: "1883e8e87b3"
+    buildID: "18843de12ca"
 };
 
 
@@ -96,7 +96,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_Main.js at Sun May 21 2023 22:45:08 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_Main.js at Mon May 22 2023 23:30:07 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -139,7 +139,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Sun May 21 2023 22:45:08 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Mon May 22 2023 23:30:07 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -189,7 +189,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Sun May 21 2023 22:45:08 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Mon May 22 2023 23:30:07 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1786,7 +1786,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Sun May 21 2023 22:45:08 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Mon May 22 2023 23:30:07 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -3706,8 +3706,8 @@ const ShipAbilities = {
             ability: '{"name":"Shadow X-3","remodel":"Nex","level":7,"model":42,"size":2.5,"zoom":0.8,"specs":{"shield":{"capacity":[455,455],"reload":[15,15]},"generator":{"capacity":[282,282],"reload":[63,63]},"ship":{"mass":420,"speed":[142,142],"rotation":[38,38],"acceleration":[115,115]}},"bodies":{"main":{"section_segments":12,"offset":{"x":0,"y":0,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0,0,0,0],"y":[-132,-130,-120,-70,-40,0,40,70,80,90,100],"z":[0,0,0,0,0,0,0,0,0,0,0]},"width":[0,5,10,20,20,20,20,30,30,30,20,0],"height":[0,5,10,30,25,10,10,15,15,15,10,10],"texture":[12,15.3,15,15.3,63,63,15.3,15.3,5],"laser":{"damage":[250,250],"rate":1,"type":2,"speed":[350,350],"number":1,"error":0,"recoil":500}},"air":{"section_segments":6,"offset":{"x":0,"y":0,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[0,-100,-30,-10,10,60,90],"z":[0,0,0,0,0,0,0]},"width":[0,20,35,30,30,35,25],"height":[0,8,10,10,10,10,10,15,15,15,10,10],"texture":[15.3,3,2,15.3,3,3]},"back":{"section_segments":12,"offset":{"x":0,"y":-5,"z":0},"position":{"x":[0,0,0,0,0],"y":[50,40,90,115,90],"z":[0,0,0,0,0]},"width":[10,25,20,25,0],"height":[10,10,10,10,0],"texture":[15.3,8,8],"propeller":true},"cockpit":{"section_segments":8,"offset":{"x":0,"y":-30,"z":18},"position":{"x":[0,0,0,0,0,0,0,0,0],"y":[-65,-25,0,25,40,70,90,120],"z":[0,0,0,-5,-7,-10,-8,-8]},"width":[0,8,13,10,15,20,14,15],"height":[0,15,23,15,10,10,10,5],"texture":[7,9,9,15.3,10,63,4]},"laser":{"section_segments":10,"offset":{"x":80,"y":10,"z":-14},"position":{"x":[0,0,0,0,0,0,0,0,0,0,0],"y":[-40,-20,-25,0,10,20,25,30,40,70,60],"z":[0,0,0,0,0,0,0,0,0,0,0]},"width":[0,6,10,15,15,15,10,10,15,12,0],"height":[0,6,10,15,15,15,10,10,15,5,0],"texture":[6,17,4,10,3,2,4,2,12,17],"propeller":true,"angle":1.5,"laser":{"damage":[8,8],"rate":5,"type":1,"speed":[260,260],"number":1}},"laser2":{"section_segments":10,"offset":{"x":45,"y":-25,"z":-5},"position":{"x":[0,0,0,0,0,0,0,0,0,0,0],"y":[-40,-20,-25,0,10,20,25,30,40,70,60],"z":[0,0,0,0,0,0,0,0,0,0,0]},"width":[0,6,10,15,15,15,10,10,15,12,0],"height":[0,6,10,15,15,15,10,10,15,5,0],"texture":[6,17,4,10,3,4,5,4,3,17],"propeller":true,"angle":1,"laser":{"damage":[8,8],"rate":6,"type":1,"speed":[280,280],"number":1}}},"wings":{"wings":{"offset":{"x":10,"y":0,"z":0},"length":[35,25,15,15,10],"width":[110,60,60,50,40,30],"angle":[-10,20,0,-20,-50],"position":[0,-15,30,40,25,-5],"texture":[15.3,63,15.3,15.3,15.3],"bump":{"position":-20,"size":15}}},"typespec":{"name":"Shadow X-3","level":7,"model":42,"code":742,"specs":{"shield":{"capacity":[455,455],"reload":[15,15]},"generator":{"capacity":[282,282],"reload":[63,63]},"ship":{"mass":420,"speed":[142,142],"rotation":[38,38],"acceleration":[115,115]}},"shape":[6.6,6.227,4.842,3.678,3.014,3.933,3.669,3.688,3.463,3.302,4.223,5.27,5.214,5.198,5.192,5.278,5.422,5.809,6.132,5.833,2.929,3.465,4.759,5.64,5.599,5.511,5.599,5.64,4.759,3.465,2.929,5.833,6.132,5.809,5.422,5.278,5.192,5.198,5.214,5.27,4.223,3.302,3.463,3.688,3.669,3.933,3.014,3.678,4.842,6.227],"lasers":[{"x":0,"y":-6.6,"z":0,"angle":0,"damage":[250,250],"rate":1,"type":2,"speed":[350,350],"number":1,"spread":0,"error":0,"recoil":500},{"x":3.948,"y":-1.499,"z":-0.7,"angle":1.5,"damage":[8,8],"rate":5,"type":1,"speed":[260,260],"number":1,"spread":0,"error":0,"recoil":0},{"x":-3.948,"y":-1.499,"z":-0.7,"angle":-1.5,"damage":[8,8],"rate":5,"type":1,"speed":[260,260],"number":1,"spread":0,"error":0,"recoil":0},{"x":2.215,"y":-3.25,"z":-0.25,"angle":1,"damage":[8,8],"rate":6,"type":1,"speed":[280,280],"number":1,"spread":0,"error":0,"recoil":0},{"x":-2.215,"y":-3.25,"z":-0.25,"angle":-1,"damage":[8,8],"rate":6,"type":1,"speed":[280,280],"number":1,"spread":0,"error":0,"recoil":0}],"radius":6.6}}'
         },
         name: "Revolve",
-        duration: 120 * 60,
-        cooldown: 35 * 60,
+        duration: 35 * 60,
+        cooldown: 70 * 60,
 
         endOnDeath: true,
         cooldownRestartOnEnd: true,
@@ -3765,7 +3765,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Sun May 21 2023 22:45:08 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Mon May 22 2023 23:30:07 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -4004,7 +4004,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Sun May 21 2023 22:45:08 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Mon May 22 2023 23:30:07 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -4014,7 +4014,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Sun May 21 2023 22:45:08 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Mon May 22 2023 23:30:07 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4365,7 +4365,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Sun May 21 2023 22:45:08 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Mon May 22 2023 23:30:07 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -5067,11 +5067,11 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/gameLogic.js at Sun May 21 2023 22:45:08 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Mon May 22 2023 23:30:07 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/GameConfig.js at Sun May 21 2023 22:45:08 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Mon May 22 2023 23:30:07 GMT+0900 (Japan Standard Time) */
 
 const map_name = null; // leave `null` if you want randomized map name
 
@@ -5179,7 +5179,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Sun May 21 2023 22:45:08 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Mon May 22 2023 23:30:07 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -5929,7 +5929,7 @@ AbilityManager.onActionBlockStateChange = function (ship) {
 
 
 
-/* Imported from misc/tickFunctions.js at Sun May 21 2023 22:45:08 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Mon May 22 2023 23:30:07 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -6008,37 +6008,41 @@ const alwaysTick = function (game) {
 }
 
 const initialization = function (game, dontChangeTick = false) {
-    var center_obj = HelperFunctions.randInt(GAME_OPTIONS.nerd) ? {
-        scale: {x:4, y:4, z:4},
-        rotation: {x:0, y:0, z:0},
-        type: {
-            id: "lost_sector_aries",
-            obj: "https://starblast.io/lost_sector/LostSector_Aries_HardEdges.obj",
-            diffuse: "https://starblast.io/lost_sector/LostSector_Aries_LostSector_Aries_Diffuse.jpg",
-            bump: "https://starblast.io/lost_sector/LostSector_Aries_LostSector_Aries_Height.jpg",
-            specular: "https://starblast.io/lost_sector/LostSector_Aries_LostSector_Aries_Specular.jpg",
-            shininess: 0,
-            emissiveColor: 0,
-            specularColor: 0x3fcf00,
-            transparent: false
-        }
-    } : {
-        scale: {x: 20, y: 20, z: 20},
-        rotation: {x: -Math.PI/4, y: -Math.PI/4, z: 0},
-        type: {
-            id: "nerd_vibraphone",
-            obj: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/objs/nerd_vibraphone.obj",
-            diffuse: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/ship_lambert_texture.png",
-            emissive: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/ship_emissive_texture.png",
-            transparent: false
-        }
-    };
+    if (!game.custom.centerObjPlaced) {
+        var center_obj = HelperFunctions.randInt(GAME_OPTIONS.nerd) ? {
+            scale: {x:4, y:4, z:4},
+            rotation: {x:0, y:0, z:0},
+            type: {
+                id: "lost_sector_aries",
+                obj: "https://starblast.io/lost_sector/LostSector_Aries_HardEdges.obj",
+                diffuse: "https://starblast.io/lost_sector/LostSector_Aries_LostSector_Aries_Diffuse.jpg",
+                bump: "https://starblast.io/lost_sector/LostSector_Aries_LostSector_Aries_Height.jpg",
+                specular: "https://starblast.io/lost_sector/LostSector_Aries_LostSector_Aries_Specular.jpg",
+                shininess: 0,
+                emissiveColor: 0,
+                specularColor: 0x3fcf00,
+                transparent: false
+            }
+        } : {
+            scale: {x: 20, y: 20, z: 20},
+            rotation: {x: -Math.PI/4, y: -Math.PI/4, z: 0},
+            type: {
+                id: "nerd_vibraphone",
+                obj: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/objs/nerd_vibraphone.obj",
+                diffuse: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/ship_lambert_texture.png",
+                emissive: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/ship_emissive_texture.png",
+                transparent: false
+            }
+        };
 
-    HelperFunctions.setObject({
-        id: "center_obj",
-        position: {x:0, y:0, z:-90},
-        ...center_obj
-    });
+        HelperFunctions.setObject({
+            id: "center_obj",
+            position: {x:0, y:0, z:-90},
+            ...center_obj
+        });
+
+        game.custom.centerObjPlaced = true;
+    }
 
     let texture = control_point_data.texture;
     let index = texture == null ? -1 : CONTROL_POINT.textures.findIndex(txt => txt.url === texture.url);
@@ -6413,7 +6417,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Sun May 21 2023 22:45:08 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Mon May 22 2023 23:30:07 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -6472,7 +6476,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Sun May 21 2023 22:45:08 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Mon May 22 2023 23:30:07 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?

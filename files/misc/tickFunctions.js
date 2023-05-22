@@ -75,37 +75,41 @@ const alwaysTick = function (game) {
 }
 
 const initialization = function (game, dontChangeTick = false) {
-    var center_obj = HelperFunctions.randInt(GAME_OPTIONS.nerd) ? {
-        scale: {x:4, y:4, z:4},
-        rotation: {x:0, y:0, z:0},
-        type: {
-            id: "lost_sector_aries",
-            obj: "https://starblast.io/lost_sector/LostSector_Aries_HardEdges.obj",
-            diffuse: "https://starblast.io/lost_sector/LostSector_Aries_LostSector_Aries_Diffuse.jpg",
-            bump: "https://starblast.io/lost_sector/LostSector_Aries_LostSector_Aries_Height.jpg",
-            specular: "https://starblast.io/lost_sector/LostSector_Aries_LostSector_Aries_Specular.jpg",
-            shininess: 0,
-            emissiveColor: 0,
-            specularColor: 0x3fcf00,
-            transparent: false
-        }
-    } : {
-        scale: {x: 20, y: 20, z: 20},
-        rotation: {x: -Math.PI/4, y: -Math.PI/4, z: 0},
-        type: {
-            id: "nerd_vibraphone",
-            obj: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/objs/nerd_vibraphone.obj",
-            diffuse: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/ship_lambert_texture.png",
-            emissive: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/ship_emissive_texture.png",
-            transparent: false
-        }
-    };
+    if (!game.custom.centerObjPlaced) {
+        var center_obj = HelperFunctions.randInt(GAME_OPTIONS.nerd) ? {
+            scale: {x:4, y:4, z:4},
+            rotation: {x:0, y:0, z:0},
+            type: {
+                id: "lost_sector_aries",
+                obj: "https://starblast.io/lost_sector/LostSector_Aries_HardEdges.obj",
+                diffuse: "https://starblast.io/lost_sector/LostSector_Aries_LostSector_Aries_Diffuse.jpg",
+                bump: "https://starblast.io/lost_sector/LostSector_Aries_LostSector_Aries_Height.jpg",
+                specular: "https://starblast.io/lost_sector/LostSector_Aries_LostSector_Aries_Specular.jpg",
+                shininess: 0,
+                emissiveColor: 0,
+                specularColor: 0x3fcf00,
+                transparent: false
+            }
+        } : {
+            scale: {x: 20, y: 20, z: 20},
+            rotation: {x: -Math.PI/4, y: -Math.PI/4, z: 0},
+            type: {
+                id: "nerd_vibraphone",
+                obj: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/objs/nerd_vibraphone.obj",
+                diffuse: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/ship_lambert_texture.png",
+                emissive: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/ship_emissive_texture.png",
+                transparent: false
+            }
+        };
 
-    HelperFunctions.setObject({
-        id: "center_obj",
-        position: {x:0, y:0, z:-90},
-        ...center_obj
-    });
+        HelperFunctions.setObject({
+            id: "center_obj",
+            position: {x:0, y:0, z:-90},
+            ...center_obj
+        });
+
+        game.custom.centerObjPlaced = true;
+    }
 
     let texture = control_point_data.texture;
     let index = texture == null ? -1 : CONTROL_POINT.textures.findIndex(txt => txt.url === texture.url);
