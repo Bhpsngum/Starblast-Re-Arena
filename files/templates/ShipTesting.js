@@ -37,6 +37,7 @@ this.tick = function (game) {
         if (ship.id == null) continue;
         if (!ship.custom.joined) {
             updateUI(ship);
+            AbilityManager.restore(ship);
             for (let keys of [
                 ["random", "D"],
                 ["reload", "F"],
