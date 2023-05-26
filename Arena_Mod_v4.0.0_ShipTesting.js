@@ -21,7 +21,7 @@ Original Arena Mod (v1.0 - v3.1.2)
 const __ABILITY_SYSTEM_INFO__ = {
     branch: "ShipTesting",
     version: "4.0.0",
-    buildID: "188591564e1"
+    buildID: "1885949b8ce"
 };
 
 
@@ -96,7 +96,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_ShipTesting.js at Sat May 27 2023 02:22:34 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_ShipTesting.js at Sat May 27 2023 03:19:43 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -139,7 +139,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Sat May 27 2023 02:22:34 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Sat May 27 2023 03:19:43 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -189,7 +189,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps_ShipTesting.js at Sat May 27 2023 02:22:34 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps_ShipTesting.js at Sat May 27 2023 03:19:43 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -205,7 +205,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Sat May 27 2023 02:22:34 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Sat May 27 2023 03:19:43 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -2184,13 +2184,15 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Sat May 27 2023 02:22:34 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Sat May 27 2023 03:19:43 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
     if (!DEBUG) return;
     const { echo, error } = game.modding.terminal;
     let gameCommands = game.modding.commands;
+
+    if (!Array.isArray(game.custom.banList)) game.custom.banList = [];
 
     const locateShip = function(req, handler) {
         let args=req.replace(/^\s+/,"").replace(/\s+/," ").split(" "),id=Number(args[1]||"NaN");
@@ -2251,6 +2253,19 @@ const MAKE_COMMANDS = function () {
     }, showTeamInfo = function (ship) {
         let teamInfo = TeamManager.getDataFromShip(ship);
         return `Team: ${teamInfo.name.toUpperCase()}, Hue: ${teamInfo.hue}, ${teamInfo.ghost ? "Ghost team, " : ""}${teamInfo.spawnpoint ? ("Spawnpoint: X: " + teamInfo.spawnpoint.x + " Y: " + teamInfo.spawnpoint.y) : "No spawnpoint"}`;
+    }, kick = function (ship, info, reason) {
+        ship.custom.kicked = true;
+        ship.custom.abilitySystemDisabled = true;
+        ship.gameover({
+            [info]: " ",
+            "Reason": reason || "No reason has been provided"
+        });
+    }, ban = function (ship, info, reason) {
+        kick(ship, info, reason);
+        game.custom.banList.push({
+            phrase: String(ship.name).toLowerCase(),
+            full: true
+        });
     }
 
     addCommand('commands', function () {
@@ -2303,18 +2318,59 @@ const MAKE_COMMANDS = function () {
     });
 
     addShipCommand('kick', function (ship, id, args) {
-        ship.custom.kicked = true;
-        ship.custom.abilitySystemDisabled = true;
-        ship.gameover({
-            "You've been kicked by the map host": " ",
-            "Reason": args.slice(2).join(" ") || "No reason has been provided"
-        });
+        kick(ship, "You've been kicked by the map host", args.slice(2).join(" "));
     }, '%s has been kicked', {
         arguments: [
             { name: "reason", required: false }
         ],
         description: "Kick a ship"
     }); 
+
+    addShipCommand('ban', function (ship, id, args) {
+        ban(ship, "You've been banned by the map host", args.slice(2).join(" "));
+    }, '%s has been banned and nickname added to ban list', {
+        arguments: [
+            { name: "reason", required: false }
+        ],
+        description: "Ban a ship and add ship's nickname to ban list"
+    });
+    
+    addCommand('banphrase', function (req) {
+        let phrase = req.split(" ").slice(1).join(' ').toLowerCase();
+        if (!phrase) return echo('Please include a phrase to ban');
+        game.custom.banList.push({
+            phrase,
+            full: false
+        });
+        echo(`'${phrase}' added to ban list`);
+    }, {
+        arguments: [
+            { name: "phrase", required: true }
+        ],
+        description: "Add a phrase to ban list"
+    }); 
+
+    addCommand('banlist', function () {
+        echo("List of banned phrases/names:");
+        let index = 0;
+        for (let banInfo of game.custom.banList) {
+            echo(`${index++}. ${banInfo.full ? "Name" : "Phrase"}: ${banInfo.phrase}`);
+        }
+    }, {
+        description: "Show list of banned phrases/names"
+    });
+
+    addCommand('unban', function (req) {
+        let id = +req.split(" ").slice(1).join(' '), info = game.custom.banList[id];
+        if (info == null) return echo('No ban info with given ID found!');
+        game.custom.banList.splice(id, 1);
+        echo(`${info.full ? "Name" : "Phrase"}: ${info.phrase} has been unbanned.`);
+    }, {
+        arguments: [
+            { name: "id", required: true }
+        ],
+        description: "Remove the ban for a phrase or name"
+    });
 
     addShipCommand('restore', function (ship, id, args) {
         AbilityManager.restore(ship);
@@ -2417,13 +2473,18 @@ const MAKE_COMMANDS = function () {
         ],
         description: "Teleport ship to position x and/or y"
     });
+
+    return {
+        kick,
+        ban
+    }
 }
 
 
 
 
 
-/* Imported from Resources.js at Sat May 27 2023 02:22:34 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Sat May 27 2023 03:19:43 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -2433,7 +2494,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Sat May 27 2023 02:22:34 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Sat May 27 2023 03:19:43 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -2784,7 +2845,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Sat May 27 2023 02:22:34 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Sat May 27 2023 03:19:43 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -3295,7 +3356,7 @@ const AbilityManager = {
             gb.TeamManager = TeamManager;
             gb.MapManager = MapManager;
 
-            MAKE_COMMANDS();
+            game.custom.abilitySystemCommands = MAKE_COMMANDS();
         }
     },
     compileAbilities: function () {
