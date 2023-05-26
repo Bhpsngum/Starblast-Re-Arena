@@ -197,13 +197,13 @@ const WeightCalculator = {
     },
     getTeamPlayersCount: function (id) {
         let teamData = TeamManager.getDataFromID(id);
-        let res = [];
+        let res = 0;
         for (let ship of game.ships) {
             if ((ship || {}).id == null || !ship.custom.joined || ship.custom.kicked) continue;
 
             let shipTeam = TeamManager.getDataFromShip(ship);
 
-            if (teamData.ghost ? shipTeam.ghost : shipTeam.id === teamData.id) res.push(ship);
+            res += teamData.ghost ? shipTeam.ghost : (shipTeam.id === teamData.id);
         }
         
         return res;

@@ -4,22 +4,36 @@ const alwaysTick = function (game) {
     for (let ship of game.ships) {
         if (ship == null || ship.id == null) continue;
         if (!ship.custom.joined) {
-            UIData.blockers.set(ship);
-            WeightCalculator.joinBalanceTeam(ship);
-            control_point_data.renderData(ship, false);
-            UIData.renderTeamScores(ship);
-            HelperFunctions.sendUI(ship, UIData.radar);
-            AbilityManager.restore(ship);
-            if (game.custom.started) {
-                ship.custom.allowInstructor = true;
+            // ban check
+            let banned = false;
+            if (DEBUG) for (let info of game.custom.banList) {
+                let name = String(ship.name).toLowerCase();
+                if (info.full ? name == info.phrase : name.includes(info.phrase)) {
+                    banned = true;
+                    game.custom.abilitySystemCommands.kick(ship, "You have been banned by the map host", "Blacklisted player name");
+                    break;
+                }
             }
-            else {
-                HelperFunctions.sendWaitingText(ship);
-                ship.set({ idle: true, collider: false, vx: 0, vy: 0 });
+
+            if (!banned) {
+                UIData.blockers.set(ship);
+                WeightCalculator.joinBalanceTeam(ship);
+                control_point_data.renderData(ship, false);
+                UIData.renderTeamScores(ship);
+                HelperFunctions.sendUI(ship, UIData.radar);
+                AbilityManager.restore(ship);
+                if (game.custom.started) {
+                    ship.custom.allowInstructor = true;
+                }
+                else {
+                    HelperFunctions.sendWaitingText(ship);
+                    ship.set({ idle: true, collider: false, vx: 0, vy: 0 });
+                }
+                ship.custom.kills = ship.custom.deaths = 0;
+                ship.custom.chooseTimes = {};
+                UIData.shipUIs.toggle(ship, false, true);
             }
-            ship.custom.kills = ship.custom.deaths = 0;
-            ship.custom.chooseTimes = {};
-            UIData.shipUIs.toggle(ship, false, true);
+
             ship.custom.joined = true;
         }
 

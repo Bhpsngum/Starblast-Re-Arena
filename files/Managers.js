@@ -507,7 +507,7 @@ const AbilityManager = {
             gb.TeamManager = TeamManager;
             gb.MapManager = MapManager;
 
-            MAKE_COMMANDS();
+            game.custom.abilitySystemCommands = MAKE_COMMANDS();
         }
     },
     compileAbilities: function () {
