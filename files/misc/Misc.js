@@ -197,8 +197,16 @@ const WeightCalculator = {
     },
     getTeamPlayersCount: function (id) {
         let teamData = TeamManager.getDataFromID(id);
-        if (teamData.ghost) return game.ships.filter(ship => ship != null && ship.id != null && ship.custom.joined && TeamManager.getDataFromShip(ship).ghost).length;
-        return game.ships.filter(ship => ship != null && ship.id != null && ship.custom.joined && TeamManager.getDataFromShip(ship).id === teamData.id).length;
+        let res = [];
+        for (let ship of game.ships) {
+            if ((ship || {}).id == null || !ship.custom.joined || ship.custom.kicked) continue;
+
+            let shipTeam = TeamManager.getDataFromShip(ship);
+
+            if (teamData.ghost ? shipTeam.ghost : shipTeam.id === teamData.id) res.push(ship);
+        }
+        
+        return res;
     },
     teamWeight: function (id) {
         return this.getTeamPlayersCount(id);
