@@ -430,9 +430,11 @@ const AbilityManager = {
                 ship.custom.allowInstructor = false;
             }
             if (ship.custom.__ability__initialized__) {
-                newList.push({ id: ship.id, team: TeamManager.getDataFromShip(ship) });
-                let oldIndex = oldList.findIndex(s => s.id === ship.id);
-                if (oldIndex >= 0) oldList.splice(oldIndex, 1);
+                if (game.custom.abilitySystemEnabled && !ship.custom.abilitySystemDisabled) {
+                    newList.push({ id: ship.id, team: TeamManager.getDataFromShip(ship) });
+                    let oldIndex = oldList.findIndex(s => s.id === ship.id);
+                    if (oldIndex >= 0) oldList.splice(oldIndex, 1);
+                }
                 this.tick(ship);
             }
             let lastStatus = !!ship.custom.lastActionBlockerStatus;
