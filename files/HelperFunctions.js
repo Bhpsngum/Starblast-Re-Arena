@@ -18,7 +18,7 @@ const HelperFunctions = {
             id,
             position: { x:0, y: 0, z: Number.MAX_VALUE },
             rotation: { x:0, y: 0, z: 0 },
-            scale: { x:0, y:0, z:0 },
+            scale: { x: Number.MIN_VALUE, y: Number.MIN_VALUE, z: Number.MIN_VALUE },
             type: {
                 id,
             }
@@ -35,7 +35,7 @@ const HelperFunctions = {
             },
             scale: {
                 ...options.scale,
-                z: 0
+                z: Number.MIN_VALUE
             },
             type: {
                 ...(options.type || {}),

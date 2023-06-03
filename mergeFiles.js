@@ -52,7 +52,7 @@ const compile = async function (template_name) {
     if (credits == null) credits = await fs.readFile("./files/Credits.js", "utf-8");
     
     try {
-        await fs.writeFile("./" + outputFileName, credits + "\n\n" + abilitySystemInfo(template_name) + content);
+        await fs.writeFile("./" + outputFileName, (credits + "\n\n" + abilitySystemInfo(template_name) + content).trim());
     }
     catch (e) { return console.error(`Failed to write to file '${outputFileName}'. Caught`, e) }
 
