@@ -29,7 +29,7 @@ AbilityManager.initialize()
 this.options = {
     reset_tree: true,
     ships: [
-        // Your other ships, yous must include the 101 since ability manager won't make you one
+        // Your other ships, you must include the 101 since ability manager won't make you one
         AbilityManager.getShipCodes()
     ]
 }

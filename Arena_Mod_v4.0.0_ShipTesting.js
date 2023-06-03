@@ -21,7 +21,7 @@ Original Arena Mod (v1.0 - v3.1.2)
 const __ABILITY_SYSTEM_INFO__ = {
     branch: "ShipTesting",
     version: "4.0.0",
-    buildID: "1886fdcd2b1"
+    buildID: "1887f184063"
 };
 
 
@@ -57,7 +57,7 @@ AbilityManager.initialize()
 this.options = {
     reset_tree: true,
     ships: [
-        // Your other ships, yous must include the 101 since ability manager won't make you one
+        // Your other ships, you must include the 101 since ability manager won't make you one
         AbilityManager.getShipCodes()
     ]
 }
@@ -96,7 +96,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_ShipTesting.js at Wed May 31 2023 12:32:02 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_ShipTesting.js at Sat Jun 03 2023 11:31:15 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -139,7 +139,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Wed May 31 2023 12:32:02 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Sat Jun 03 2023 11:31:15 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -189,7 +189,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps_ShipTesting.js at Wed May 31 2023 12:32:02 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps_ShipTesting.js at Sat Jun 03 2023 11:31:15 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -205,7 +205,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Wed May 31 2023 12:32:02 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Sat Jun 03 2023 11:31:15 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -349,7 +349,7 @@ const ShipAbilities = {
             ship.custom.lastTriggered = game.step;
         },
 
-        // function used when the code changes (this should only happen on Mod Editor only)
+        // function used when the code changes (this should only happen on Mod Editor)
         // optional, do nothing
         // newTemplate: that new ship template after code changes, `null` if the template is removed on new code
         // Note: this function runs after initial compilation (ships and templates compilation)
@@ -731,6 +731,8 @@ const ShipAbilities = {
 
             if (abilCustom.__vampireAbilityName == null) abilCustom.__vampireAbilityName = HelperFunctions.randInt(this.chance) ? this.name : this.namae;
 
+            ship.custom.abilityCustom = abilCustom;
+            
             return abilCustom.__vampireAbilityName;
         }
     },
@@ -2197,7 +2199,7 @@ const ShipAbilities = {
         },
         name: "Divebomb",
         cooldown: 32 * 60,
-        duration: 2.5 * 60,      
+        duration: 2.5 * 60,
         endOnDeath: true,
 
         generatorInit: 120,
@@ -2216,7 +2218,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Wed May 31 2023 12:32:02 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Sat Jun 03 2023 11:31:15 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -2516,7 +2518,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Wed May 31 2023 12:32:02 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Sat Jun 03 2023 11:31:15 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -2526,7 +2528,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Wed May 31 2023 12:32:02 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Sat Jun 03 2023 11:31:15 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -2548,7 +2550,7 @@ const HelperFunctions = {
             id,
             position: { x:0, y: 0, z: Number.MAX_VALUE },
             rotation: { x:0, y: 0, z: 0 },
-            scale: { x:0, y:0, z:0 },
+            scale: { x: Number.MIN_VALUE, y: Number.MIN_VALUE, z: Number.MIN_VALUE },
             type: {
                 id,
             }
@@ -2565,7 +2567,7 @@ const HelperFunctions = {
             },
             scale: {
                 ...options.scale,
-                z: 0
+                z: Number.MIN_VALUE
             },
             type: {
                 ...(options.type || {}),
@@ -2877,7 +2879,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Wed May 31 2023 12:32:02 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Sat Jun 03 2023 11:31:15 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,

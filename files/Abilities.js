@@ -140,7 +140,7 @@ const ShipAbilities = {
             ship.custom.lastTriggered = game.step;
         },
 
-        // function used when the code changes (this should only happen on Mod Editor only)
+        // function used when the code changes (this should only happen on Mod Editor)
         // optional, do nothing
         // newTemplate: that new ship template after code changes, `null` if the template is removed on new code
         // Note: this function runs after initial compilation (ships and templates compilation)
@@ -522,6 +522,8 @@ const ShipAbilities = {
 
             if (abilCustom.__vampireAbilityName == null) abilCustom.__vampireAbilityName = HelperFunctions.randInt(this.chance) ? this.name : this.namae;
 
+            ship.custom.abilityCustom = abilCustom;
+            
             return abilCustom.__vampireAbilityName;
         }
     },
@@ -1988,7 +1990,7 @@ const ShipAbilities = {
         },
         name: "Divebomb",
         cooldown: 32 * 60,
-        duration: 2.5 * 60,      
+        duration: 2.5 * 60,
         endOnDeath: true,
 
         generatorInit: 120,
