@@ -9,6 +9,7 @@ on:
 jobs:
   Compile-Templates:
     runs-on: ubuntu-latest
+    if: ${{ !startsWith(github.event.head_commit.message, '[Automatic]') }}
     steps:
     - uses: actions/checkout@v3
     - uses: szenius/set-timezone@v1.2
@@ -18,6 +19,16 @@ jobs:
         timezoneWindows: "Japan Standard Time"
     - uses: actions/setup-node@v3
     - run: npm run compile
+    - name: Build Arena Files
+        working-directory: ./
+        run: |
+          git config user.name "Bhpsngum"
+          git config user.email "bhpsngumproductions@gmail.com"
+          git add .
+          git commit -m "[Automatic] Build arena files ${GITHUB_SHA}"
+          git push --force https://bhpsngum:${GH_TOKEN}@github.com/bhpsngum/Arena-mod-remake.git HEAD
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
     - uses: actions/upload-artifact@v3
       with:
         name: arena-files
