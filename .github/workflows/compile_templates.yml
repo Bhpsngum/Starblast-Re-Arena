@@ -1,0 +1,24 @@
+name: Compile Mod Templates
+run-name: Template files are being compiled
+on:
+  push:
+    branches: main
+  pull_request:
+    branches: main
+  workflow_dispatch:
+jobs:
+  Compile-Templates:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: szenius/set-timezone@v1.2
+      with:
+        timezoneLinux: "Asia/Tokyo"
+        timezoneMacos: "Asia/Tokyo"
+        timezoneWindows: "Japan Standard Time"
+    - uses: actions/setup-node@v3
+    - run: npm run compile
+    - uses: actions/upload-artifact@v3
+      with:
+        name: arena-files
+        path: releases/
