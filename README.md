@@ -63,6 +63,6 @@ But then, I had a look over Starblast Prototypes (SP) by UranusOrbiter (It's act
 
 Yep, that works.
 
-But uh, I can't just yoink the "taping" code from him because SP is not AMR and vice versa. So I created a custom "taper" by myself.
+But uh, I can't just yoink the "taper" code from him because SP is not AMR and vice versa. So I created a custom "taper" by myself.
 
 And based on that, I made mod templates, which are basically "Ability System" but can be used to create mods on your preferences. You can take a look [here](/files/templates/).
