@@ -300,7 +300,7 @@ const main_phase = function (game) {
                 // This is an updated algorithm with only one loop required
                 // The algorithm is still the same comparing to old algorithm,
                 // it's just that the old one has 2 nested loops that may decrease performance (altho not much significant)
-                // and also, credits to @victorz#5357 on Discord for helping me implement this new approach
+                // and also, credits to @victorz#5357 on Discord (GitHub @theonlypwner) for helping me implement this new approach
                 // For old approach with 2 nested loops, see here: https://pastebin.com/APfrRW9Y
 
                 let shipsNotBeforeCurrent = players.length;
@@ -331,6 +331,9 @@ const main_phase = function (game) {
 
                     // update control result
                     teamControl.control = Math.min(100, teamControl.control);
+                    
+                    if (teamControl.index == "ghost") control_point_data.ghost = teamControl.control;
+                    else control_point_data.teams[teamControl.index] = teamControl.control;
                 });
             }
         }
