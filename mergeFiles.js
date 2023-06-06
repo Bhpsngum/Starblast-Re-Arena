@@ -47,7 +47,7 @@ const compile = async function (template_name) {
         return console.error(`Failed to parse content in template '${template_name}'. Caught`, e);
     }
 
-    let outputFileName = package.name + "_" + template_name + ".js";
+    let outputFileName = package.name + "_v" + package.version + "_" + template_name + ".js";
 
     if (credits == null) credits = await fs.readFile("./files/Credits.js", "utf-8");
     

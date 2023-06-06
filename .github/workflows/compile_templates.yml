@@ -17,6 +17,8 @@ jobs:
         timezoneLinux: "Asia/Tokyo"
         timezoneMacos: "Asia/Tokyo"
         timezoneWindows: "Japan Standard Time"
+    - name: Cleanup old Arena files
+      run: rm -rfv releases/
     - uses: actions/setup-node@v3
     - name: Compile Arena files
       run: npm run compile
