@@ -21,7 +21,7 @@ Original Arena Mod (v1.0 - v3.1.2)
 const __ABILITY_SYSTEM_INFO__ = {
     branch: "Main",
     version: "4.0.0",
-    buildID: "1887f184063"
+    buildID: "1888e70180e"
 };
 
 
@@ -96,7 +96,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_Main.js at Sat Jun 03 2023 11:31:15 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_Main.js at Tue Jun 06 2023 11:01:30 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -139,7 +139,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Sat Jun 03 2023 11:31:15 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Tue Jun 06 2023 11:01:30 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -189,7 +189,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Sat Jun 03 2023 11:31:15 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Tue Jun 06 2023 11:01:30 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1786,7 +1786,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Sat Jun 03 2023 11:31:15 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Tue Jun 06 2023 11:01:30 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -3799,7 +3799,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Sat Jun 03 2023 11:31:15 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Tue Jun 06 2023 11:01:30 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -4099,7 +4099,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Sat Jun 03 2023 11:31:15 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Tue Jun 06 2023 11:01:30 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -4109,7 +4109,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Sat Jun 03 2023 11:31:15 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Tue Jun 06 2023 11:01:30 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4460,7 +4460,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Sat Jun 03 2023 11:31:15 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Tue Jun 06 2023 11:01:30 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -5164,11 +5164,11 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/gameLogic.js at Sat Jun 03 2023 11:31:15 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Tue Jun 06 2023 11:01:30 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/GameConfig.js at Sat Jun 03 2023 11:31:15 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Tue Jun 06 2023 11:01:30 GMT+0900 (Japan Standard Time) */
 
 const map_name = null; // leave `null` if you want randomized map name
 
@@ -5276,7 +5276,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Sat Jun 03 2023 11:31:15 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Tue Jun 06 2023 11:01:30 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -6034,7 +6034,7 @@ AbilityManager.onActionBlockStateChange = function (ship) {
 
 
 
-/* Imported from misc/tickFunctions.js at Sat Jun 03 2023 11:31:15 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Tue Jun 06 2023 11:01:30 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -6334,41 +6334,42 @@ const main_phase = function (game) {
                 teamControls = teamControls.filter(team => team.control > 0 || team.ships > 0).sort((a, b) => a.ships - b.ships);
 
                 // stealing time
-                // yes, this part's time complexity is O(n^2) where n is number of teams
-                // but n is capped at 5, which should be 5^2 = 25
-                // so it's fine unless your computer is a potato (definitely not a sarcasm)
-                for (let teamControl of teamControls) {
-                    // calculate ship disadvantage by count
-                    let ships_disadvantage = 0; // later you'll know why
-                    for (let team of teamControls) {
-                        // skip its own team or teams with same count, of course
-                        // or you can comment the line below, i won't judge
-                        if (team.index == teamControl.index || team.ships == teamControl.ships) continue;
-                        let ships_difference = team.ships - teamControl.ships;
-                        
-                        // if the difference is positive, it has disadvantages
-                        // or else just bully the weaker team
-                        if (ships_difference > 0) ships_disadvantage += ships_difference;
-                        else teamControl.control += -ships_difference * team.steal_amount;
-                    }
-                    // if the disadvantage is 0 (aka no disadvantage), welp they're lucky
-                    // or else, prepare for suffer
+
+                // This is an updated algorithm with only one loop required
+                // The algorithm is still the same comparing to old algorithm,
+                // it's just that the old one has 2 nested loops that may decrease performance (altho not much significant)
+                // and also, credits to @victorz#5357 on Discord for helping me implement this new approach
+                // For old approach with 2 nested loops, see here: https://pastebin.com/APfrRW9Y
+
+                let shipsNotBeforeCurrent = players.length;
+                let controlGainPerShip = 0; // control amount gained per ships on the winning team
+                let controlPenalty = 0;
+                // since total control gain is steal_amount * (ships_count - losing_team_ships_count)
+                // `controlPenalty` will be the sum of steal_amount * losing_team_ships_count
+                // and it might stack up after each loop
+
+                teamControls.forEach((teamControl, index) => {
+                    let ships_disadvantage = shipsNotBeforeCurrent - teamControl.ships * (teamControls.length - index);
+
+                    teamControl.control += controlGainPerShip * teamControl.ships - controlPenalty;
+
                     if (ships_disadvantage > 0) {
                         // how much will it lose?
-                        let total_loss = ships_disadvantage * teamControl.steal_amount;
-                        if (total_loss >= teamControl.control) {
-                            // completely loss of control
-                            teamControl.steal_amount = teamControl.control / ships_disadvantage;
-                            teamControl.control = 0;
-                        }
-                        else teamControl.control -= total_loss; // welp, at least there's still something left
+                        let total_loss = Math.min(teamControl.control, ships_disadvantage * increment);
+
+                        teamControl.control -= total_loss;
+
+                        // later ships need to gain total_loss / ships_disadvantage * (laterTeam.ships - teamControl.ships)
+                        total_loss /= ships_disadvantage;
+                        controlGainPerShip += total_loss;
+                        controlPenalty += total_loss * teamControl.ships;
                     }
 
+                    shipsNotBeforeCurrent -= teamControl.ships;
+
                     // update control result
-                    let controlRes = Math.min(100, teamControl.control);
-                    if (teamControl.index == "ghost") control_point_data.ghost = controlRes;
-                    else control_point_data.teams[teamControl.index] = controlRes;
-                }
+                    teamControl.control = Math.min(100, teamControl.control);
+                });
             }
         }
 
@@ -6536,7 +6537,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Sat Jun 03 2023 11:31:15 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Tue Jun 06 2023 11:01:30 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -6595,7 +6596,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Sat Jun 03 2023 11:31:15 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Tue Jun 06 2023 11:01:30 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
