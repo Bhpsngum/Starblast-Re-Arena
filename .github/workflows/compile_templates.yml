@@ -28,4 +28,4 @@ jobs:
         git config user.email "bhpsngumproductions@gmail.com"
         git add .
         git commit -m "[Automatic] Build arena files ${GITHUB_SHA}"
-        git push -u https://bhpsngum:${secrets.GITHUB_TOKEN}@github.com/bhpsngum/Arena-mod-remake.git HEAD
+        git push -u https://bhpsngum:${{ secrets.GITHUB_TOKEN }}@github.com/bhpsngum/Arena-mod-remake.git HEAD
