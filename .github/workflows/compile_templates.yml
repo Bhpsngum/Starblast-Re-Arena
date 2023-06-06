@@ -24,7 +24,7 @@ jobs:
       run: npm run compile
     - name: Deploy Arena files
       run: |
-        git config user.name "Bhpsngum"
+        git config user.name "Re:Arena-Files-Builder-Bot"
         git config user.email "bhpsngumproductions@gmail.com"
         git add .
         git commit -m "[Automatic] Build arena files ${GITHUB_SHA}"
