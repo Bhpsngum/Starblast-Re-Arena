@@ -20,7 +20,7 @@ jobs:
     - uses: actions/setup-node@v3
     - run: npm run compile
     - name: Build Arena Files
-        working-directory: ./
+        working-directory: /
         run: |
           git config user.name "Bhpsngum"
           git config user.email "bhpsngumproductions@gmail.com"
