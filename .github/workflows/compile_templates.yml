@@ -9,7 +9,7 @@ on:
 jobs:
   Compile-Templates:
     runs-on: ubuntu-latest
-    if: ${{ !startsWith(github.event.head_commit.message, '[Automatic]') }}
+    if: ${{ !startsWith(github.event.head_commit.message, '[Automatic]') && !startsWith(github.event.head_commit.message, '[Nobuild]') }}
     steps:
     - uses: actions/checkout@v3
     - uses: szenius/set-timezone@v1.2
@@ -18,8 +18,9 @@ jobs:
         timezoneMacos: "Asia/Tokyo"
         timezoneWindows: "Japan Standard Time"
     - uses: actions/setup-node@v3
-    - run: npm run compile
-    - name: Build Arena Files
+    - name: Compile Arena files
+      run: npm run compile
+    - name: Deploy Arena files
       run: |
         git config user.name "Bhpsngum"
         git config user.email "bhpsngumproductions@gmail.com"
@@ -28,7 +29,3 @@ jobs:
         git push -u https://bhpsngum:${GH_TOKEN}@github.com/bhpsngum/Arena-mod-remake.git HEAD
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
-    - uses: actions/upload-artifact@v3
-      with:
-        name: arena-files
-        path: releases/
