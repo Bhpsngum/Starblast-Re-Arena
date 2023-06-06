@@ -25,7 +25,7 @@ jobs:
         git config user.email "bhpsngumproductions@gmail.com"
         git add .
         git commit -m "[Automatic] Build arena files ${GITHUB_SHA}"
-        git push --force https://bhpsngum:${GH_TOKEN}@github.com/bhpsngum/Arena-mod-remake.git HEAD
+        git push --force https://bhpsngum:${GH_TOKEN}@github.com/bhpsngum/bin.git HEAD
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
     - uses: actions/upload-artifact@v3
