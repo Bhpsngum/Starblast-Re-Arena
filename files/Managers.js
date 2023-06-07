@@ -508,6 +508,21 @@ const AbilityManager = {
             gb.MapManager = MapManager;
 
             game.custom.abilitySystemCommands = MAKE_COMMANDS();
+
+            let systemInfo = __ABILITY_SYSTEM_INFO__;
+
+            let resourceLink = `https://github.com/Bhpsngum/Arena-mod-remake/blob/main/releases/${systemInfo.name}_v${systemInfo.version}_${systemInfo.branch}.js`;
+
+            fetch(resourceLink + '?raw=true').then(data => data.text().then(text => {
+                let latestBuildID = (text.match(/buildID:\s*"([a-f0-9]+)"/) || [])[1];
+                if (latestBuildID != systemInfo.buildID) $("#terminal").terminal().echo(`\n\nNOTICE: Newer build ([[;#AAFF00;]${latestBuildID}]) detected!\nYou can get it through `, {
+                    finalize: function (div) {
+                        div.children().last().append(`<a href="${resourceLink}" target="_blank">this link.</a><br><br>`)
+                    }
+                })
+            })).catch(e => {
+                game.modding.terminal.error("Failed to fetch source version info");
+            });
         }
     },
     compileAbilities: function () {
