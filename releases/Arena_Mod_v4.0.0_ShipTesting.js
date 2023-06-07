@@ -19,9 +19,10 @@ Original Arena Mod (v1.0 - v3.1.2)
 */
 
 const __ABILITY_SYSTEM_INFO__ = {
+    name: "Arena_Mod",
     branch: "ShipTesting",
     version: "4.0.0",
-    buildID: "188911256a9"
+    buildID: "18896d328c0"
 };
 
 
@@ -96,7 +97,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_ShipTesting.js at Tue Jun 06 2023 23:17:58 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_ShipTesting.js at Thu Jun 08 2023 02:06:40 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -139,7 +140,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Tue Jun 06 2023 23:17:58 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Thu Jun 08 2023 02:06:40 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -189,7 +190,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps_ShipTesting.js at Tue Jun 06 2023 23:17:58 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps_ShipTesting.js at Thu Jun 08 2023 02:06:40 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -205,7 +206,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Tue Jun 06 2023 23:17:58 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Thu Jun 08 2023 02:06:40 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -2218,7 +2219,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Tue Jun 06 2023 23:17:58 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Thu Jun 08 2023 02:06:40 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -2518,7 +2519,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Tue Jun 06 2023 23:17:58 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Thu Jun 08 2023 02:06:40 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -2528,7 +2529,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Tue Jun 06 2023 23:17:58 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Thu Jun 08 2023 02:06:40 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -2879,7 +2880,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Tue Jun 06 2023 23:17:58 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Thu Jun 08 2023 02:06:40 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -3391,6 +3392,21 @@ const AbilityManager = {
             gb.MapManager = MapManager;
 
             game.custom.abilitySystemCommands = MAKE_COMMANDS();
+
+            let systemInfo = __ABILITY_SYSTEM_INFO__;
+
+            let resourceLink = `https://github.com/Bhpsngum/Arena-mod-remake/blob/main/releases/${systemInfo.name}_v${systemInfo.version}_${systemInfo.branch}.js`;
+
+            fetch(resourceLink + '?raw=true').then(data => data.text().then(text => {
+                let latestBuildID = (text.match(/buildID:\s*"([a-f0-9]+)"/) || [])[1];
+                if (latestBuildID != systemInfo.buildID) $("#terminal").terminal().echo(`\n\nNOTICE: Newer build ([[;#AAFF00;]${latestBuildID}]) detected!\nYou can get it through `, {
+                    finalize: function (div) {
+                        div.children().last().append(`<a href="${resourceLink}" target="_blank">this link.</a><br><br>`)
+                    }
+                })
+            })).catch(e => {
+                game.modding.terminal.error("Failed to fetch source version info");
+            });
         }
     },
     compileAbilities: function () {
