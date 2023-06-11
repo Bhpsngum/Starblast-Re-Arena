@@ -149,6 +149,7 @@ const AbilityManager = {
     crystals: GAME_OPTIONS.ability.crystals,
     usageLimit: GAME_OPTIONS.ability.usage_limit,
     updateDelay: 5, // technical spec, don't touch if you don't know what it does
+    UIActionsDelay: 0.2 * 60,
     _this: this,
     echo: DEBUG ? (window || global).echo || game.modding.terminal.echo : function () {},
     ring_model: {
@@ -404,6 +405,103 @@ const AbilityManager = {
         else this.globalTick = this.globalTick2;
         this.globalTick(game);
     },
+    abilityRangeUI: {
+        width: 2,
+        id: "abilityRange",
+        optionUI: {
+            prefix: "preset_change_",
+            infoID: "preset_info",
+            data: {
+                position: [65, 0, 15, 5],
+                components: [
+                    { type: "text", position: [0, 0, 100, 50], value: "RATIO GO HERE", color: "#cde", align: "right"},
+                    { type: "text", position: [0, 50, 100, 50], value: "0 --> 9 to change aspect ratio", color: "#cde", align: "right"}
+                ]
+            }
+        },
+        renderInfo: function (ship) {
+            let UI = {
+                id: this.optionUI.presetInfo,
+                ...this.optionUI.data
+            }, preset = this.getPreset(ship);
+
+            UI.components[0].value = `Current: ${preset.w}:${preset.h} (${(ship.custom.preferredRatioPreset + 1) % 10})`;
+
+            HelperFunctions.sendUI(ship, UI);
+        },
+        handleOptions: function (ship, id) {
+            if (!id.startsWith(this.optionUI.prefix)) return;
+            let oldPresetIndex = ship.custom.preferredRatioPreset;
+            ship.custom.preferredRatioPreset = +id.replace(this.optionUI.prefix, "");
+            this.getPreset(ship);
+            if (ship.custom.preferredRatioPreset === oldPresetIndex) return;
+            this.renderInfo(ship);
+            this.set(ship);
+        },
+        showOptions: function (ship) {
+            if ((ship || {}).id == null) return;
+            for (let i = 0; i < 10; ++i) { // yes this part is hardcoded
+                HelperFunctions.sendUI(ship, {
+                    id: this.optionUI.prefix + i,
+                    visible: false,
+                    clickable: true,
+                    shortcut: ((i + 1) % 10).toString() // 1 2 3 4 5 6 7 8 9 0
+                });
+            }
+        },
+        color: "#cde",
+        vertical_scale: 1.425, // we will scale using vertical ratio as base
+        presets: [
+            {w: 16, h: 9},
+            {w: 16, h: 10},
+            {w: 4, h: 3},
+            {w: 1, h: 1}
+        ],
+        getPreset: function (ship) {
+            let x = ship.custom.preferredRatioPreset;
+            let preset = this.presets[x] || this.presets[x = 0];
+            ship.custom.preferredRatioPreset = x;
+            return preset;
+        },
+        threeJSClientSpecs: {
+            // most of this are from Starblast client anyway
+            // might subject to change in the future if the client updates
+            cameraZ: 70, // 140 in welcome screen, but it's useless because who plays arena mod on welcome screen...?
+            defaultAngle: Math.PI / 4,
+            getZoom: function (zoom, radius) { return Math.pow(radius / 3, 0.3) / zoom },
+            angle: function (zoom, radius) { return this.getZoom(zoom, radius) * this.defaultAngle },
+            calculatePlaneScale: function (zoom, radius) {
+                // https://stackoverflow.com/a/15331885
+                return 2 * Math.tan(this.angle(zoom, radius) / 2);
+            },
+            getVisibleHeightFraction: function (range, shipRadius, zoom, scale) {
+                return scale * (range * 2) / this.calculatePlaneScale(zoom, shipRadius);
+            }
+        },
+        set: function (ship) {
+            if ((ship || {}).id == null) return;
+            
+            let shipAbil = ship.custom.ability;
+
+            if (!(shipAbil || {}).showAbilityRangeUI || shipAbil.range == null) return HelperFunctions.sendUI(ship, { id: this.id, visible: false});
+
+            let preset = this.getPreset(ship);
+
+            let zoomLevel = AbilityManager.zoomLevel[ship.custom.__last_ability_ship_type__];
+
+            // render abilityRange UI here
+            let height = this.threeJSClientSpecs.getVisibleHeightFraction(shipAbil.range, zoomLevel.radius || 1, zoomLevel.zoom || 1, this.vertical_scale);
+            let width = height * preset.h / preset.w;
+
+            HelperFunctions.sendUI(ship, {
+                id: this.id,
+                position: [(100 - width) / 2, (100 - height) / 2, width, height],
+                components: [
+                    { type: "round", position: [0, 0, 100, 100], stroke: this.color, width: this.width }
+                ]
+            });
+        }
+    },
     globalTick2: function (game) {
         game.custom.abilityCustom.entitiesUpdateRequested = false;
         HelperFunctions.TimeManager.tick();
@@ -418,6 +516,8 @@ const AbilityManager = {
             if (ship.id == null) continue;
             if (!ship.custom.__ability__initialized__ && ship.alive) {
                 this.random(ship, true);
+                this.abilityRangeUI.showOptions(ship);
+                this.abilityRangeUI.renderInfo(ship);
                 ship.custom.__ability__initialized__ = true;
             }
             if (this.showAbilityNotice && ship.custom.allowInstructor) {
@@ -430,6 +530,10 @@ const AbilityManager = {
                 ship.custom.allowInstructor = false;
             }
             if (ship.custom.__ability__initialized__) {
+                if (ship.type != ship.custom.__last_ability_ship_type__) {
+                    ship.custom.__last_ability_ship_type__ = ship.type;
+                    this.abilityRangeUI.set(ship);
+                }
                 if (game.custom.abilitySystemEnabled && !ship.custom.abilitySystemDisabled) {
                     newList.push({ id: ship.id, team: TeamManager.getDataFromShip(ship) });
                     let oldIndex = oldList.findIndex(s => s.id === ship.id);
@@ -457,9 +561,13 @@ const AbilityManager = {
             case "ui_component_clicked":
                 let component = event.id;
                 switch (component) {
-                    case AbilityManager.UI.id:
-                        AbilityManager.start(ship);
+                    case this.UI.id:
+                        this.start(ship);
                         break;
+                    default:
+                        if (ship.custom.__abilitySystem_last_ui_action__ != null && game.step - ship.custom.__abilitySystem_last_ui_action__ <= this.UIActionsDelay) break;
+                        ship.custom.__abilitySystem_last_ui_action__ = game.step;
+                        this.abilityRangeUI.handleOptions(ship, component);
                 }
                 break;
             case "ship_spawned":
@@ -530,6 +638,7 @@ const AbilityManager = {
         
         this.ship_codes = [];
         this.shipActionBlockers = [];
+        this.zoomLevel = {};
 
         let smallestLimit = Math.ceil(GAME_OPTIONS.max_players / GAME_OPTIONS.teams_count / Object.values(this.abilities).filter(e => !e.hidden).length);
 
@@ -639,6 +748,10 @@ const AbilityManager = {
                 }
 
                 this.ship_codes.push(JSON.stringify(jsonData));
+                this.zoomLevel[jsonData.typespec.code] = {
+                    zoom: jsonData.zoom || 1,
+                    radius: jsonData.typespec.radius || 1
+                };
             }
             catch (e) {
                 HelperFunctions.terminal.error(`Failed to compile ship code for model '${shipAbilityName}' of '${shipName}'.\nCaught Error: ${e.message}`);

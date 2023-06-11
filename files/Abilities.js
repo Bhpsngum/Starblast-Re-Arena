@@ -18,6 +18,7 @@ const ShipAbilities = {
         // default false, only applied when `cooldownRestartOnEnd` is set
         range: 69, // ability range for special ships, in radii
 
+        showAbilityRangeUI: true, // show the range UI on screen
         includeRingOnModel: true, // to include the indicator model in ship model or not
         // please note that `AbilityManager.includeRingOnModel` must be `true` in order for this to apply
 
@@ -158,6 +159,7 @@ const ShipAbilities = {
         duration: 4 * 60,
         cooldown: 31 * 60,
         range: 45,
+        showAbilityRangeUI: true,
         includeRingOnModel: true,
         selfDMG: 150,
 
@@ -304,6 +306,7 @@ const ShipAbilities = {
 
         range: 40,
 
+        showAbilityRangeUI: true,
         includeRingOnModel: true,
 
         pullStrength: 2,
@@ -642,6 +645,7 @@ const ShipAbilities = {
         cooldown: 9 * 60,
         duration: 1,
 
+        showAbilityRangeUI: true,
         includeRingOnModel: true,
 
         range: 60,
@@ -1126,6 +1130,7 @@ const ShipAbilities = {
         },
         name: "Mirror",
         range: 60,
+        showAbilityRangeUI: true,
         includeRingOnModel: {
             default: true,
             ability: false
@@ -1330,6 +1335,7 @@ const ShipAbilities = {
         generatorInit: 0,
 
         range: 10,
+        showAbilityRangeUI: true,
         includeRingOnModel: true,
 
         tickInterval: 1 * 60,
@@ -1664,6 +1670,8 @@ const ShipAbilities = {
         endOnDeath: true,
 
         range: 69,
+        showAbilityRangeUI: true,
+        
         pushStrength: 1.69,
 
         generatorInit: 0,
@@ -1695,6 +1703,7 @@ const ShipAbilities = {
         healingRingDuration: 15 * 60,
 
         range: 30,
+        showAbilityRangeUI: true,
         includeRingOnModel: {
             default: true,
             ability: false
@@ -1852,6 +1861,7 @@ const ShipAbilities = {
         
         range: 60 / 1.2,
         
+        showAbilityRangeUI: true,
         includeRingOnModel: true,
 
         generatorInit: 0,
