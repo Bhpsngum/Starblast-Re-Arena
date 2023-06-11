@@ -22,7 +22,7 @@ const __ABILITY_SYSTEM_INFO__ = {
     name: "Arena_Mod",
     branch: "ShipTesting",
     version: "4.0.0",
-    buildID: "18896d328c0"
+    buildID: "188aa58920b"
 };
 
 
@@ -97,7 +97,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_ShipTesting.js at Thu Jun 08 2023 02:06:40 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_ShipTesting.js at Sun Jun 11 2023 21:05:11 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -140,7 +140,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Thu Jun 08 2023 02:06:40 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Sun Jun 11 2023 21:05:11 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -190,7 +190,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps_ShipTesting.js at Thu Jun 08 2023 02:06:40 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps_ShipTesting.js at Sun Jun 11 2023 21:05:11 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -206,7 +206,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Thu Jun 08 2023 02:06:40 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Sun Jun 11 2023 21:05:11 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -228,6 +228,7 @@ const ShipAbilities = {
         // default false, only applied when `cooldownRestartOnEnd` is set
         range: 69, // ability range for special ships, in radii
 
+        showAbilityRangeUI: true, // show the range UI on screen
         includeRingOnModel: true, // to include the indicator model in ship model or not
         // please note that `AbilityManager.includeRingOnModel` must be `true` in order for this to apply
 
@@ -368,6 +369,7 @@ const ShipAbilities = {
         duration: 4 * 60,
         cooldown: 31 * 60,
         range: 45,
+        showAbilityRangeUI: true,
         includeRingOnModel: true,
         selfDMG: 150,
 
@@ -514,6 +516,7 @@ const ShipAbilities = {
 
         range: 40,
 
+        showAbilityRangeUI: true,
         includeRingOnModel: true,
 
         pullStrength: 2,
@@ -852,6 +855,7 @@ const ShipAbilities = {
         cooldown: 9 * 60,
         duration: 1,
 
+        showAbilityRangeUI: true,
         includeRingOnModel: true,
 
         range: 60,
@@ -1336,6 +1340,7 @@ const ShipAbilities = {
         },
         name: "Mirror",
         range: 60,
+        showAbilityRangeUI: true,
         includeRingOnModel: {
             default: true,
             ability: false
@@ -1540,6 +1545,7 @@ const ShipAbilities = {
         generatorInit: 0,
 
         range: 10,
+        showAbilityRangeUI: true,
         includeRingOnModel: true,
 
         tickInterval: 1 * 60,
@@ -1874,6 +1880,8 @@ const ShipAbilities = {
         endOnDeath: true,
 
         range: 69,
+        showAbilityRangeUI: true,
+        
         pushStrength: 1.69,
 
         generatorInit: 0,
@@ -1905,6 +1913,7 @@ const ShipAbilities = {
         healingRingDuration: 15 * 60,
 
         range: 30,
+        showAbilityRangeUI: true,
         includeRingOnModel: {
             default: true,
             ability: false
@@ -2062,6 +2071,7 @@ const ShipAbilities = {
         
         range: 60 / 1.2,
         
+        showAbilityRangeUI: true,
         includeRingOnModel: true,
 
         generatorInit: 0,
@@ -2219,7 +2229,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Thu Jun 08 2023 02:06:40 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Sun Jun 11 2023 21:05:11 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -2519,7 +2529,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Thu Jun 08 2023 02:06:40 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Sun Jun 11 2023 21:05:11 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -2529,7 +2539,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Thu Jun 08 2023 02:06:40 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Sun Jun 11 2023 21:05:11 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -2880,7 +2890,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Thu Jun 08 2023 02:06:40 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Sun Jun 11 2023 21:05:11 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -3033,6 +3043,7 @@ const AbilityManager = {
     crystals: GAME_OPTIONS.ability.crystals,
     usageLimit: GAME_OPTIONS.ability.usage_limit,
     updateDelay: 5, // technical spec, don't touch if you don't know what it does
+    UIActionsDelay: 0.2 * 60,
     _this: this,
     echo: DEBUG ? (window || global).echo || game.modding.terminal.echo : function () {},
     ring_model: {
@@ -3288,6 +3299,103 @@ const AbilityManager = {
         else this.globalTick = this.globalTick2;
         this.globalTick(game);
     },
+    abilityRangeUI: {
+        width: 2,
+        id: "abilityRange",
+        optionUI: {
+            prefix: "preset_change_",
+            infoID: "preset_info",
+            data: {
+                position: [65, 0, 15, 5],
+                components: [
+                    { type: "text", position: [0, 0, 100, 50], value: "RATIO GO HERE", color: "#cde", align: "right"},
+                    { type: "text", position: [0, 50, 100, 50], value: "0 --> 9 to change aspect ratio", color: "#cde", align: "right"}
+                ]
+            }
+        },
+        renderInfo: function (ship) {
+            let UI = {
+                id: this.optionUI.presetInfo,
+                ...this.optionUI.data
+            }, preset = this.getPreset(ship);
+
+            UI.components[0].value = `Current: ${preset.w}:${preset.h} (${(ship.custom.preferredRatioPreset + 1) % 10})`;
+
+            HelperFunctions.sendUI(ship, UI);
+        },
+        handleOptions: function (ship, id) {
+            if (!id.startsWith(this.optionUI.prefix)) return;
+            let oldPresetIndex = ship.custom.preferredRatioPreset;
+            ship.custom.preferredRatioPreset = +id.replace(this.optionUI.prefix, "");
+            this.getPreset(ship);
+            if (ship.custom.preferredRatioPreset === oldPresetIndex) return;
+            this.renderInfo(ship);
+            this.set(ship);
+        },
+        showOptions: function (ship) {
+            if ((ship || {}).id == null) return;
+            for (let i = 0; i < 10; ++i) { // yes this part is hardcoded
+                HelperFunctions.sendUI(ship, {
+                    id: this.optionUI.prefix + i,
+                    visible: false,
+                    clickable: true,
+                    shortcut: ((i + 1) % 10).toString() // 1 2 3 4 5 6 7 8 9 0
+                });
+            }
+        },
+        color: "#cde",
+        vertical_scale: 1.425, // we will scale using vertical ratio as base
+        presets: [
+            {w: 16, h: 9},
+            {w: 16, h: 10},
+            {w: 4, h: 3},
+            {w: 1, h: 1}
+        ],
+        getPreset: function (ship) {
+            let x = ship.custom.preferredRatioPreset;
+            let preset = this.presets[x] || this.presets[x = 0];
+            ship.custom.preferredRatioPreset = x;
+            return preset;
+        },
+        threeJSClientSpecs: {
+            // most of this are from Starblast client anyway
+            // might subject to change in the future if the client updates
+            cameraZ: 70, // 140 in welcome screen, but it's useless because who plays arena mod on welcome screen...?
+            defaultAngle: Math.PI / 4,
+            getZoom: function (zoom, radius) { return Math.pow(radius / 3, 0.3) / zoom },
+            angle: function (zoom, radius) { return this.getZoom(zoom, radius) * this.defaultAngle },
+            calculatePlaneScale: function (zoom, radius) {
+                // https://stackoverflow.com/a/15331885
+                return 2 * Math.tan(this.angle(zoom, radius) / 2);
+            },
+            getVisibleHeightFraction: function (range, shipRadius, zoom, scale) {
+                return scale * (range * 2) / this.calculatePlaneScale(zoom, shipRadius);
+            }
+        },
+        set: function (ship) {
+            if ((ship || {}).id == null) return;
+            
+            let shipAbil = ship.custom.ability;
+
+            if (!(shipAbil || {}).showAbilityRangeUI || shipAbil.range == null) return HelperFunctions.sendUI(ship, { id: this.id, visible: false});
+
+            let preset = this.getPreset(ship);
+
+            let zoomLevel = AbilityManager.zoomLevel[ship.custom.__last_ability_ship_type__];
+
+            // render abilityRange UI here
+            let height = this.threeJSClientSpecs.getVisibleHeightFraction(shipAbil.range, zoomLevel.radius || 1, zoomLevel.zoom || 1, this.vertical_scale);
+            let width = height * preset.h / preset.w;
+
+            HelperFunctions.sendUI(ship, {
+                id: this.id,
+                position: [(100 - width) / 2, (100 - height) / 2, width, height],
+                components: [
+                    { type: "round", position: [0, 0, 100, 100], stroke: this.color, width: this.width }
+                ]
+            });
+        }
+    },
     globalTick2: function (game) {
         game.custom.abilityCustom.entitiesUpdateRequested = false;
         HelperFunctions.TimeManager.tick();
@@ -3302,6 +3410,8 @@ const AbilityManager = {
             if (ship.id == null) continue;
             if (!ship.custom.__ability__initialized__ && ship.alive) {
                 this.random(ship, true);
+                this.abilityRangeUI.showOptions(ship);
+                this.abilityRangeUI.renderInfo(ship);
                 ship.custom.__ability__initialized__ = true;
             }
             if (this.showAbilityNotice && ship.custom.allowInstructor) {
@@ -3314,6 +3424,10 @@ const AbilityManager = {
                 ship.custom.allowInstructor = false;
             }
             if (ship.custom.__ability__initialized__) {
+                if (ship.type != ship.custom.__last_ability_ship_type__) {
+                    ship.custom.__last_ability_ship_type__ = ship.type;
+                    this.abilityRangeUI.set(ship);
+                }
                 if (game.custom.abilitySystemEnabled && !ship.custom.abilitySystemDisabled) {
                     newList.push({ id: ship.id, team: TeamManager.getDataFromShip(ship) });
                     let oldIndex = oldList.findIndex(s => s.id === ship.id);
@@ -3341,9 +3455,13 @@ const AbilityManager = {
             case "ui_component_clicked":
                 let component = event.id;
                 switch (component) {
-                    case AbilityManager.UI.id:
-                        AbilityManager.start(ship);
+                    case this.UI.id:
+                        this.start(ship);
                         break;
+                    default:
+                        if (ship.custom.__abilitySystem_last_ui_action__ != null && game.step - ship.custom.__abilitySystem_last_ui_action__ <= this.UIActionsDelay) break;
+                        ship.custom.__abilitySystem_last_ui_action__ = game.step;
+                        this.abilityRangeUI.handleOptions(ship, component);
                 }
                 break;
             case "ship_spawned":
@@ -3414,6 +3532,7 @@ const AbilityManager = {
         
         this.ship_codes = [];
         this.shipActionBlockers = [];
+        this.zoomLevel = {};
 
         let smallestLimit = Math.ceil(GAME_OPTIONS.max_players / GAME_OPTIONS.teams_count / Object.values(this.abilities).filter(e => !e.hidden).length);
 
@@ -3523,6 +3642,10 @@ const AbilityManager = {
                 }
 
                 this.ship_codes.push(JSON.stringify(jsonData));
+                this.zoomLevel[jsonData.typespec.code] = {
+                    zoom: jsonData.zoom || 1,
+                    radius: jsonData.typespec.radius || 1
+                };
             }
             catch (e) {
                 HelperFunctions.terminal.error(`Failed to compile ship code for model '${shipAbilityName}' of '${shipName}'.\nCaught Error: ${e.message}`);
