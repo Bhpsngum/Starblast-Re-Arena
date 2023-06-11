@@ -754,6 +754,8 @@ const AbilityManager = {
                     jsonData.bodies.__ArenaModAbilityRangeRing__ = ringModel;
                 }
 
+                jsonData.typespec.__ABILITY_SYSTEM_INFO__ = __ABILITY_SYSTEM_INFO__;
+
                 this.ship_codes.push(JSON.stringify(jsonData));
                 this.zoomLevel[jsonData.typespec.code] = {
                     zoom: jsonData.zoom || 1,
