@@ -452,10 +452,17 @@ const AbilityManager = {
         color: "#cde",
         vertical_scale: 1.425, // we will scale using vertical ratio as base
         presets: [
+            // most popular ratio
             {w: 16, h: 9},
-            {w: 16, h: 10},
+            // pc/laptop ratios
+            {w: 16, h: 10}, // hello mac users :)
             {w: 4, h: 3},
-            {w: 1, h: 1}
+            // phone ratios
+            {w: 18, h: 9},
+            {w: 19.5, h: 9},
+            {w: 21, h: 9},
+            // others
+            {w: 1, h: 1} // S Q U A R E
         ],
         getPreset: function (ship) {
             let x = ship.custom.preferredRatioPreset;
