@@ -432,7 +432,8 @@ const AbilityManager = {
         handleOptions: function (ship, id) {
             if (!id.startsWith(this.optionUI.prefix)) return;
             let oldPresetIndex = ship.custom.preferredRatioPreset;
-            ship.custom.preferredRatioPreset = +id.replace(this.optionUI.prefix, "");
+            let option = id.replace(this.optionUI.prefix, "");
+            ship.custom.preferredRatioPreset = option == "next" ? ++ship.custom.preferredRatioPreset : +option;
             this.getPreset(ship);
             if (ship.custom.preferredRatioPreset === oldPresetIndex) return;
             this.renderInfo(ship);
@@ -448,6 +449,16 @@ const AbilityManager = {
                     shortcut: ((i + 1) % 10).toString() // 1 2 3 4 5 6 7 8 9 0
                 });
             }
+
+            HelperFunctions.sendUI(ship, {
+                id: this.optionUI.prefix + "next",
+                clickable: true,
+                position: [75, 5, 5, 2.5],
+                components: [
+                    { type: "box", position: [0, 0, 100, 100], stroke: "#cde", width: 2},
+                    { type: "text", position: [0, 0, 100, 100], value: "Change", color: "#cde"}
+                ]
+            })
         },
         color: "#cde",
         vertical_scale: 1.425, // we will scale using vertical ratio as base
