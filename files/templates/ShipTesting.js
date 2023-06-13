@@ -19,7 +19,7 @@
 const updateUI = function (ship) {
     HelperFunctions.sendUI(ship, {
         id: "debug_test",
-        position: [25,0,50,10],
+        position: [35,0,30,10],
         clickable: false,
         visible: true,
         components: [
