@@ -505,7 +505,7 @@ const AbilityManager = {
 
             let preset = this.getPreset(ship);
 
-            let zoomLevel = AbilityManager.zoomLevel[ship.custom.__last_ability_ship_type__];
+            let zoomLevel = AbilityManager.zoomLevel[ship.custom.__last_ability_ship_type__ || ship.type] || {};
 
             // render abilityRange UI here
             let height = this.threeJSClientSpecs.getVisibleHeightFraction(shipAbil.range, zoomLevel.radius || 1, zoomLevel.zoom || 1, this.vertical_scale);
