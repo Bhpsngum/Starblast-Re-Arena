@@ -2071,7 +2071,10 @@ const ShipAbilities = {
                 if (duration > this.zoneDMGDelay) {
                     let victims = HelperFunctions.findEntitiesInRange(ring, this.range, false, true, { ships: true }, true);
 
-                    for (let victim of victims) HelperFunctions.damage(victim, this.zoneDMG);
+                    for (let victim of victims) {
+                        HelperFunctions.damage(victim, this.zoneDMG);
+                        victim.set({ angle: Math.random() * 360 }); // simulate stun in a least effort way
+                    }
 
                     this.removeActiveRing(ring.ship);
                 }
