@@ -22,7 +22,7 @@ const __ABILITY_SYSTEM_INFO__ = {
     name: "Arena_Mod",
     branch: "ShipTesting",
     version: "4.0.0",
-    buildID: "188bd4f086c"
+    buildID: "188bedfb5ad"
 };
 
 
@@ -97,7 +97,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_ShipTesting.js at Thu Jun 15 2023 13:27:33 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_ShipTesting.js at Thu Jun 15 2023 20:45:12 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -140,7 +140,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Thu Jun 15 2023 13:27:33 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Thu Jun 15 2023 20:45:12 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -190,7 +190,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps_ShipTesting.js at Thu Jun 15 2023 13:27:33 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps_ShipTesting.js at Thu Jun 15 2023 20:45:12 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -206,7 +206,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Thu Jun 15 2023 13:27:33 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Thu Jun 15 2023 20:45:12 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -2208,24 +2208,21 @@ const ShipAbilities = {
             default: '{"name":"Valence-2","level":6,"model":45,"size":1.8,"zoom":0.85,"specs":{"shield":{"capacity":[270,270],"reload":[8.5,8.5]},"generator":{"capacity":[240,240],"reload":[60,60]},"ship":{"mass":200,"speed":[175,175],"rotation":[110,110],"acceleration":[120,120]}},"bodies":{"body_main":{"section_segments":12,"offset":{"x":0,"y":0,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0,0,0],"y":[-110,-107,-64,-49,-30,-15,5,25,40,35],"z":[0,0,0,0,0,0,0,0,0,0,0]},"width":[0,8,20,18,19,20,22,21,20,0],"height":[0,5,15,19,22,24,24,24,24,27,0],"texture":[63,2,2,13,3,4,18,12,17],"propeller":true},"body_cockpit":{"section_segments":6,"offset":{"x":0,"y":-80,"z":10},"position":{"x":[0,0,0,0,0,0,0,0,0],"y":[-15,-10,5,16,24,36,48,50,57],"z":[-3,0,0,0,0,0,3,5,5]},"width":[0,6,11,13,12,11,10,10,0],"height":[0,2,9,12,13,14,14,13,0],"texture":[9,9,9,4,63,4,4],"propeller":false},"cannons_front":{"section_segments":12,"offset":{"x":62,"y":-59,"z":-10},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[-45,-28,-23,-10,5,20,30,38,41,38],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[0,3,9,11,11,11,11,9,8,0],"height":[0,2,8,10,10,10,10,9,8,0],"angle":2.1,"laser":{"damage":[15,15],"rate":4,"type":1,"speed":[220,220],"number":1,"angle":0,"error":0},"propeller":true,"texture":[6,3,12,4,8,4,13,2,17]},"cannons_back":{"section_segments":12,"offset":{"x":40,"y":50,"z":20},"position":{"x":[0,0,0,0,0,0,0,0],"y":[-60,-45,-40,-29,-10,0,10,5],"z":[0,0,0,0,0,0,0,0]},"width":[0,3,11,13,13,11,9,0],"height":[0,3,11,13,13,11,9,0],"texture":[6,12,4,8,4,13,17],"propeller":true,"angle":1.4,"laser":{"damage":[15,15],"rate":4,"type":1,"speed":[220,220],"number":1,"angle":0,"error":0}}},"wings":{"wings_primary_outer":{"offset":{"x":0,"y":0,"z":-13},"length":[30,30,5],"width":[80,75,65,65],"texture":[3,4,4],"angle":[0,0,0],"position":[0,-20,-50,-82],"doubleside":true,"bump":{"position":-35,"size":5}},"wing_primary_inner":{"offset":{"x":0,"y":-83.5,"z":-6},"length":[20,25,15],"width":[60,50,35,30],"angle":[0,0,0],"position":[80,69,48,36],"texture":[4,8,3],"doubleside":true,"bump":{"position":10,"size":0}},"wings_back":{"offset":{"x":0,"y":0,"z":15},"length":[45],"width":[40,20],"angle":[10],"position":[5,45],"texture":[63],"doubleside":true,"bump":{"position":-3,"size":10}},"winglet_body_outline":{"offset":{"x":6,"y":-83,"z":0},"length":[20,15],"width":[65,10],"texture":[63],"angle":[0,0],"position":[-15,20],"doubleside":true,"bump":{"size":0}},"winglets_cannon_front":{"offset":{"x":70,"y":-34,"z":-5},"length":[20],"width":[54,0],"angle":[35],"position":[-10,29],"texture":[63],"doubleside":true,"bump":{"position":10,"size":5}},"winglets_cannon_back":{"offset":{"x":51,"y":47,"z":25},"length":[20],"width":[44,0],"angle":[35],"position":[-10,29],"texture":[63],"doubleside":true,"bump":{"position":10,"size":5}},"connector_cannon_front_body":{"offset":{"x":0,"y":-54,"z":15},"length":[60],"width":[24,12],"angle":[-15],"position":[50,9],"texture":[63],"doubleside":true,"bump":{"position":-10,"size":10}}},"typespec":{"name":"Valence-2","level":6,"model":45,"code":645,"specs":{"shield":{"capacity":[270,270],"reload":[8.5,8.5]},"generator":{"capacity":[240,240],"reload":[60,60]},"ship":{"mass":200,"speed":[175,175],"rotation":[110,110],"acceleration":[120,120]}},"shape":[4.703,4.482,3.41,2.79,4.74,4.359,3.893,3.588,3.302,3.163,3.088,3.082,3.115,1.62,1.883,2.028,2.263,2.581,3.1,3.657,2.788,2.56,1.591,1.513,1.466,1.443,1.466,1.513,1.591,2.56,2.788,3.657,3.1,2.581,2.263,2.028,1.883,1.609,3.115,3.082,3.088,3.163,3.302,3.588,3.893,4.359,4.74,2.79,3.41,4.482],"lasers":[{"x":2.173,"y":-3.743,"z":-0.36,"angle":2.1,"damage":[15,15],"rate":4,"type":1,"speed":[220,220],"number":1,"spread":0,"error":0,"recoil":0},{"x":-2.173,"y":-3.743,"z":-0.36,"angle":-2.1,"damage":[15,15],"rate":4,"type":1,"speed":[220,220],"number":1,"spread":0,"error":0,"recoil":0},{"x":1.387,"y":-0.359,"z":0.72,"angle":1.4,"damage":[15,15],"rate":4,"type":1,"speed":[220,220],"number":1,"spread":0,"error":0,"recoil":0},{"x":-1.387,"y":-0.359,"z":0.72,"angle":-1.4,"damage":[15,15],"rate":4,"type":1,"speed":[220,220],"number":1,"spread":0,"error":0,"recoil":0}],"radius":4.74}}'
         },
         name: "Divebomb",
-        cooldown: 32 * 60,
+        cooldown: 35 * 60,
 
-        zoneDMGDelay: 2.5 * 60,
-        zoneWarningTime: 1 * 60, // x seconds after ability cast
+        zoneDMGDelay: 3 * 60,
+        zoneWarningTime: 0.5 * 60, // x seconds after ability cast
 
-        zoneDMG: 800, // DMG to enemies inside the zone
+        zoneDMG: 500, // DMG to enemies inside the zone
         customEndcondition: true,
 
         range: 30,
         showAbilityRangeUI: true,
-        includeRingOnModel: {
-            default: true,
-            ability: false
-        },
+        includeRingOnModel: true,
 
-        abilityDashSpeed: 2,
+        abilityDashSpeed: 1.5,
 
-        objScale: Math.sqrt(5),
+        objScale: 2.48,
 
         activeRings: new Map(),
 
@@ -2305,7 +2302,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Thu Jun 15 2023 13:27:33 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Thu Jun 15 2023 20:45:12 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -2605,7 +2602,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Thu Jun 15 2023 13:27:33 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Thu Jun 15 2023 20:45:12 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -2615,7 +2612,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Thu Jun 15 2023 13:27:33 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Thu Jun 15 2023 20:45:12 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -2966,7 +2963,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Thu Jun 15 2023 13:27:33 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Thu Jun 15 2023 20:45:12 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
