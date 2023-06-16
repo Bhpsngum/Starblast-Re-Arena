@@ -2012,7 +2012,7 @@ const ShipAbilities = {
 
         abilityDashSpeed: 1.5,
 
-        objScale: 2.48,
+        objScale: 2.25,
 
         activeRings: new Map(),
 
@@ -2037,8 +2037,6 @@ const ShipAbilities = {
                 type: {
                     id: "bomb_area_" + ship.team,
                     emissive: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/incident_zone.png",
-                    // great thanks to whoever made this texture available
-                    // the texture is not my creation anyway
                     emissiveColor: ship.hue
                 }
             });
