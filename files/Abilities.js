@@ -1658,7 +1658,8 @@ const ShipAbilities = {
         name: "Dragon's Breath",
         cooldown: 25 * 60,
         duration: 7 * 60,
-        endOnDeath: true
+        endOnDeath: true,
+        cooldownRestartOnEnd: true
     },
     "Viper": {
         models: {
