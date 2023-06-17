@@ -1773,7 +1773,7 @@ const ShipAbilities = {
         cooldown: 35 * 60,
 
         zoneDMGDelay: 3 * 60,
-        zoneWarningTime: 0.5 * 60, // x seconds after ability cast
+        zoneWarningTime: 1 * 60, // x seconds after ability cast
 
         zoneDMG: 500, // DMG to enemies inside the zone
         customEndcondition: true,
