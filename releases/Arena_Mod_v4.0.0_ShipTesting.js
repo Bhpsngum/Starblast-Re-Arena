@@ -22,7 +22,7 @@ const __ABILITY_SYSTEM_INFO__ = {
     name: "Arena_Mod",
     branch: "ShipTesting",
     version: "4.0.0",
-    buildID: "188c72e35ed"
+    buildID: "188c7d1ffa5"
 };
 
 
@@ -97,7 +97,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_ShipTesting.js at Sat Jun 17 2023 11:27:54 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_ShipTesting.js at Sat Jun 17 2023 14:26:48 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -140,7 +140,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Sat Jun 17 2023 11:27:54 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Sat Jun 17 2023 14:26:48 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -190,7 +190,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps_ShipTesting.js at Sat Jun 17 2023 11:27:54 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps_ShipTesting.js at Sat Jun 17 2023 14:26:48 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -206,7 +206,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Sat Jun 17 2023 11:27:54 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Sat Jun 17 2023 14:26:48 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -898,240 +898,11 @@ const ShipAbilities = {
             ability: '{"name":"BFG","level":7,"model":21,"size":4,"zoom":0.8,"specs":{"shield":{"capacity":[150,150],"reload":[10,10]},"generator":{"capacity":[15000,15000],"reload":[0.1,0.1]},"ship":{"mass":1500,"speed":[10,10],"rotation":[0.25,0.25],"acceleration":[300,300]}},"bodies":{"main":{"section_segments":8,"offset":{"x":0,"y":40,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0,0,0,0,0,0],"y":[-25,-30,-35,-25,-10,-15,-5,5,0,20,40,35,50,30],"z":[0,0,0,0,0,0,0,0,0,0,0,0,0,0]},"width":[0,6,13,14,15,19,20,20,24,30,30,18,18,0],"height":[0,6,10,11,12,14,14,15,18,18,12,10,10,0],"propeller":false,"texture":[4,1,11,2,10,4]},"indicator":{"section_segments":12,"offset":{"x":0,"y":-25,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0,0,0],"y":[-25,-30,-20,-5,0,15,20,40,50,125,100],"z":[0,0,0,0,0,0,0,0,0,0,0]},"width":[0,10,13,13,8,8,15,15,10,10,0],"height":[0,10,13,13,9,9,9,9,10,10,0],"texture":[17,17,18,63,17,4,8,8,8,17],"angle":0,"propeller":1},"rialgun":{"section_segments":[35,65,105,145,215,325],"offset":{"x":-62,"y":0,"z":0},"position":{"x":[13,10,9,8,10,9,6,3,3,0,0],"y":[-150,-120,-100,-80,-70,-50,-40,-10,30,70,50],"z":[-14,-10,-9,-8,-7,-5,0,0,0,0,0]},"width":[0,7,9,11,6,8,12,10,10,10,0],"height":[0,13,16,20,20,20,20,20,20,20,0],"texture":[3,3,18,4,13,4,3,8,10,17],"angle":-4},"sides":{"section_segments":[35,55,125,145,215,235,305,325,395],"offset":{"x":30,"y":45,"z":0},"position":{"x":[0,-1,0,10,0,0],"y":[-80,-70,-40,-20,35,30],"z":[0,0,0,0,0,0,0,0]},"width":[0,6,10,10,10,0],"height":[0,5,5,5,5,0],"propeller":false,"texture":[4,1,4,3,1,4]},"box3":{"vertical":true,"angle":30,"section_segments":[45,135,225,315],"offset":{"x":10,"y":0,"z":-50},"position":{"x":[0,0,0,0,0],"y":[0,10,19,20],"z":[0,0,0,0]},"width":[0,10,10,10],"height":[0,55,30,0],"texture":[4,63,8]},"intake":{"section_segments":8,"offset":{"x":30,"y":-10,"z":0},"position":{"x":[-10,-3,0,-1,1,0,0,0],"y":[15,35,35,60,70,100,90],"z":[5,5,0,0,0,0,0,0]},"width":[0,5,6,12,10,10,0],"height":[0,5,10,12,8,8,0],"texture":[63,1,4,1,18,17],"propeller":1}},"wings":{"cockpit":{"doubleside":true,"offset":{"x":0,"y":14,"z":10},"length":[10,5],"width":[15,10,10],"angle":[0,0],"position":[0,5,15],"texture":[17],"bump":{"position":10,"size":20}},"cockpit2":{"doubleside":true,"offset":{"x":0,"y":25,"z":14},"length":[10,5],"width":[25,20,10],"angle":[0,0],"position":[0,5,15],"texture":[5],"bump":{"position":10,"size":20}},"main":{"doubleside":true,"offset":{"x":0,"y":50,"z":13},"length":[15,20,25],"width":[60,40,20,10],"angle":[35,-20,7],"position":[0,10,30,20],"texture":[18,13,4,63],"bump":{"position":0,"size":13}},"rails":{"doubleside":true,"offset":{"x":33,"y":-55,"z":-5},"length":[8,20],"width":[230,180,20],"angle":[40,0],"position":[0,10,20],"texture":[49,13,63],"bump":{"position":20,"size":5}},"rails15":{"doubleside":true,"offset":{"x":15,"y":0,"z":-5},"length":[3,25],"width":[160,140,20],"angle":[40,0],"position":[0,10,20],"texture":[49,5,63],"bump":{"position":20,"size":7}},"rails25":{"doubleside":true,"offset":{"x":22,"y":-20,"z":-5},"length":[5,15],"width":[200,180,20],"angle":[40,0],"position":[0,10,20],"texture":[49,4,63],"bump":{"position":20,"size":8}},"rails2":{"doubleside":true,"offset":{"x":45,"y":20,"z":-15},"length":[4,10],"width":[100,80,40],"angle":[40,0],"position":[0,10,20],"texture":[17,13,63],"bump":{"position":0,"size":14}},"shields":{"doubleside":true,"offset":{"x":40,"y":15,"z":-26},"length":[0,15,35,15],"width":[30,30,40,40,20,20],"angle":[30,30,80,150],"position":[10,10,0,0,10],"texture":[4,13,4,63],"bump":{"position":0,"size":4}},"shields2":{"doubleside":true,"offset":{"x":50,"y":65,"z":-26},"length":[0,15,25,15],"width":[30,30,40,40,20,20],"angle":[30,30,90,150],"position":[10,10,0,0,10],"texture":[4,13,4,63],"bump":{"position":0,"size":4}},"shields3":{"doubleside":true,"offset":{"x":40,"y":-80,"z":-21},"length":[0,15,25,16],"width":[30,30,40,40,20,20],"angle":[30,30,80,150],"position":[10,10,0,0,10],"texture":[4,13,4,63],"bump":{"position":0,"size":4}}},"typespec":{"name":"BFG","level":7,"model":21,"code":721,"specs":{"shield":{"capacity":[150,150],"reload":[10,10]},"generator":{"capacity":[15000,15000],"reload":[0.1,0.1]},"ship":{"mass":1500,"speed":[10,10],"rotation":[0.25,0.25],"acceleration":[300,300]}},"shape":[4.409,9.76,13.854,11.38,9.814,8.607,7.233,6.251,6.104,5.955,5.696,5.549,5.494,5.586,5.774,6.074,6.578,7.33,8.251,8.103,8.464,8.319,7.879,7.57,8.04,8.016,8.04,7.57,7.879,8.319,8.464,8.103,8.251,7.33,6.578,6.074,5.774,5.586,5.494,5.549,5.696,5.955,6.104,6.251,7.233,8.607,9.814,11.38,13.854,9.76],"lasers":[],"radius":13.854}}'
         },
         name: "Pulverize",
-        duration: 5 * 60,
-        cooldown: 34 * 60,
-        tickInterval: 1.5 * 60,
+        duration: 4 * 60,
+        cooldown: 35 * 60,
         endOnDeath: true,
 
-        warningDuration: 1 * 60, // warning before ship can fire
-
-        emissiveImg: `https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/BFG_warning_line.png`,
-
-        imgScale: { // update this based on emissiveImg's resolution
-            x: 3939,
-            y: 400
-        },
-
-        scale: {
-            x: 1.16 / 3939,
-            y: 0.1
-        },
-
-        lasers: {
-            default: {
-                regen: 260,
-                amount: 50, // amount of lasers
-                speed: 25,
-                damage: 40,
-                rate: 2 / 15,
-                range: { // laser range, in map unit
-                    inner: 5,
-                    outer: 160
-                },
-                includeLineModel: false // include the range line in ship model
-            },
-            ability: {
-                amount: 0,
-                range: {
-                    inner: 5,
-                    outer: 400
-                },
-                includeLineModel: true
-            },
-            rotationLocked: {
-                regen: 0.1,
-                amount: 60,
-                speed: 20,
-                damage: 500,
-                rate: 1 / 150000
-            }
-        },
-
-        indicatorLaser: {
-            damage: ["damage x2"],
-            rate: 10,
-            type: 2,
-            speed: [1,1],
-            number: 100
-        },
-
-        laserSample: {
-            x: 0,
-            y: "-offset",
-            z: 0,
-            damage: ["damage x 2"],
-            rate: "rate",
-            type: 1,
-            speed: ["speed x2"],
-            number: 1,
-            spread: 0,
-            error: 0,
-            recoil: 0,
-            angle: 0
-        },
-
-        lineModel: {
-            section_segments: 4,
-            offset: {
-                x: 0,
-                y: 0,
-                z: 0
-            },
-            position: {
-                x: [0,0],
-                y: ["here",0],
-                z: [0,0]
-            },
-            width: [2,2],
-            height: [0,0],
-            propeller: false,
-            texture: [ 17 ]
-        },
-
-        delta: function (namespec) {
-            let spec = this.lasers[namespec].range;
-            return spec.outer - spec.inner;
-        },
-
-        start: function (ship) {
-            ship.custom.abilityCustom.reloaded = false;
-            ship.custom.abilityCustom.shield = ship.shield;
-            ship.set({type: this.codes.ability, generator:0,invulnerable:100,vx:0,vy:0, stats: AbilityManager.maxStats});
-        },
-        tick: function (ship) {
-            if (!ship.custom.abilityCustom.reloaded) {
-                if (ship.alive) {
-                    ship.set({
-                        type: this.codes.rotationLocked,
-                        angle: ship.r * 180 / Math.PI,
-                        stats: AbilityManager.maxStats,
-                        vx: 0,
-                        vy: 0
-                    });
-                    HelperFunctions.TimeManager.setTimeout(function () {
-                        if (ship.alive && ship.custom.ability === this) ship.set({
-                            generator: this.lasers.ability.amount * this.lasers.ability.damage
-                        });
-                    }.bind(this), this.warningDuration);
-                    let delta = this.delta("ability");
-                    let OBJCenterDistFromShip = delta / 2 + this.lasers.ability.range.inner;
-                    let shipR = ship.r;
-                    HelperFunctions.setPlaneOBJ({
-                        id: "BFG_warning_" + ship.id,
-                        scale: {
-                            x: this.imgScale.x * this.scale.x * delta,
-                            y: this.imgScale.y * this.scale.y
-                        },
-                        rotation: {
-                            x: Math.PI,
-                            y: 0,
-                            z: -shipR
-                        },
-                        position: {
-                            x: ship.x + OBJCenterDistFromShip * Math.cos(shipR),
-                            y: ship.y + OBJCenterDistFromShip * Math.sin(shipR)
-                        },
-                        type: {
-                            id: "BFG_warning_" + ship.team, 
-                            emissive: this.emissiveImg,
-                            emissiveColor: HelperFunctions.toHSLA(TeamManager.getDataFromShip(ship).hue)
-                        }
-                    });
-                }
-                ship.custom.abilityCustom.reloaded = true;
-            }
-        },
-        end: function (ship) {
-            ship.set({
-                type: this.codes.default,
-                stats: AbilityManager.maxStats,
-                generator: this.lasers.default.damage * this.lasers.default.amount,
-                shield: ship.custom.abilityCustom.shield || 150
-            });
-            HelperFunctions.removeObject("BFG_warning_" + ship.id);
-        },
-
-        compile: function (_this) {
-            // setup proper spec for rotation-locked ver
-            this.lasers.rotationLocked = {
-                ...this.lasers.ability,
-                ...this.lasers.rotationLocked
-            }
-            this.models.rotationLocked = this.models.ability;
-
-            // process models
-            for (let name in this.models) {
-                let model = JSON.parse(this.models[name]), data = this.lasers[name], size = model.size;
-
-                // adding laser model
-                if (data.amount > 0) {
-                    model.typespec.lasers = [
-                        { // indicator laser
-                            ...this.laserSample,
-                            ...this.indicatorLaser,
-                            y: -data.range.inner,
-                            damage: Array(2).fill(data.damage * data.amount)
-                        }
-                    ];
-                    let increment = this.delta(name) / data.amount;
-                    for (let i = 0; i < data.amount; ++i) {
-                        model.typespec.lasers.push({
-                            ...this.laserSample,
-                            y: -(increment * i + data.range.inner),
-                            damage: Array(2).fill(data.damage),
-                            speed: Array(2).fill(data.speed),
-                            rate: data.rate
-                        });
-                    }
-                }
-
-                model.specs.generator = model.typespec.specs.generator = {
-                    capacity: Array(2).fill((data.damage * data.amount) || 1e-300),
-                    reload: Array(2).fill(data.regen || 1e-300)
-                }
-
-                // adding laser range indicator
-                if (data.includeLineModel) {
-                    let lineModel = HelperFunctions.clone(this.lineModel);
-                    
-                    lineModel.position.y[0] = -HelperFunctions.fromMapUnitToShipModelUnit(data.range.outer, size);
-
-                    model.bodies["__LINE_BODY__"] = lineModel;
-                }
-                
-                this.models[name] = JSON.stringify(model);
-            };
-
-            // clear agil on rotation-locked version
-            let rotationLocked = JSON.parse(this.models.rotationLocked);
-
-            for (let i of [rotationLocked, rotationLocked.typespec]) {
-                i.specs.ship = {
-                    mass: i.specs.ship.mass,
-                    acceleration: [1e-300, 1e-300],
-                    speed: [1e-300, 1e-300],
-                    rotation: [1e-300, 1e-300]
-                }
-            }
-
-            this.models.rotationLocked = JSON.stringify(rotationLocked);
-
-            // revert
-            this.lasers.ability = this.lasers.rotationLocked;
-        }
-    },
-    "BFG (New)": {
-        hidden: true,
-        models: {
-            default: '{"name":"BFG","level":6,"model":21,"size":4,"zoom":0.8,"specs":{"shield":{"capacity":[550,550],"reload":[6,6]},"generator":{"capacity":[2000,2000],"reload":[260,260]},"ship":{"mass":650,"speed":[45,45],"rotation":[18,18],"acceleration":[150,150]}},"bodies":{"main":{"section_segments":8,"offset":{"x":0,"y":40,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0,0,0,0,0,0],"y":[-25,-30,-35,-25,-10,-15,-5,5,0,20,40,35,50,30],"z":[0,0,0,0,0,0,0,0,0,0,0,0,0,0]},"width":[0,6,13,14,15,19,20,20,24,30,30,18,18,0],"height":[0,6,10,11,12,14,14,15,18,18,12,10,10,0],"propeller":false,"texture":[4,1,11,2,10,4]},"indicator":{"section_segments":12,"offset":{"x":0,"y":-25,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0,0,0],"y":[-25,-30,-20,-5,0,15,20,40,50,125,100],"z":[0,0,0,0,0,0,0,0,0,0,0]},"width":[0,10,13,13,8,8,15,15,10,10,0],"height":[0,10,13,13,9,9,9,9,10,10,0],"texture":[17,3,11,63,13,4,8,8,8,17],"angle":0,"propeller":1},"rialgun":{"section_segments":[35,65,105,145,215,325],"offset":{"x":-22,"y":0,"z":0},"position":{"x":[13,10,9,8,10,9,6,3,3,0,0],"y":[-150,-120,-100,-80,-70,-50,-40,-10,30,70,50],"z":[-14,-10,-9,-8,-7,-5,0,0,0,0,0]},"width":[0,7,9,11,6,8,12,10,10,10,0],"height":[0,13,16,20,20,20,20,20,20,20,0],"texture":[3,3,18,4,13,4,3,8,10,17],"angle":0},"sides":{"section_segments":[35,55,125,145,215,235,305,325,395],"offset":{"x":30,"y":45,"z":0},"position":{"x":[0,-1,0,10,0,0],"y":[-80,-70,-40,-20,35,30],"z":[0,0,0,0,0,0,0,0]},"width":[0,6,10,10,10,0],"height":[0,5,5,5,5,0],"propeller":false,"texture":[4,1,4,3,1,4]},"box3":{"vertical":true,"angle":30,"section_segments":[45,135,225,315],"offset":{"x":10,"y":0,"z":-50},"position":{"x":[0,0,0,0,0],"y":[0,10,19,20],"z":[0,0,0,0]},"width":[0,10,10,10],"height":[0,55,30,0],"texture":[4,63,8]},"intake":{"section_segments":8,"offset":{"x":30,"y":-10,"z":0},"position":{"x":[-10,-3,0,-1,1,0,0,0],"y":[15,35,35,60,70,100,90],"z":[5,5,0,0,0,0,0,0]},"width":[0,5,6,12,10,10,0],"height":[0,5,10,12,8,8,0],"texture":[63,1,4,1,18,17],"propeller":1}},"wings":{"cockpit":{"doubleside":true,"offset":{"x":0,"y":18,"z":10},"length":[10,5],"width":[25,20,10],"angle":[0,0],"position":[0,5,15],"texture":[17],"bump":{"position":10,"size":20}},"cockpit2":{"doubleside":true,"offset":{"x":0,"y":25,"z":14},"length":[10,5],"width":[25,20,10],"angle":[0,0],"position":[0,5,15],"texture":[5],"bump":{"position":10,"size":20}},"main":{"doubleside":true,"offset":{"x":0,"y":50,"z":13},"length":[15,20,25],"width":[60,40,20,10],"angle":[35,-20,7],"position":[0,10,30,20],"texture":[18,13,4,63],"bump":{"position":0,"size":13}},"rails":{"doubleside":true,"offset":{"x":8,"y":-55,"z":-5},"length":[4,20],"width":[200,180,20],"angle":[40,0],"position":[0,10,20],"texture":[17,13,63],"bump":{"position":20,"size":14}},"rails2":{"doubleside":true,"offset":{"x":42,"y":10,"z":-15},"length":[4,10],"width":[100,80,40],"angle":[40,0],"position":[0,10,20],"texture":[17,13,63],"bump":{"position":0,"size":14}},"shields":{"doubleside":true,"offset":{"x":20,"y":15,"z":-26},"length":[0,15,35,15],"width":[30,30,40,40,20,20],"angle":[30,30,80,150],"position":[10,10,0,0,10],"texture":[4,13,4,63],"bump":{"position":0,"size":4}},"shields2":{"doubleside":true,"offset":{"x":35,"y":65,"z":-26},"length":[0,15,25,15],"width":[30,30,40,40,20,20],"angle":[30,30,90,150],"position":[10,10,0,0,10],"texture":[4,13,4,63],"bump":{"position":0,"size":4}},"shields3":{"doubleside":true,"offset":{"x":17,"y":-80,"z":-21},"length":[0,15,25,16],"width":[30,30,40,40,20,20],"angle":[30,30,80,150],"position":[10,10,0,0,10],"texture":[4,13,4,63],"bump":{"position":0,"size":4}}},"typespec":{"name":"BFG","level":6,"model":21,"code":621,"specs":{"shield":{"capacity":[550,550],"reload":[6,6]},"generator":{"capacity":[2000,2000],"reload":[260,260]},"ship":{"mass":650,"speed":[45,45],"rotation":[18,18],"acceleration":[150,150]}},"shape":[12.417,11.928,8.764,8.458,6.545,4.528,4.64,4.612,4.28,4.052,3.934,3.999,4.133,4.35,4.545,4.732,5.016,5.445,5.95,7.011,7.483,7.809,7.879,7.57,8.04,8.016,8.04,7.57,7.879,7.809,7.483,7.011,5.95,5.445,5.016,4.732,4.545,4.35,4.133,3.999,3.934,4.052,4.28,4.612,4.64,4.528,6.545,8.458,8.764,11.928],"lasers":[],"radius":12.417}}',
-            ability: '{"name":"BFG","level":7,"model":21,"size":4,"zoom":0.8,"specs":{"shield":{"capacity":[150,150],"reload":[10,10]},"generator":{"capacity":[15000,15000],"reload":[0.1,0.1]},"ship":{"mass":1500,"speed":[10,10],"rotation":[0.25,0.25],"acceleration":[300,300]}},"bodies":{"main":{"section_segments":8,"offset":{"x":0,"y":40,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0,0,0,0,0,0],"y":[-25,-30,-35,-25,-10,-15,-5,5,0,20,40,35,50,30],"z":[0,0,0,0,0,0,0,0,0,0,0,0,0,0]},"width":[0,6,13,14,15,19,20,20,24,30,30,18,18,0],"height":[0,6,10,11,12,14,14,15,18,18,12,10,10,0],"propeller":false,"texture":[4,1,11,2,10,4]},"indicator":{"section_segments":12,"offset":{"x":0,"y":-25,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0,0,0],"y":[-25,-30,-20,-5,0,15,20,40,50,125,100],"z":[0,0,0,0,0,0,0,0,0,0,0]},"width":[0,10,13,13,8,8,15,15,10,10,0],"height":[0,10,13,13,9,9,9,9,10,10,0],"texture":[17,17,18,63,17,4,8,8,8,17],"angle":0,"propeller":1},"rialgun":{"section_segments":[35,65,105,145,215,325],"offset":{"x":-62,"y":0,"z":0},"position":{"x":[13,10,9,8,10,9,6,3,3,0,0],"y":[-150,-120,-100,-80,-70,-50,-40,-10,30,70,50],"z":[-14,-10,-9,-8,-7,-5,0,0,0,0,0]},"width":[0,7,9,11,6,8,12,10,10,10,0],"height":[0,13,16,20,20,20,20,20,20,20,0],"texture":[3,3,18,4,13,4,3,8,10,17],"angle":-4},"sides":{"section_segments":[35,55,125,145,215,235,305,325,395],"offset":{"x":30,"y":45,"z":0},"position":{"x":[0,-1,0,10,0,0],"y":[-80,-70,-40,-20,35,30],"z":[0,0,0,0,0,0,0,0]},"width":[0,6,10,10,10,0],"height":[0,5,5,5,5,0],"propeller":false,"texture":[4,1,4,3,1,4]},"box3":{"vertical":true,"angle":30,"section_segments":[45,135,225,315],"offset":{"x":10,"y":0,"z":-50},"position":{"x":[0,0,0,0,0],"y":[0,10,19,20],"z":[0,0,0,0]},"width":[0,10,10,10],"height":[0,55,30,0],"texture":[4,63,8]},"intake":{"section_segments":8,"offset":{"x":30,"y":-10,"z":0},"position":{"x":[-10,-3,0,-1,1,0,0,0],"y":[15,35,35,60,70,100,90],"z":[5,5,0,0,0,0,0,0]},"width":[0,5,6,12,10,10,0],"height":[0,5,10,12,8,8,0],"texture":[63,1,4,1,18,17],"propeller":1}},"wings":{"cockpit":{"doubleside":true,"offset":{"x":0,"y":14,"z":10},"length":[10,5],"width":[15,10,10],"angle":[0,0],"position":[0,5,15],"texture":[17],"bump":{"position":10,"size":20}},"cockpit2":{"doubleside":true,"offset":{"x":0,"y":25,"z":14},"length":[10,5],"width":[25,20,10],"angle":[0,0],"position":[0,5,15],"texture":[5],"bump":{"position":10,"size":20}},"main":{"doubleside":true,"offset":{"x":0,"y":50,"z":13},"length":[15,20,25],"width":[60,40,20,10],"angle":[35,-20,7],"position":[0,10,30,20],"texture":[18,13,4,63],"bump":{"position":0,"size":13}},"rails":{"doubleside":true,"offset":{"x":33,"y":-55,"z":-5},"length":[8,20],"width":[230,180,20],"angle":[40,0],"position":[0,10,20],"texture":[49,13,63],"bump":{"position":20,"size":5}},"rails15":{"doubleside":true,"offset":{"x":15,"y":0,"z":-5},"length":[3,25],"width":[160,140,20],"angle":[40,0],"position":[0,10,20],"texture":[49,5,63],"bump":{"position":20,"size":7}},"rails25":{"doubleside":true,"offset":{"x":22,"y":-20,"z":-5},"length":[5,15],"width":[200,180,20],"angle":[40,0],"position":[0,10,20],"texture":[49,4,63],"bump":{"position":20,"size":8}},"rails2":{"doubleside":true,"offset":{"x":45,"y":20,"z":-15},"length":[4,10],"width":[100,80,40],"angle":[40,0],"position":[0,10,20],"texture":[17,13,63],"bump":{"position":0,"size":14}},"shields":{"doubleside":true,"offset":{"x":40,"y":15,"z":-26},"length":[0,15,35,15],"width":[30,30,40,40,20,20],"angle":[30,30,80,150],"position":[10,10,0,0,10],"texture":[4,13,4,63],"bump":{"position":0,"size":4}},"shields2":{"doubleside":true,"offset":{"x":50,"y":65,"z":-26},"length":[0,15,25,15],"width":[30,30,40,40,20,20],"angle":[30,30,90,150],"position":[10,10,0,0,10],"texture":[4,13,4,63],"bump":{"position":0,"size":4}},"shields3":{"doubleside":true,"offset":{"x":40,"y":-80,"z":-21},"length":[0,15,25,16],"width":[30,30,40,40,20,20],"angle":[30,30,80,150],"position":[10,10,0,0,10],"texture":[4,13,4,63],"bump":{"position":0,"size":4}}},"typespec":{"name":"BFG","level":7,"model":21,"code":721,"specs":{"shield":{"capacity":[150,150],"reload":[10,10]},"generator":{"capacity":[15000,15000],"reload":[0.1,0.1]},"ship":{"mass":1500,"speed":[10,10],"rotation":[0.25,0.25],"acceleration":[300,300]}},"shape":[4.409,9.76,13.854,11.38,9.814,8.607,7.233,6.251,6.104,5.955,5.696,5.549,5.494,5.586,5.774,6.074,6.578,7.33,8.251,8.103,8.464,8.319,7.879,7.57,8.04,8.016,8.04,7.57,7.879,8.319,8.464,8.103,8.251,7.33,6.578,6.074,5.774,5.586,5.494,5.549,5.696,5.955,6.104,6.251,7.233,8.607,9.814,11.38,13.854,9.76],"lasers":[],"radius":13.854}}'
-        },
-        name: "Pulverize",
-        duration: 5 * 60,
-        cooldown: 34 * 60,
-        endOnDeath: true,
-
-        warningDuration: 2.5 * 60, // warning before ship can fire
+        warningDuration: 1.5 * 60, // warning before ship can fire
 
         emissiveImg: `https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/BFG_warning_line.png`,
 
@@ -2301,7 +2072,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Sat Jun 17 2023 11:27:54 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Sat Jun 17 2023 14:26:48 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -2601,7 +2372,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Sat Jun 17 2023 11:27:54 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Sat Jun 17 2023 14:26:48 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -2611,7 +2382,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Sat Jun 17 2023 11:27:54 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Sat Jun 17 2023 14:26:48 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -2962,7 +2733,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Sat Jun 17 2023 11:27:54 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Sat Jun 17 2023 14:26:48 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
