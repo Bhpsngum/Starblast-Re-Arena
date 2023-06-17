@@ -22,7 +22,7 @@ const __ABILITY_SYSTEM_INFO__ = {
     name: "Arena_Mod",
     branch: "ShipTesting",
     version: "4.0.0",
-    buildID: "188c7fc5764"
+    buildID: "188c9455aef"
 };
 
 
@@ -97,7 +97,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_ShipTesting.js at Sat Jun 17 2023 15:13:03 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_ShipTesting.js at Sat Jun 17 2023 21:12:25 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -140,7 +140,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Sat Jun 17 2023 15:13:03 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Sat Jun 17 2023 21:12:25 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -190,7 +190,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps_ShipTesting.js at Sat Jun 17 2023 15:13:03 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps_ShipTesting.js at Sat Jun 17 2023 21:12:25 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -206,7 +206,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Sat Jun 17 2023 15:13:03 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Sat Jun 17 2023 21:12:25 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -746,13 +746,20 @@ const ShipAbilities = {
             ability: '{"name":"Attack Pod","level":7,"model":14,"size":1.2,"zoom":0.6,"specs":{"shield":{"capacity":[350,350],"reload":[14,14]},"generator":{"capacity":[200,200],"reload":[45,45]},"ship":{"mass":360,"speed":[108,108],"rotation":[68,68],"acceleration":[115,115]}},"bodies":{"main":{"section_segments":[35,55,125,145,215,235,305,325,395],"offset":{"x":0,"y":0,"z":0},"position":{"x":[0,0,0,0,0,0,0],"y":[-50,-50,0,25,50,40],"z":[0,0,0,0,0,0,0]},"width":[0,10,50,50,20,0],"height":[0,5,20,15,15,0],"propeller":false,"texture":[1,1,4,3,17]},"cannon":{"section_segments":8,"offset":{"x":0,"y":0,"z":0},"position":{"x":[0,0,0,0,0,0,0],"y":[-60,-70,-30,0,30,35,40],"z":[0,0,0,5,5,0,0,0,0]},"width":[0,10,15,10,15,10,0],"height":[0,10,15,18,15,10,0],"propeller":false,"texture":[4,63,1,1,1,4],"laser":{"damage":[20,20],"rate":4,"type":1,"speed":[180,180],"number":1,"error":0}}},"wings":{"I000l":{"length":[60],"width":[80,30],"angle":[0,0],"position":[0,20],"doubleside":true,"texture":[63],"offset":{"x":0,"y":0,"z":-5},"bump":{"position":30,"size":20}}},"typespec":{"name":"Attack Pod","level":7,"model":14,"code":714,"specs":{"shield":{"capacity":[350,350],"reload":[14,14]},"generator":{"capacity":[200,200],"reload":[45,45]},"ship":{"mass":360,"speed":[108,108],"rotation":[68,68],"acceleration":[115,115]}},"shape":[1.683,1.697,1.447,1.05,0.959,0.9,0.859,0.833,0.841,0.899,0.982,1.103,1.267,1.451,1.485,1.547,1.642,1.667,1.462,1.286,1.161,1.195,1.263,1.262,1.221,1.202,1.221,1.262,1.263,1.195,1.161,1.286,1.462,1.667,1.642,1.547,1.485,1.451,1.267,1.103,0.982,0.899,0.841,0.833,0.859,0.9,0.959,1.05,1.447,1.697],"lasers":[{"x":0,"y":-1.68,"z":0,"angle":0,"damage":[20,20],"rate":4,"type":1,"speed":[180,180],"number":1,"spread":0,"error":0,"recoil":0}],"radius":1.697}}'
         },
         name: "Drones",
-        cooldown: 45 * 60,
+        cooldown: 30 * 60,
         duration: 15 * 60,
         endOnDeath: true,
+        cooldownRestartOnEnd: true,
+        customInAbilityText: true,
 
         attackPodCode: 41,
 
         range: 30,
+        showAbilityRangeUI: true,
+
+        requirementsText: function (ship) {
+            return ship.custom.inAbility ? HelperFunctions.timeLeft(ship.custom.lastTriggered + this.duration) : HelperFunctions.templates.requirementsText.call(this, ship);
+        },
 
         start: function (ship) {
             HelperFunctions.templates.start.call(this, ship);
@@ -1811,11 +1818,13 @@ const ShipAbilities = {
         duration: 1,
         endOnDeath: true,
 
+        showAbilityRangeUI: true,
+
         defencePodCode: 42,
 
         generatorInit: 0,
 
-        range: 30,
+        range: 40,
 
         start: function (ship) {
             HelperFunctions.templates.start.call(this, ship);
@@ -2072,7 +2081,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Sat Jun 17 2023 15:13:03 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Sat Jun 17 2023 21:12:25 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -2372,7 +2381,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Sat Jun 17 2023 15:13:03 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Sat Jun 17 2023 21:12:25 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -2382,7 +2391,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Sat Jun 17 2023 15:13:03 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Sat Jun 17 2023 21:12:25 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -2733,7 +2742,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Sat Jun 17 2023 15:13:03 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Sat Jun 17 2023 21:12:25 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
