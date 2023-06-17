@@ -22,7 +22,7 @@ const __ABILITY_SYSTEM_INFO__ = {
     name: "Arena_Mod",
     branch: "Main",
     version: "4.0.0",
-    buildID: "188c7d1ffa5"
+    buildID: "188c7fc5764"
 };
 
 
@@ -97,7 +97,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_Main.js at Sat Jun 17 2023 14:26:48 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_Main.js at Sat Jun 17 2023 15:13:03 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -140,7 +140,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Sat Jun 17 2023 14:26:48 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Sat Jun 17 2023 15:13:03 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -190,7 +190,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Sat Jun 17 2023 14:26:48 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Sat Jun 17 2023 15:13:03 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1787,7 +1787,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Sat Jun 17 2023 14:26:48 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Sat Jun 17 2023 15:13:03 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -3564,7 +3564,7 @@ const ShipAbilities = {
         cooldown: 35 * 60,
 
         zoneDMGDelay: 3 * 60,
-        zoneWarningTime: 0.5 * 60, // x seconds after ability cast
+        zoneWarningTime: 1 * 60, // x seconds after ability cast
 
         zoneDMG: 500, // DMG to enemies inside the zone
         customEndcondition: true,
@@ -3653,7 +3653,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Sat Jun 17 2023 14:26:48 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Sat Jun 17 2023 15:13:03 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -3953,7 +3953,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Sat Jun 17 2023 14:26:48 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Sat Jun 17 2023 15:13:03 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -3963,7 +3963,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Sat Jun 17 2023 14:26:48 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Sat Jun 17 2023 15:13:03 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4314,7 +4314,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Sat Jun 17 2023 14:26:48 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Sat Jun 17 2023 15:13:03 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -5166,11 +5166,11 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/gameLogic.js at Sat Jun 17 2023 14:26:48 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Sat Jun 17 2023 15:13:03 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/GameConfig.js at Sat Jun 17 2023 14:26:48 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Sat Jun 17 2023 15:13:03 GMT+0900 (Japan Standard Time) */
 
 const map_name = null; // leave `null` if you want randomized map name
 
@@ -5279,7 +5279,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Sat Jun 17 2023 14:26:48 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Sat Jun 17 2023 15:13:03 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -6037,7 +6037,7 @@ AbilityManager.onActionBlockStateChange = function (ship) {
 
 
 
-/* Imported from misc/tickFunctions.js at Sat Jun 17 2023 14:26:48 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Sat Jun 17 2023 15:13:03 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -6543,7 +6543,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Sat Jun 17 2023 14:26:48 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Sat Jun 17 2023 15:13:03 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -6602,7 +6602,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Sat Jun 17 2023 14:26:48 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Sat Jun 17 2023 15:13:03 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
@@ -6651,6 +6651,6 @@ this.options = {
 
 
 
-/* Imported from misc/gameInfo.js at Sat Jun 17 2023 14:26:48 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameInfo.js at Sat Jun 17 2023 15:13:03 GMT+0900 (Japan Standard Time) */
 
 AbilityManager.echo(`[[bg;DarkTurquoise;]Re:][[bg;#EE4B2B;]Arena] ([[;#AAFF00;]${__ABILITY_SYSTEM_INFO__.branch}]) [[;Cyan;]v${__ABILITY_SYSTEM_INFO__.version} (Build ID [[;${HelperFunctions.toHSLA(__ABILITY_SYSTEM_INFO__.buildID)};]${__ABILITY_SYSTEM_INFO__.buildID}])\nMap picked: [[b;Cyan;]${MapManager.get().name} by ${MapManager.get().author}\n\nType \`commands\` to see all commands\nAnd \`usage <commandName>\` to show usage of a command\n\n]`);
