@@ -24,8 +24,8 @@ jobs:
       run: npm run compile
     - name: Deploy Arena files
       run: |
-        git config user.name "github-actions"
-        git config user.email "action@github.com"
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
         git add .
         git commit -m "[Automatic] Build arena files ${GITHUB_SHA}"
         git push -u https://bhpsngum:${{ secrets.GITHUB_TOKEN }}@github.com/bhpsngum/Arena-mod-remake.git HEAD
