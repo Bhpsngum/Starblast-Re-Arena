@@ -260,8 +260,8 @@ const AbilityManager = {
                 shortcut: this.abilityShortcut,
                 components: [
                     { type: "text",position:[0,0,100,50],value: HelperFunctions.fill(abilityName + ` [${this.abilityShortcut}]`, 15), color: "#FFFFFF"},
-                    { type:"box",position:[0,50,100,50],fill: color.fill, stroke: color.stroke,width:4},
-                    { type: "text",position:[0,55,100,40],value: text ,color: color.text},
+                    { type: "box",position:[0,50,100,50],fill: color.fill, stroke: color.stroke,width:4},
+                    { type: "text",position:[2.5,57.5,95,35],value: text ,color: color.text},
                 ]
             })
         }
@@ -728,6 +728,8 @@ const AbilityManager = {
             if ("function" != typeof ability.initialize) ability.initialize = templates.initialize;
 
             if ("function" != typeof ability.onCodeChanged) ability.onCodeChanged = templates.onCodeChanged;
+
+            if ("function" != typeof ability.getDefaultShipCode) ability.getDefaultShipCode = templates.getDefaultShipCode;
 
             // pre-compile
             if ("function" == typeof ability.compile) try {

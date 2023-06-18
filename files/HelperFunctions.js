@@ -209,9 +209,9 @@ const HelperFunctions = {
     damage: function (ship,num) {
         // damage ship by `num` HP
         if (ship.shield < num){
-          let val = ship.crystals + ship.shield;
-          if (val < num) ship.set({kill:true});
-          else ship.set({crystals: val - num, shield: 0});
+            let val = ship.crystals + ship.shield;
+            if (val < num) ship.set({kill:true});
+            else ship.set({crystals: val - num, shield: 0});
         }
         else ship.set({shield:ship.shield-num});
     },
@@ -329,7 +329,11 @@ const HelperFunctions = {
             ship.custom.lastTriggered = game.step;
         },
 
-        onCodeChanged: function () {}
+        onCodeChanged: function () {},
+
+        getDefaultShipCode: function (ship) {
+            return this.codes.default
+        }
     },
     terminal: {
         errors: 0,
