@@ -22,7 +22,7 @@ const __ABILITY_SYSTEM_INFO__ = {
     name: "Arena_Mod",
     branch: "ShipTesting",
     version: "4.0.0",
-    buildID: "188cf2813fb"
+    buildID: "188d2ff8fe7"
 };
 
 
@@ -97,7 +97,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_ShipTesting.js at Mon Jun 19 2023 00:38:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_ShipTesting.js at Mon Jun 19 2023 18:32:23 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -140,7 +140,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Mon Jun 19 2023 00:38:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Mon Jun 19 2023 18:32:23 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -190,7 +190,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps_ShipTesting.js at Mon Jun 19 2023 00:38:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps_ShipTesting.js at Mon Jun 19 2023 18:32:23 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -206,7 +206,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Mon Jun 19 2023 00:38:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Mon Jun 19 2023 18:32:23 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -2134,7 +2134,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Mon Jun 19 2023 00:38:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Mon Jun 19 2023 18:32:23 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -2206,10 +2206,22 @@ const MAKE_COMMANDS = function () {
     }, kick = function (ship, info, reason) {
         ship.custom.kicked = true;
         ship.custom.abilitySystemDisabled = true;
+        ship.set({
+            idle: true,
+            collider: false,
+            type: 101,
+            vx: 0,
+            vy: 0
+        });
+        let kickReason = ship.custom.kickReason || {};
+        info = String(info || kickReason.info || "You've been kicked by map host!");
+        reason = String(reason || kickReason.reason || "No reason has been provided");
+        ship.custom.kickReason = { info, reason };
         ship.gameover({
             [info]: " ",
-            "Reason": reason || "No reason has been provided"
+            "Reason": reason
         });
+        try { UIData.updateScoreboard(game); } catch (e) {}
     }, ban = function (ship, info, reason) {
         kick(ship, info, reason);
         game.custom.banList.push({
@@ -2370,7 +2382,7 @@ const MAKE_COMMANDS = function () {
             if (newTeam == teamInfo) return `%s is already on ${teamInfo.name.toUpperCase()}`;
             teamInfo = newTeam;
             TeamManager.set(ship, team, true, false);
-            UIData.updateScoreboard(game);
+            try { UIData.updateScoreboard(game); } catch (e) {}
         }
         return team ? `Set %s to team ${teamInfo.name.toUpperCase()}`: showTeamInfo(ship);
     }, '%r', {
@@ -2434,7 +2446,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Mon Jun 19 2023 00:38:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Mon Jun 19 2023 18:32:23 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -2444,7 +2456,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Mon Jun 19 2023 00:38:10 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Mon Jun 19 2023 18:32:23 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -2799,7 +2811,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Mon Jun 19 2023 00:38:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Mon Jun 19 2023 18:32:23 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
