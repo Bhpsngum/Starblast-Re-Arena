@@ -22,7 +22,7 @@ const __ABILITY_SYSTEM_INFO__ = {
     name: "Arena_Mod",
     branch: "Battlefield",
     version: "4.0.0",
-    buildID: "188cf2813fb"
+    buildID: "188d2ff8fe7"
 };
 
 
@@ -97,7 +97,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_Battlefield.js at Mon Jun 19 2023 00:38:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_Battlefield.js at Mon Jun 19 2023 18:32:23 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -140,7 +140,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams_Battlefield.js at Mon Jun 19 2023 00:38:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams_Battlefield.js at Mon Jun 19 2023 18:32:23 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -190,7 +190,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps_Battlefield.js at Mon Jun 19 2023 00:38:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps_Battlefield.js at Mon Jun 19 2023 18:32:23 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -422,7 +422,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Mon Jun 19 2023 00:38:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Mon Jun 19 2023 18:32:23 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -2350,7 +2350,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Mon Jun 19 2023 00:38:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Mon Jun 19 2023 18:32:23 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -2422,10 +2422,22 @@ const MAKE_COMMANDS = function () {
     }, kick = function (ship, info, reason) {
         ship.custom.kicked = true;
         ship.custom.abilitySystemDisabled = true;
+        ship.set({
+            idle: true,
+            collider: false,
+            type: 101,
+            vx: 0,
+            vy: 0
+        });
+        let kickReason = ship.custom.kickReason || {};
+        info = String(info || kickReason.info || "You've been kicked by map host!");
+        reason = String(reason || kickReason.reason || "No reason has been provided");
+        ship.custom.kickReason = { info, reason };
         ship.gameover({
             [info]: " ",
-            "Reason": reason || "No reason has been provided"
+            "Reason": reason
         });
+        try { UIData.updateScoreboard(game); } catch (e) {}
     }, ban = function (ship, info, reason) {
         kick(ship, info, reason);
         game.custom.banList.push({
@@ -2586,7 +2598,7 @@ const MAKE_COMMANDS = function () {
             if (newTeam == teamInfo) return `%s is already on ${teamInfo.name.toUpperCase()}`;
             teamInfo = newTeam;
             TeamManager.set(ship, team, true, false);
-            UIData.updateScoreboard(game);
+            try { UIData.updateScoreboard(game); } catch (e) {}
         }
         return team ? `Set %s to team ${teamInfo.name.toUpperCase()}`: showTeamInfo(ship);
     }, '%r', {
@@ -2650,7 +2662,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Mon Jun 19 2023 00:38:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Mon Jun 19 2023 18:32:23 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -2660,7 +2672,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Mon Jun 19 2023 00:38:10 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Mon Jun 19 2023 18:32:23 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -3015,7 +3027,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Mon Jun 19 2023 00:38:10 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Mon Jun 19 2023 18:32:23 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -3869,7 +3881,7 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/GameConfig_Battlefield.js at Mon Jun 19 2023 00:38:10 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig_Battlefield.js at Mon Jun 19 2023 18:32:23 GMT+0900 (Japan Standard Time) */
 
 const map_name = "Re:Arena Battlefield"; // leave `null` if you want randomized map name
 
@@ -3979,7 +3991,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Mon Jun 19 2023 00:38:10 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Mon Jun 19 2023 18:32:23 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -4174,7 +4186,7 @@ const WeightCalculator = {
         return kills - deaths / 3;
     },
     getTopPlayers: function (game, donSort = false) {
-        let players = game.ships.filter(e => e && e.id != null);
+        let players = game.ships.filter(e => (e || {}).id != null && !e.custom.kicked);
         if (donSort) return players;
         return players.sort((a, b) => this.playerWeight(b) - this.playerWeight(a));
     },
@@ -4440,8 +4452,6 @@ const UIData = {
     updatePlayerCount: function (game) {
         let players = WeightCalculator.getTopPlayers(game, true);
 
-        if (players.length < 1) return;
-
         let teams = TeamManager.getAll();
         let team_counts = new Array(teams.length).fill(0), ghost_count = 0;
 
@@ -4491,7 +4501,7 @@ const UIData = {
 
         i = 0;
         for (let count of team_counts) compos.push(
-            { type: "box", position: [i * chart_width, 50, chart_width, 50 * count / players.length], fill: HelperFunctions.toHSLA(teams[i++].hue) }
+            { type: "box", position: [i * chart_width, 50, chart_width, 50 * ((count / players.length) || 0)], fill: HelperFunctions.toHSLA(teams[i++].hue) }
         );
 
         if (ghost_count > 0) compos.push(
@@ -4539,6 +4549,12 @@ const UIData = {
     },
     renderScoreboard: function (ship) {
         if (ship == null || ship.id == null) return;
+        if (ship.custom.kicked) return HelperFunctions.sendUI(ship, {
+            id: "scoreboard",
+            components: [
+                { type: "text", position: [0, 45, 100, 10], value: "You've been kicked!", color: "#cde" }
+            ]
+        });
         let scoreboardData = { ...this.scoreboard };
         if (game.custom.started) {
             // highlight players
@@ -4737,7 +4753,7 @@ AbilityManager.onActionBlockStateChange = function (ship) {
 
 
 
-/* Imported from misc/tickFunctions.js at Mon Jun 19 2023 00:38:10 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Mon Jun 19 2023 18:32:23 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -4884,6 +4900,12 @@ const initialization = function (game, dontChangeTick = false) {
 
     game.custom.last_map = MapManager.get();
 
+    // rekick the kicked players
+
+    for (let ship of game.ships) {
+        if ((ship || {}).id != null && ship.custom.kicked) game.custom.abilitySystemCommands.kick(ship)
+    }
+
     if (!dontChangeTick) {
         this.tick = waiting;
         this.tick(game);
@@ -4909,6 +4931,7 @@ const waiting = function (game) {
                     visible: false
                 });
                 ship.custom.allowInstructor = true;
+                if ((ship || {}).id == null || ship.custom.kicked) return;
                 AbilityManager.random(ship);
                 UIData.shipUIs.toggle(ship, false, true);
                 ship.set({ idle: false, collider: true });
@@ -5138,7 +5161,7 @@ const main_phase = function (game) {
 
         // check if any endgame condition matches
         game.custom.timeout = HelperFunctions.timeExceeded(game.custom.startedStep, GAME_OPTIONS.duration * 60);
-        let test = new Set(game.ships.filter(e => e && e.id != null).map(e => e.team));
+        let test = new Set(WeightCalculator.getTopPlayers(game, true).map(e => e.team));
         game.custom.oneTeamLeft = test.size < 2;
         if (game.custom.oneTeamLeft) game.custom.winner = [...test][0];
         if (game.custom.oneTeamLeft || game.custom.timeout || Math.max(...control_point_data.scores, control_point_data.ghostScore) >= GAME_OPTIONS.points) this.tick = endGame; 
@@ -5243,7 +5266,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Mon Jun 19 2023 00:38:10 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Mon Jun 19 2023 18:32:23 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -5302,7 +5325,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Mon Jun 19 2023 00:38:10 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Mon Jun 19 2023 18:32:23 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
@@ -5347,10 +5370,29 @@ this.options = {
     ]
 }
 
+let ship101 = JSON.parse(this.options.ships[0]);
+
+for (let val of [ship101, ship101.typespec]) {
+    val.specs.generator = {
+        capacity: [1e-300, 1e-300],
+        reload: [1e-300, 1e-300]
+    }
+    val.specs.ship = {
+        mass: 1,
+        acceleration: [1e-300, 1e-300],
+        speed: [1e-300, 1e-300],
+        rotation: [1e-300, 1e-300]
+    }
+}
+
+ship101.typespec.lasers = [];
+
+this.options.ships[0] = JSON.stringify(ship101);
 
 
 
 
-/* Imported from misc/gameInfo.js at Mon Jun 19 2023 00:38:10 GMT+0900 (Japan Standard Time) */
+
+/* Imported from misc/gameInfo.js at Mon Jun 19 2023 18:32:23 GMT+0900 (Japan Standard Time) */
 
 AbilityManager.echo(`[[bg;DarkTurquoise;]Re:][[bg;#EE4B2B;]Arena] ([[;#AAFF00;]${__ABILITY_SYSTEM_INFO__.branch}]) [[;Cyan;]v${__ABILITY_SYSTEM_INFO__.version} (Build ID [[;${HelperFunctions.toHSLA(__ABILITY_SYSTEM_INFO__.buildID)};]${__ABILITY_SYSTEM_INFO__.buildID}])\nMap picked: [[b;Cyan;]${MapManager.get().name} by ${MapManager.get().author}\n\nType \`commands\` to see all commands\nAnd \`usage <commandName>\` to show usage of a command\n\n]`);
