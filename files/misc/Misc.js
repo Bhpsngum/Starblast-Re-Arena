@@ -191,7 +191,7 @@ const WeightCalculator = {
         return kills - deaths / 3;
     },
     getTopPlayers: function (game, donSort = false) {
-        let players = game.ships.filter(e => e && e.id != null);
+        let players = game.ships.filter(e => (e || {}).id != null && !e.custom.kicked);
         if (donSort) return players;
         return players.sort((a, b) => this.playerWeight(b) - this.playerWeight(a));
     },
@@ -457,8 +457,6 @@ const UIData = {
     updatePlayerCount: function (game) {
         let players = WeightCalculator.getTopPlayers(game, true);
 
-        if (players.length < 1) return;
-
         let teams = TeamManager.getAll();
         let team_counts = new Array(teams.length).fill(0), ghost_count = 0;
 
@@ -508,7 +506,7 @@ const UIData = {
 
         i = 0;
         for (let count of team_counts) compos.push(
-            { type: "box", position: [i * chart_width, 50, chart_width, 50 * count / players.length], fill: HelperFunctions.toHSLA(teams[i++].hue) }
+            { type: "box", position: [i * chart_width, 50, chart_width, 50 * ((count / players.length) || 0)], fill: HelperFunctions.toHSLA(teams[i++].hue) }
         );
 
         if (ghost_count > 0) compos.push(
@@ -556,6 +554,12 @@ const UIData = {
     },
     renderScoreboard: function (ship) {
         if (ship == null || ship.id == null) return;
+        if (ship.custom.kicked) return HelperFunctions.sendUI(ship, {
+            id: "scoreboard",
+            components: [
+                { type: "text", position: [0, 45, 100, 10], value: "You've been kicked!", color: "#cde" }
+            ]
+        });
         let scoreboardData = { ...this.scoreboard };
         if (game.custom.started) {
             // highlight players

@@ -143,6 +143,12 @@ const initialization = function (game, dontChangeTick = false) {
 
     game.custom.last_map = MapManager.get();
 
+    // rekick the kicked players
+
+    for (let ship of game.ships) {
+        if ((ship || {}).id != null && ship.custom.kicked) game.custom.abilitySystemCommands.kick(ship)
+    }
+
     if (!dontChangeTick) {
         this.tick = waiting;
         this.tick(game);
@@ -168,6 +174,7 @@ const waiting = function (game) {
                     visible: false
                 });
                 ship.custom.allowInstructor = true;
+                if ((ship || {}).id == null || ship.custom.kicked) return;
                 AbilityManager.random(ship);
                 UIData.shipUIs.toggle(ship, false, true);
                 ship.set({ idle: false, collider: true });
@@ -397,7 +404,7 @@ const main_phase = function (game) {
 
         // check if any endgame condition matches
         game.custom.timeout = HelperFunctions.timeExceeded(game.custom.startedStep, GAME_OPTIONS.duration * 60);
-        let test = new Set(game.ships.filter(e => e && e.id != null).map(e => e.team));
+        let test = new Set(WeightCalculator.getTopPlayers(game, true).map(e => e.team));
         game.custom.oneTeamLeft = test.size < 2;
         if (game.custom.oneTeamLeft) game.custom.winner = [...test][0];
         if (game.custom.oneTeamLeft || game.custom.timeout || Math.max(...control_point_data.scores, control_point_data.ghostScore) >= GAME_OPTIONS.points) this.tick = endGame; 
