@@ -40,3 +40,22 @@ this.options = {
         ...AbilityManager.getShipCodes()
     ]
 }
+
+let ship101 = JSON.parse(this.options.ships[0]);
+
+for (let val of [ship101, ship101.typespec]) {
+    val.specs.generator = {
+        capacity: [1e-300, 1e-300],
+        reload: [1e-300, 1e-300]
+    }
+    val.specs.ship = {
+        mass: 1,
+        acceleration: [1e-300, 1e-300],
+        speed: [1e-300, 1e-300],
+        rotation: [1e-300, 1e-300]
+    }
+}
+
+ship101.typespec.lasers = [];
+
+this.options.ships[0] = JSON.stringify(ship101);
