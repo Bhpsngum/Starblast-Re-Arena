@@ -35,10 +35,10 @@ But at least it should run as expected ~~I guess~~
 * **`README.md`**: This file
 * **`mergeFiles.js`**: This file is used to assemble the codes to create a complete mod file, only run in NodeJS
 * **`releases`**: Contains compiled versions of the mod:
-    * **{Name}_Main.js**: The code that you can host as a normal Arena game, supports commands.
-    * **{Name}_MS.js**: Prepared code for future Modding Space release. Don't use this one unless you actually want to.
-    * **{Name}_Battlefield.js**: Code for Re:Arena Battlefield events.
-    * **{Name}_ShipTesting.js**: Purely a Ability Ships Tester code, use this to test your newly added ships.
+    * **{Name}_{Version}_Main.js**: The code that you can host as a normal Arena game, supports commands.
+    * **{Name}_{Version}_MS.js**: Prepared code for future Modding Space release. Don't use this one unless you actually want to.
+    * **{Name}_{Version}_Battlefield.js**: Code for Re:Arena Battlefield events.
+    * **{Name}_{Version}_ShipTesting.js**: Purely a Ability Ships Tester code, use this to test your newly added ships.
 
 ## Q&A
 If you have any questions or feedbacks, please open an issue and I might include answers in this section.
