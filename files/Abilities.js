@@ -1239,7 +1239,7 @@ const ShipAbilities = {
         limitVelocityDelay: 3.25 * 60,
         limitVelocityTick: 0.25 * 60,
 
-        speedLimit: 1, // to prevent abuse
+        speedLimit: 0.5, // to prevent abuse
 
         start: function (ship) {
             HelperFunctions.templates.start.call(this, ship);
@@ -1250,7 +1250,7 @@ const ShipAbilities = {
         tick: function (ship, duration) {
             if (!ship.custom.abilityCustom.limitVeloc && duration >= this.limitVelocityDelay) ship.custom.abilityCustom.limitVeloc = true;
             if (ship.custom.abilityCustom.limitVeloc) {
-                let speedRatio = this.speedLimit / Math.sqrt(ship.vx ** 2 + ship.vy ** 2);
+                let speedRatio = this.speedLimit <= 0 ? 0 : (this.speedLimit / Math.sqrt(ship.vx ** 2 + ship.vy ** 2));
                 if (speedRatio < 1) ship.set({ vx: ship.vx * speedRatio, vy: ship.vy * speedRatio });
             }
         },
