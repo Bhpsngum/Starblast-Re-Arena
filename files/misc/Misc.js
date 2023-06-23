@@ -479,7 +479,7 @@ const UIData = {
         let width = 100 / width_equiv;
 
         let compos = [
-            {type: "text", position: [0, 0, 100, 25], value: "Players distribution:", color: "#cde"}
+            {type: "text", position: [0, 0, 100, 25], value: "Players distribution", color: "#cde"}
         ];
 
         // render team ratio
@@ -587,21 +587,21 @@ const UIData = {
                 position: [35,11.5,30,5],
                 components: []
             };
-            let UI_counts = GAME_OPTIONS.teams_count * 2 - 1;
+            let teams_count = GAME_OPTIONS.teams_count;
             let ghostTeamScore = Math.floor(control_point_data.ghostScore);
             let ghostTeamShow = ghostTeamScore > 0;
-            if (ghostTeamShow) UI_counts += 2;
+            if (ghostTeamShow) ++teams_count;
+            let UI_counts = teams_count * 2 - 1;
             let width = 100 / UI_counts;
             let dash = { type: "text", value: "-", color: "#fff"};
             let index = 0;
-            let scoreTeams = 1 / ((UI_counts + 1) / 2 + 1);
             UIData.scores.components = control_point_data.scores.map((score, id) => {
                 let color = HelperFunctions.toHSLA(TeamManager.getDataFromID(id).hue, 1, 100, this.colorTextLightness);
                 let data = [
                     { type: "text", position: [index * width, 0, width, 100], value: Math.floor(score), color}
                 ];
                 if (game.custom.scoreIncreased && id === game.custom.winner) data.push(
-                    { type: "text", position: [(index + (1 - scoreTeams)) * width, 0, width * scoreTeams, 50], value: "+" + increaseAmount, color}
+                    { type: "text", position: [index * width, 0, width, 100 / (teams_count + 1)], value: "+" + increaseAmount, color, align: "right"}
                 );
 
                 data.push( { ...dash, position: [(index + 1) * width, 0, width, 100]});
