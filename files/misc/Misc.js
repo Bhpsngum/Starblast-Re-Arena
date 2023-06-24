@@ -503,14 +503,15 @@ const UIData = {
 
         // render chart
         let chart_width = 100 / (teams.length + (ghost_count > 0));
+        let largest_team_count = Math.max(...teams_count, ghost_count);
 
         i = 0;
         for (let count of team_counts) compos.push(
-            { type: "box", position: [i * chart_width, 50, chart_width, 50 * ((count / players.length) || 0)], fill: HelperFunctions.toHSLA(teams[i++].hue) }
+            { type: "box", position: [i * chart_width, 50, chart_width, 50 * ((count / largest_team_count) || 0)], fill: HelperFunctions.toHSLA(teams[i++].hue) }
         );
 
         if (ghost_count > 0) compos.push(
-            { type: "box", position: [i * chart_width, 50, chart_width, 50 * ghost_count / players.length], fill: HelperFunctions.toHSLA(TeamManager.ghostTeam.hue) }
+            { type: "box", position: [i * chart_width, 50, chart_width, 50 * ghost_count / largest_team_count], fill: HelperFunctions.toHSLA(TeamManager.ghostTeam.hue) }
         );
 
         this.player_count = {
