@@ -503,7 +503,7 @@ const UIData = {
 
         // render chart
         let chart_width = 100 / (teams.length + (ghost_count > 0));
-        let largest_team_count = Math.max(...teams_count, ghost_count);
+        let largest_team_count = Math.max(...team_counts, ghost_count);
 
         i = 0;
         for (let count of team_counts) compos.push(
