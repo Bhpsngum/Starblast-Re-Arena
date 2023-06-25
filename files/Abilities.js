@@ -1274,6 +1274,7 @@ const ShipAbilities = {
 
         range: 55,
         includeRingOnModel: true,
+        showAbilityRangeUI: true,
 
         pullStrength: 1,
 

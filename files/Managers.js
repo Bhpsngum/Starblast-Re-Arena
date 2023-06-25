@@ -415,7 +415,7 @@ const AbilityManager = {
                 position: [65, 0, 15, 5],
                 components: [
                     { type: "text", position: [0, 0, 100, 50], value: "RATIO GO HERE", color: "#cde", align: "right"},
-                    { type: "text", position: [0, 50, 100, 50], value: "0 --> 9 to change aspect ratio", color: "#cde", align: "right"}
+                    { type: "text", position: [0, 50, 100, 50], value: "[0] - [9] to change", color: "#cde", align: "right"}
                 ]
             }
         },
@@ -425,7 +425,7 @@ const AbilityManager = {
                 ...this.optionUI.data
             }, preset = this.getPreset(ship);
 
-            UI.components[0].value = `Current: ${preset.w}:${preset.h} (${(ship.custom.preferredRatioPreset + 1) % 10})`;
+            UI.components[0].value = `Aspect Ratio ${preset.w}:${preset.h} [${(ship.custom.preferredRatioPreset + 1) % 10}]`;
 
             HelperFunctions.sendUI(ship, UI);
         },
