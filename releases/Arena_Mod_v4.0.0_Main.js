@@ -22,7 +22,7 @@ const __ABILITY_SYSTEM_INFO__ = {
     name: "Arena_Mod",
     branch: "Main",
     version: "4.0.0",
-    buildID: "188f08e0f05"
+    buildID: "188f090b0ca"
 };
 
 
@@ -97,7 +97,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_Main.js at Sun Jun 25 2023 12:17:01 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_Main.js at Sun Jun 25 2023 12:19:54 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -140,7 +140,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Sun Jun 25 2023 12:17:01 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Sun Jun 25 2023 12:19:54 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -190,7 +190,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Sun Jun 25 2023 12:17:01 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Sun Jun 25 2023 12:19:54 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1787,7 +1787,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Sun Jun 25 2023 12:17:01 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Sun Jun 25 2023 12:19:54 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -3741,7 +3741,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Sun Jun 25 2023 12:17:01 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Sun Jun 25 2023 12:19:54 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -4053,7 +4053,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Sun Jun 25 2023 12:17:01 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Sun Jun 25 2023 12:19:54 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -4063,7 +4063,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Sun Jun 25 2023 12:17:01 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Sun Jun 25 2023 12:19:54 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4418,7 +4418,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Sun Jun 25 2023 12:17:01 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Sun Jun 25 2023 12:19:54 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -5272,11 +5272,11 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/gameLogic.js at Sun Jun 25 2023 12:17:01 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Sun Jun 25 2023 12:19:54 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/GameConfig.js at Sun Jun 25 2023 12:17:01 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Sun Jun 25 2023 12:19:54 GMT+0900 (Japan Standard Time) */
 
 const map_name = null; // leave `null` if you want randomized map name
 
@@ -5385,7 +5385,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Sun Jun 25 2023 12:17:01 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Sun Jun 25 2023 12:19:54 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -5892,7 +5892,7 @@ const UIData = {
 
         // render chart
         let chart_width = 100 / (teams.length + (ghost_count > 0));
-        let largest_team_count = Math.max(...teams_count, ghost_count);
+        let largest_team_count = Math.max(...team_counts, ghost_count);
 
         i = 0;
         for (let count of team_counts) compos.push(
@@ -6149,7 +6149,7 @@ AbilityManager.onActionBlockStateChange = function (ship) {
 
 
 
-/* Imported from misc/tickFunctions.js at Sun Jun 25 2023 12:17:01 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Sun Jun 25 2023 12:19:54 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -6662,7 +6662,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Sun Jun 25 2023 12:17:01 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Sun Jun 25 2023 12:19:54 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -6721,7 +6721,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Sun Jun 25 2023 12:17:01 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Sun Jun 25 2023 12:19:54 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
@@ -6760,6 +6760,7 @@ this.options = {
     mines_self_destroy: true,
     mines_destroy_delay: 5000,
     map_size: GAME_OPTIONS.map_size,
+    release_crystal: true,
     ships: [
         HelperFunctions.randInt(GAME_OPTIONS.x) ? '{"name":"Fly","level":1,"model":1,"size":1.05,"specs":{"shield":{"capacity":[75,100],"reload":[2,3]},"generator":{"capacity":[40,60],"reload":[10,15]},"ship":{"mass":60,"speed":[125,145],"rotation":[110,130],"acceleration":[100,120]}},"bodies":{"main":{"section_segments":12,"offset":{"x":0,"y":0,"z":10},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[-65,-60,-50,-20,10,30,55,75,60],"z":[0,0,0,0,0,0,0,0,0]},"width":[0,8,10,30,25,30,18,15,0],"height":[0,6,8,12,20,20,18,15,0],"propeller":true,"texture":[4,63,10,1,1,1,12,17]},"cockpit":{"section_segments":12,"offset":{"x":0,"y":0,"z":20},"position":{"x":[0,0,0,0,0,0,0],"y":[-15,0,20,30,60],"z":[0,0,0,0,0]},"width":[0,13,17,10,5],"height":[0,18,25,18,5],"propeller":false,"texture":[7,9,9,4,4]},"cannon":{"section_segments":6,"offset":{"x":0,"y":-15,"z":-10},"position":{"x":[0,0,0,0,0,0],"y":[-40,-50,-20,0,20,30],"z":[0,0,0,0,0,20]},"width":[0,5,8,11,7,0],"height":[0,5,8,11,10,0],"angle":0,"laser":{"damage":[5,6],"rate":4,"type":1,"speed":[160,180],"number":1,"error":2.5},"propeller":false,"texture":[3,3,10,3]}},"wings":{"main":{"length":[60,20],"width":[100,50,40],"angle":[-10,10],"position":[0,20,10],"doubleside":true,"offset":{"x":0,"y":10,"z":5},"bump":{"position":30,"size":20},"texture":[11,63]}},"typespec":{"name":"Fly","level":1,"model":1,"code":101,"specs":{"shield":{"capacity":[75,100],"reload":[2,3]},"generator":{"capacity":[40,60],"reload":[10,15]},"ship":{"mass":60,"speed":[125,145],"rotation":[110,130],"acceleration":[100,120]}},"shape":[1.368,1.368,1.093,0.965,0.883,0.827,0.791,0.767,0.758,0.777,0.847,0.951,1.092,1.667,1.707,1.776,1.856,1.827,1.744,1.687,1.525,1.415,1.335,1.606,1.603,1.578,1.603,1.606,1.335,1.415,1.525,1.687,1.744,1.827,1.856,1.776,1.707,1.667,1.654,0.951,0.847,0.777,0.758,0.767,0.791,0.827,0.883,0.965,1.093,1.368],"lasers":[{"x":0,"y":-1.365,"z":-0.21,"angle":0,"damage":[5,6],"rate":4,"type":1,"speed":[160,180],"number":1,"spread":0,"error":2.5,"recoil":0}],"radius":1.856}}' : '{"name":"__Arena_Mod_Icon__","designer":"Supernova","level":1,"model":1,"size":1,"specs":{"shield":{"capacity":[125,175],"reload":[2,4]},"generator":{"capacity":[75,125],"reload":[20,35]},"ship":{"mass":90,"speed":[100,120],"rotation":[50,70],"acceleration":[100,130]}},"bodies":{"ring":{"section_segments":100,"offset":{"x":0,"y":0,"z":0},"position":{"x":[0,0,0,0,0,0,0,0],"y":[0,0,0,0,0,0,0,0],"z":[0,0,0,0,0,0,0,0,0]},"width":[80,100,100,100,100,100,100,80],"height":[80,100,100,100,100,100,100,80],"texture":63,"propeller":false,"vertical":true},"spike1":{"section_segments":4,"offset":{"x":-73,"y":-65,"z":0},"position":{"x":[0,0,0,0,0,0,0],"y":[-30,0,20,50],"z":[0,0,0]},"width":[0,20,20,0],"height":[0,10,10,0],"texture":[1],"angle":46,"propeller":false},"spike2":{"section_segments":4,"offset":{"x":-57,"y":53,"z":0},"position":{"x":[0,0,0,0,0,0,0],"y":[-30,0,20,50],"z":[0,0,0]},"width":[0,20,20,0],"height":[0,10,10,0],"texture":[1],"angle":-46,"propeller":false},"x_1":{"section_segments":[45,135,225,315],"offset":{"x":0,"y":0,"z":0},"position":{"x":[-18,-18,18,18],"y":[-20,-20,20,20],"z":[0,0,0,0]},"width":[0,10,10,0],"height":[0,10,10,0],"texture":[1]},"x_2":{"section_segments":[45,135,225,315],"offset":{"x":0,"y":0,"z":0},"position":{"x":[18,18,-18,-18],"y":[-20,-20,20,20],"z":[0,0,0,0]},"width":[0,10,10,0],"height":[0,10,10,0],"texture":[1]}},"typespec":{"name":"__Arena_Mod_Icon__","level":1,"model":1,"code":101,"specs":{"shield":{"capacity":[125,175],"reload":[2,4]},"generator":{"capacity":[75,125],"reload":[20,35]},"ship":{"mass":90,"speed":[100,120],"rotation":[50,70],"acceleration":[100,130]}},"shape":[2,2,2,2,2,2.093,2.481,2.555,2.227,2,2,2,2,2,2,2,2,2.164,2.545,2.557,2.162,2,2,2,2,2,2,2,2,2,2.162,2.557,2.545,2.164,2,2,2,2,2,2,2,2,2.227,2.555,2.481,2.093,2,2,2,2],"lasers":[],"radius":2.557}}',
         ...AbilityManager.getShipCodes()
@@ -6789,6 +6790,6 @@ this.options.ships[0] = JSON.stringify(ship101);
 
 
 
-/* Imported from misc/gameInfo.js at Sun Jun 25 2023 12:17:01 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameInfo.js at Sun Jun 25 2023 12:19:54 GMT+0900 (Japan Standard Time) */
 
 AbilityManager.echo(`[[bg;DarkTurquoise;]Re:][[bg;#EE4B2B;]Arena] ([[;#AAFF00;]${__ABILITY_SYSTEM_INFO__.branch}]) [[;Cyan;]v${__ABILITY_SYSTEM_INFO__.version} (Build ID [[;${HelperFunctions.toHSLA(__ABILITY_SYSTEM_INFO__.buildID)};]${__ABILITY_SYSTEM_INFO__.buildID}])\nMap picked: [[b;Cyan;]${MapManager.get().name} by ${MapManager.get().author}\n\nType \`commands\` to see all commands\nAnd \`usage <commandName>\` to show usage of a command\n\n]`);
