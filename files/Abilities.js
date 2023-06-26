@@ -19,8 +19,14 @@ const ShipAbilities = {
         range: 69, // ability range for special ships, in radii
 
         showAbilityRangeUI: true, // show the range UI on screen
+        // or it could be done with individual model like this:
+        // showAbilityRangeUI: {
+        //    default: true,
+        //    ability: false
+        // },
         includeRingOnModel: true, // to include the indicator model in ship model or not
         // please note that `AbilityManager.includeRingOnModel` must be `true` in order for this to apply
+        // and you can also implement this depends on model like `showAbilityRangeUI`
 
         endOnDeath: true, // ability will end when ship dies
         canStartOnAbility: true, // allow ability to start even when on ability (to enable stacking, etc.), default false
@@ -563,7 +569,10 @@ const ShipAbilities = {
         attackPodCode: 41,
 
         range: 30,
-        showAbilityRangeUI: true,
+        showAbilityRangeUI: {
+            default: true,
+            ability: false
+        },
 
         requirementsText: function (ship) {
             return ship.custom.inAbility ? HelperFunctions.timeLeft(ship.custom.lastTriggered + this.duration) : HelperFunctions.templates.requirementsText.call(this, ship);
@@ -967,7 +976,10 @@ const ShipAbilities = {
         },
         name: "Mirror",
         range: 60,
-        showAbilityRangeUI: true,
+        showAbilityRangeUI: {
+            default: true,
+            ability: false
+        },
         includeRingOnModel: {
             default: true,
             ability: false
@@ -1565,7 +1577,10 @@ const ShipAbilities = {
         healingRingDuration: 15 * 60,
 
         range: 30,
-        showAbilityRangeUI: true,
+        showAbilityRangeUI: {
+            default: true,
+            ability: false
+        },
         includeRingOnModel: {
             default: true,
             ability: false

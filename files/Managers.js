@@ -419,16 +419,6 @@ const AbilityManager = {
                 ]
             }
         },
-        renderInfo: function (ship) {
-            let UI = {
-                id: this.optionUI.presetInfo,
-                ...this.optionUI.data
-            }, preset = this.getPreset(ship);
-
-            UI.components[0].value = `Aspect Ratio ${preset.w}:${preset.h} [${(ship.custom.preferredRatioPreset + 1) % 10}]`;
-
-            HelperFunctions.sendUI(ship, UI);
-        },
         handleOptions: function (ship, id) {
             if (!id.startsWith(this.optionUI.prefix)) return;
             let oldPresetIndex = ship.custom.preferredRatioPreset;
@@ -436,29 +426,7 @@ const AbilityManager = {
             ship.custom.preferredRatioPreset = option == "next" ? ++ship.custom.preferredRatioPreset : +option;
             this.getPreset(ship);
             if (ship.custom.preferredRatioPreset === oldPresetIndex) return;
-            this.renderInfo(ship);
-            this.set(ship);
-        },
-        showOptions: function (ship) {
-            if ((ship || {}).id == null) return;
-            for (let i = 0; i < 10; ++i) { // yes this part is hardcoded
-                HelperFunctions.sendUI(ship, {
-                    id: this.optionUI.prefix + i,
-                    visible: false,
-                    clickable: true,
-                    shortcut: ((i + 1) % 10).toString() // 1 2 3 4 5 6 7 8 9 0
-                });
-            }
-
-            HelperFunctions.sendUI(ship, {
-                id: this.optionUI.prefix + "next",
-                clickable: true,
-                position: [75, 5, 5, 2.5],
-                components: [
-                    { type: "box", position: [0, 0, 100, 100], stroke: "#cde", width: 2},
-                    { type: "text", position: [0, 0, 100, 100], value: "Change", color: "#cde"}
-                ]
-            })
+            this.set(ship, true);
         },
         color: "#cde",
         vertical_scale: 1.425, // we will scale using vertical ratio as base
@@ -496,19 +464,28 @@ const AbilityManager = {
                 return scale * (range * 2) / this.calculatePlaneScale(zoom, shipRadius);
             }
         },
-        set: function (ship) {
+        set: function (ship, forced = false) {
             if ((ship || {}).id == null) return;
-            
-            let shipAbil = ship.custom.ability;
 
-            if (!(shipAbil || {}).showAbilityRangeUI || shipAbil.range == null) return HelperFunctions.sendUI(ship, { id: this.id, visible: false});
+            let zoomLevel = AbilityManager.zoomLevel[ship.custom.__last_ability_ship_type__ || ship.type];
+
+            if (zoomLevel == null || zoomLevel.range <= 0) {
+                if (!ship.custom.__hide_aspect_ratio_info__) {
+                    for (let id of [
+                        this.id,
+                        this.optionUI.infoID,
+                        this.optionUI.prefix + "next",
+                        ...Array(10).fill(0).map((v, i) => (this.optionUI.prefix + i))
+                    ]) HelperFunctions.sendUI(ship, { id, visible: false });
+                    ship.custom.__hide_aspect_ratio_info__ = true;
+                }
+                return;
+            }
 
             let preset = this.getPreset(ship);
 
-            let zoomLevel = AbilityManager.zoomLevel[ship.custom.__last_ability_ship_type__ || ship.type] || {};
-
             // render abilityRange UI here
-            let height = this.threeJSClientSpecs.getVisibleHeightFraction(shipAbil.range, zoomLevel.radius || 1, zoomLevel.zoom || 1, this.vertical_scale);
+            let height = this.threeJSClientSpecs.getVisibleHeightFraction(zoomLevel.range, zoomLevel.radius || 1, zoomLevel.zoom || 1, this.vertical_scale);
             let width = height * preset.h / preset.w;
 
             HelperFunctions.sendUI(ship, {
@@ -518,6 +495,38 @@ const AbilityManager = {
                     { type: "round", position: [0, 0, 100, 100], stroke: this.color, width: this.width }
                 ]
             });
+
+            if (forced || ship.custom.__hide_aspect_ratio_info__) {
+                let UI = {
+                    id: this.optionUI.infoID,
+                    ...this.optionUI.data
+                };
+
+                UI.components[0].value = `Aspect Ratio ${preset.w}:${preset.h} [${(ship.custom.preferredRatioPreset + 1) % 10}]`;
+
+                HelperFunctions.sendUI(ship, UI);
+
+                HelperFunctions.sendUI(ship, {
+                    id: this.optionUI.prefix + "next",
+                    clickable: true,
+                    position: [75, 5, 5, 2.5],
+                    components: [
+                        { type: "box", position: [0, 0, 100, 100], stroke: "#cde", width: 2},
+                        { type: "text", position: [0, 0, 100, 100], value: "Change", color: "#cde"}
+                    ]
+                });
+    
+                for (let i = 0; i < 10; ++i) { // yes this part is hardcoded
+                    HelperFunctions.sendUI(ship, {
+                        id: this.optionUI.prefix + i,
+                        visible: false,
+                        clickable: true,
+                        shortcut: ((i + 1) % 10).toString() // 1 2 3 4 5 6 7 8 9 0
+                    });
+                }
+            }
+
+            ship.custom.__hide_aspect_ratio_info__ = false;
         }
     },
     globalTick2: function (game) {
@@ -534,8 +543,6 @@ const AbilityManager = {
             if (ship.id == null) continue;
             if (!ship.custom.__ability__initialized__ && ship.alive) {
                 this.random(ship, true);
-                this.abilityRangeUI.showOptions(ship);
-                this.abilityRangeUI.renderInfo(ship);
                 ship.custom.__ability__initialized__ = true;
             }
             if (this.showAbilityNotice && ship.custom.allowInstructor) {
@@ -770,9 +777,16 @@ const AbilityManager = {
                 jsonData.typespec.__ABILITY_SYSTEM_INFO__ = __ABILITY_SYSTEM_INFO__;
 
                 this.ship_codes.push(JSON.stringify(jsonData));
-                this.zoomLevel[jsonData.typespec.code] = {
+                
+                let showAbilityRangeUI;
+
+                if (ability.showAbilityRangeUI == null || "object" != typeof ability.showAbilityRangeUI) showAbilityRangeUI = !!ability.showAbilityRangeUI;
+                else showAbilityRangeUI = !!ability.showAbilityRangeUI[shipAbilityName];
+
+                if (showAbilityRangeUI && ability.range != null && !isNaN(ability.range)) this.zoomLevel[jsonData.typespec.code] = {
                     zoom: jsonData.zoom || 1,
-                    radius: jsonData.typespec.radius || 1
+                    radius: jsonData.typespec.radius || 1,
+                    range: +ability.range || 0
                 };
             }
             catch (e) {
