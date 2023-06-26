@@ -22,7 +22,7 @@ const __ABILITY_SYSTEM_INFO__ = {
     name: "Arena_Mod",
     branch: "MS",
     version: "4.0.0",
-    buildID: "188f2dec44e"
+    buildID: "188f5c7e7ad"
 };
 
 
@@ -97,7 +97,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_MS.js at Sun Jun 25 2023 23:04:25 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_MS.js at Mon Jun 26 2023 12:38:18 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = false; // if in debug phase
 
@@ -140,7 +140,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Sun Jun 25 2023 23:04:25 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Mon Jun 26 2023 12:38:18 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -190,7 +190,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Sun Jun 25 2023 23:04:25 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Mon Jun 26 2023 12:38:18 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -1787,7 +1787,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Sun Jun 25 2023 23:04:25 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Mon Jun 26 2023 12:38:18 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -1810,8 +1810,14 @@ const ShipAbilities = {
         range: 69, // ability range for special ships, in radii
 
         showAbilityRangeUI: true, // show the range UI on screen
+        // or it could be done with individual model like this:
+        // showAbilityRangeUI: {
+        //    default: true,
+        //    ability: false
+        // },
         includeRingOnModel: true, // to include the indicator model in ship model or not
         // please note that `AbilityManager.includeRingOnModel` must be `true` in order for this to apply
+        // and you can also implement this depends on model like `showAbilityRangeUI`
 
         endOnDeath: true, // ability will end when ship dies
         canStartOnAbility: true, // allow ability to start even when on ability (to enable stacking, etc.), default false
@@ -2354,7 +2360,10 @@ const ShipAbilities = {
         attackPodCode: 41,
 
         range: 30,
-        showAbilityRangeUI: true,
+        showAbilityRangeUI: {
+            default: true,
+            ability: false
+        },
 
         requirementsText: function (ship) {
             return ship.custom.inAbility ? HelperFunctions.timeLeft(ship.custom.lastTriggered + this.duration) : HelperFunctions.templates.requirementsText.call(this, ship);
@@ -2758,7 +2767,10 @@ const ShipAbilities = {
         },
         name: "Mirror",
         range: 60,
-        showAbilityRangeUI: true,
+        showAbilityRangeUI: {
+            default: true,
+            ability: false
+        },
         includeRingOnModel: {
             default: true,
             ability: false
@@ -3356,7 +3368,10 @@ const ShipAbilities = {
         healingRingDuration: 15 * 60,
 
         range: 30,
-        showAbilityRangeUI: true,
+        showAbilityRangeUI: {
+            default: true,
+            ability: false
+        },
         includeRingOnModel: {
             default: true,
             ability: false
@@ -3742,7 +3757,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Sun Jun 25 2023 23:04:25 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Mon Jun 26 2023 12:38:18 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -4054,7 +4069,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Sun Jun 25 2023 23:04:25 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Mon Jun 26 2023 12:38:18 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -4064,7 +4079,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Sun Jun 25 2023 23:04:25 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Mon Jun 26 2023 12:38:18 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -4419,7 +4434,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Sun Jun 25 2023 23:04:25 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Mon Jun 26 2023 12:38:18 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -4842,16 +4857,6 @@ const AbilityManager = {
                 ]
             }
         },
-        renderInfo: function (ship) {
-            let UI = {
-                id: this.optionUI.presetInfo,
-                ...this.optionUI.data
-            }, preset = this.getPreset(ship);
-
-            UI.components[0].value = `Aspect Ratio ${preset.w}:${preset.h} [${(ship.custom.preferredRatioPreset + 1) % 10}]`;
-
-            HelperFunctions.sendUI(ship, UI);
-        },
         handleOptions: function (ship, id) {
             if (!id.startsWith(this.optionUI.prefix)) return;
             let oldPresetIndex = ship.custom.preferredRatioPreset;
@@ -4859,29 +4864,7 @@ const AbilityManager = {
             ship.custom.preferredRatioPreset = option == "next" ? ++ship.custom.preferredRatioPreset : +option;
             this.getPreset(ship);
             if (ship.custom.preferredRatioPreset === oldPresetIndex) return;
-            this.renderInfo(ship);
-            this.set(ship);
-        },
-        showOptions: function (ship) {
-            if ((ship || {}).id == null) return;
-            for (let i = 0; i < 10; ++i) { // yes this part is hardcoded
-                HelperFunctions.sendUI(ship, {
-                    id: this.optionUI.prefix + i,
-                    visible: false,
-                    clickable: true,
-                    shortcut: ((i + 1) % 10).toString() // 1 2 3 4 5 6 7 8 9 0
-                });
-            }
-
-            HelperFunctions.sendUI(ship, {
-                id: this.optionUI.prefix + "next",
-                clickable: true,
-                position: [75, 5, 5, 2.5],
-                components: [
-                    { type: "box", position: [0, 0, 100, 100], stroke: "#cde", width: 2},
-                    { type: "text", position: [0, 0, 100, 100], value: "Change", color: "#cde"}
-                ]
-            })
+            this.set(ship, true);
         },
         color: "#cde",
         vertical_scale: 1.425, // we will scale using vertical ratio as base
@@ -4919,19 +4902,28 @@ const AbilityManager = {
                 return scale * (range * 2) / this.calculatePlaneScale(zoom, shipRadius);
             }
         },
-        set: function (ship) {
+        set: function (ship, forced = false) {
             if ((ship || {}).id == null) return;
-            
-            let shipAbil = ship.custom.ability;
 
-            if (!(shipAbil || {}).showAbilityRangeUI || shipAbil.range == null) return HelperFunctions.sendUI(ship, { id: this.id, visible: false});
+            let zoomLevel = AbilityManager.zoomLevel[ship.custom.__last_ability_ship_type__ || ship.type];
+
+            if (zoomLevel == null || zoomLevel.range <= 0) {
+                if (!ship.custom.__hide_aspect_ratio_info__) {
+                    for (let id of [
+                        this.id,
+                        this.optionUI.infoID,
+                        this.optionUI.prefix + "next",
+                        ...Array(10).fill(0).map((v, i) => (this.optionUI.prefix + i))
+                    ]) HelperFunctions.sendUI(ship, { id, visible: false });
+                    ship.custom.__hide_aspect_ratio_info__ = true;
+                }
+                return;
+            }
 
             let preset = this.getPreset(ship);
 
-            let zoomLevel = AbilityManager.zoomLevel[ship.custom.__last_ability_ship_type__ || ship.type] || {};
-
             // render abilityRange UI here
-            let height = this.threeJSClientSpecs.getVisibleHeightFraction(shipAbil.range, zoomLevel.radius || 1, zoomLevel.zoom || 1, this.vertical_scale);
+            let height = this.threeJSClientSpecs.getVisibleHeightFraction(zoomLevel.range, zoomLevel.radius || 1, zoomLevel.zoom || 1, this.vertical_scale);
             let width = height * preset.h / preset.w;
 
             HelperFunctions.sendUI(ship, {
@@ -4941,6 +4933,38 @@ const AbilityManager = {
                     { type: "round", position: [0, 0, 100, 100], stroke: this.color, width: this.width }
                 ]
             });
+
+            if (forced || ship.custom.__hide_aspect_ratio_info__) {
+                let UI = {
+                    id: this.optionUI.infoID,
+                    ...this.optionUI.data
+                };
+
+                UI.components[0].value = `Aspect Ratio ${preset.w}:${preset.h} [${(ship.custom.preferredRatioPreset + 1) % 10}]`;
+
+                HelperFunctions.sendUI(ship, UI);
+
+                HelperFunctions.sendUI(ship, {
+                    id: this.optionUI.prefix + "next",
+                    clickable: true,
+                    position: [75, 5, 5, 2.5],
+                    components: [
+                        { type: "box", position: [0, 0, 100, 100], stroke: "#cde", width: 2},
+                        { type: "text", position: [0, 0, 100, 100], value: "Change", color: "#cde"}
+                    ]
+                });
+    
+                for (let i = 0; i < 10; ++i) { // yes this part is hardcoded
+                    HelperFunctions.sendUI(ship, {
+                        id: this.optionUI.prefix + i,
+                        visible: false,
+                        clickable: true,
+                        shortcut: ((i + 1) % 10).toString() // 1 2 3 4 5 6 7 8 9 0
+                    });
+                }
+            }
+
+            ship.custom.__hide_aspect_ratio_info__ = false;
         }
     },
     globalTick2: function (game) {
@@ -4957,8 +4981,6 @@ const AbilityManager = {
             if (ship.id == null) continue;
             if (!ship.custom.__ability__initialized__ && ship.alive) {
                 this.random(ship, true);
-                this.abilityRangeUI.showOptions(ship);
-                this.abilityRangeUI.renderInfo(ship);
                 ship.custom.__ability__initialized__ = true;
             }
             if (this.showAbilityNotice && ship.custom.allowInstructor) {
@@ -5193,9 +5215,16 @@ const AbilityManager = {
                 jsonData.typespec.__ABILITY_SYSTEM_INFO__ = __ABILITY_SYSTEM_INFO__;
 
                 this.ship_codes.push(JSON.stringify(jsonData));
-                this.zoomLevel[jsonData.typespec.code] = {
+                
+                let showAbilityRangeUI;
+
+                if (ability.showAbilityRangeUI == null || "object" != typeof ability.showAbilityRangeUI) showAbilityRangeUI = !!ability.showAbilityRangeUI;
+                else showAbilityRangeUI = !!ability.showAbilityRangeUI[shipAbilityName];
+
+                if (showAbilityRangeUI && ability.range != null && !isNaN(ability.range)) this.zoomLevel[jsonData.typespec.code] = {
                     zoom: jsonData.zoom || 1,
-                    radius: jsonData.typespec.radius || 1
+                    radius: jsonData.typespec.radius || 1,
+                    range: +ability.range || 0
                 };
             }
             catch (e) {
@@ -5273,11 +5302,11 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/gameLogic.js at Sun Jun 25 2023 23:04:25 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Mon Jun 26 2023 12:38:18 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/GameConfig.js at Sun Jun 25 2023 23:04:25 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Mon Jun 26 2023 12:38:18 GMT+0900 (Japan Standard Time) */
 
 const map_name = null; // leave `null` if you want randomized map name
 
@@ -5386,7 +5415,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Sun Jun 25 2023 23:04:25 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Mon Jun 26 2023 12:38:18 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -6150,7 +6179,7 @@ AbilityManager.onActionBlockStateChange = function (ship) {
 
 
 
-/* Imported from misc/tickFunctions.js at Sun Jun 25 2023 23:04:25 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Mon Jun 26 2023 12:38:18 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -6663,7 +6692,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Sun Jun 25 2023 23:04:25 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Mon Jun 26 2023 12:38:18 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -6722,7 +6751,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Sun Jun 25 2023 23:04:25 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Mon Jun 26 2023 12:38:18 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
@@ -6791,6 +6820,6 @@ this.options.ships[0] = JSON.stringify(ship101);
 
 
 
-/* Imported from misc/gameInfo.js at Sun Jun 25 2023 23:04:25 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameInfo.js at Mon Jun 26 2023 12:38:18 GMT+0900 (Japan Standard Time) */
 
 AbilityManager.echo(`[[bg;DarkTurquoise;]Re:][[bg;#EE4B2B;]Arena] ([[;#AAFF00;]${__ABILITY_SYSTEM_INFO__.branch}]) [[;Cyan;]v${__ABILITY_SYSTEM_INFO__.version} (Build ID [[;${HelperFunctions.toHSLA(__ABILITY_SYSTEM_INFO__.buildID)};]${__ABILITY_SYSTEM_INFO__.buildID}])\nMap picked: [[b;Cyan;]${MapManager.get().name} by ${MapManager.get().author}\n\nType \`commands\` to see all commands\nAnd \`usage <commandName>\` to show usage of a command\n\n]`);
