@@ -22,7 +22,7 @@ const __ABILITY_SYSTEM_INFO__ = {
     name: "Arena_Mod",
     branch: "ShipTesting",
     version: "4.0.0",
-    buildID: "188f5c7e7ad"
+    buildID: "18900cb2c6f"
 };
 
 
@@ -97,7 +97,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_ShipTesting.js at Mon Jun 26 2023 12:38:18 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_ShipTesting.js at Wed Jun 28 2023 15:57:42 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -140,7 +140,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Mon Jun 26 2023 12:38:18 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Wed Jun 28 2023 15:57:42 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -190,7 +190,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps_ShipTesting.js at Mon Jun 26 2023 12:38:18 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps_ShipTesting.js at Wed Jun 28 2023 15:57:42 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -206,7 +206,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Mon Jun 26 2023 12:38:18 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Wed Jun 28 2023 15:57:42 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -473,7 +473,7 @@ const ShipAbilities = {
             default: '{"name":"A-Speedster","remodel":"Nex","level":6,"model":5,"size":1.5,"specs":{"shield":{"capacity":[200,300],"reload":[6,8]},"generator":{"capacity":[80,140],"reload":[37,47]},"ship":{"mass":200,"speed":[90,135],"rotation":[60,80],"acceleration":[90,140]}},"bodies":{"main":{"section_segments":8,"offset":{"x":0,"y":0,"z":0},"position":{"x":[0,0,0,0],"y":[-100,-95,0,5],"z":[0,0,0,0]},"width":[0,10,40,0],"height":[0,5,30,0],"texture":[6,11,4],"laser":{"damage":[38,84],"rate":1,"type":2,"speed":[175,230],"recoil":50,"number":1,"error":0}},"warp_drive":{"section_segments":12,"offset":{"x":0,"y":20,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"y":[-22,-22,-8,-2,-3,2,1,40,40,45,60,80,70],"z":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},"width":[0,30,25,23,21,21,13,13,21,23,25,18,0],"height":[0,25,25,23,21,21,13,13,21,23,25,18,0],"propeller":1,"texture":[4,13,4,8,4,17,17,18,4,12,8,17],"vertical":0,"angle":0},"side_connector":{"section_segments":12,"offset":{"x":20,"y":-20,"z":-40},"position":{"x":[-9,-9,0,0,0,0,0,0,0,0,0,0,0,0],"y":[-27,-27,-3,0,-1,4,3,15,15,20,25,25],"z":[0,0,0,0,0,0,0,0,0,0,0,0]},"width":[0,20,20,18,16,16,13,12,16,18,20,0],"height":[0,20,20,18,16,16,13,12,16,18,20,0],"propeller":false,"texture":[4,13,4,8,4,17,3,18,4,12,4],"vertical":1,"angle":70},"struts":{"section_segments":12,"offset":{"x":15,"y":50,"z":0},"position":{"x":[0,0,0,0],"y":[-50,-20,40,40],"z":[0,0,0,0]},"width":[2,4,4,2],"height":[2,5,5,2],"angle":0,"propeller":false,"texture":4},"struts2":{"section_segments":12,"offset":{"x":0,"y":50,"z":10},"position":{"x":[0,0,0,0],"y":[-50,-20,40,40],"z":[0,0,0,0]},"width":[2,4,4,2],"height":[2,5,5,2],"angle":0,"propeller":false,"texture":4},"cookring1":{"section_segments":8,"offset":{"x":0,"y":55,"z":0},"position":{"x":[0,0,0,0],"y":[-4,-4,0,0],"z":[0,0,0,0]},"width":[0,18,18,0],"height":[0,18,18,0],"texture":[4],"propeller":false},"cookring2":{"section_segments":8,"offset":{"x":0,"y":45,"z":0},"position":{"x":[0,0,0,0],"y":[-4,-4,0,0],"z":[0,0,0,0]},"width":[0,18,18,0],"height":[0,18,18,0],"texture":[4],"propeller":false},"cookring3":{"section_segments":8,"offset":{"x":0,"y":35,"z":0},"position":{"x":[0,0,0,0],"y":[-4,-4,0,0],"z":[0,0,0,0]},"width":[0,18,18,0],"height":[0,18,18,0],"texture":[4],"propeller":false},"cockpit":{"section_segments":8,"offset":{"x":0,"y":-60,"z":15},"position":{"x":[0,0,0,0,0,0,0],"y":[-15,0,20,40,50],"z":[-7,-5,0,0,0]},"width":[0,6,10,12,0],"height":[0,10,15,12,0],"texture":[9]},"side_propulsors":{"section_segments":10,"offset":{"x":50,"y":25,"z":-5},"position":{"x":[0,0,0,0,0,0,0,0,0,0,0,0],"y":[-20,-15,0,10,20,25,30,40,60,65,90,90],"z":[0,0,0,0,0,0,0,0,0,0,0,0]},"width":[0,15,20,20,20,15,15,20,20,10,10,0],"height":[0,15,20,20,20,15,15,20,20,10,10,0],"propeller":true,"texture":[4,4,2,2,5,63,5,4,17,17,4]},"thruster":{"section_segments":10,"offset":{"x":50,"y":55,"z":-5},"position":{"x":[0,0,0],"y":[10,30,30],"z":[0,0,0]},"width":[18,18,20],"height":[18,18,20],"propeller":true,"texture":[4,17,17,4]},"flame_shield":{"section_segments":[35,55,125,145,215,235,305,325],"offset":{"x":50,"y":80,"z":10},"position":{"x":[0,0,0,0],"y":[-50,-20,40,40],"z":[0,0,0,0]},"width":[0,4,4,0],"height":[0,5,5,0],"angle":0,"propeller":false,"texture":4},"flame_shield2":{"section_segments":[35,55,125,145,215,235,305,325],"offset":{"x":65,"y":80,"z":-5},"position":{"x":[0,0,0,0],"y":[-50,-20,40,40],"z":[0,0,0,0]},"width":[0,4,4,0],"height":[0,5,5,0],"angle":0,"propeller":false,"texture":4},"flame_shield3":{"section_segments":[35,55,125,145,215,235,305,325],"offset":{"x":35,"y":80,"z":-5},"position":{"x":[0,0,0,0],"y":[-50,-20,40,40],"z":[0,0,0,0]},"width":[0,4,4,0],"height":[0,5,5,0],"angle":0,"propeller":false,"texture":4},"flame_shield4":{"section_segments":[35,55,125,145,215,235,305,325],"offset":{"x":50,"y":80,"z":-20},"position":{"x":[0,0,0,0],"y":[-50,-20,40,40],"z":[0,0,0,0]},"width":[0,4,4,0],"height":[0,5,5,0],"angle":0,"propeller":false,"texture":4},"cookring":{"section_segments":8,"offset":{"x":0,"y":-43,"z":0},"position":{"x":[0,0,0,0],"y":[-10,-8,0,0],"z":[0,0,0,0]},"width":[0,25,30,20],"height":[0,20,22,20],"texture":[63],"propeller":false},"cannons":{"section_segments":8,"offset":{"x":50,"y":40,"z":12},"position":{"x":[0,0,0,0,0,0,0],"y":[-50,-45,-20,0,20,30,40],"z":[0,0,0,0,0,0,0]},"width":[0,5,7,10,3,5,0],"height":[0,5,7,8,3,5,0],"angle":-1,"laser":{"damage":[8,10],"rate":1.5,"type":1,"speed":[120,160],"number":1,"angle":0,"error":0},"propeller":false,"texture":[6,4,10,4,63,4]}},"wings":{"winglets":{"offset":{"x":15,"y":-40,"z":10},"doubleside":true,"length":[25,10],"width":[5,20,30],"angle":[4,-10],"position":[90,80,50],"texture":[4],"bump":{"position":10,"size":30}}},"typespec":{"name":"A-Speedster","level":6,"model":5,"code":605,"specs":{"shield":{"capacity":[200,300],"reload":[6,8]},"generator":{"capacity":[80,140],"reload":[37,47]},"ship":{"mass":200,"speed":[90,135],"rotation":[60,80],"acceleration":[90,140]}},"shape":[3,2.914,2.408,1.952,1.704,1.603,1.349,1.263,1.198,1.163,1.146,1.631,1.682,1.709,2.06,2.227,2.362,2.484,2.832,3.248,3.818,4.142,3.939,3.779,3.048,3.006,3.048,3.779,3.939,4.142,3.818,3.248,2.832,2.484,2.362,2.227,2.06,1.709,1.682,1.631,1.146,1.163,1.198,1.263,1.349,1.603,1.704,1.952,2.408,2.914],"lasers":[{"x":0,"y":-3,"z":0,"angle":0,"damage":[38,84],"rate":1,"type":2,"speed":[175,230],"number":1,"spread":0,"error":0,"recoil":50},{"x":1.526,"y":-0.3,"z":0.36,"angle":-1,"damage":[8,10],"rate":1.5,"type":1,"speed":[120,160],"number":1,"spread":0,"error":0,"recoil":0},{"x":-1.526,"y":-0.3,"z":0.36,"angle":1,"damage":[8,10],"rate":1.5,"type":1,"speed":[120,160],"number":1,"spread":0,"error":0,"recoil":0}],"radius":4.142}}'
         },
         name: "Quickdrive",
-        cooldown: 6 * 60,
+        cooldown: 8 * 60,
         duration: 0.14 * 60,
 
         TPDistance: 5,
@@ -2176,7 +2176,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Mon Jun 26 2023 12:38:18 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Wed Jun 28 2023 15:57:42 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -2488,7 +2488,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Mon Jun 26 2023 12:38:18 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Wed Jun 28 2023 15:57:42 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -2498,7 +2498,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Mon Jun 26 2023 12:38:18 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Wed Jun 28 2023 15:57:42 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -2853,7 +2853,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Mon Jun 26 2023 12:38:18 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Wed Jun 28 2023 15:57:42 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
