@@ -44,7 +44,7 @@ But at least it should run as expected ~~I guess~~
 If you have any questions or feedbacks, please open an issue and I might include answers in this section.
 
 ### Discord server invite link?
-https://discord.gg/arena-mod (or https://discord.gg/697sdMJwKj if the vanity invite doesn't work)
+https://discord.gg/697sdMJwKj
 
 ### Why so many files and not a single file?
 Welp, actually at first, the remade was conducted only on a single file as usual, but when it reached 5k+ lines, i had some problems with it:
