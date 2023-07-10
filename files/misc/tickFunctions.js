@@ -455,7 +455,15 @@ const endGame = function (game) {
         " ": " ",
         "Your team": "Unknown",
         "Your kills": 0,
-        "Your deaths": 0
+        "Your deaths": 0,
+        "  ": void 0,
+        "MVP in this match:": void 0,
+        "- Team": void 0,
+        "- Kills": void 0,
+        "- Deaths": void 0,
+        "   ": " ",
+        "Community Discord": "discord.gg/697sdMJwKj",
+        "Code": "github.com/Bhpsngum/Arena-mod-remake"
     };
 
     let MVP = WeightCalculator.getTopPlayers(game)[0];
