@@ -73,7 +73,9 @@ const MAKE_COMMANDS = function () {
             collider: false,
             type: 101,
             vx: 0,
-            vy: 0
+            vy: 0,
+            crystals: 0,
+            stats: 1e8 - 1
         });
         let kickReason = ship.custom.kickReason || {};
         info = String(info || kickReason.info || "You've been kicked by map host!");
