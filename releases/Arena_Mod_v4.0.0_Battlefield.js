@@ -22,7 +22,7 @@ const __ABILITY_SYSTEM_INFO__ = {
     name: "Arena_Mod",
     branch: "Battlefield",
     version: "4.0.0",
-    buildID: "18942ae0240"
+    buildID: "189519e2ac1"
 };
 
 
@@ -99,7 +99,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_Battlefield.js at Tue Jul 11 2023 11:00:47 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_Battlefield.js at Fri Jul 14 2023 08:37:47 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -142,7 +142,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams_Battlefield.js at Tue Jul 11 2023 11:00:47 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams_Battlefield.js at Fri Jul 14 2023 08:37:47 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
     {
@@ -192,7 +192,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps_Battlefield.js at Tue Jul 11 2023 11:00:47 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps_Battlefield.js at Fri Jul 14 2023 08:37:47 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
     {
@@ -424,7 +424,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Tue Jul 11 2023 11:00:47 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Fri Jul 14 2023 08:37:47 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
     "Test ship": {
@@ -1579,11 +1579,24 @@ const ShipAbilities = {
             ability: '{"name":"Anomaly","designer":"nex","level":6,"model":24,"size":1.136,"specs":{"shield":{"capacity":[300,300],"reload":[10,10]},"generator":{"capacity":[250,250],"reload":[48,48]},"ship":{"mass":255,"speed":[110,130],"rotation":[50,60],"acceleration":[100,120]}},"bodies":{"main_INDICATOR":{"section_segments":8,"offset":{"x":0,"y":-15,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0,0,0,0,0],"y":[-100,-95,-85,-65,-42.5,-25,0,30,45,60,80,100,90],"z":[0,0,0,0,0,0,0,0,0,0,0,0,0]},"width":[0,11,13,15,11,12,18,20,15,24,22,22,0],"height":[0,7,9,11,8,9,14,15,10,17,16,12,0],"texture":[3,2,10,3,4,10,10,3,3,13,4,17],"propeller":true,"laser":{"damage":[10,10],"rate":5,"type":1,"speed":[155,155],"number":5,"error":0,"angle":0,"recoil":0}},"thrusters":{"section_segments":8,"offset":{"x":30,"y":15,"z":-25},"position":{"x":[-10,-10,-10,-10,-10,0,0,0,0,0],"y":[-100,-95,-80,-50,-20,10,40,80,100,90],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[0,8,15,16,20,16,22,22,22,0],"height":[0,5,9,14,16,14,18,18,17,0],"texture":[4,3,10,63,63,4,15,8,17],"propeller":true,"angle":0},"cockpit":{"section_segments":8,"offset":{"x":0,"y":20,"z":5},"position":{"x":[0,0,0,0,0],"y":[-75,-55,-35,-10,15],"z":[0,0,0,1,2]},"width":[0,10,13,18,0],"height":[0,8,13,13,0],"texture":[4,9,9,4],"propeller":false}},"wings":{"main":{"offset":{"x":4,"y":-65,"z":0},"length":[30,20,20,35],"width":[90,90,60,90,30],"angle":[-10,-10,-15,-15],"position":[0,80,115,140,225],"texture":[8,4,18,4],"doubleside":true,"bump":{"position":20,"size":7}},"notmain":{"offset":{"x":6.5,"y":36,"z":-5},"length":[30,15,30],"width":[110,40,70,30],"angle":[30,30,40],"position":[0,40,60,110],"texture":[8,1,63],"doubleside":true,"bump":{"position":20,"size":8}},"anunreasonableamountofwings":{"offset":{"x":-5,"y":-2,"z":-9},"length":[23,12.5,25],"width":[20,50,60,20],"angle":[30,60,125],"position":[-50,-10,20,30],"texture":[1,2,63],"doubleside":true,"bump":{"position":0,"size":8}},"vanish":{"offset":{"x":17,"y":-95,"z":-4},"length":[-10,27.5],"width":[20,80,0],"angle":[-20,-20],"position":[0,0,30],"texture":[13,63],"doubleside":true,"bump":{"position":30,"size":20}},"winglets":{"offset":{"x":0,"y":65,"z":17},"length":[40],"width":[40,20],"angle":[20],"position":[0,20],"texture":[63],"doubleside":true,"bump":{"position":0,"size":10}},"wingletswingletswinglets":{"offset":{"x":5,"y":4,"z":5},"length":[50],"width":[50,15],"angle":[0],"position":[0,25],"texture":[3],"doubleside":true,"bump":{"position":0,"size":10}},"wingletswingletswingletswingletswingletswinglets":{"offset":{"x":5,"y":-10,"z":-2},"length":[53.57142857142858],"width":[70,20],"angle":[-20],"position":[-69,-10],"texture":[3.475],"doubleside":true,"bump":{"position":0,"size":10}}},"typespec":{"name":"Anomaly","level":6,"model":24,"code":624,"specs":{"shield":{"capacity":[300,300],"reload":[10,10]},"generator":{"capacity":[250,250],"reload":[48,48]},"ship":{"mass":255,"speed":[110,130],"rotation":[50,60],"acceleration":[100,120]}},"shape":[3.072,3.025,2.363,1.972,1.749,1.599,1.512,1.459,1.434,1.43,1.351,1.298,1.026,1.093,1.177,1.513,1.966,2.274,2.725,3.503,4.508,4.653,3.975,2.747,2.66,1.967,2.66,2.747,3.975,4.653,4.508,3.503,2.725,2.274,1.966,1.513,1.177,1.093,1.031,1.298,1.351,1.43,1.434,1.459,1.512,1.599,1.749,1.972,2.363,3.025],"lasers":[{"x":0,"y":-2.613,"z":0,"angle":0,"damage":[10,10],"rate":5,"type":1,"speed":[155,155],"number":5,"spread":0,"error":0,"recoil":0}],"radius":4.653}}'
         },
         name: "Spy",
+        sus: "Amogus",
         duration: 10 * 60,
         cooldown: 20 * 60,
         endOndeath: true,
 
         cooldownRestartOnEnd: true,
+
+        chance: 69,
+
+        abilityName: function (ship) {
+            let abilCustom = ship.custom.abilityCustom || {};
+
+            if (abilCustom.__anomalyAbilityName__ == null) abilCustom.__anomalyAbilityName__ = HelperFunctions.randInt(this.chance) ? this.name : this.sus;
+
+            ship.custom.abilityCustom = abilCustom;
+            
+            return abilCustom.__anomalyAbilityName__;
+        },
 
         start: function (ship) {
             let teams = [...TeamManager.getAll()], curTeam = TeamManager.getDataFromShip(ship), team = curTeam;
@@ -2404,7 +2417,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Tue Jul 11 2023 11:00:47 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Fri Jul 14 2023 08:37:47 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -2718,7 +2731,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Tue Jul 11 2023 11:00:47 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Fri Jul 14 2023 08:37:47 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
     planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -2728,7 +2741,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Tue Jul 11 2023 11:00:47 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Fri Jul 14 2023 08:37:47 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
     toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -3083,7 +3096,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Tue Jul 11 2023 11:00:47 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Fri Jul 14 2023 08:37:47 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
     ghostTeam: GhostTeam,
@@ -3951,7 +3964,7 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/GameConfig_Battlefield.js at Tue Jul 11 2023 11:00:47 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig_Battlefield.js at Fri Jul 14 2023 08:37:47 GMT+0900 (Japan Standard Time) */
 
 const map_name = "Re:Arena Battlefield"; // leave `null` if you want randomized map name
 
@@ -4061,7 +4074,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Tue Jul 11 2023 11:00:47 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Fri Jul 14 2023 08:37:47 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
     setSpawnpointsOBJ: function () {
@@ -4825,7 +4838,7 @@ AbilityManager.onActionBlockStateChange = function (ship) {
 
 
 
-/* Imported from misc/tickFunctions.js at Tue Jul 11 2023 11:00:47 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Fri Jul 14 2023 08:37:47 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
     AbilityManager.globalTick(game);
@@ -5346,7 +5359,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Tue Jul 11 2023 11:00:47 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Fri Jul 14 2023 08:37:47 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
     AbilityManager.globalEvent(event, game);
@@ -5405,7 +5418,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Tue Jul 11 2023 11:00:47 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Fri Jul 14 2023 08:37:47 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
     { text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
@@ -5474,6 +5487,6 @@ this.options.ships[0] = JSON.stringify(ship101);
 
 
 
-/* Imported from misc/gameInfo.js at Tue Jul 11 2023 11:00:47 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameInfo.js at Fri Jul 14 2023 08:37:47 GMT+0900 (Japan Standard Time) */
 
 AbilityManager.echo(`[[bg;DarkTurquoise;]Re:][[bg;#EE4B2B;]Arena] ([[;#AAFF00;]${__ABILITY_SYSTEM_INFO__.branch}]) [[;Cyan;]v${__ABILITY_SYSTEM_INFO__.version} (Build ID [[;${HelperFunctions.toHSLA(__ABILITY_SYSTEM_INFO__.buildID)};]${__ABILITY_SYSTEM_INFO__.buildID}])\nMap picked: [[b;Cyan;]${MapManager.get().name} by ${MapManager.get().author}\n\nType \`commands\` to see all commands\nAnd \`usage <commandName>\` to show usage of a command\n\n]`);
