@@ -15,11 +15,11 @@ Currently, to use the Ability System (which is bundled with TeamManager and MapM
 1. Clone this Repository to your machine and navigate to that folder
 2. Tune the files inside the "files" directory by your choice
 The files below are recommended and better don't touch other files unless you know what you're doing
-    - Config.js
-    - Abilities.js
-    - Maps.js
-    - Teams.js
-    - Commands.js (if you understand it, or else don't)
+	- Config.js
+	- Abilities.js
+	- Maps.js
+	- Teams.js
+	- Commands.js (if you understand it, or else don't)
 
 3. Paste your current's mod code in the templates/gameLogic.js file
 Consider the things below:
@@ -29,19 +29,19 @@ AbilityManager.initialize()
 
 // to get ship codes to put in `this.options`:
 this.options = {
-    reset_tree: true,
-    ships: [
-        // Your other ships, you must include the 101 since ability manager won't make you one
-        AbilityManager.getShipCodes()
-    ]
+	reset_tree: true,
+	ships: [
+		// Your other ships, you must include the 101 since ability manager won't make you one
+		AbilityManager.getShipCodes()
+	]
 }
 
 // Note that it will initialize first if it hasn't yet
 
 // Control the tick
 this.tick = function (game) {
-    AbilityManager.globalTick(game);
-    // your stuff here
+	AbilityManager.globalTick(game);
+	// your stuff here
 }
 
 // make sure to set
@@ -51,8 +51,8 @@ this.tick = function (game) {
 
 // Control the event
 this.event = function (event, game) {
-    AbilityManager.globalEvent(event, game);
-    // your stuff here
+	AbilityManager.globalEvent(event, game);
+	// your stuff here
 }
 
 4. Install NodeJS and NPM if you haven't yet

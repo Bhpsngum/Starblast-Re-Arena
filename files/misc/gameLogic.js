@@ -5,11 +5,11 @@
 /* import misc/tickFunctions.js */
 
 if (DEBUG) {
-    const debug = { ...this };
-    debug.tick = initialization;
-    this.tick = function (game) {
-        try { debug.tick(game); } catch (e) { console.error(e) }
-    }
+	const debug = { ...this };
+	debug.tick = initialization;
+	this.tick = function (game) {
+		try { debug.tick(game); } catch (e) { console.error(e) }
+	}
 }
 else this.tick = initialization;
 
