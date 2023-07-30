@@ -100,7 +100,7 @@ const GameHelperFunctions = {
 			{
 				...CONTROL_POINT.position,
 				size: CONTROL_POINT.size,
-				character: "×",
+				character: String.fromCharCode(215), // it's a "times" character, but using this conversion just in case file is saved in another format (not UTF-8)
 				color
 			}
 		];
