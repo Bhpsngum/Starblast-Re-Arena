@@ -646,16 +646,19 @@ const AbilityManager = {
 
 			let resourceLink = `https://github.com/Bhpsngum/Arena-mod-remake/blob/main/releases/${systemInfo.name}_v${systemInfo.version}_${systemInfo.branch}.js`;
 
-			fetch(resourceLink + '?raw=true').then(data => data.text().then(text => {
-				let latestBuildID = (text.match(/buildID:\s*"([a-f0-9]+)"/) || [])[1];
-				if (latestBuildID != systemInfo.buildID) $("#terminal").terminal().echo(`\n\nNOTICE: Newer build ([[;#AAFF00;]${latestBuildID}]) detected!\nYou can get it through `, {
-					finalize: function (div) {
-						div.children().last().append(`<a href="${resourceLink}" target="_blank">this link.</a><br><br>`)
-					}
-				})
-			})).catch(e => {
-				game.modding.terminal.error("Failed to fetch source version info");
-			});
+			try {
+				fetch(resourceLink + '?raw=true').then(data => data.text().then(text => {
+					let latestBuildID = (text.match(/buildID:\s*"([a-f0-9]+)"/) || [])[1];
+					if (latestBuildID != systemInfo.buildID) $("#terminal").terminal().echo(`\n\nNOTICE: Newer build ([[;#AAFF00;]${latestBuildID}]) detected!\nYou can get it through `, {
+						finalize: function (div) {
+							div.children().last().append(`<a href="${resourceLink}" target="_blank">this link.</a><br><br>`)
+						}
+					})
+				})).catch(e => {
+					game.modding.terminal.error("Failed to fetch source version info");
+				});
+			}
+			catch (e) { game.modding.terminal.error("Failed to fetch source version info"); }
 		}
 	},
 	compileAbilities: function () {
@@ -855,7 +858,12 @@ this.__ABILITY_MANAGER_OPTIONS__ = {
 	max_players: GAME_OPTIONS.max_players
 }
 
+this.__options__ = JSON.parse(JSON.stringify(this.__ABILITY_MANAGER_OPTIONS__));
+
 Object.defineProperty(this, 'options', {
-	get () { return this.__ABILITY_MANAGER_OPTIONS__ },
-	set (value) { return Object.assign(this.__ABILITY_MANAGER_OPTIONS__, value) }
+	get () { return this.__options__ },
+	set (value) {
+		this.__options__ = Object.assign(JSON.parse(JSON.stringify(this.__ABILITY_MANAGER_OPTIONS__)), value);
+		return this.__options__
+	}
 });
