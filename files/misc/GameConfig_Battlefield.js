@@ -12,10 +12,10 @@ Object.assign(GAME_OPTIONS, {
 	map_size: 200,
 	radar_zoom: 2,
 	buttons_cooldown: 0.25, // must wait after x (seconds) before the same button can be triggered again
-	duplicate_choose_limit: 5, // immediately close the ship menu after a single ship has been choosen x times
+	duplicate_choose_limit: 5, // immediately close the ship menu after a single ship has been chosen x times
 	killsCap: {
-		start: 5, // initial starting
-		seconds: 10, // increases after every <x> "judged" seconds on point, don't do 0 btw
+		start: 5, // initial cap
+		seconds: 30, // increases after every <x> "judged" seconds on point, don't do 0 btw
 		bonus: 3 // and increase by "bonus" each
 	},
 	alienSpawns: {

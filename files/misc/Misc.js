@@ -187,7 +187,7 @@ const WeightCalculator = {
 		let kills = ship.custom.kills = +ship.custom.kills || 0;
 		let deaths = ship.custom.deaths = +ship.custom.deaths || 0;
 
-		return kills - deaths / 3;
+		return kills * 3 - deaths;
 	},
 	getTopPlayers: function (game, donSort = false) {
 		let players = game.ships.filter(e => (e || {}).id != null && !e.custom.kicked);
