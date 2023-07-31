@@ -22,7 +22,7 @@ const __ABILITY_SYSTEM_INFO__ = {
     name: "Arena_Mod",
     branch: "Battlefield",
     version: "4.0.0",
-    buildID: "189a81b4c4d"
+    buildID: "189abdb6992"
 };
 
 
@@ -99,7 +99,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_Battlefield.js at Mon Jul 31 2023 03:41:48 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_Battlefield.js at Mon Jul 31 2023 21:10:30 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -142,7 +142,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams_Battlefield.js at Mon Jul 31 2023 03:41:48 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams_Battlefield.js at Mon Jul 31 2023 21:10:30 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
 	{
@@ -192,7 +192,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps_Battlefield.js at Mon Jul 31 2023 03:41:48 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps_Battlefield.js at Mon Jul 31 2023 21:10:30 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
 	{
@@ -424,7 +424,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Mon Jul 31 2023 03:41:48 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Mon Jul 31 2023 21:10:30 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
 	"Test ship": {
@@ -913,7 +913,7 @@ const ShipAbilities = {
 		name: "Air-strike",
 		cooldown: 33 * 60,
 		duration: 5 * 60,
-		ammountCanFire: 8, // amount of secondaries can fire in the duration
+		ammountCanFire: 10, // amount of secondaries can fire in the duration
 		cooldownRestartOnEnd: true,
 		customInAbilityText: true,
 		endOnDeath: true,
@@ -2093,7 +2093,7 @@ const ShipAbilities = {
 	},
 	"Valkyrie": {
 		models: {
-			default: '{"name":"Valkyrie","designer":"nex","level":6,"model":35,"size":1.15,"specs":{"shield":{"capacity":[200,200],"reload":[6,6]},"generator":{"capacity":[120,120],"reload":[80,80]},"ship":{"mass":160,"speed":[110,110],"rotation":[130,130],"acceleration":[180,180]}},"bodies":{"chin":{"section_segments":8,"offset":{"x":0,"y":0,"z":0},"position":{"x":[0,0,0,0,0,0,0,0],"y":[-60,-57,-30,-5,20,60,110,90],"z":[0,0,0,0,0,0,0,0]},"width":[0,15,25,27,20,30,20,0],"height":[0,10,15,15,10,15,10,0],"texture":[1,2,11,4,3,8,17],"propeller":true},"shield":{"section_segments":4,"offset":{"x":0,"y":-60,"z":0},"position":{"x":[-25,-20,0,0,-20,-25],"y":[-70,-60,-20,20,60,70],"z":[0,0,0,0,0,0]},"width":[0,10,17,17,10,0],"height":[0,20,24,24,20,0],"texture":[1,4,8,4,1],"propeller":true,"angle":90},"plate":{"section_segments":12,"offset":{"x":0,"y":-20,"z":-55},"position":{"x":[0,0,0,0,0],"y":[-40,-40,-30,-10,0],"z":[0,0,0,0,0]},"width":[0,35,45,0,0],"height":[0,35,45,0,0],"texture":[1,4],"propeller":false,"vertical":true,"angle":180},"plus_sign":{"section_segments":6,"offset":{"x":0,"y":30,"z":21},"position":{"x":[0,0,0,0],"y":[-55,-50,0,5],"z":[0,0,0,0]},"width":[5,8,8,5],"height":[0,0,0,0],"texture":[62],"propeller":false,"vertical":false,"angle":180},"plus_sign2":{"section_segments":6,"offset":{"x":0,"y":55,"z":21},"position":{"x":[0,0,0,0],"y":[-30,-25,25,30],"z":[0,0,0,0]},"width":[5,8,8,5],"height":[0,0,0,0],"texture":[62],"propeller":false,"vertical":false,"angle":90},"wing_base":{"section_segments":4,"offset":{"x":120,"y":115,"z":10},"position":{"x":[0,0,-15,-25,-10,5,10],"y":[-130,-95,-70,-40,0,30,35],"z":[0,0,10,30,40,40,40]},"width":[0,10,11,17,12,10,0],"height":[0,10,10,13,10,7,0],"texture":[4,3,2,1,-1],"propeller":false,"angle":45},"healinglaser":{"section_segments":8,"offset":{"x":20,"y":-60,"z":0},"position":{"x":[-10,-8,0,5,5,5,5,20],"y":[-95,-70,-50,-40,-20,-10,60,110],"z":[-15,-10,-10,-10,-10,-5,0,0]},"width":[0,4,6,7,7,5,10,5],"height":[0,4,6,7,7,5,5,5],"texture":[-1,13,4,8,1,1,3],"propeller":false,"angle":0,"laser":{"damage":[10,10],"rate":5,"type":1,"speed":[80,80],"number":1,"error":0,"angle":0,"recoil":0}},"healinglaser4":{"section_segments":8,"offset":{"x":25,"y":-60,"z":0},"position":{"x":[-10],"y":[-95],"z":[-15]},"width":[0],"height":[0],"texture":[-1],"propeller":false,"angle":5,"laser":{"damage":[10,10],"rate":5,"type":1,"speed":[100,100],"number":1,"error":0,"angle":0,"recoil":0}},"healinglaser2":{"section_segments":8,"offset":{"x":0,"y":-50,"z":0},"position":{"x":[0,0,0,0,0,0,0,0],"y":[-95,-70,-50,-40,-20,-10,60,140],"z":[-10,-10,-10,-10,-10,-5,0,0]},"width":[0,4,5,7,7,5,10,5],"height":[0,4,5,7,7,5,5,5],"texture":[-1,13,4,8],"propeller":false,"angle":0,"laser":{"damage":[80,80],"rate":3,"type":2,"speed":[130,130],"number":1,"error":0,"angle":0,"recoil":0}}},"wings":{"main":{"offset":{"x":20,"y":90,"z":-5},"length":[35,-15,40],"width":[30,40,160,90],"angle":[0,0,-30],"position":[-10,-20,-40,-10],"texture":[4,13,63],"doubleside":true,"bump":{"position":20,"size":15}},"fang1":{"offset":{"x":18,"y":-95,"z":-8},"length":[-10,25],"width":[0,90,100],"angle":[-20,-20],"position":[0,15,0],"texture":[13,63],"doubleside":true,"bump":{"position":20,"size":30}},"fang2":{"offset":{"x":35,"y":-75,"z":-10},"length":[-10,15,15],"width":[0,40,60,0],"angle":[0,0,30],"position":[0,10,0,30],"texture":[13,3,63],"doubleside":true,"bump":{"position":20,"size":20}},"feather1":{"offset":{"x":75,"y":100,"z":30},"length":[100,10],"width":[40,20,0],"angle":[13,9],"position":[0,30,35],"texture":[49,1],"doubleside":true,"bump":{"position":20,"size":15}},"feather2":{"offset":{"x":60,"y":80,"z":17},"length":[110,10],"width":[40,20,0],"angle":[10,10],"position":[0,10,20],"texture":[49,1],"doubleside":true,"bump":{"position":20,"size":15}},"feather3":{"offset":{"x":62,"y":70,"z":11},"length":[83,10],"width":[40,20,0],"angle":[10,10],"position":[0,-10,-13],"texture":[49,1],"doubleside":true,"bump":{"position":20,"size":15}},"feather4":{"offset":{"x":60,"y":45,"z":5},"length":[60,10],"width":[40,20,0],"angle":[5,5],"position":[10,-12,-15],"texture":[49,1],"doubleside":true,"bump":{"position":20,"size":15}},"cockpit":{"offset":{"x":0,"y":-15,"z":13.5},"length":[12,10],"width":[46,30,0],"angle":[-7,-20],"position":[0,0,10],"texture":[9,4],"doubleside":true,"bump":{"position":30,"size":16}},"cockpit_top":{"offset":{"x":0,"y":5,"z":20},"length":[12,20],"width":[30,30,70],"angle":[0,-53],"position":[0,0,15],"texture":[13,4],"doubleside":true,"bump":{"position":30,"size":10}}},"typespec":{"name":"Valkyrie","level":6,"model":35,"code":635,"specs":{"shield":{"capacity":[200,200],"reload":[6,6]},"generator":{"capacity":[120,120],"reload":[80,80]},"ship":{"mass":160,"speed":[110,110],"rotation":[130,130],"acceleration":[180,180]}},"shape":[3.335,3.572,3.416,2.584,2.319,1.999,1.793,1.796,1.793,1.8,1.167,1.21,1.287,1.384,3.063,3.768,4.636,5.09,5.218,4.573,3.929,3.349,3.231,3.136,2.571,2.535,2.571,3.136,3.231,3.349,3.929,4.573,5.218,5.09,4.636,3.768,3.063,1.384,1.287,1.21,1.167,1.8,1.793,1.796,1.793,1.999,2.319,2.584,3.416,3.572],"lasers":[{"x":0.23,"y":-3.565,"z":0,"angle":0,"damage":[10,10],"rate":5,"type":1,"speed":[80,80],"number":1,"spread":0,"error":0,"recoil":0},{"x":-0.23,"y":-3.565,"z":0,"angle":0,"damage":[10,10],"rate":5,"type":1,"speed":[80,80],"number":1,"spread":0,"error":0,"recoil":0},{"x":0.155,"y":-3.537,"z":0,"angle":5,"damage":[10,10],"rate":5,"type":1,"speed":[100,100],"number":1,"spread":0,"error":0,"recoil":0},{"x":-0.155,"y":-3.537,"z":0,"angle":-5,"damage":[10,10],"rate":5,"type":1,"speed":[100,100],"number":1,"spread":0,"error":0,"recoil":0},{"x":0,"y":-3.335,"z":0,"angle":0,"damage":[80,80],"rate":3,"type":2,"speed":[130,130],"number":1,"spread":0,"error":0,"recoil":0}],"radius":5.218}}',
+			default: '{"name":"Valkyrie","designer":"nex","level":6,"model":35,"size":1.15,"specs":{"shield":{"capacity":[200,200],"reload":[6,6]},"generator":{"capacity":[120,120],"reload":[69,69]},"ship":{"mass":160,"speed":[110,110],"rotation":[130,130],"acceleration":[180,180]}},"bodies":{"chin":{"section_segments":8,"offset":{"x":0,"y":0,"z":0},"position":{"x":[0,0,0,0,0,0,0,0],"y":[-60,-57,-30,-5,20,60,110,90],"z":[0,0,0,0,0,0,0,0]},"width":[0,15,25,27,20,30,20,0],"height":[0,10,15,15,10,15,10,0],"texture":[1,2,11,4,3,8,17],"propeller":true},"shield":{"section_segments":4,"offset":{"x":0,"y":-60,"z":0},"position":{"x":[-25,-20,0,0,-20,-25],"y":[-70,-60,-20,20,60,70],"z":[0,0,0,0,0,0]},"width":[0,10,17,17,10,0],"height":[0,20,24,24,20,0],"texture":[1,4,8,4,1],"propeller":true,"angle":90},"plate":{"section_segments":12,"offset":{"x":0,"y":-20,"z":-55},"position":{"x":[0,0,0,0,0],"y":[-40,-40,-30,-10,0],"z":[0,0,0,0,0]},"width":[0,35,45,0,0],"height":[0,35,45,0,0],"texture":[1,4],"propeller":false,"vertical":true,"angle":180},"plus_sign":{"section_segments":6,"offset":{"x":0,"y":30,"z":21},"position":{"x":[0,0,0,0],"y":[-55,-50,0,5],"z":[0,0,0,0]},"width":[5,8,8,5],"height":[0,0,0,0],"texture":[62],"propeller":false,"vertical":false,"angle":180},"plus_sign2":{"section_segments":6,"offset":{"x":0,"y":55,"z":21},"position":{"x":[0,0,0,0],"y":[-30,-25,25,30],"z":[0,0,0,0]},"width":[5,8,8,5],"height":[0,0,0,0],"texture":[62],"propeller":false,"vertical":false,"angle":90},"wing_base":{"section_segments":4,"offset":{"x":120,"y":115,"z":10},"position":{"x":[0,0,-15,-25,-10,5,10],"y":[-130,-95,-70,-40,0,30,35],"z":[0,0,10,30,40,40,40]},"width":[0,10,11,17,12,10,0],"height":[0,10,10,13,10,7,0],"texture":[4,3,2,1,-1],"propeller":false,"angle":45},"healinglaser":{"section_segments":8,"offset":{"x":20,"y":-60,"z":0},"position":{"x":[-10,-8,0,5,5,5,5,20],"y":[-95,-70,-50,-40,-20,-10,60,110],"z":[-15,-10,-10,-10,-10,-5,0,0]},"width":[0,4,6,7,7,5,10,5],"height":[0,4,6,7,7,5,5,5],"texture":[-1,13,4,8,1,1,3],"propeller":false,"angle":0,"laser":{"damage":[10,10],"rate":5,"type":1,"speed":[80,80],"number":1,"error":0,"angle":0,"recoil":0}},"healinglaser4":{"section_segments":8,"offset":{"x":25,"y":-60,"z":0},"position":{"x":[-10],"y":[-95],"z":[-15]},"width":[0],"height":[0],"texture":[-1],"propeller":false,"angle":5,"laser":{"damage":[10,10],"rate":5,"type":1,"speed":[100,100],"number":1,"error":0,"angle":0,"recoil":0}},"healinglaser2":{"section_segments":8,"offset":{"x":0,"y":-50,"z":0},"position":{"x":[0,0,0,0,0,0,0,0],"y":[-95,-70,-50,-40,-20,-10,60,140],"z":[-10,-10,-10,-10,-10,-5,0,0]},"width":[0,4,5,7,7,5,10,5],"height":[0,4,5,7,7,5,5,5],"texture":[-1,13,4,8],"propeller":false,"angle":0,"laser":{"damage":[80,80],"rate":3,"type":2,"speed":[130,130],"number":1,"error":0,"angle":0,"recoil":0}}},"wings":{"main":{"offset":{"x":20,"y":90,"z":-5},"length":[35,-15,40],"width":[30,40,160,90],"angle":[0,0,-30],"position":[-10,-20,-40,-10],"texture":[4,13,63],"doubleside":true,"bump":{"position":20,"size":15}},"fang1":{"offset":{"x":18,"y":-95,"z":-8},"length":[-10,25],"width":[0,90,100],"angle":[-20,-20],"position":[0,15,0],"texture":[13,63],"doubleside":true,"bump":{"position":20,"size":30}},"fang2":{"offset":{"x":35,"y":-75,"z":-10},"length":[-10,15,15],"width":[0,40,60,0],"angle":[0,0,30],"position":[0,10,0,30],"texture":[13,3,63],"doubleside":true,"bump":{"position":20,"size":20}},"feather1":{"offset":{"x":75,"y":100,"z":30},"length":[100,10],"width":[40,20,0],"angle":[13,9],"position":[0,30,35],"texture":[49,1],"doubleside":true,"bump":{"position":20,"size":15}},"feather2":{"offset":{"x":60,"y":80,"z":17},"length":[110,10],"width":[40,20,0],"angle":[10,10],"position":[0,10,20],"texture":[49,1],"doubleside":true,"bump":{"position":20,"size":15}},"feather3":{"offset":{"x":62,"y":70,"z":11},"length":[83,10],"width":[40,20,0],"angle":[10,10],"position":[0,-10,-13],"texture":[49,1],"doubleside":true,"bump":{"position":20,"size":15}},"feather4":{"offset":{"x":60,"y":45,"z":5},"length":[60,10],"width":[40,20,0],"angle":[5,5],"position":[10,-12,-15],"texture":[49,1],"doubleside":true,"bump":{"position":20,"size":15}},"cockpit":{"offset":{"x":0,"y":-15,"z":13.5},"length":[12,10],"width":[46,30,0],"angle":[-7,-20],"position":[0,0,10],"texture":[9,4],"doubleside":true,"bump":{"position":30,"size":16}},"cockpit_top":{"offset":{"x":0,"y":5,"z":20},"length":[12,20],"width":[30,30,70],"angle":[0,-53],"position":[0,0,15],"texture":[13,4],"doubleside":true,"bump":{"position":30,"size":10}}},"typespec":{"name":"Valkyrie","level":6,"model":35,"code":635,"specs":{"shield":{"capacity":[200,200],"reload":[6,6]},"generator":{"capacity":[120,120],"reload":[69,69]},"ship":{"mass":160,"speed":[110,110],"rotation":[130,130],"acceleration":[180,180]}},"shape":[3.335,3.572,3.416,2.584,2.319,1.999,1.793,1.796,1.793,1.8,1.167,1.21,1.287,1.384,3.063,3.768,4.636,5.09,5.218,4.573,3.929,3.349,3.231,3.136,2.571,2.535,2.571,3.136,3.231,3.349,3.929,4.573,5.218,5.09,4.636,3.768,3.063,1.384,1.287,1.21,1.167,1.8,1.793,1.796,1.793,1.999,2.319,2.584,3.416,3.572],"lasers":[{"x":0.23,"y":-3.565,"z":0,"angle":0,"damage":[10,10],"rate":5,"type":1,"speed":[80,80],"number":1,"spread":0,"error":0,"recoil":0},{"x":-0.23,"y":-3.565,"z":0,"angle":0,"damage":[10,10],"rate":5,"type":1,"speed":[80,80],"number":1,"spread":0,"error":0,"recoil":0},{"x":0.155,"y":-3.537,"z":0,"angle":5,"damage":[10,10],"rate":5,"type":1,"speed":[100,100],"number":1,"spread":0,"error":0,"recoil":0},{"x":-0.155,"y":-3.537,"z":0,"angle":-5,"damage":[10,10],"rate":5,"type":1,"speed":[100,100],"number":1,"spread":0,"error":0,"recoil":0},{"x":0,"y":-3.335,"z":0,"angle":0,"damage":[80,80],"rate":3,"type":2,"speed":[130,130],"number":1,"spread":0,"error":0,"recoil":0}],"radius":5.218}}',
 			ability: '{"name":"Valkyrie","designer":"nex","level":7,"model":35,"size":1.12,"specs":{"shield":{"capacity":[260,260],"reload":[12,12]},"generator":{"capacity":[160,160],"reload":[55,55]},"ship":{"mass":225,"speed":[160,160],"rotation":[70,70],"acceleration":[140,140]}},"bodies":{"chin":{"section_segments":8,"offset":{"x":0,"y":0,"z":0},"position":{"x":[0,0,0,0,0,0,0,0],"y":[-60,-57,-30,-5,20,60,110,90],"z":[0,0,0,0,0,0,0,0]},"width":[0,15,25,27,20,30,20,0],"height":[0,10,15,15,10,15,10,0],"texture":[1,2,11,4,3,8,17],"propeller":true},"shield":{"section_segments":4,"offset":{"x":0,"y":-60,"z":0},"position":{"x":[-25,-20,0,0,-20,-25],"y":[-70,-60,-20,20,60,70],"z":[0,0,0,0,0,0]},"width":[0,10,17,17,10,0],"height":[0,20,24,24,20,0],"texture":[1,4,8,4,1],"propeller":true,"angle":90},"plate":{"section_segments":12,"offset":{"x":0,"y":-20,"z":-55},"position":{"x":[0,0,0,0,0],"y":[-40,-40,-30,-10,0],"z":[0,0,0,0,0]},"width":[0,35,45,0,0],"height":[0,35,45,0,0],"texture":[1,4],"propeller":false,"vertical":true,"angle":180},"cross_sign":{"section_segments":6,"offset":{"x":0.1,"y":55,"z":21},"position":{"x":[0,0,0,0],"y":[-30,-25,25,30],"z":[0,0,0,0]},"width":[5,8,8,5],"height":[0,0,0,0],"texture":[63],"propeller":false,"vertical":false,"angle":45},"wing_base":{"section_segments":4,"offset":{"x":120,"y":115,"z":10},"position":{"x":[0,0,7,10,-15,-40,-35],"y":[-130,-95,-70,-40,0,30,35],"z":[0,0,10,30,40,40,40]},"width":[0,10,11,17,12,10,0],"height":[0,10,10,13,10,7,0],"texture":[4,3,2,1,-1],"propeller":false,"angle":45},"healinglaser":{"section_segments":8,"offset":{"x":20,"y":-60,"z":0},"position":{"x":[-7,-5,0,5,5,0,0,10],"y":[-95,-70,-50,-40,-20,-10,60,110],"z":[-15,-10,-10,-10,-10,-5,0,0]},"width":[0,4,6,7,7,5,10,5],"height":[0,4,6,7,7,5,5,5],"texture":[-1,13,4,8,1,1,3],"propeller":false,"angle":5},"healinglaser2":{"section_segments":8,"offset":{"x":0,"y":-50,"z":0},"position":{"x":[0,0,0,0,0,0,0,0],"y":[-95,-70,-50,-40,-20,-10,60,140],"z":[-10,-10,-10,-10,-10,-5,0,0]},"width":[0,4,5,7,7,5,10,5],"height":[0,4,5,7,7,5,5,5],"texture":[-1,13,4,8],"propeller":false,"angle":0,"laser":{"damage":[80,80],"rate":2,"type":2,"speed":[180,180],"number":1,"error":0,"angle":0,"recoil":100}}},"wings":{"main":{"offset":{"x":20,"y":90,"z":-5},"length":[35,-15,40],"width":[30,40,160,90],"angle":[0,0,-30],"position":[-10,-20,-40,-10],"texture":[4,13,63],"doubleside":true,"bump":{"position":20,"size":15}},"fang1":{"offset":{"x":18,"y":-95,"z":-8},"length":[-10,25],"width":[0,90,100],"angle":[-20,-20],"position":[0,15,0],"texture":[13,63],"doubleside":true,"bump":{"position":20,"size":30}},"fang2":{"offset":{"x":35,"y":-75,"z":-10},"length":[-10,15,15],"width":[0,40,60,0],"angle":[0,0,30],"position":[0,10,0,30],"texture":[13,3,63],"doubleside":true,"bump":{"position":20,"size":20}},"feather1":{"offset":{"x":110,"y":110,"z":30},"length":[60,10],"width":[80,20,0],"angle":[180,180],"position":[0,110,120],"texture":[49,1],"doubleside":true,"bump":{"position":20,"size":15}},"feather2":{"offset":{"x":95,"y":95,"z":30},"length":[75,10],"width":[70,20,0],"angle":[180,180],"position":[0,105,110],"texture":[49,1],"doubleside":true,"bump":{"position":20,"size":15}},"feather3":{"offset":{"x":85,"y":70,"z":15},"length":[0,70,10],"width":[0,70,20,0],"angle":[0,180,180],"position":[0,20,80,85],"texture":[49,49,1],"doubleside":true,"bump":{"position":20,"size":15}},"feather4":{"offset":{"x":75,"y":70,"z":15},"length":[0,50,10],"width":[0,50,20,0],"angle":[0,180,180],"position":[0,0,30,35],"texture":[49,49,1],"doubleside":true,"bump":{"position":20,"size":15}},"cockpit":{"offset":{"x":0,"y":-15,"z":13.5},"length":[12,10],"width":[46,30,0],"angle":[-7,-20],"position":[0,0,10],"texture":[9,4],"doubleside":true,"bump":{"position":30,"size":16}},"cockpit_top":{"offset":{"x":0,"y":5,"z":20},"length":[12,20],"width":[30,30,70],"angle":[0,-53],"position":[0,0,15],"texture":[13,4],"doubleside":true,"bump":{"position":30,"size":10}}},"typespec":{"name":"Valkyrie","level":7,"model":35,"code":735,"specs":{"shield":{"capacity":[260,260],"reload":[12,12]},"generator":{"capacity":[160,160],"reload":[55,55]},"ship":{"mass":225,"speed":[160,160],"rotation":[70,70],"acceleration":[140,140]}},"shape":[3.452,3.201,3.327,2.517,2.258,1.947,1.746,1.749,1.746,1.753,1.136,1.179,1.253,1.348,1.491,1.705,1.901,3.125,3.59,4.191,4.561,4.521,4.872,5.272,5.245,4.633,5.245,5.272,4.872,4.521,4.561,4.191,3.59,3.125,1.901,1.705,1.491,1.348,1.253,1.179,1.136,1.753,1.746,1.749,1.746,1.947,2.258,2.517,3.327,3.201],"lasers":[{"x":0,"y":-3.248,"z":0,"angle":0,"damage":[80,80],"rate":2,"type":2,"speed":[180,180],"number":1,"spread":0,"error":0,"recoil":100}],"radius":5.272}}'
 		},
 		name: "Heal",
@@ -2521,7 +2521,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Mon Jul 31 2023 03:41:48 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Mon Jul 31 2023 21:10:30 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -2835,7 +2835,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Mon Jul 31 2023 03:41:48 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Mon Jul 31 2023 21:10:30 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
 	planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -2845,7 +2845,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Mon Jul 31 2023 03:41:48 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Mon Jul 31 2023 21:10:30 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
 	toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -3200,7 +3200,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Mon Jul 31 2023 03:41:48 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Mon Jul 31 2023 21:10:30 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
 	ghostTeam: GhostTeam,
@@ -4076,7 +4076,7 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/GameConfig_Battlefield.js at Mon Jul 31 2023 03:41:48 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig_Battlefield.js at Mon Jul 31 2023 21:10:30 GMT+0900 (Japan Standard Time) */
 
 const map_name = "Re:Arena Battlefield"; // leave `null` if you want randomized map name
 
@@ -4092,10 +4092,10 @@ Object.assign(GAME_OPTIONS, {
 	map_size: 200,
 	radar_zoom: 2,
 	buttons_cooldown: 0.25, // must wait after x (seconds) before the same button can be triggered again
-	duplicate_choose_limit: 5, // immediately close the ship menu after a single ship has been choosen x times
+	duplicate_choose_limit: 5, // immediately close the ship menu after a single ship has been chosen x times
 	killsCap: {
-		start: 5, // initial starting
-		seconds: 10, // increases after every <x> "judged" seconds on point, don't do 0 btw
+		start: 5, // initial cap
+		seconds: 30, // increases after every <x> "judged" seconds on point, don't do 0 btw
 		bonus: 3 // and increase by "bonus" each
 	},
 	alienSpawns: {
@@ -4190,7 +4190,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Mon Jul 31 2023 03:41:48 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Mon Jul 31 2023 21:10:30 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
 	setSpawnpointsOBJ: function () {
@@ -4381,7 +4381,7 @@ const WeightCalculator = {
 		let kills = ship.custom.kills = +ship.custom.kills || 0;
 		let deaths = ship.custom.deaths = +ship.custom.deaths || 0;
 
-		return kills - deaths / 3;
+		return kills * 3 - deaths;
 	},
 	getTopPlayers: function (game, donSort = false) {
 		let players = game.ships.filter(e => (e || {}).id != null && !e.custom.kicked);
@@ -4953,7 +4953,7 @@ AbilityManager.onActionBlockStateChange = function (ship) {
 
 
 
-/* Imported from misc/tickFunctions.js at Mon Jul 31 2023 03:41:48 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Mon Jul 31 2023 21:10:30 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
 	AbilityManager.globalTick(game);
@@ -5477,7 +5477,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Mon Jul 31 2023 03:41:48 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Mon Jul 31 2023 21:10:30 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
 	AbilityManager.globalEvent(event, game);
@@ -5538,7 +5538,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Mon Jul 31 2023 03:41:48 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Mon Jul 31 2023 21:10:30 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
 	{ text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
@@ -5607,6 +5607,6 @@ this.options.ships[0] = JSON.stringify(ship101);
 
 
 
-/* Imported from misc/gameInfo.js at Mon Jul 31 2023 03:41:48 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameInfo.js at Mon Jul 31 2023 21:10:30 GMT+0900 (Japan Standard Time) */
 
 AbilityManager.echo(`[[bg;DarkTurquoise;]Re:][[bg;#EE4B2B;]Arena] ([[;#AAFF00;]${__ABILITY_SYSTEM_INFO__.branch}]) [[;Cyan;]v${__ABILITY_SYSTEM_INFO__.version} (Build ID [[;${HelperFunctions.toHSLA(__ABILITY_SYSTEM_INFO__.buildID)};]${__ABILITY_SYSTEM_INFO__.buildID}])\nMap picked: [[b;Cyan;]${MapManager.get().name} by ${MapManager.get().author}\n\nType \`commands\` to see all commands\nAnd \`usage <commandName>\` to show usage of a command\n\n]`);
