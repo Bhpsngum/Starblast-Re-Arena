@@ -22,7 +22,7 @@ const __ABILITY_SYSTEM_INFO__ = {
     name: "Arena_Mod",
     branch: "MS",
     version: "4.0.0",
-    buildID: "189abdb6992"
+    buildID: "189bb431a8a"
 };
 
 
@@ -99,7 +99,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_MS.js at Mon Jul 31 2023 21:10:30 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_MS.js at Thu Aug 03 2023 20:58:04 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = false; // if in debug phase
 
@@ -142,7 +142,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Mon Jul 31 2023 21:10:30 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Thu Aug 03 2023 20:58:04 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
 	{
@@ -192,7 +192,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Mon Jul 31 2023 21:10:30 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Thu Aug 03 2023 20:58:04 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
 	{
@@ -2698,7 +2698,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Mon Jul 31 2023 21:10:30 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Thu Aug 03 2023 20:58:04 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
 	"Test ship": {
@@ -4795,11 +4795,39 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Mon Jul 31 2023 21:10:30 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Thu Aug 03 2023 20:58:04 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
-	if (!DEBUG) return;
+	let kick = function (ship, info, reason) {
+		ship.custom.kicked = true;
+		ship.custom.abilitySystemDisabled = true;
+		ship.set({
+			idle: true,
+			collider: false,
+			type: 101,
+			vx: 0,
+			vy: 0,
+			crystals: 0,
+			stats: 1e8 - 1
+		});
+		let kickReason = ship.custom.kickReason || {};
+		info = String(info || kickReason.info || "You've been kicked by map host!");
+		reason = String(reason || kickReason.reason || "No reason has been provided");
+		ship.custom.kickReason = { info, reason };
+		ship.gameover({
+			[info]: " ",
+			"Reason": reason
+		});
+		try { UIData.updateScoreboard(game); } catch (e) {}
+	}, ban = function (ship, info, reason) {
+		kick(ship, info, reason);
+		game.custom.banList.push({
+			phrase: String(ship.name).toLowerCase(),
+			full: true
+		});
+	}
+	if (!DEBUG) return { kick, ban };
 	const { echo, error } = game.modding.terminal;
 	let gameCommands = game.modding.commands;
 
@@ -4864,34 +4892,7 @@ const MAKE_COMMANDS = function () {
 	}, showTeamInfo = function (ship) {
 		let teamInfo = TeamManager.getDataFromShip(ship);
 		return `Team: ${teamInfo.name.toUpperCase()}, Hue: ${teamInfo.hue}, ${teamInfo.ghost ? "Ghost team, " : ""}${teamInfo.spawnpoint ? ("Spawnpoint: X: " + teamInfo.spawnpoint.x + " Y: " + teamInfo.spawnpoint.y) : "No spawnpoint"}`;
-	}, kick = function (ship, info, reason) {
-		ship.custom.kicked = true;
-		ship.custom.abilitySystemDisabled = true;
-		ship.set({
-			idle: true,
-			collider: false,
-			type: 101,
-			vx: 0,
-			vy: 0,
-			crystals: 0,
-			stats: 1e8 - 1
-		});
-		let kickReason = ship.custom.kickReason || {};
-		info = String(info || kickReason.info || "You've been kicked by map host!");
-		reason = String(reason || kickReason.reason || "No reason has been provided");
-		ship.custom.kickReason = { info, reason };
-		ship.gameover({
-			[info]: " ",
-			"Reason": reason
-		});
-		try { UIData.updateScoreboard(game); } catch (e) {}
-	}, ban = function (ship, info, reason) {
-		kick(ship, info, reason);
-		game.custom.banList.push({
-			phrase: String(ship.name).toLowerCase(),
-			full: true
-		});
-	}
+	};
 
 	addCommand('commands', function () {
 		for (let command of commands) showCommandUsage(command);
@@ -5109,7 +5110,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Mon Jul 31 2023 21:10:30 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Thu Aug 03 2023 20:58:04 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
 	planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -5119,7 +5120,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Mon Jul 31 2023 21:10:30 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Thu Aug 03 2023 20:58:04 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
 	toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -5474,7 +5475,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Mon Jul 31 2023 21:10:30 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Thu Aug 03 2023 20:58:04 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
 	ghostTeam: GhostTeam,
@@ -6111,14 +6112,14 @@ const AbilityManager = {
 
 		if (game.custom.abilityCustom == null) game.custom.abilityCustom = {};
 
+		game.custom.abilitySystemCommands = MAKE_COMMANDS();
+
 		if (DEBUG) {
 			let gb = window || global;
 
 			gb.AbilityManager = AbilityManager;
 			gb.TeamManager = TeamManager;
 			gb.MapManager = MapManager;
-
-			game.custom.abilitySystemCommands = MAKE_COMMANDS();
 
 			let systemInfo = __ABILITY_SYSTEM_INFO__;
 
@@ -6350,11 +6351,11 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/gameLogic.js at Mon Jul 31 2023 21:10:30 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Thu Aug 03 2023 20:58:04 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/GameConfig.js at Mon Jul 31 2023 21:10:30 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Thu Aug 03 2023 20:58:04 GMT+0900 (Japan Standard Time) */
 
 const map_name = null; // leave `null` if you want randomized map name
 
@@ -6362,6 +6363,7 @@ Object.assign(GAME_OPTIONS, {
 	duration: 30 * 60, // game duration in seconds
 	points: 100, // points for one team to reach in order to win
 	required_players: 2, // players required to start, min 2
+	AFK_timeout: 1 * 60, // maximum AFK time before the ship will be kicked, in seconds
 	waiting_time: 30, // in seconds
 	ship_ui_timeout: 30, // time for the ship ui to hide, in seconds
 	max_players: 80,
@@ -6468,7 +6470,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Mon Jul 31 2023 21:10:30 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Thu Aug 03 2023 20:58:04 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
 	setSpawnpointsOBJ: function () {
@@ -6649,6 +6651,11 @@ const GameHelperFunctions = {
 		}
 
 		return false;
+	},
+	epsilon: 1e-4,
+	isEqual: function (a, b) {
+		// compare a == b by using epsilon error
+		return Math.abs(a - b) < this.epsilon;
 	}
 }
 
@@ -7231,7 +7238,7 @@ AbilityManager.onActionBlockStateChange = function (ship) {
 
 
 
-/* Imported from misc/tickFunctions.js at Mon Jul 31 2023 21:10:30 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Thu Aug 03 2023 20:58:04 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
 	AbilityManager.globalTick(game);
@@ -7270,6 +7277,20 @@ const alwaysTick = function (game) {
 			}
 
 			ship.custom.joined = true;
+		}
+
+		// AFK Check
+		if (game.custom.started && !ship.custom.kicked) {
+			let data = ship.custom.last_status || {};
+			let { r, vx, vy, generator } = ship;
+			// check if player is not moving, rotating ship, and firing, then kick
+			if (!HelperFunctions.isEqual(data.vx, vx) || !HelperFunctions.isEqual(data.vy, vy) || !HelperFunctions.isEqual(data.r, r) || !HelperFunctions.isEqual(data.generator, generator)) ship.custom.last_active = game.step;
+
+			if (ship.custom.last_active != null && HelperFunctions.timeExceeded(ship.custom.last_active, GAME_OPTIONS.AFK_timeout * 60)) {
+				game.custom.abilitySystemCommands.kick(ship, "You have been kicked", "AFK");
+			}
+
+			ship.custom.last_status = { r, vx, vy, generator };
 		}
 
 		let spawnpoint, stepDifference = game.step - ship.custom.lastSpawnedStep;
@@ -7413,6 +7434,7 @@ const waiting = function (game) {
 				AbilityManager.random(ship);
 				UIData.shipUIs.toggle(ship, false, true);
 				ship.set({ idle: false, collider: true });
+				ship.custom.last_active = game.step;
 			});
 			if (game.custom.startedStep == null) game.custom.startedStep = game.step + 1;
 			return this.tick = main_phase;
@@ -7755,7 +7777,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Mon Jul 31 2023 21:10:30 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Thu Aug 03 2023 20:58:04 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
 	AbilityManager.globalEvent(event, game);
@@ -7816,7 +7838,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Mon Jul 31 2023 21:10:30 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Thu Aug 03 2023 20:58:04 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
 	{ text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
@@ -7885,6 +7907,6 @@ this.options.ships[0] = JSON.stringify(ship101);
 
 
 
-/* Imported from misc/gameInfo.js at Mon Jul 31 2023 21:10:30 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameInfo.js at Thu Aug 03 2023 20:58:04 GMT+0900 (Japan Standard Time) */
 
 AbilityManager.echo(`[[bg;DarkTurquoise;]Re:][[bg;#EE4B2B;]Arena] ([[;#AAFF00;]${__ABILITY_SYSTEM_INFO__.branch}]) [[;Cyan;]v${__ABILITY_SYSTEM_INFO__.version} (Build ID [[;${HelperFunctions.toHSLA(__ABILITY_SYSTEM_INFO__.buildID)};]${__ABILITY_SYSTEM_INFO__.buildID}])\nMap picked: [[b;Cyan;]${MapManager.get().name} by ${MapManager.get().author}\n\nType \`commands\` to see all commands\nAnd \`usage <commandName>\` to show usage of a command\n\n]`);
