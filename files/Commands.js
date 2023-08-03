@@ -1,6 +1,34 @@
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
-	if (!DEBUG) return;
+	let kick = function (ship, info, reason) {
+		ship.custom.kicked = true;
+		ship.custom.abilitySystemDisabled = true;
+		ship.set({
+			idle: true,
+			collider: false,
+			type: 101,
+			vx: 0,
+			vy: 0,
+			crystals: 0,
+			stats: 1e8 - 1
+		});
+		let kickReason = ship.custom.kickReason || {};
+		info = String(info || kickReason.info || "You've been kicked by map host!");
+		reason = String(reason || kickReason.reason || "No reason has been provided");
+		ship.custom.kickReason = { info, reason };
+		ship.gameover({
+			[info]: " ",
+			"Reason": reason
+		});
+		try { UIData.updateScoreboard(game); } catch (e) {}
+	}, ban = function (ship, info, reason) {
+		kick(ship, info, reason);
+		game.custom.banList.push({
+			phrase: String(ship.name).toLowerCase(),
+			full: true
+		});
+	}
+	if (!DEBUG) return { kick, ban };
 	const { echo, error } = game.modding.terminal;
 	let gameCommands = game.modding.commands;
 
@@ -65,34 +93,7 @@ const MAKE_COMMANDS = function () {
 	}, showTeamInfo = function (ship) {
 		let teamInfo = TeamManager.getDataFromShip(ship);
 		return `Team: ${teamInfo.name.toUpperCase()}, Hue: ${teamInfo.hue}, ${teamInfo.ghost ? "Ghost team, " : ""}${teamInfo.spawnpoint ? ("Spawnpoint: X: " + teamInfo.spawnpoint.x + " Y: " + teamInfo.spawnpoint.y) : "No spawnpoint"}`;
-	}, kick = function (ship, info, reason) {
-		ship.custom.kicked = true;
-		ship.custom.abilitySystemDisabled = true;
-		ship.set({
-			idle: true,
-			collider: false,
-			type: 101,
-			vx: 0,
-			vy: 0,
-			crystals: 0,
-			stats: 1e8 - 1
-		});
-		let kickReason = ship.custom.kickReason || {};
-		info = String(info || kickReason.info || "You've been kicked by map host!");
-		reason = String(reason || kickReason.reason || "No reason has been provided");
-		ship.custom.kickReason = { info, reason };
-		ship.gameover({
-			[info]: " ",
-			"Reason": reason
-		});
-		try { UIData.updateScoreboard(game); } catch (e) {}
-	}, ban = function (ship, info, reason) {
-		kick(ship, info, reason);
-		game.custom.banList.push({
-			phrase: String(ship.name).toLowerCase(),
-			full: true
-		});
-	}
+	};
 
 	addCommand('commands', function () {
 		for (let command of commands) showCommandUsage(command);

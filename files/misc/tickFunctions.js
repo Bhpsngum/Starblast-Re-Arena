@@ -37,6 +37,20 @@ const alwaysTick = function (game) {
 			ship.custom.joined = true;
 		}
 
+		// AFK Check
+		if (game.custom.started && !ship.custom.kicked) {
+			let data = ship.custom.last_status || {};
+			let { r, vx, vy, generator } = ship;
+			// check if player is not moving, rotating ship, and firing, then kick
+			if (!HelperFunctions.isEqual(data.vx, vx) || !HelperFunctions.isEqual(data.vy, vy) || !HelperFunctions.isEqual(data.r, r) || !HelperFunctions.isEqual(data.generator, generator)) ship.custom.last_active = game.step;
+
+			if (ship.custom.last_active != null && HelperFunctions.timeExceeded(ship.custom.last_active, GAME_OPTIONS.AFK_timeout * 60)) {
+				game.custom.abilitySystemCommands.kick(ship, "You have been kicked", "AFK");
+			}
+
+			ship.custom.last_status = { r, vx, vy, generator };
+		}
+
 		let spawnpoint, stepDifference = game.step - ship.custom.lastSpawnedStep;
 		if ( // Don't ask why
 			!ship.custom.shipUIsPermaHidden && (
@@ -178,6 +192,7 @@ const waiting = function (game) {
 				AbilityManager.random(ship);
 				UIData.shipUIs.toggle(ship, false, true);
 				ship.set({ idle: false, collider: true });
+				ship.custom.last_active = game.step;
 			});
 			if (game.custom.startedStep == null) game.custom.startedStep = game.step + 1;
 			return this.tick = main_phase;

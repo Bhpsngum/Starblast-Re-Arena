@@ -177,6 +177,11 @@ const GameHelperFunctions = {
 		}
 
 		return false;
+	},
+	epsilon: 1e-4,
+	isEqual: function (a, b) {
+		// compare a == b by using epsilon error
+		return Math.abs(a - b) < this.epsilon;
 	}
 }
 

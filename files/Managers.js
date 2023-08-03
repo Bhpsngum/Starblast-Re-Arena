@@ -633,14 +633,14 @@ const AbilityManager = {
 
 		if (game.custom.abilityCustom == null) game.custom.abilityCustom = {};
 
+		game.custom.abilitySystemCommands = MAKE_COMMANDS();
+
 		if (DEBUG) {
 			let gb = window || global;
 
 			gb.AbilityManager = AbilityManager;
 			gb.TeamManager = TeamManager;
 			gb.MapManager = MapManager;
-
-			game.custom.abilitySystemCommands = MAKE_COMMANDS();
 
 			let systemInfo = __ABILITY_SYSTEM_INFO__;
 
