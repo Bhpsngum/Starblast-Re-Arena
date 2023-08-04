@@ -22,7 +22,7 @@ const __ABILITY_SYSTEM_INFO__ = {
     name: "Arena_Mod",
     branch: "ShipTesting",
     version: "4.0.0",
-    buildID: "189c02df0cd"
+    buildID: "189c0b6fb58"
 };
 
 
@@ -99,7 +99,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_ShipTesting.js at Fri Aug 04 2023 19:53:03 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_ShipTesting.js at Fri Aug 04 2023 22:22:44 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -127,9 +127,9 @@ Press [${this.ability.shortcut}] to activate it.`
 			}
 		},
 		usage_limit: Infinity // default usage limit of a ship in one team
-		// minimum depends on number of teams, max players and number of ability ships
-		// maximum Infinity, you can also omit the limit to obtain same result
+		// minimum 1, maximum Infinity, you can also omit the limit to obtain same result
 		// to define different limit for a certain ship, use `usageLimit` spec in ship template
+		// please tune the usage limits so total usages will exceed max players, otherwise the mod may not function properly
 	},
 	plane_3D_OBJ_Z_level: -3 // z value of 3D Plane OBJ
 }
@@ -142,7 +142,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Fri Aug 04 2023 19:53:03 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Fri Aug 04 2023 22:22:44 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
 	{
@@ -192,7 +192,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps_ShipTesting.js at Fri Aug 04 2023 19:53:03 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps_ShipTesting.js at Fri Aug 04 2023 22:22:44 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
 	{
@@ -208,7 +208,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Fri Aug 04 2023 19:53:03 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Fri Aug 04 2023 22:22:44 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
 	"Test ship": {
@@ -2305,7 +2305,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Fri Aug 04 2023 19:53:03 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Fri Aug 04 2023 22:22:44 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -2620,7 +2620,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Fri Aug 04 2023 19:53:03 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Fri Aug 04 2023 22:22:44 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
 	planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -2630,7 +2630,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Fri Aug 04 2023 19:53:03 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Fri Aug 04 2023 22:22:44 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
 	toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -2985,7 +2985,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Fri Aug 04 2023 19:53:03 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Fri Aug 04 2023 22:22:44 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
 	ghostTeam: GhostTeam,
@@ -3657,9 +3657,9 @@ const AbilityManager = {
 		this.shipActionBlockers = [];
 		this.zoomLevel = {};
 
-		let smallestLimit = Math.ceil(GAME_OPTIONS.max_players / GAME_OPTIONS.teams_count / Object.values(this.abilities).filter(e => !e.hidden).length);
+		let globalUsage = 0;
 
-		this.usageLimit = Math.max(this.usageLimit, smallestLimit) || Infinity;
+		this.usageLimit = +this.usageLimit || Infinity;
 
 		let model = 100, templates = HelperFunctions.templates;
 
@@ -3696,7 +3696,9 @@ const AbilityManager = {
 
 			if (isNaN(ability.crystals)) ability.crystals = this.crystals;
 
-			ability.usageLimit = Math.max(ability.usageLimit, smallestLimit) || this.usageLimit;
+			ability.usageLimit = +ability.usageLimit || this.usageLimit;
+
+			globalUsage += ability.usageLimit;
 
 			if ("function" != typeof ability.canStart) ability.canStart = templates.canStart;
 
@@ -3794,6 +3796,19 @@ const AbilityManager = {
 		}
 
 		if (this.ship_codes.length < 1) HelperFunctions.terminal.error(`No ships found. What the f*ck?`);
+
+		globalUsage *= GAME_OPTIONS.teams_count || 1;
+
+		if (Number.isFinite(globalUsage) && globalUsage <= GAME_OPTIONS.max_players) HelperFunctions.terminal.error(
+			`Total usage limit (${globalUsage}) does not exceed max players (${GAME_OPTIONS.max_players}).\n` +
+			`Consider tuning these specs to satisfy the condition above:\n` + 
+			[
+				"Number of maximum players",
+				"Number of teams",
+				"Default usage limit",
+				"Individual ship templates' usage limit"
+			].map(e => "\t- " + e).join("\n")
+		);
 
 		this.ships_list = Object.keys(this.abilities).sort();
 	},
