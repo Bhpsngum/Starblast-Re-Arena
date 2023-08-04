@@ -192,6 +192,8 @@ const WeightCalculator = {
 		let kills = ship.custom.kills = +ship.custom.kills || 0;
 		let deaths = ship.custom.deaths = +ship.custom.deaths || 0;
 
+		if (kills == 0 && deaths == 0) return -Infinity;
+
 		return kills * 3 - deaths;
 	},
 	getTopPlayers: function (game, donSort = false) {
