@@ -316,7 +316,7 @@ const UIData = {
 		}
 	},
 	shipUIs: {
-		shortcut: "V",
+		shortcut: "M",
 		toggleID: "toggle_choose_ship",
 		shipSelectPrefix: "choose_ship_",
 		shipSelectSize: {
