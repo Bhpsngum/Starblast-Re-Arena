@@ -24,9 +24,9 @@ Press [${this.ability.shortcut}] to activate it.`
 			}
 		},
 		usage_limit: Infinity // default usage limit of a ship in one team
-		// minimum depends on number of teams, max players and number of ability ships
-		// maximum Infinity, you can also omit the limit to obtain same result
+		// minimum 1, maximum Infinity, you can also omit the limit to obtain same result
 		// to define different limit for a certain ship, use `usageLimit` spec in ship template
+		// please tune the usage limits so total usages will exceed max players, otherwise the mod may not function properly
 	},
 	plane_3D_OBJ_Z_level: -3 // z value of 3D Plane OBJ
 }

@@ -668,9 +668,9 @@ const AbilityManager = {
 		this.shipActionBlockers = [];
 		this.zoomLevel = {};
 
-		let smallestLimit = Math.ceil(GAME_OPTIONS.max_players / GAME_OPTIONS.teams_count / Object.values(this.abilities).filter(e => !e.hidden).length);
+		let globalUsage = 0;
 
-		this.usageLimit = Math.max(this.usageLimit, smallestLimit) || Infinity;
+		this.usageLimit = +this.usageLimit || Infinity;
 
 		let model = 100, templates = HelperFunctions.templates;
 
@@ -707,7 +707,9 @@ const AbilityManager = {
 
 			if (isNaN(ability.crystals)) ability.crystals = this.crystals;
 
-			ability.usageLimit = Math.max(ability.usageLimit, smallestLimit) || this.usageLimit;
+			ability.usageLimit = +ability.usageLimit || this.usageLimit;
+
+			globalUsage += ability.usageLimit;
 
 			if ("function" != typeof ability.canStart) ability.canStart = templates.canStart;
 
@@ -805,6 +807,19 @@ const AbilityManager = {
 		}
 
 		if (this.ship_codes.length < 1) HelperFunctions.terminal.error(`No ships found. What the f*ck?`);
+
+		globalUsage *= GAME_OPTIONS.teams_count || 1;
+
+		if (Number.isFinite(globalUsage) && globalUsage <= GAME_OPTIONS.max_players) HelperFunctions.terminal.error(
+			`Total usage limit (${globalUsage}) does not exceed max players (${GAME_OPTIONS.max_players}).\n` +
+			`Consider tuning these specs to satisfy the condition above:\n` + 
+			[
+				"Number of maximum players",
+				"Number of teams",
+				"Default usage limit",
+				"Individual ship templates' usage limit"
+			].map(e => "\t- " + e).join("\n")
+		);
 
 		this.ships_list = Object.keys(this.abilities).sort();
 	},

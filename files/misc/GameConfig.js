@@ -7,7 +7,6 @@ Object.assign(GAME_OPTIONS, {
 	AFK_timeout: 1 * 60, // maximum AFK time before the ship will be kicked, in seconds
 	waiting_time: 30, // in seconds
 	ship_ui_timeout: 30, // time for the ship ui to hide, in seconds
-	max_players: 80,
 	healing_ratio: 1, // better don't touch this
 	crystal_drop: 0.5, // this.options.crystal_drop
 	map_size: 100,
