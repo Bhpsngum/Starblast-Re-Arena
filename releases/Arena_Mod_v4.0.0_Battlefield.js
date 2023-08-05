@@ -22,7 +22,7 @@ const __ABILITY_SYSTEM_INFO__ = {
     name: "Arena_Mod",
     branch: "Battlefield",
     version: "4.0.0",
-    buildID: "189c0b6fb58"
+    buildID: "189c5c380c0"
 };
 
 
@@ -99,7 +99,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_Battlefield.js at Fri Aug 04 2023 22:22:44 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_Battlefield.js at Sat Aug 05 2023 21:54:31 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -142,7 +142,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams_Battlefield.js at Fri Aug 04 2023 22:22:44 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams_Battlefield.js at Sat Aug 05 2023 21:54:31 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
 	{
@@ -192,7 +192,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps_Battlefield.js at Fri Aug 04 2023 22:22:44 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps_Battlefield.js at Sat Aug 05 2023 21:54:31 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
 	{
@@ -424,7 +424,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Fri Aug 04 2023 22:22:44 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Sat Aug 05 2023 21:54:31 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
 	"Test ship": {
@@ -2521,7 +2521,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Fri Aug 04 2023 22:22:44 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Sat Aug 05 2023 21:54:31 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -2836,7 +2836,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Fri Aug 04 2023 22:22:44 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Sat Aug 05 2023 21:54:31 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
 	planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -2846,7 +2846,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Fri Aug 04 2023 22:22:44 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Sat Aug 05 2023 21:54:31 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
 	toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -3201,7 +3201,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Fri Aug 04 2023 22:22:44 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Sat Aug 05 2023 21:54:31 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
 	ghostTeam: GhostTeam,
@@ -4092,7 +4092,7 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/GameConfig_Battlefield.js at Fri Aug 04 2023 22:22:44 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig_Battlefield.js at Sat Aug 05 2023 21:54:31 GMT+0900 (Japan Standard Time) */
 
 const map_name = "Re:Arena Battlefield"; // leave `null` if you want randomized map name
 
@@ -4109,10 +4109,11 @@ Object.assign(GAME_OPTIONS, {
 	radar_zoom: 2,
 	buttons_cooldown: 0.25, // must wait after x (seconds) before the same button can be triggered again
 	duplicate_choose_limit: 5, // immediately close the ship menu after a single ship has been chosen x times
-	killsCap: {
-		start: 5, // initial cap
-		seconds: 30, // increases after every <x> "judged" seconds on point, don't do 0 btw
-		bonus: 3 // and increase by "bonus" each
+	player_weight_multipliers: { // multipliers for calculating player weight
+		// formula: weight(player, multiplier) = player.kills * multiplier.kills + player.deaths * multiplier.deaths + player.timeOnPoint * multiplier.timeOnPoint
+		kills: 3,
+		deaths: -1,
+		timeOnPoint: 1/2
 	},
 	alienSpawns: {
 		level: {
@@ -4206,7 +4207,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Fri Aug 04 2023 22:22:44 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Sat Aug 05 2023 21:54:31 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
 	setSpawnpointsOBJ: function () {
@@ -4398,18 +4399,37 @@ const GameHelperFunctions = {
 Object.assign(HelperFunctions, GameHelperFunctions);
 
 const WeightCalculator = {
-	playerWeight: function (ship) {
+	playerWeightByKD: function (ship) {
 		let kills = ship.custom.kills = +ship.custom.kills || 0;
 		let deaths = ship.custom.deaths = +ship.custom.deaths || 0;
 
+		let muls = GAME_OPTIONS.player_weight_multipliers;
+
 		if (kills == 0 && deaths == 0) return -Infinity;
 
-		return kills * 3 - deaths;
+		return kills * muls.kills + deaths * muls.deaths;
 	},
-	getTopPlayers: function (game, donSort = false) {
+	playerWeight: function (ship) {
+		let kills = ship.custom.kills = +ship.custom.kills || 0;
+		let deaths = ship.custom.deaths = +ship.custom.deaths || 0;
+		let timeOnPoint = +ship.custom.timeOnPoint || 0;
+
+		let muls = GAME_OPTIONS.player_weight_multipliers;
+
+		if (kills == 0 && deaths == 0 && timeOnPoint == 0) return -Infinity;
+
+		return kills * muls.kills + deaths * muls.deaths + timeOnPoint * muls.timeOnPoint;
+	},
+	getTopPlayers: function (game, donSort = false, formula = "playerWeightByKD") {
 		let players = game.ships.filter(e => (e || {}).id != null && !e.custom.kicked);
 		if (donSort) return players;
-		return players.sort((a, b) => this.playerWeight(b) - this.playerWeight(a));
+
+		// get formula
+		let weightFormula = this[formula];
+		if ("function" != typeof weightFormula) weightFormula = this.playerWeightByKD;
+		weightFormula = weightFormula.bind(this);
+		
+		return players.sort((a, b) => weightFormula(b) - weightFormula(a));
 	},
 	getTeamPlayersCount: function (id) {
 		let teamData = TeamManager.getDataFromID(id);
@@ -4976,7 +4996,7 @@ AbilityManager.onActionBlockStateChange = function (ship) {
 
 
 
-/* Imported from misc/tickFunctions.js at Fri Aug 04 2023 22:22:44 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Sat Aug 05 2023 21:54:31 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
 	AbilityManager.globalTick(game);
@@ -5464,8 +5484,8 @@ const endGame = function (game) {
 		"Feedback": "forms.gle/u9C1Br9kqbdDh22u5"
 	};
 
-	let MVP = WeightCalculator.getTopPlayers(game)[0];
-	if (MVP != null && (MVP.custom.kills || MVP.custom.deaths)) Object.assign(game.custom.endGameInfo, {
+	let MVP = WeightCalculator.getTopPlayers(game, false, "playerWeight")[0];
+	if (MVP != null && (MVP.custom.kills || MVP.custom.deaths || MVP.custom.timeOnPoint)) Object.assign(game.custom.endGameInfo, {
 		"  ": " ",
 		"MVP in this match:": MVP.name,
 		"- Team": TeamManager.getDataFromShip(MVP).name.toUpperCase(),
@@ -5515,7 +5535,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Fri Aug 04 2023 22:22:44 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Sat Aug 05 2023 21:54:31 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
 	AbilityManager.globalEvent(event, game);
@@ -5534,11 +5554,7 @@ this.event = function (event, game) {
 			HelperFunctions.resetIntrusionWarningMSG(ship);
 			ship.custom.deaths = (ship.custom.deaths + 1) || 1;
 			let killer = event.killer;
-			if (killer != null && killer.id != null && !killer.custom.kicked) {
-				let kills = killer.custom.kills || 0;
-				let killCap = GAME_OPTIONS.killsCap.start + Math.trunc((killer.custom.timeOnPoint || 0) / GAME_OPTIONS.killsCap.seconds) * GAME_OPTIONS.killsCap.bonus;
-				if (kills < killCap) killer.custom.kills = kills + 1;
-			}
+			if ((killer || {}).id != null && !killer.custom.kicked) killer.custom.kills = (killer.custom.kills || 0) + 1;
 			UIData.updateScoreboard(game);
 			break;
 		case "ui_component_clicked":
@@ -5576,7 +5592,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Fri Aug 04 2023 22:22:44 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Sat Aug 05 2023 21:54:31 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
 	{ text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
@@ -5645,6 +5661,6 @@ this.options.ships[0] = JSON.stringify(ship101);
 
 
 
-/* Imported from misc/gameInfo.js at Fri Aug 04 2023 22:22:44 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameInfo.js at Sat Aug 05 2023 21:54:31 GMT+0900 (Japan Standard Time) */
 
 AbilityManager.echo(`[[bg;DarkTurquoise;]Re:][[bg;#EE4B2B;]Arena] ([[;#AAFF00;]${__ABILITY_SYSTEM_INFO__.branch}]) [[;Cyan;]v${__ABILITY_SYSTEM_INFO__.version} (Build ID [[;${HelperFunctions.toHSLA(__ABILITY_SYSTEM_INFO__.buildID)};]${__ABILITY_SYSTEM_INFO__.buildID}])\nMap picked: [[b;Cyan;]${MapManager.get().name} by ${MapManager.get().author}\n\nType \`commands\` to see all commands\nAnd \`usage <commandName>\` to show usage of a command\n\n]`);
