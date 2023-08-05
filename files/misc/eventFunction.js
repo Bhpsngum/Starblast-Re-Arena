@@ -15,11 +15,7 @@ this.event = function (event, game) {
 			HelperFunctions.resetIntrusionWarningMSG(ship);
 			ship.custom.deaths = (ship.custom.deaths + 1) || 1;
 			let killer = event.killer;
-			if (killer != null && killer.id != null && !killer.custom.kicked) {
-				let kills = killer.custom.kills || 0;
-				let killCap = GAME_OPTIONS.killsCap.start + Math.trunc((killer.custom.timeOnPoint || 0) / GAME_OPTIONS.killsCap.seconds) * GAME_OPTIONS.killsCap.bonus;
-				if (kills < killCap) killer.custom.kills = kills + 1;
-			}
+			if ((killer || {}).id != null && !killer.custom.kicked) killer.custom.kills = (killer.custom.kills || 0) + 1;
 			UIData.updateScoreboard(game);
 			break;
 		case "ui_component_clicked":

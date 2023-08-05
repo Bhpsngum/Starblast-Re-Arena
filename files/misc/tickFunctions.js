@@ -484,8 +484,8 @@ const endGame = function (game) {
 		"Feedback": "forms.gle/u9C1Br9kqbdDh22u5"
 	};
 
-	let MVP = WeightCalculator.getTopPlayers(game)[0];
-	if (MVP != null && (MVP.custom.kills || MVP.custom.deaths)) Object.assign(game.custom.endGameInfo, {
+	let MVP = WeightCalculator.getTopPlayers(game, false, "playerWeight")[0];
+	if (MVP != null && (MVP.custom.kills || MVP.custom.deaths || MVP.custom.timeOnPoint)) Object.assign(game.custom.endGameInfo, {
 		"  ": " ",
 		"MVP in this match:": MVP.name,
 		"- Team": TeamManager.getDataFromShip(MVP).name.toUpperCase(),

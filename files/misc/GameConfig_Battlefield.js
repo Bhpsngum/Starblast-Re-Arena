@@ -13,10 +13,11 @@ Object.assign(GAME_OPTIONS, {
 	radar_zoom: 2,
 	buttons_cooldown: 0.25, // must wait after x (seconds) before the same button can be triggered again
 	duplicate_choose_limit: 5, // immediately close the ship menu after a single ship has been chosen x times
-	killsCap: {
-		start: 5, // initial cap
-		seconds: 30, // increases after every <x> "judged" seconds on point, don't do 0 btw
-		bonus: 3 // and increase by "bonus" each
+	player_weight_multipliers: { // multipliers for calculating player weight
+		// formula: weight(player, multiplier) = player.kills * multiplier.kills + player.deaths * multiplier.deaths + player.timeOnPoint * multiplier.timeOnPoint
+		kills: 3,
+		deaths: -1,
+		timeOnPoint: 1/2
 	},
 	alienSpawns: {
 		level: {

@@ -188,18 +188,37 @@ const GameHelperFunctions = {
 Object.assign(HelperFunctions, GameHelperFunctions);
 
 const WeightCalculator = {
-	playerWeight: function (ship) {
+	playerWeightByKD: function (ship) {
 		let kills = ship.custom.kills = +ship.custom.kills || 0;
 		let deaths = ship.custom.deaths = +ship.custom.deaths || 0;
 
+		let muls = GAME_OPTIONS.player_weight_multipliers;
+
 		if (kills == 0 && deaths == 0) return -Infinity;
 
-		return kills * 3 - deaths;
+		return kills * muls.kills + deaths * muls.deaths;
 	},
-	getTopPlayers: function (game, donSort = false) {
+	playerWeight: function (ship) {
+		let kills = ship.custom.kills = +ship.custom.kills || 0;
+		let deaths = ship.custom.deaths = +ship.custom.deaths || 0;
+		let timeOnPoint = +ship.custom.timeOnPoint || 0;
+
+		let muls = GAME_OPTIONS.player_weight_multipliers;
+
+		if (kills == 0 && deaths == 0 && timeOnPoint == 0) return -Infinity;
+
+		return kills * muls.kills + deaths * muls.deaths + timeOnPoint * muls.timeOnPoint;
+	},
+	getTopPlayers: function (game, donSort = false, formula = "playerWeightByKD") {
 		let players = game.ships.filter(e => (e || {}).id != null && !e.custom.kicked);
 		if (donSort) return players;
-		return players.sort((a, b) => this.playerWeight(b) - this.playerWeight(a));
+
+		// get formula
+		let weightFormula = this[formula];
+		if ("function" != typeof weightFormula) weightFormula = this.playerWeightByKD;
+		weightFormula = weightFormula.bind(this);
+		
+		return players.sort((a, b) => weightFormula(b) - weightFormula(a));
 	},
 	getTeamPlayersCount: function (id) {
 		let teamData = TeamManager.getDataFromID(id);
