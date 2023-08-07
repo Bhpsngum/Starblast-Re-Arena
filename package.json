@@ -1,13 +1,13 @@
 {
-    "name": "Arena_Mod",
-    "version": "4.0.0",
-    "branches": [
-        "Main",
-        "MS",
-        "ShipTesting",
-        "Battlefield"
-    ],
-    "scripts": {
-        "compile": "node mergeFiles.js"
-    }
+	"name": "Arena_Mod",
+	"version": "4.0.0",
+	"branches": [
+		"Main",
+		"MS",
+		"ShipTesting",
+		"Battlefield"
+	],
+	"scripts": {
+		"compile": "node mergeFiles.js"
+	}
 }
