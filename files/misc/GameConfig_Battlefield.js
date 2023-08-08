@@ -17,7 +17,7 @@ Object.assign(GAME_OPTIONS, {
 		// formula: weight(player, multiplier) = player.kills * multiplier.kills + player.deaths * multiplier.deaths + player.timeOnPoint * multiplier.timeOnPoint
 		kills: 3,
 		deaths: -1,
-		timeOnPoint: 1/2
+		timeOnPoint: 1/10
 	},
 	alienSpawns: {
 		level: {
