@@ -25,8 +25,8 @@ But at least it should run as expected ~~I guess~~
 * **Coding:** Bhpsngum
 * **Textures:** Caramel
 * **Ships:** Caramel
-* **Maps:** Supernova, Caramel, Bylolopro, Nerd69420, Megalodon, and others
-* **Contributors:** Tost, Caramel, Lexydrow, Akira, and others
+* **Maps:** Supernova, Caramel, Bylolopro, Nerd69420, Megalodon, Gooby, and others
+* **Contributors:** Tost, Caramel, Lexydrow, Akira, Gooby, and others
 
 ## What's in here?
 **Folders:**
