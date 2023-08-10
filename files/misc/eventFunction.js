@@ -8,6 +8,7 @@ this.event = function (event, game) {
 			AbilityManager.restore(ship);
 			HelperFunctions.resetIntrusionWarningMSG(ship);
 			UIData.updateScoreboard(game);
+			ship.set({invulnerable: GAME_OPTIONS.ship_invulnerability * 60});
 			ship.custom.chooseTimes = {};
 			if (game.custom.abilitySystemEnabled && !ship.custom.abilitySystemDisabled) UIData.shipUIs.toggle(ship, false, true);
 			break;

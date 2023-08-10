@@ -7,6 +7,7 @@ Object.assign(GAME_OPTIONS, {
 	AFK_timeout: 1 * 60, // maximum AFK time before the ship will be kicked, in seconds
 	waiting_time: 30, // in seconds
 	ship_ui_timeout: 30, // time for the ship ui to hide, in seconds
+	ship_invulnerability: 5, // invulnerability duration for ship upon spawning/changing ship through ship menu, in seconds
 	healing_ratio: 1, // better don't touch this
 	crystal_drop: 0.5, // this.options.crystal_drop
 	map_size: 200,
@@ -64,7 +65,7 @@ const CONTROL_POINT = {
 
 const BASES = {
 	size: 65, // in radius
-	intrusion_damage: 145, // damage per sec if enemy enters the base
+	intrusion_damage: 200, // damage per sec if enemy enters the base
 	textures: [ // textures list to choose from (randomized)
 		{
 			url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_0.png",

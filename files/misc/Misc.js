@@ -217,7 +217,7 @@ const WeightCalculator = {
 		let weightFormula = this[formula];
 		if ("function" != typeof weightFormula) weightFormula = this.playerWeightByKD;
 		weightFormula = weightFormula.bind(this);
-		
+
 		return players.sort((a, b) => weightFormula(b) - weightFormula(a));
 	},
 	getTeamPlayersCount: function (id) {
@@ -656,7 +656,7 @@ const UIData = {
 		let res = AbilityManager.assign(ship, name);
 		if (res.success) {
 			AbilityManager.restore(ship);
-			ship.set({ vx: 0, vy: 0 });
+			ship.set({ vx: 0, vy: 0, invulnerable: GAME_OPTIONS.ship_invulnerability * 60 });
 			let x = (ship.custom.chooseTimes[ship.custom.shipName] || 0) + 1;
 			if (x >= GAME_OPTIONS.duplicate_choose_limit) return this.shipUIs.toggle(ship, true);
 			ship.custom.chooseTimes[ship.custom.shipName] = x;
@@ -752,7 +752,17 @@ const makeAlienSpawns = function () {
 		return true;
 	});
 
-	AlienSpawns = map;
+	AlienSpawns = [];
+
+	let diagonal_size = actual_size * Math.SQRT2;
+
+	// the more close to center, the more spawning chance
+
+	for (let spawn of map) {
+		let { x, y } = spawn;
+		let distMul = Math.max(Math.round((1 - HelperFunctions.simpleDistance({x: 0, y: 0}, {x, y}) / diagonal_size) * 10), 1);
+		for (let i = 0; i < distMul; ++i) AlienSpawns.push({x, y});
+	}
 }
 
 AbilityManager.onShipsListUpdate = function (team, newList, oldList) {
