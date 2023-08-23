@@ -29,21 +29,46 @@ this.event = function (event, game) {
 					UIData.shipUIs.toggle(ship);
 					break;
 				case "next_ship": if (HelperFunctions.canUseButtons(ship)) {
-					let ships_list = AbilityManager.getAssignableShipsList(ship);
+					let ships_list = UIData.shipUIs.getUserShipsList(ship, true, true);
+					if (ships_list.length < 2) break;
 					let pos = ships_list.indexOf(ship.custom.shipName) + 1;
-					UIData.assign(ship, ships_list[pos] || ships_list[0]);
+					UIData.assign(ship, function() {
+						return AbilityManager.assign(ship, ships_list[pos] || ships_list[0]);
+					});
 					break;
 				}
 				case "prev_ship": if (HelperFunctions.canUseButtons(ship)) {
-					let ships_list = AbilityManager.getAssignableShipsList(ship);
+					let ships_list = UIData.shipUIs.getUserShipsList(ship, true, true);
+					if (ships_list.length < 2) break;
 					let pos = ships_list.lastIndexOf(ship.custom.shipName) - 1;
-					UIData.assign(ship, ships_list.at(pos));
+					UIData.assign(ship, function(){
+						return AbilityManager.assign(ship, ships_list.at(pos));
+					});
+					break;
+				}
+				case "prev_page": if (HelperFunctions.canUseButtons(ship)) {
+					ship.custom.shipSelectPage = (ship.custom.shipSelectPage || 0) - 1;
+					UIData.shipUIs.toggleSelectMenu(ship);
+					break;
+				}
+				case "next_page": if (HelperFunctions.canUseButtons(ship)) {
+					++ship.custom.shipSelectPage;
+					UIData.shipUIs.toggleSelectMenu(ship);
+					break;
+				}
+				case "random_ship": if (HelperFunctions.canUseButtons(ship)) {
+					UIData.assign(ship, function () {
+						return AbilityManager.random(ship);
+					});
 					break;
 				}
 				default:
-					if (HelperFunctions.canUseButtons(ship) && component.startsWith(UIData.shipUIs.shipSelectPrefix)) {
-						let shipName = component.replace(UIData.shipUIs.shipSelectPrefix, "");
-						if (shipName !== ship.custom.shipName) UIData.assign(ship, shipName);
+					let pageData = UIData.shipUIs.ItemID.getIndexFromID(component);
+					if (HelperFunctions.canUseButtons(ship) && pageData != null) {
+						let shipName = UIData.shipUIs.ItemID.getShipName(ship, pageData);
+						if (shipName != null && shipName !== ship.custom.shipName) UIData.assign(ship, function () {
+							return AbilityManager.assign(ship, shipName)
+						});
 					}
 			}
 			break;

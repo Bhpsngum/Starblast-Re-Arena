@@ -4,7 +4,7 @@ Object.assign(GAME_OPTIONS, {
 	duration: 2 * 60 * 60, // game duration in seconds
 	points: 200, // points for one team to reach in order to win
 	required_players: 2, // players required to start, min 2
-	AFK_timeout: 1 * 60, // maximum AFK time before the ship will be kicked, in seconds
+	AFK_timeout: 2 * 60, // maximum AFK time before the ship will be kicked, in seconds
 	waiting_time: 30, // in seconds
 	ship_ui_timeout: 30, // time for the ship ui to hide, in seconds
 	ship_invulnerability: 5, // invulnerability duration for ship upon spawning/changing ship through ship menu, in seconds
