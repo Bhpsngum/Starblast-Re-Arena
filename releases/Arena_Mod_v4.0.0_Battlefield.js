@@ -22,7 +22,7 @@ const __ABILITY_SYSTEM_INFO__ = {
 	name: "Arena_Mod",
 	branch: "Battlefield",
 	version: "4.0.0",
-	buildID: "189df708d51"
+	buildID: "18a2320012d"
 };
 
 
@@ -99,7 +99,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_Battlefield.js at Thu Aug 10 2023 21:34:02 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_Battlefield.js at Thu Aug 24 2023 01:00:14 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -142,7 +142,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams_Battlefield.js at Thu Aug 10 2023 21:34:02 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams_Battlefield.js at Thu Aug 24 2023 01:00:14 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
 	{
@@ -192,7 +192,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps_Battlefield.js at Thu Aug 10 2023 21:34:02 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps_Battlefield.js at Thu Aug 24 2023 01:00:14 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
 	{
@@ -424,7 +424,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Thu Aug 10 2023 21:34:02 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Thu Aug 24 2023 01:00:14 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
 	"Test ship": {
@@ -2521,7 +2521,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Thu Aug 10 2023 21:34:02 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Thu Aug 24 2023 01:00:14 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -2836,7 +2836,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Thu Aug 10 2023 21:34:02 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Thu Aug 24 2023 01:00:14 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
 	planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -2846,7 +2846,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Thu Aug 10 2023 21:34:02 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Thu Aug 24 2023 01:00:14 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
 	toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -3201,7 +3201,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Thu Aug 10 2023 21:34:02 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Thu Aug 24 2023 01:00:14 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
 	ghostTeam: GhostTeam,
@@ -4092,7 +4092,7 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/GameConfig_Battlefield.js at Thu Aug 10 2023 21:34:02 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig_Battlefield.js at Thu Aug 24 2023 01:00:14 GMT+0900 (Japan Standard Time) */
 
 const map_name = "Re:Arena Battlefield"; // leave `null` if you want randomized map name
 
@@ -4100,7 +4100,7 @@ Object.assign(GAME_OPTIONS, {
 	duration: 2 * 60 * 60, // game duration in seconds
 	points: 200, // points for one team to reach in order to win
 	required_players: 2, // players required to start, min 2
-	AFK_timeout: 1 * 60, // maximum AFK time before the ship will be kicked, in seconds
+	AFK_timeout: 2 * 60, // maximum AFK time before the ship will be kicked, in seconds
 	waiting_time: 30, // in seconds
 	ship_ui_timeout: 30, // time for the ship ui to hide, in seconds
 	ship_invulnerability: 5, // invulnerability duration for ship upon spawning/changing ship through ship menu, in seconds
@@ -4208,7 +4208,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Thu Aug 10 2023 21:34:02 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Thu Aug 24 2023 01:00:14 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
 	setSpawnpointsOBJ: function () {
@@ -4551,16 +4551,21 @@ const UIData = {
 	shipUIs: {
 		shortcut: "M",
 		toggleID: "toggle_choose_ship",
-		shipSelectPrefix: "choose_ship_",
+		shipSelectPrefix: "choose_ship",
 		shipSelectSize: {
-			textLength: 35, // to keep the text looks pretty and aligned
-			itemsPerLine: 4,
+			textLength: 25, // to keep the text looks pretty and aligned
+			// Please note that multiple pages are available, itemsPerRow * itemsPerColumn is the number of items in one page
+			itemsPerRow: 5, // horizontal items count
+			itemsPerColumn: 6, // vertical items count
 			xStart: 21,
 			yStart: 19,
 			xEnd: 79,
 			yEnd: 85,
 			margin_scale_x: 1/8, // comparing to button width
 			margin_scale_y: 1/6, // comparing to button height
+		},
+		getTotalItemsCountPerPage: function () {
+			return this.shipSelectSize.itemsPerColumn * this.shipSelectSize.itemsPerRow; 
 		},
 		positionCache: {},
 		styles: {
@@ -4619,9 +4624,8 @@ const UIData = {
 		},
 		sendIndividual: function (ship, position, name, stylePreset, id = null, shortcut = null) {
 			let { bgColor, borderColor, borderWidth, textColor } = this.styles[stylePreset];
-			if (!id) id = this.shipSelectPrefix + name;
 			let visible = true;
-			position = this.positionCache[name] = position == null ? this.positionCache[name] : position;
+			position = this.positionCache[id] = position == null ? this.positionCache[id] : position;
 			if (position == null) visible = false;
 			HelperFunctions.sendUI(ship, {
 				id,
@@ -4635,32 +4639,99 @@ const UIData = {
 				]   
 			});
 		},
+		getTotalPagesCount: function () {
+			return Math.ceil(AbilityManager.ships_list.length / this.getTotalItemsCountPerPage());
+		},
+		getUserPageIndex: function (ship) {
+			let page = Math.trunc(ship.custom.shipSelectPage) || 0;
+			let totalPage = this.getTotalPagesCount() - 1;
+			if (page < 0) page = totalPage;
+			if (page > totalPage) page = 0;
+
+			return ship.custom.shipSelectPage = page;
+		},
+		getUserShipsList: function (ship, onlyAssignable = false, includeSelf = true) {
+			let totalItems = this.getTotalItemsCountPerPage();
+			let currentPage = this.getUserPageIndex(ship) * totalItems;
+			let pageList = AbilityManager.ships_list.slice(currentPage, currentPage + totalItems);
+			if (!onlyAssignable) return pageList;
+			let assignableShipsList = AbilityManager.getAssignableShipsList(ship);
+
+			let data = [];
+			for (let i of pageList) if (assignableShipsList.includes(i) || (includeSelf && i == ship.custom.shipName)) data.push(i);
+
+			return data;
+		},
+		ItemID: {
+			getString: function (obj = {
+				row: 0,
+				column: 0
+			}) {
+				// create this in case we need to change its format later
+				return `${UIData.shipUIs.shipSelectPrefix}_${obj.row || 0}_${obj.column || 0}`;
+			},
+			getShipName: function (ship, obj = {
+				row: 0,
+				column: 0
+			}) {
+				let index = obj.row * UIData.shipUIs.shipSelectSize.itemsPerRow + obj.column;
+				return UIData.shipUIs.getUserShipsList(ship)[index];
+			},
+			getIndexFromID: function (id = "") {
+				let pos = id.match(new RegExp(`^${UIData.shipUIs.shipSelectPrefix}_(\\d+)_(\\d+)$`));
+				if (pos == null) return null;
+				return {
+					row: Math.max(Math.min(pos[1], UIData.shipUIs.shipSelectSize.itemsPerRow), 0) || 0,
+					column: Math.max(Math.min(pos[2], UIData.shipUIs.shipSelectSize.itemsPerColumn), 0) || 0
+				}
+			},
+			getIndexFromName: function (name = "") {
+				let index = AbilityManager.ships_list.indexOf(name);
+				if (index < 0) return null;
+				let { itemsPerRow } = UIData.shipUIs.shipSelectSize;
+				let itemsCount = UIData.shipUIs.getTotalItemsCountPerPage();
+				let page = Math.trunc(index / itemsCount);
+				let pageOffset = index % itemsCount;
+				return {
+					page,
+					row: Math.trunc(pageOffset / itemsPerRow),
+					column: pageOffset % itemsPerRow
+				}
+			}
+		},
 		toggleSelectMenu: function (ship) {
 			let visible = !ship.custom.shipUIsHidden;
-			let abilities = AbilityManager.ships_list;
+
+			let UISpec = this.shipSelectSize;
 
 			if (!visible) {
-				for (let abil of abilities) HelperFunctions.sendUI(ship, { id: this.shipSelectPrefix + abil, visible: false });
-				HelperFunctions.sendUI(ship, {id: "next_ship", visible: false});
-				HelperFunctions.sendUI(ship, {id: "prev_ship", visible: false});
+				for (let row = 0; row < UISpec.itemsPerColumn; ++row) {
+					for (let column = 0; column < UISpec.itemsPerRow; ++column) {
+						HelperFunctions.sendUI(ship, { id: this.ItemID.getString({ row, column }), visible: false, clickable: false });
+					}
+				}
+				for (let id of ["next_ship", "prev_ship", "next_page", "prev_page", "page_num", "random_ship"]) HelperFunctions.sendUI(ship, {id, visible: false, clickable: false});
 				return;
 			}
 
-			let UISpec = this.shipSelectSize;
-			let itemsPerLine = UISpec.itemsPerLine;
-			let itemsPerColumn = Math.ceil(abilities.length / itemsPerLine);
+			let { itemsPerRow, itemsPerColumn } = UISpec;
 
-			let width = (UISpec.xEnd - UISpec.xStart) / (itemsPerLine + (itemsPerLine - 1) * UISpec.margin_scale_x);
+			let abilities = this.getUserShipsList(ship);
+
+			let width = (UISpec.xEnd - UISpec.xStart) / (itemsPerRow + (itemsPerRow - 1) * UISpec.margin_scale_x);
 			let height = (UISpec.yEnd - UISpec.yStart) / (itemsPerColumn + (itemsPerColumn - 1) * UISpec.margin_scale_y);
 
-			let lastLineXOffset = (itemsPerLine - (abilities.length % itemsPerLine || itemsPerLine)) * width * (1 + UISpec.margin_scale_x) / 2;
+			let lastLineXOffset = (itemsPerRow - (abilities.length % itemsPerRow || itemsPerRow)) * width * (1 + UISpec.margin_scale_x) / 2;
 
 			let i = 0;
-			let canUseUI = HelperFunctions.canUseButtons(ship) && !AbilityManager.isActionBlocked(ship).blocked;
+			let canUseButtons = HelperFunctions.canUseButtons(ship);
+			let canUseUI = canUseButtons && !AbilityManager.isActionBlocked(ship).blocked;
+
+			let rowsCount = Math.ceil(abilities.length / itemsPerRow);
 
 			for (let abil of abilities) {
-				let row = Math.trunc(i / itemsPerLine), column = i % itemsPerLine;
-				let offsetX = row == itemsPerColumn - 1 ? lastLineXOffset : 0;
+				let row = Math.trunc(i / itemsPerRow), column = i % itemsPerRow;
+				let offsetX = row == rowsCount - 1 ? lastLineXOffset : 0;
 				let usable = canUseUI && AbilityManager.assign(ship, abil, true).success;
 				let style = "";
 				if (ship.custom.shipName == abil) style = "selected";
@@ -4672,23 +4743,83 @@ const UIData = {
 					UISpec.yStart + row * height * (UISpec.margin_scale_y + 1),
 					width,
 					height
-				], abil, style);
+				], abil, style, this.ItemID.getString({ row, column }));
 				++i;
 			}
+			
+			let totalItems = this.getTotalItemsCountPerPage();
+
+			for (; i < totalItems; ++i) {
+				HelperFunctions.sendUI(ship, {
+					id: this.ItemID.getString({
+						row: Math.trunc(i / itemsPerRow),
+						column: i % itemsPerRow
+					}),
+					visible: false,
+					clickable: false
+				})
+			}
+
+			let abilityUIXStart = AbilityManager.UI.position[0];
+			let abilityUIWidth = AbilityManager.UI.position[2];
+
+			let startEndPos = abilityUIWidth + abilityUIXStart;
+
+			let scaler = 2 + 3/2 * UISpec.margin_scale_x
+
+
+			let leftWidth = (abilityUIXStart - UISpec.xStart) / scaler;
+			let rightWidth = (UISpec.xEnd - startEndPos) / scaler;
+
+			let menuStartY = UISpec.yEnd + height * UISpec.margin_scale_y * 2, menuHeight = 95 - menuStartY;
 
 			this.sendIndividual(ship, [
 				UISpec.xStart,
-				UISpec.yEnd + height * UISpec.margin_scale_y * 2,
-				width,
-				95 - (UISpec.yEnd + height * UISpec.margin_scale_y * 2)
+				menuStartY,
+				leftWidth,
+				menuHeight
+			], "< Previous page", canUseButtons ? "default" : "disabled", "prev_page", String.fromCharCode(188));
+
+			this.sendIndividual(ship, [
+				UISpec.xStart + leftWidth * (1 + UISpec.margin_scale_x),
+				menuStartY,
+				leftWidth,
+				menuHeight
 			], "[ Previous ship", canUseUI ? "default" : "disabled", "prev_ship", String.fromCharCode(219));
 
 			this.sendIndividual(ship, [
-				UISpec.xEnd - width,
-				UISpec.yEnd + height * UISpec.margin_scale_y * 2,
-				width,
-				95 - (UISpec.yEnd + height * UISpec.margin_scale_y * 2)
+				startEndPos + rightWidth * UISpec.margin_scale_x / 2,
+				menuStartY,
+				rightWidth,
+				menuHeight
 			], "Next ship ]", canUseUI ? "default" : "disabled", "next_ship", String.fromCharCode(221));
+
+			this.sendIndividual(ship, [
+				UISpec.xEnd - rightWidth,
+				menuStartY,
+				rightWidth,
+				menuHeight
+			], "Next page >", canUseButtons ? "default" : "disabled", "next_page", String.fromCharCode(190));
+
+			HelperFunctions.sendUI(ship, {
+				id: "random_ship",
+				visible: canUseUI,
+				clickable: canUseUI,
+				position: [3,42.5,15,10],
+				shortcut: String.fromCharCode(191),
+				components: [
+					{ type:"box",position:[0,0,100,100],fill:"rgba(68, 85, 102, 0.5)",stroke:"#FFFFFF",width:2},
+					{ type: "text",position:[5,20,90,60],value: "Pick a random ship [?]", color:"#FFFFFF"},
+				]
+			});
+
+			HelperFunctions.sendUI(ship, {
+				id: "page_num",
+				position: [3, 55, 15, 3],
+				components: [
+					{ type: "text", position: [0, 0, 100, 100], value: `Page ${this.getUserPageIndex(ship) + 1}/${this.getTotalPagesCount()}`, color: "#FFFFFF" }
+				]
+			});
 		}
 	},
 	updatePlayerCount: function (game) {
@@ -4863,9 +4994,9 @@ const UIData = {
 		};
 		HelperFunctions.sendUI(ship, UIData.scores);
 	},
-	assign: function (ship, name) {
+	assign: function (ship, func) {
 		let oldName = ship.custom.shipName;
-		let res = AbilityManager.assign(ship, name);
+		let res = func();
 		if (res.success) {
 			AbilityManager.restore(ship);
 			ship.set({ vx: 0, vy: 0, invulnerable: GAME_OPTIONS.ship_invulnerability * 60 });
@@ -4873,8 +5004,12 @@ const UIData = {
 			if (x >= GAME_OPTIONS.duplicate_choose_limit) return this.shipUIs.toggle(ship, true);
 			ship.custom.chooseTimes[ship.custom.shipName] = x;
 			if (oldName != ship.custom.shipName) {
-				this.shipUIs.sendIndividual(ship, null, ship.custom.shipName, "selected");
-				this.shipUIs.sendIndividual(ship, null, oldName, AbilityManager.getAssignableShipsList(ship).includes(oldName) ? "default" : "disabled");
+				let { ItemID } = UIData.shipUIs;
+				let userPage = UIData.shipUIs.getUserPageIndex(ship);
+				let oldData = ItemID.getIndexFromName(oldName);
+				let newData = ItemID.getIndexFromName(ship.custom.shipName);
+				if (userPage == newData.page) this.shipUIs.sendIndividual(ship, null, ship.custom.shipName, "selected", ItemID.getString(newData));
+				if (userPage == oldData.page) this.shipUIs.sendIndividual(ship, null, oldName, AbilityManager.getAssignableShipsList(ship).includes(oldName) ? "default" : "disabled", ItemID.getString(oldData));
 			}
 		}
 	}
@@ -4978,15 +5113,25 @@ const makeAlienSpawns = function () {
 }
 
 AbilityManager.onShipsListUpdate = function (team, newList, oldList) {
+	let { shipUIs } = UIData;
+	let { ItemID } = shipUIs;
 	for (let s of game.ships) {
 		if (s == null || s.id == null || s.custom.shipUIsPermaHidden || s.custom.shipUIsHidden || s.custom.inAbility || AbilityManager.isAbilityBlocked(s).blocked) continue;
 		let x = TeamManager.getDataFromShip(s), playerShipName = s.custom.shipName;
 		if (team.ghost ? !x.ghost : team.id !== x.id) continue; // wrong team
 
 		// update ship usage limit UIs
+
+		let userPage = shipUIs.getUserPageIndex(s);
 		
-		for (let name of oldList) if (playerShipName != name) UIData.shipUIs.sendIndividual(s, null, name, "disabled");
-		for (let name of newList) if (playerShipName != name) UIData.shipUIs.sendIndividual(s, null, name, "default");
+		for (let name of oldList) {
+			let pageData = ItemID.getIndexFromName(name);
+			if (pageData != null && pageData.page == userPage && playerShipName != name) shipUIs.sendIndividual(s, null, name, "disabled", ItemID.getString(pageData));
+		}
+		for (let name of newList) {
+			let pageData = ItemID.getIndexFromName(name);
+			if (pageData != null && pageData.page == userPage && playerShipName != name) shipUIs.sendIndividual(s, null, name, "default", ItemID.getString(pageData));
+		}
 	}
 }
 
@@ -5007,7 +5152,7 @@ AbilityManager.onActionBlockStateChange = function (ship) {
 
 
 
-/* Imported from misc/tickFunctions.js at Thu Aug 10 2023 21:34:02 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Thu Aug 24 2023 01:00:14 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
 	AbilityManager.globalTick(game);
@@ -5546,7 +5691,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Thu Aug 10 2023 21:34:02 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Thu Aug 24 2023 01:00:14 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
 	AbilityManager.globalEvent(event, game);
@@ -5579,21 +5724,46 @@ this.event = function (event, game) {
 					UIData.shipUIs.toggle(ship);
 					break;
 				case "next_ship": if (HelperFunctions.canUseButtons(ship)) {
-					let ships_list = AbilityManager.getAssignableShipsList(ship);
+					let ships_list = UIData.shipUIs.getUserShipsList(ship, true, true);
+					if (ships_list.length < 2) break;
 					let pos = ships_list.indexOf(ship.custom.shipName) + 1;
-					UIData.assign(ship, ships_list[pos] || ships_list[0]);
+					UIData.assign(ship, function() {
+						return AbilityManager.assign(ship, ships_list[pos] || ships_list[0]);
+					});
 					break;
 				}
 				case "prev_ship": if (HelperFunctions.canUseButtons(ship)) {
-					let ships_list = AbilityManager.getAssignableShipsList(ship);
+					let ships_list = UIData.shipUIs.getUserShipsList(ship, true, true);
+					if (ships_list.length < 2) break;
 					let pos = ships_list.lastIndexOf(ship.custom.shipName) - 1;
-					UIData.assign(ship, ships_list.at(pos));
+					UIData.assign(ship, function(){
+						return AbilityManager.assign(ship, ships_list.at(pos));
+					});
+					break;
+				}
+				case "prev_page": if (HelperFunctions.canUseButtons(ship)) {
+					ship.custom.shipSelectPage = (ship.custom.shipSelectPage || 0) - 1;
+					UIData.shipUIs.toggleSelectMenu(ship);
+					break;
+				}
+				case "next_page": if (HelperFunctions.canUseButtons(ship)) {
+					++ship.custom.shipSelectPage;
+					UIData.shipUIs.toggleSelectMenu(ship);
+					break;
+				}
+				case "random_ship": if (HelperFunctions.canUseButtons(ship)) {
+					UIData.assign(ship, function () {
+						return AbilityManager.random(ship);
+					});
 					break;
 				}
 				default:
-					if (HelperFunctions.canUseButtons(ship) && component.startsWith(UIData.shipUIs.shipSelectPrefix)) {
-						let shipName = component.replace(UIData.shipUIs.shipSelectPrefix, "");
-						if (shipName !== ship.custom.shipName) UIData.assign(ship, shipName);
+					let pageData = UIData.shipUIs.ItemID.getIndexFromID(component);
+					if (HelperFunctions.canUseButtons(ship) && pageData != null) {
+						let shipName = UIData.shipUIs.ItemID.getShipName(ship, pageData);
+						if (shipName != null && shipName !== ship.custom.shipName) UIData.assign(ship, function () {
+							return AbilityManager.assign(ship, shipName)
+						});
 					}
 			}
 			break;
@@ -5604,7 +5774,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Thu Aug 10 2023 21:34:02 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Thu Aug 24 2023 01:00:14 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
 	{ text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
@@ -5673,6 +5843,6 @@ this.options.ships[0] = JSON.stringify(ship101);
 
 
 
-/* Imported from misc/gameInfo.js at Thu Aug 10 2023 21:34:02 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameInfo.js at Thu Aug 24 2023 01:00:14 GMT+0900 (Japan Standard Time) */
 
 AbilityManager.echo(`[[bg;DarkTurquoise;]Re:][[bg;#EE4B2B;]Arena] ([[;#AAFF00;]${__ABILITY_SYSTEM_INFO__.branch}]) [[;Cyan;]v${__ABILITY_SYSTEM_INFO__.version} (Build ID [[;${HelperFunctions.toHSLA(__ABILITY_SYSTEM_INFO__.buildID)};]${__ABILITY_SYSTEM_INFO__.buildID}])\nMap picked: [[b;Cyan;]${MapManager.get().name} by ${MapManager.get().author}\n\nType \`commands\` to see all commands\nAnd \`usage <commandName>\` to show usage of a command\n\n]`);
