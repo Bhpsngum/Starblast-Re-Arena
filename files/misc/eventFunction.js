@@ -42,7 +42,7 @@ this.event = function (event, game) {
 					if (ships_list.length < 2) break;
 					let pos = ships_list.lastIndexOf(ship.custom.shipName) - 1;
 					UIData.assign(ship, function(){
-						return AbilityManager.assign(ship, ships_list.at(pos));
+						return AbilityManager.assign(ship, ships_list[pos] || ships_list.at(-1));
 					});
 					break;
 				}

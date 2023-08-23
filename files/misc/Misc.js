@@ -561,12 +561,14 @@ const UIData = {
 
 			let menuStartY = UISpec.yEnd + height * UISpec.margin_scale_y * 2, menuHeight = 95 - menuStartY;
 
+			let totalPages = this.getTotalPagesCount();
+
 			this.sendIndividual(ship, [
 				UISpec.xStart,
 				menuStartY,
 				leftWidth,
 				menuHeight
-			], "< Previous page", canUseButtons ? "default" : "disabled", "prev_page", String.fromCharCode(188));
+			], "< Previous page", canUseButtons && totalPages > 1 ? "default" : "disabled", "prev_page", String.fromCharCode(188));
 
 			this.sendIndividual(ship, [
 				UISpec.xStart + leftWidth * (1 + UISpec.margin_scale_x),
@@ -587,25 +589,15 @@ const UIData = {
 				menuStartY,
 				rightWidth,
 				menuHeight
-			], "Next page >", canUseButtons ? "default" : "disabled", "next_page", String.fromCharCode(190));
+			], "Next page >", canUseButtons && totalPages > 1 ? "default" : "disabled", "next_page", String.fromCharCode(190));
 
-			HelperFunctions.sendUI(ship, {
-				id: "random_ship",
-				visible: canUseUI,
-				clickable: canUseUI,
-				position: [3,42.5,15,10],
-				shortcut: String.fromCharCode(191),
-				components: [
-					{ type:"box",position:[0,0,100,100],fill:"rgba(68, 85, 102, 0.5)",stroke:"#FFFFFF",width:2},
-					{ type: "text",position:[5,20,90,60],value: "Pick a random ship [?]", color:"#FFFFFF"},
-				]
-			});
+			this.sendIndividual(ship, [3, 42.5, 15, 10], "Pick a random ship [?]", canUseUI ? "default" : "disabled", "random_ship", String.fromCharCode(191));
 
 			HelperFunctions.sendUI(ship, {
 				id: "page_num",
 				position: [3, 55, 15, 3],
 				components: [
-					{ type: "text", position: [0, 0, 100, 100], value: `Page ${this.getUserPageIndex(ship) + 1}/${this.getTotalPagesCount()}`, color: "#FFFFFF" }
+					{ type: "text", position: [0, 0, 100, 100], value: `Page ${this.getUserPageIndex(ship) + 1}/${totalPages}`, color: "#FFFFFF" }
 				]
 			});
 		}
