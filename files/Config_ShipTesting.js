@@ -20,7 +20,7 @@ const GAME_OPTIONS = {
 				return `Greetings, Commander.
 Your ship is equipped with a special ability module.
 Press [${this.ability.shortcut}] to activate it.`
-// Capture the point in the middle to win! Stand inside the point to capture it.`
+// Capture the objective and get ${this.points} points to win. Good luck!`
 			}
 		},
 		usage_limit: Infinity // default usage limit of a ship in one team

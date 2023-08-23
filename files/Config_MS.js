@@ -14,13 +14,13 @@ const GAME_OPTIONS = {
 		crystals: 720, // crystals when first set, default of `abilityTemplate.crystals`
 		notice: {
 			show: true, // to show it or not
-			timeout: 5 * 60, // time for instructor to disappear, in ticks
+			timeout: 10 * 60, // time for instructor to disappear, in ticks
 			message: function (ship) { // notice message function for each ships
 				// this function binds to `GAME_OPTIONS` object
 				return `Greetings, Commander.
 Your ship is equipped with a special ability module.
-Press [${this.ability.shortcut}] to activate it.`
-// Capture the point in the middle to win! Stand inside the point to capture it.`
+Press [${this.ability.shortcut}] to activate it.
+Capture the objective and get ${this.points} points to win. Good luck!`
 			}
 		},
 		usage_limit: 3 // default usage limit of a ship in one team
