@@ -413,7 +413,10 @@ const UIData = {
 		sendIndividual: function (ship, position, name, stylePreset, id = null, shortcut = null) {
 			let { bgColor, borderColor, borderWidth, textColor } = this.styles[stylePreset];
 			let visible = true;
-			position = this.positionCache[id] = position == null ? this.positionCache[id] : position;
+			let page = this.getUserPageIndex(ship);
+			let positionCache = this.positionCache[page];
+			if (positionCache == null) positionCache = this.positionCache[page] = {};
+			position = positionCache[id] = position == null ? positionCache[id] : position;
 			if (position == null) visible = false;
 			HelperFunctions.sendUI(ship, {
 				id,
