@@ -711,7 +711,7 @@ const ShipAbilities = {
 			ship.set({
 				type: this.codes[model],
 				stats: AbilityManager.maxStats,
-				generator: this.energy_capacities[model],
+				generator: this.energy_capacities[model]
 			});
 			ship.custom.forceEnd = true;
 		},
