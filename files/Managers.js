@@ -202,6 +202,7 @@ const AbilityManager = {
 		if (ability == null) return;
 		ship.custom.inAbility = false;
 		ship.custom.forceEnd = false;
+		ship.custom.immovable = !!ability.immovable;
 		HelperFunctions.TimeManager.clearTimeout(ability.ships.get(ship.id));
 		ability.ships.delete(ship.id);
 		if (ability.cooldownRestartOnEnd) ability.unload(ship);
@@ -219,6 +220,7 @@ const AbilityManager = {
 		ship.custom.forceEnd = false;
 		let lastStatus = ship.custom.inAbility;
 		ship.custom.inAbility = true;
+		ship.custom.immovable = !!(ability.immovable || ability.immovableInAbility);
 		ability.start(ship, lastStatus);
 		if (ability.duration != null) {
 			let oldTimeout = ability.ships.get(ship.id);
@@ -377,6 +379,7 @@ const AbilityManager = {
 		ship.custom.ability = shipAbil;
 		ship.custom.inAbility = false;
 		ship.custom.forceEnd = false;
+		ship.custom.immovable = !!shipAbil.immovable;
 		ship.custom.abilityCustom = {};
 		ship.custom.lastUI = {};
 		ship.set({

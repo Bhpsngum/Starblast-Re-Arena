@@ -28,6 +28,9 @@ const ShipAbilities = {
 		// please note that `AbilityManager.includeRingOnModel` must be `true` in order for this to apply
 		// and you can also implement this depends on model like `showAbilityRangeUI`
 
+		immovable: true, // if the ship is immune to pull/push abilities
+		immovableInAbility: true, // if the ship is immune to pull/push abilities while it's on its own ability
+
 		endOnDeath: true, // ability will end when ship dies
 		canStartOnAbility: true, // allow ability to start even when on ability (to enable stacking, etc.), default false
 
@@ -635,6 +638,8 @@ const ShipAbilities = {
 		endOnDeath: true,
 		cooldownRestartOnEnd: true,
 		customInAbilityText: true,
+
+		immovableInAbility: true,
 		
 		deployedModelRadius: 6,
 		tickInterval: 2 * 60,
@@ -646,7 +651,6 @@ const ShipAbilities = {
 		start: function (ship) {
 			HelperFunctions.templates.start.call(this, ship);
 			ship.custom.abilityCustom.deployed = false;
-			includeLineModel: true;
 			ship.set({ generator: 0 });
 		},
 		
@@ -760,6 +764,7 @@ const ShipAbilities = {
 		endOnDeath: true,
 		cooldownRestartOnEnd: false,
 		customInAbilityText: true,
+		immovableInAbility: true,
 		requirementsText: function (ship) {
 			return ship.custom.inAbility ? HelperFunctions.timeLeft(ship.custom.lastTriggered + this.duration) : HelperFunctions.templates.requirementsText.call(this, ship);
 		},
@@ -828,6 +833,8 @@ const ShipAbilities = {
 
 		velocityResetTick: 15,
 		cooldownRestartOnEnd: true,
+
+		immovableInAbility: true,
 
 		warningDuration: 1 * 60, // warning before ship can fire
 		preAimDuration: 1.5 * 60, // delay before entering warning phase
