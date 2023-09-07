@@ -22,7 +22,7 @@ const __ABILITY_SYSTEM_INFO__ = {
 	name: "Arena_Mod",
 	branch: "ShipTesting",
 	version: "4.0.0",
-	buildID: "18a6d7b8c8d"
+	buildID: "18a6e97202a"
 };
 
 
@@ -99,7 +99,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_ShipTesting.js at Thu Sep 07 2023 11:32:08 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_ShipTesting.js at Thu Sep 07 2023 16:41:52 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -142,7 +142,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Thu Sep 07 2023 11:32:08 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Thu Sep 07 2023 16:41:52 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
 	{
@@ -192,7 +192,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps_ShipTesting.js at Thu Sep 07 2023 11:32:08 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps_ShipTesting.js at Thu Sep 07 2023 16:41:52 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
 	{
@@ -208,7 +208,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Thu Sep 07 2023 11:32:08 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Thu Sep 07 2023 16:41:52 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
 	"Test ship": {
@@ -239,6 +239,9 @@ const ShipAbilities = {
 		includeRingOnModel: true, // to include the indicator model in ship model or not
 		// please note that `AbilityManager.includeRingOnModel` must be `true` in order for this to apply
 		// and you can also implement this depends on model like `showAbilityRangeUI`
+
+		immovable: true, // if the ship is immune to pull/push abilities
+		immovableInAbility: true, // if the ship is immune to pull/push abilities while it's on its own ability
 
 		endOnDeath: true, // ability will end when ship dies
 		canStartOnAbility: true, // allow ability to start even when on ability (to enable stacking, etc.), default false
@@ -847,6 +850,8 @@ const ShipAbilities = {
 		endOnDeath: true,
 		cooldownRestartOnEnd: true,
 		customInAbilityText: true,
+
+		immovableInAbility: true,
 		
 		deployedModelRadius: 6,
 		tickInterval: 2 * 60,
@@ -858,7 +863,6 @@ const ShipAbilities = {
 		start: function (ship) {
 			HelperFunctions.templates.start.call(this, ship);
 			ship.custom.abilityCustom.deployed = false;
-			includeLineModel: true;
 			ship.set({ generator: 0 });
 		},
 		
@@ -972,6 +976,7 @@ const ShipAbilities = {
 		endOnDeath: true,
 		cooldownRestartOnEnd: false,
 		customInAbilityText: true,
+		immovableInAbility: true,
 		requirementsText: function (ship) {
 			return ship.custom.inAbility ? HelperFunctions.timeLeft(ship.custom.lastTriggered + this.duration) : HelperFunctions.templates.requirementsText.call(this, ship);
 		},
@@ -1040,6 +1045,8 @@ const ShipAbilities = {
 
 		velocityResetTick: 15,
 		cooldownRestartOnEnd: true,
+
+		immovableInAbility: true,
 
 		warningDuration: 1 * 60, // warning before ship can fire
 		preAimDuration: 1.5 * 60, // delay before entering warning phase
@@ -2344,7 +2351,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Thu Sep 07 2023 11:32:08 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Thu Sep 07 2023 16:41:52 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -2659,7 +2666,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Thu Sep 07 2023 11:32:08 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Thu Sep 07 2023 16:41:52 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
 	planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -2669,7 +2676,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Thu Sep 07 2023 11:32:08 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Thu Sep 07 2023 16:41:52 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
 	toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -3028,7 +3035,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Thu Sep 07 2023 11:32:08 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Thu Sep 07 2023 16:41:52 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
 	ghostTeam: GhostTeam,
@@ -3234,6 +3241,7 @@ const AbilityManager = {
 		if (ability == null) return;
 		ship.custom.inAbility = false;
 		ship.custom.forceEnd = false;
+		ship.custom.immovable = !!ability.immovable;
 		HelperFunctions.TimeManager.clearTimeout(ability.ships.get(ship.id));
 		ability.ships.delete(ship.id);
 		if (ability.cooldownRestartOnEnd) ability.unload(ship);
@@ -3251,6 +3259,7 @@ const AbilityManager = {
 		ship.custom.forceEnd = false;
 		let lastStatus = ship.custom.inAbility;
 		ship.custom.inAbility = true;
+		ship.custom.immovable = !!(ability.immovable || ability.immovableInAbility);
 		ability.start(ship, lastStatus);
 		if (ability.duration != null) {
 			let oldTimeout = ability.ships.get(ship.id);
@@ -3409,6 +3418,7 @@ const AbilityManager = {
 		ship.custom.ability = shipAbil;
 		ship.custom.inAbility = false;
 		ship.custom.forceEnd = false;
+		ship.custom.immovable = !!shipAbil.immovable;
 		ship.custom.abilityCustom = {};
 		ship.custom.lastUI = {};
 		ship.set({
