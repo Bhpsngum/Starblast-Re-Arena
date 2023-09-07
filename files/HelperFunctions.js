@@ -136,8 +136,12 @@ const HelperFunctions = {
 			angle: shortestAngle
 		}
 	},
-	accelerate: function (ship, speed, angle = null, initial_dependency = 0) {
+	accelerate: function (ship, speed, angle = null, initial_dependency = 0, force = false) {
 		// accelerate ship with speed and angle (or ship angle)
+
+		// ignore ships with "immovable" status unless forced to
+		if (!force && ship.custom.immovable) return;
+
 		if (angle == null) angle = ship.r;
 		if (initial_dependency) speed += Math.sqrt(ship.vx ** 2 + ship.vy ** 2) * initial_dependency;
 		ship.set({
@@ -145,12 +149,12 @@ const HelperFunctions = {
 			vy: speed * Math.sin(angle)
 		});
 	},
-	accelerateToTarget: function (ship, target, strength, push = false) {
+	accelerateToTarget: function (ship, target, strength, push = false, force = false) {
 		// accelerate ship from/to target with strength
 		// push: `true` is push, otherwise pull
 		let accelAngle = this.distance(target, ship).angle;
 		if (push) accelAngle += Math.PI;
-		this.accelerate(ship, strength, accelAngle);
+		this.accelerate(ship, strength, accelAngle, void 0, force);
 	},
 	satisfies: function (ship1, ship2, teammate, enemy) {
 		// check if ship2 statisfies condition with ship1
