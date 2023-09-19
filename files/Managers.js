@@ -151,7 +151,7 @@ const AbilityManager = {
 	updateDelay: 5, // technical spec, don't touch if you don't know what it does
 	UIActionsDelay: 0.2 * 60,
 	_this: this,
-	echo: DEBUG ? (window || global).echo || game.modding.terminal.echo : function () {},
+	echo: DEBUG ? game.modding.terminal.echo : function () {},
 	ring_model: {
 		section_segments: 64,
 		offset: {x: 0, y: 0, z: 0},
@@ -639,7 +639,7 @@ const AbilityManager = {
 		game.custom.abilitySystemCommands = MAKE_COMMANDS();
 
 		if (DEBUG) {
-			let gb = window || global;
+			let gb = globalThis;
 
 			gb.AbilityManager = AbilityManager;
 			gb.TeamManager = TeamManager;
