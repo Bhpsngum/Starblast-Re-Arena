@@ -658,10 +658,10 @@ const AbilityManager = {
 						}
 					})
 				})).catch(e => {
-					HelperFunctions.terminal.log("Skipping version info checks dude to an error while fetching sources.");
+					HelperFunctions.terminal.log("Skipping version info checks due to an error while fetching sources.");
 				});
 			}
-			catch (e) { HelperFunctions.terminal.log("Skipping version info checks dude to an error while fetching sources."); }
+			catch (e) { HelperFunctions.terminal.log("Skipping version info checks due to an error while fetching sources."); }
 		}
 	},
 	compileAbilities: function () {
