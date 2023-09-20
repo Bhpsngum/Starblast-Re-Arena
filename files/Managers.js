@@ -658,10 +658,10 @@ const AbilityManager = {
 						}
 					})
 				})).catch(e => {
-					game.modding.terminal.error("Failed to fetch source version info");
+					HelperFunctions.terminal.log("Skipping version info checks dude to an error while fetching sources.");
 				});
 			}
-			catch (e) { game.modding.terminal.error("Failed to fetch source version info"); }
+			catch (e) { HelperFunctions.terminal.log("Skipping version info checks dude to an error while fetching sources."); }
 		}
 	},
 	compileAbilities: function () {
