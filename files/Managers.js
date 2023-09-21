@@ -680,7 +680,7 @@ const AbilityManager = {
 
 		this.usageLimit = +this.usageLimit || Infinity;
 
-		let model = 799, templates = HelperFunctions.templates, nexts = [null, null];
+		let model = 799, templates = HelperFunctions.templates;
 
 		this.shipLevels = this.checkLevel(this.shipLevels);
 
@@ -779,7 +779,7 @@ const AbilityManager = {
 				jsonData.level = jsonData.typespec.level = level;
 				jsonData.model = model - level * 100;
 
-				jsonData.next = jsonData.typespec.next = nexts;
+				jsonData.next = jsonData.typespec.next = [];
 
 				ability.codes[shipAbilityName] = jsonData.typespec.code = model--;
 
