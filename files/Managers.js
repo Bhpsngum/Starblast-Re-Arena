@@ -664,6 +664,11 @@ const AbilityManager = {
 			catch (e) { HelperFunctions.terminal.log("Skipping version info checks due to an error while fetching sources."); }
 		}
 	},
+	checkLevel: function (value, defaultValue = 6) {
+		value = +value;
+		if (isNaN(value) || value <= 0) value = defaultValue;
+		return value;
+	},
 	compileAbilities: function () {
 		// Compile ships and abilities
 		
@@ -675,7 +680,9 @@ const AbilityManager = {
 
 		this.usageLimit = +this.usageLimit || Infinity;
 
-		let model = 100, templates = HelperFunctions.templates;
+		let model = 799, templates = HelperFunctions.templates, nexts = [null, null];
+
+		this.shipLevels = this.checkLevel(this.shipLevels);
 
 		for (let shipName in this.abilities) {
 			let ability = this.abilities[shipName];
@@ -757,13 +764,25 @@ const AbilityManager = {
 			// process ship codes
 			ability.codes = {};
 			ability.energy_capacities = {};
+
+			let levels = ability.levels, useDynamicShipLevel = levels != null && "object" == typeof levels;
+			ability.levels = {};
+
+			ability.level = this.checkLevel(ability.level, this.shipLevels);
+
 			for (let shipAbilityName in ability.models) try {
 				let jsonData = JSON.parse(ability.models[shipAbilityName]);
 				if (jsonData == null || jsonData.typespec == null) throw "No ship data or typespec";
-				jsonData.level = jsonData.typespec.level = this.shipLevels;
-				jsonData.model = --model;
 
-				ability.codes[shipAbilityName] = jsonData.typespec.code = this.shipLevels * 100 + model;
+				let level = ability.levels[shipAbilityName] = useDynamicShipLevel ? this.checkLevel(levels[shipAbilityName], ability.level) : ability.level;
+
+				jsonData.level = jsonData.typespec.level = level;
+				jsonData.model = model - level * 100;
+
+				jsonData.next = jsonData.typespec.next = nexts;
+
+				ability.codes[shipAbilityName] = jsonData.typespec.code = model--;
+
 				ability.energy_capacities[shipAbilityName] = Math.max(...jsonData.specs.generator.capacity);
 
 				let allowRingOnModel;
@@ -825,6 +844,8 @@ const AbilityManager = {
 		);
 
 		this.ships_list = Object.keys(this.abilities).sort();
+
+		return model;
 	},
 	getAssignableShipsList: function (ship, forceUpdate = false) {
 		let teamData = TeamManager.getDataFromShip(ship);

@@ -28,13 +28,22 @@ const ShipAbilities = {
 		// please note that `AbilityManager.includeRingOnModel` must be `true` in order for this to apply
 		// and you can also implement this depends on model like `showAbilityRangeUI`
 
+		level: 7, // default ship level for all models in this template, default `GAME_OPTIONS.ability.ship_levels`
+
+		levels: {
+			// specify ship level for specific models in your template
+			ability: 10,
+			default: 6.9
+			// other modules that aren't specified here (if exists) will receive the default level value defined above
+		},
+
 		immovable: true, // if the ship is immune to pull/push abilities
 		immovableInAbility: true, // if the ship is immune to pull/push abilities while it's on its own ability
 
 		endOnDeath: true, // ability will end when ship dies
 		canStartOnAbility: true, // allow ability to start even when on ability (to enable stacking, etc.), default false
 
-		crystals: 500, // crystals when first set, default `AbilityManager.crystals`,
+		crystals: 500, // crystals when first set, default `GAME_OPTIONS.ability.crystals`,
 
 		generatorInit: 69, // generator value on first set, default maximum default model's energy capacity
 
