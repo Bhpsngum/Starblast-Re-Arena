@@ -206,11 +206,13 @@ const HelperFunctions = {
 
 		if (includes.ships && (teammate || enemy)) data.push(...game.ships.filter(ship => (ship || {}).id != null && ship.alive && (includes.self || ship !== entity) && this.satisfies(entity, ship, teammate, enemy) && this.distance(entity, ship).distance <= range));
 		
+		// if you only need to select enemies in range and don't care about the order by distance, set `dontSort` to `true`
+		// the sorting procedure below this might be heavy, so only use sorted array it if you need to
 		if (dontSort) return data;
 
 		return data.sort((a, b) => this.distance(entity, a).distance - this.distance(entity, b).distance);
 	},
-	damage: function (ship,num) {
+	damage: function (ship, num) {
 		// damage ship by `num` HP
 		if (ship.shield < num){
 			let val = ship.crystals + ship.shield;
@@ -226,32 +228,32 @@ const HelperFunctions = {
 		try { id = String(UI.id) } catch (e) { id = '' }
 	  
 		let parsedUI = {
-		  id: id,
-		  position: UI.position,
-		  visible: UI.visible,
-		  clickable: UI.clickable,
-		  shortcut: UI.shortcut,
-		  components: UI.components
+			id: id,
+			position: UI.position,
+			visible: UI.visible,
+			clickable: UI.clickable,
+			shortcut: UI.shortcut,
+			components: UI.components
 		}
 	  
 		if (parsedUI.visible || parsedUI.visible == null) {
-		  delete parsedUI.visible;
-		  let position = parsedUI.position, count = 0;
-		  for (let i = 0 ; i < 4 ; i++) {
-			let pos = (position||{})[i];
-			if (pos == null || pos == 100) count++
-		  }
-		  if (count == 4) delete parsedUI.position
+			delete parsedUI.visible;
+			let position = parsedUI.position, count = 0;
+			for (let i = 0 ; i < 4 ; i++) {
+				let pos = (position||{})[i];
+				if (pos == null || pos == 100) count++
+			}
+			if (count == 4) delete parsedUI.position
 		}
 		else {
-		  parsedUI.position = [0,0,0,0];
-		  parsedUI.visible = false;
-		  delete parsedUI.components
+			parsedUI.position = [0,0,0,0];
+			parsedUI.visible = false;
+			delete parsedUI.components
 		}
 	  
 		if (!parsedUI.clickable) {
-		  delete parsedUI.clickable;
-		  delete parsedUI.shortcut
+			delete parsedUI.clickable;
+			delete parsedUI.shortcut
 		}
 	  
 		return parsedUI
@@ -261,29 +263,28 @@ const HelperFunctions = {
 	},
 	TimeManager: {
 		id_pool: 0,
-		setTimeout: function(f,time){
+		setTimeout: function(f, time, ...args){
 			let id = this.id_pool++;
-			this.jobs.set(id, {f: f,time: game.step+time});
+			this.jobs.set(id, { f, time: game.step + +time, args });
 			return id;
 		},
 		clearTimeout: function (id) {
 			this.jobs.delete(id);
 		},
 		jobs: new Map(),
-		tick: function() {
-		  var t = game.step;
-		  for (let i of this.jobs){
-			var job = i[1];
-			if (t>=job.time){
-			  try {
-				job.f();
-			  }
-			  catch (err){
-				console.error(err);
-			  }
-			  this.jobs.delete(i[0]);
+		tick: function () {
+			for (let i of this.jobs) {
+				var job = i[1];
+				if (game.step >= job.time){
+					try {
+						job.f.call(game, ...job.args);
+					}
+					catch (err) {
+						console.error(err);
+					}
+					this.jobs.delete(i[0]);
+				}
 			}
-		  }
 		}
 	},
 	fill: function (text, limit) {
