@@ -22,7 +22,7 @@ const __ABILITY_SYSTEM_INFO__ = {
 	name: "Arena_Mod",
 	branch: "Battlefield",
 	version: "4.0.0",
-	buildID: "18ab7379f36"
+	buildID: "18abf98242b"
 };
 
 
@@ -99,7 +99,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_Battlefield.js at Thu Sep 21 2023 19:09:50 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_Battlefield.js at Sat Sep 23 2023 10:12:13 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -142,7 +142,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams_Battlefield.js at Thu Sep 21 2023 19:09:50 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams_Battlefield.js at Sat Sep 23 2023 10:12:13 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
 	{
@@ -192,7 +192,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps_Battlefield.js at Thu Sep 21 2023 19:09:50 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps_Battlefield.js at Sat Sep 23 2023 10:12:13 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
 	{
@@ -424,7 +424,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Thu Sep 21 2023 19:09:50 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Sat Sep 23 2023 10:12:13 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
 	"Test ship": {
@@ -2576,7 +2576,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Thu Sep 21 2023 19:09:50 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Sat Sep 23 2023 10:12:13 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -2891,7 +2891,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Thu Sep 21 2023 19:09:50 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Sat Sep 23 2023 10:12:13 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
 	planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -2901,7 +2901,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Thu Sep 21 2023 19:09:50 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Sat Sep 23 2023 10:12:13 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
 	toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -3111,11 +3111,13 @@ const HelperFunctions = {
 
 		if (includes.ships && (teammate || enemy)) data.push(...game.ships.filter(ship => (ship || {}).id != null && ship.alive && (includes.self || ship !== entity) && this.satisfies(entity, ship, teammate, enemy) && this.distance(entity, ship).distance <= range));
 		
+		// if you only need to select enemies in range and don't care about the order by distance, set `dontSort` to `true`
+		// the sorting procedure below this might be heavy, so only use sorted array it if you need to
 		if (dontSort) return data;
 
 		return data.sort((a, b) => this.distance(entity, a).distance - this.distance(entity, b).distance);
 	},
-	damage: function (ship,num) {
+	damage: function (ship, num) {
 		// damage ship by `num` HP
 		if (ship.shield < num){
 			let val = ship.crystals + ship.shield;
@@ -3131,32 +3133,32 @@ const HelperFunctions = {
 		try { id = String(UI.id) } catch (e) { id = '' }
 	  
 		let parsedUI = {
-		  id: id,
-		  position: UI.position,
-		  visible: UI.visible,
-		  clickable: UI.clickable,
-		  shortcut: UI.shortcut,
-		  components: UI.components
+			id: id,
+			position: UI.position,
+			visible: UI.visible,
+			clickable: UI.clickable,
+			shortcut: UI.shortcut,
+			components: UI.components
 		}
 	  
 		if (parsedUI.visible || parsedUI.visible == null) {
-		  delete parsedUI.visible;
-		  let position = parsedUI.position, count = 0;
-		  for (let i = 0 ; i < 4 ; i++) {
-			let pos = (position||{})[i];
-			if (pos == null || pos == 100) count++
-		  }
-		  if (count == 4) delete parsedUI.position
+			delete parsedUI.visible;
+			let position = parsedUI.position, count = 0;
+			for (let i = 0 ; i < 4 ; i++) {
+				let pos = (position||{})[i];
+				if (pos == null || pos == 100) count++
+			}
+			if (count == 4) delete parsedUI.position
 		}
 		else {
-		  parsedUI.position = [0,0,0,0];
-		  parsedUI.visible = false;
-		  delete parsedUI.components
+			parsedUI.position = [0,0,0,0];
+			parsedUI.visible = false;
+			delete parsedUI.components
 		}
 	  
 		if (!parsedUI.clickable) {
-		  delete parsedUI.clickable;
-		  delete parsedUI.shortcut
+			delete parsedUI.clickable;
+			delete parsedUI.shortcut
 		}
 	  
 		return parsedUI
@@ -3166,29 +3168,28 @@ const HelperFunctions = {
 	},
 	TimeManager: {
 		id_pool: 0,
-		setTimeout: function(f,time){
+		setTimeout: function(f, time, ...args){
 			let id = this.id_pool++;
-			this.jobs.set(id, {f: f,time: game.step+time});
+			this.jobs.set(id, { f, time: game.step + +time, args });
 			return id;
 		},
 		clearTimeout: function (id) {
 			this.jobs.delete(id);
 		},
 		jobs: new Map(),
-		tick: function() {
-		  var t = game.step;
-		  for (let i of this.jobs){
-			var job = i[1];
-			if (t>=job.time){
-			  try {
-				job.f();
-			  }
-			  catch (err){
-				console.error(err);
-			  }
-			  this.jobs.delete(i[0]);
+		tick: function () {
+			for (let i of this.jobs) {
+				var job = i[1];
+				if (game.step >= job.time){
+					try {
+						job.f.call(game, ...job.args);
+					}
+					catch (err) {
+						console.error(err);
+					}
+					this.jobs.delete(i[0]);
+				}
 			}
-		  }
 		}
 	},
 	fill: function (text, limit) {
@@ -3260,7 +3261,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Thu Sep 21 2023 19:09:50 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Sat Sep 23 2023 10:12:13 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
 	ghostTeam: GhostTeam,
@@ -4175,7 +4176,7 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/GameConfig_Battlefield.js at Thu Sep 21 2023 19:09:50 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig_Battlefield.js at Sat Sep 23 2023 10:12:13 GMT+0900 (Japan Standard Time) */
 
 const map_name = "Re:Arena Battlefield"; // leave `null` if you want randomized map name
 
@@ -4291,7 +4292,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Thu Sep 21 2023 19:09:50 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Sat Sep 23 2023 10:12:13 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
 	setSpawnpointsOBJ: function () {
@@ -5230,7 +5231,7 @@ AbilityManager.onActionBlockStateChange = function (ship) {
 
 
 
-/* Imported from misc/tickFunctions.js at Thu Sep 21 2023 19:09:50 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Sat Sep 23 2023 10:12:13 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
 	AbilityManager.globalTick(game);
@@ -5769,7 +5770,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Thu Sep 21 2023 19:09:50 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Sat Sep 23 2023 10:12:13 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
 	AbilityManager.globalEvent(event, game);
@@ -5852,7 +5853,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Thu Sep 21 2023 19:09:50 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Sat Sep 23 2023 10:12:13 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
 	{ text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
@@ -5921,6 +5922,6 @@ this.options.ships[0] = JSON.stringify(ship101);
 
 
 
-/* Imported from misc/gameInfo.js at Thu Sep 21 2023 19:09:50 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameInfo.js at Sat Sep 23 2023 10:12:13 GMT+0900 (Japan Standard Time) */
 
 AbilityManager.echo(`[[bg;DarkTurquoise;]Re:][[bg;#EE4B2B;]Arena] ([[;#AAFF00;]${__ABILITY_SYSTEM_INFO__.branch}]) [[;Cyan;]v${__ABILITY_SYSTEM_INFO__.version} (Build ID [[;${HelperFunctions.toHSLA(__ABILITY_SYSTEM_INFO__.buildID)};]${__ABILITY_SYSTEM_INFO__.buildID}])\nMap picked: [[b;Cyan;]${MapManager.get().name} by ${MapManager.get().author}\n\nType \`commands\` to see all commands\nAnd \`usage <commandName>\` to show usage of a command\n\n]`);
