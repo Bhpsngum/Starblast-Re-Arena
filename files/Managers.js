@@ -44,7 +44,12 @@ const TeamManager = {
 		ship.set({hue: teamData.hue});
 		if (changeTeam) {
 			ship.set({team: teamData.id});
+			let oldTeamID = ship.custom.team;
 			ship.custom.team = teamData.id;
+			if (oldTeamID !== teamData.id && "function" == typeof this.onShipTeamChange) try {
+				let oldTeamOBJ = oldTeamID == null ? null : this.getDataFromID(oldTeamID);
+				this.onShipTeamChange(ship, teamData, oldTeamOBJ);
+			} catch (e) {}
 			AbilityManager.updateShipsList(teamData);
 		}
 		if (TpBackToBase) MapManager.spawn(ship);
@@ -619,7 +624,7 @@ const AbilityManager = {
 			for (let abil in oldAbilityManager.abilities) {
 				let ability = oldAbilityManager.abilities[abil], newAbility = AbilityManager.abilities[abil];
 				if (newAbility != null) newAbility.ships = ability.ships;
-				ability.onCodeChanged(newAbility);
+				ability.onCodeChange(newAbility);
 			}
 
 			// reset abilities on ships
@@ -749,7 +754,7 @@ const AbilityManager = {
 
 			if ("function" != typeof ability.initialize) ability.initialize = templates.initialize;
 
-			if ("function" != typeof ability.onCodeChanged) ability.onCodeChanged = templates.onCodeChanged;
+			if ("function" != typeof ability.onCodeChange) ability.onCodeChange = templates.onCodeChange;
 
 			if ("function" != typeof ability.getDefaultShipCode) ability.getDefaultShipCode = templates.getDefaultShipCode;
 
@@ -845,7 +850,7 @@ const AbilityManager = {
 
 		this.ships_list = Object.keys(this.abilities).sort();
 
-		return model;
+		this.lastModelUsage = model;
 	},
 	getAssignableShipsList: function (ship, forceUpdate = false) {
 		let teamData = TeamManager.getDataFromShip(ship);
@@ -874,10 +879,6 @@ const AbilityManager = {
 		}
 
 		if ((oldList.length > 0 || newList.length > 0) && "function" == typeof this.onShipsListUpdate) this.onShipsListUpdate(team, newList, oldList);
-		// update func:
-		// team: team needs to be updated
-		// newList: new allowed ships
-		// oldList: new disabled ships
 	},
 	getShipCodes: function () {
 		if (!Array.isArray(this.ship_codes)) this.initialize();

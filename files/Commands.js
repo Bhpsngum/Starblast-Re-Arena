@@ -247,7 +247,6 @@ const MAKE_COMMANDS = function () {
 			if (newTeam == teamInfo) return `%s is already on ${teamInfo.name.toUpperCase()}`;
 			teamInfo = newTeam;
 			TeamManager.set(ship, team, true, false);
-			try { UIData.updateScoreboard(game); } catch (e) {}
 		}
 		return team ? `Set %s to team ${teamInfo.name.toUpperCase()}`: showTeamInfo(ship);
 	}, '%r', {

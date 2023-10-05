@@ -929,3 +929,7 @@ AbilityManager.onAbilityStart = function (ship, inAbilityBeforeStart) {
 AbilityManager.onActionBlockStateChange = function (ship) {
 	if (!ship.custom.shipUIsHidden) UIData.shipUIs.toggleSelectMenu(ship);
 }
+
+TeamManager.onShipTeamChange = function (ship, newTeamOBJ, oldTeamOBJ) {
+	if (oldTeamOBJ != null) UIData.updateScoreboard(game);
+}

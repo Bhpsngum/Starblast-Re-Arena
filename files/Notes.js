@@ -24,6 +24,7 @@ The files below are recommended and better don't touch other files unless you kn
 3. Paste your current's mod code in the templates/gameLogic.js file
 Consider the things below:
 
+```js
 // to initialize the Ability System (required):
 AbilityManager.initialize()
 
@@ -35,6 +36,10 @@ this.options = {
 		AbilityManager.getShipCodes()
 	]
 }
+
+// Please note that after initialization, a value in `AbilityManager.lastModelUsage`
+// indicates that all model slots from 799 down to `AbilityManager.lastModelUsage + 1` have been used up for building models for the Ability System
+// Don't use any model number higher than that given value, only equal or lower.
 
 // Note that it will initialize first if it hasn't yet
 
@@ -54,6 +59,42 @@ this.event = function (event, game) {
 	AbilityManager.globalEvent(event, game);
 	// your stuff here
 }
+
+// Additionally, there are events that you can modify their functions for your own use:
+AbilityManager.onShipsListUpdate = function (team, newList, oldList) {
+	// Triggers when assignable ship list on one team change
+	// Parameters:
+	// - team: the Team Object (same structure in Teams.js file)
+	// - newList: an array of updated assignable ship names
+	// - oldList: an array of previous assignable ship names
+}
+
+AbilityManager.onAbilityEnd = function (ship) {
+	// Triggers when a ship ends its ability
+	// Parameters:
+	// - ship: the ship object
+}
+
+AbilityManager.onAbilityStart = function (ship, inAbilityBeforeStart) {
+	// Triggers when a ship starts its ability
+	// Parameters:
+	// - ship: the ship object
+}
+
+AbilityManager.onActionBlockStateChange = function (ship) {
+	// Triggers when a ship has been blocked from certain activities (using activities, changing ships)
+	// Parameters:
+	// - ship: the ship object
+}
+
+TeamManager.onShipTeamChange = function (ship, newTeamOBJ, oldTeamOBJ) {
+	// Triggers when a ship's team has been changed
+	// Parameters
+	// - ship: the ship object
+	// - newTeamOBJ: Team Object of the new team that ship belongs to
+	// - oldTeamOBJ: Team Object of the old team before changes. Note that a `null` is expected if before given ship wasn't assigned to any teams yet (including ghost team)
+}
+```
 
 4. Install NodeJS and NPM if you haven't yet
 5. Open terminal/console, move to the folder in step 1 (use cd command or whatever you want)

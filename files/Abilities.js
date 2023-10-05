@@ -163,7 +163,7 @@ const ShipAbilities = {
 		// optional, do nothing
 		// newTemplate: that new ship template after code changes, `null` if the template is removed on new code
 		// Note: this function runs after initial compilation (ships and templates compilation)
-		onCodeChanged: function (newTemplate) {
+		onCodeChange: function (newTemplate) {
 
 		},
 
@@ -1828,7 +1828,7 @@ const ShipAbilities = {
 			}
 		},
 
-		onCodeChanged: function (newTemplate) {
+		onCodeChange: function (newTemplate) {
 			if (newTemplate == null) {
 				for (let ring of this.activeRings.values()) this.removeActiveRing(ring.ship);
 				return;
@@ -2134,7 +2134,7 @@ const ShipAbilities = {
 			}
 		},
 
-		onCodeChanged: function (newTemplate) {
+		onCodeChange: function (newTemplate) {
 			if (newTemplate == null) {
 				for (let ring of this.activeRings.values()) this.removeActiveRing(ring.ship);
 				return;

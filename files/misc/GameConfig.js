@@ -57,7 +57,7 @@ const CONTROL_POINT = {
 	textures: [
 		{
 			url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/capture_area.png",
-			author: "Nexagon", // it's shown nowhere on the mod, but at least a token of respect
+			author: "Nex", // it's shown nowhere on the mod, but at least a token of respect
 			scale: 2.24
 		}
 	]
@@ -69,12 +69,12 @@ const BASES = {
 	textures: [ // textures list to choose from (randomized)
 		{
 			url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_0.png",
-			author: "Nexagon", // it's shown nowhere on the mod, but at least a token of respect
+			author: "Nex", // it's shown nowhere on the mod, but at least a token of respect
 			scale: 2.24
 		},
 		{
 			url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/base_1.png",
-			author: "Nexagon",
+			author: "Nex",
 			scale: 2.24
 		},
 		{

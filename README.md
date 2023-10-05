@@ -13,11 +13,11 @@ But at least it should run as expected ~~I guess~~
 ## Credits
 
 ### Original Arena Mod (v1.0 - v3.1.2)
-* **CEO:** Nexagon
-* **Coding:** Nexagon
-* **Textures:** Nexagon, and others
-* **Ships:** Nexagon, Edward, Supernova, and others
-* **Maps:** Nexagon, Carme, Caramel, Nerd69420, and others
+* **CEO:** Nex
+* **Coding:** Nex
+* **Textures:** Nex, and others
+* **Ships:** Nex, Edward, Supernova, and others
+* **Maps:** Nex, Carme, Caramel, Nerd69420, and others
 * **Contributors:** Lexydrow, Boris, Thuliux, Bylolopro, Caramel, Duschi, Edward, Megalodon, Supernova, ThirdToeMan, Madness, Slayer, and others
 
 ### Re:Arena - Arena Mod Remake/Recontinuation (v3.1.3 - v4.0+)
