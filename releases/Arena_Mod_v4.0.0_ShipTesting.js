@@ -10,11 +10,11 @@ Re:Arena - Arena Mod Remake/Recontinuation (v3.1.3 - v4.0+)
 GitHub Repository: https://github.com/Bhpsngum/Arena-mod-remake
 
 Original Arena Mod (v1.0 - v3.1.2)
-- CEO: Nexagon
-- Coding: Nexagon
-- Textures: Nexagon, and others
-- Ships: Nexagon, Edward, Supernova, and others
-- Maps: Nexagon, Carme, Caramel, Nerd69420, and others
+- CEO: Nex
+- Coding: Nex
+- Textures: Nex, and others
+- Ships: Nex, Edward, Supernova, and others
+- Maps: Nex, Carme, Caramel, Nerd69420, and others
 - Contributors: Lexydrow, Boris, Thuliux, Bylolopro, Caramel, Duschi, Edward, Megalodon, Supernova, ThirdToeMan, Madness, Slayer, and others
 */
 
@@ -22,7 +22,7 @@ const __ABILITY_SYSTEM_INFO__ = {
 	name: "Arena_Mod",
 	branch: "ShipTesting",
 	version: "4.0.0",
-	buildID: "18abf98242b"
+	buildID: "18afe24059f"
 };
 
 
@@ -53,6 +53,7 @@ The files below are recommended and better don't touch other files unless you kn
 3. Paste your current's mod code in the templates/gameLogic.js file
 Consider the things below:
 
+```js
 // to initialize the Ability System (required):
 AbilityManager.initialize()
 
@@ -64,6 +65,10 @@ this.options = {
 		AbilityManager.getShipCodes()
 	]
 }
+
+// Please note that after initialization, a value in `AbilityManager.lastModelUsage`
+// indicates that all model slots from 799 down to `AbilityManager.lastModelUsage + 1` have been used up for building models for the Ability System
+// Don't use any model number higher than that given value, only equal or lower.
 
 // Note that it will initialize first if it hasn't yet
 
@@ -84,6 +89,42 @@ this.event = function (event, game) {
 	// your stuff here
 }
 
+// Additionally, there are events that you can modify their functions for your own use:
+AbilityManager.onShipsListUpdate = function (team, newList, oldList) {
+	// Triggers when assignable ship list on one team change
+	// Parameters:
+	// - team: the Team Object (same structure in Teams.js file)
+	// - newList: an array of updated assignable ship names
+	// - oldList: an array of previous assignable ship names
+}
+
+AbilityManager.onAbilityEnd = function (ship) {
+	// Triggers when a ship ends its ability
+	// Parameters:
+	// - ship: the ship object
+}
+
+AbilityManager.onAbilityStart = function (ship, inAbilityBeforeStart) {
+	// Triggers when a ship starts its ability
+	// Parameters:
+	// - ship: the ship object
+}
+
+AbilityManager.onActionBlockStateChange = function (ship) {
+	// Triggers when a ship has been blocked from certain activities (using activities, changing ships)
+	// Parameters:
+	// - ship: the ship object
+}
+
+TeamManager.onShipTeamChange = function (ship, newTeamOBJ, oldTeamOBJ) {
+	// Triggers when a ship's team has been changed
+	// Parameters
+	// - ship: the ship object
+	// - newTeamOBJ: Team Object of the new team that ship belongs to
+	// - oldTeamOBJ: Team Object of the old team before changes. Note that a `null` is expected if before given ship wasn't assigned to any teams yet (including ghost team)
+}
+```
+
 4. Install NodeJS and NPM if you haven't yet
 5. Open terminal/console, move to the folder in step 1 (use cd command or whatever you want)
 6. Run `npm run compile main`
@@ -99,7 +140,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_ShipTesting.js at Sat Sep 23 2023 10:12:13 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_ShipTesting.js at Thu Oct 05 2023 13:41:28 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -142,7 +183,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Sat Sep 23 2023 10:12:13 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Thu Oct 05 2023 13:41:28 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
 	{
@@ -192,7 +233,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps_ShipTesting.js at Sat Sep 23 2023 10:12:13 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps_ShipTesting.js at Thu Oct 05 2023 13:41:28 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
 	{
@@ -208,7 +249,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Sat Sep 23 2023 10:12:13 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Thu Oct 05 2023 13:41:28 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
 	"Test ship": {
@@ -375,7 +416,7 @@ const ShipAbilities = {
 		// optional, do nothing
 		// newTemplate: that new ship template after code changes, `null` if the template is removed on new code
 		// Note: this function runs after initial compilation (ships and templates compilation)
-		onCodeChanged: function (newTemplate) {
+		onCodeChange: function (newTemplate) {
 
 		},
 
@@ -2040,7 +2081,7 @@ const ShipAbilities = {
 			}
 		},
 
-		onCodeChanged: function (newTemplate) {
+		onCodeChange: function (newTemplate) {
 			if (newTemplate == null) {
 				for (let ring of this.activeRings.values()) this.removeActiveRing(ring.ship);
 				return;
@@ -2346,7 +2387,7 @@ const ShipAbilities = {
 			}
 		},
 
-		onCodeChanged: function (newTemplate) {
+		onCodeChange: function (newTemplate) {
 			if (newTemplate == null) {
 				for (let ring of this.activeRings.values()) this.removeActiveRing(ring.ship);
 				return;
@@ -2360,7 +2401,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Sat Sep 23 2023 10:12:13 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Thu Oct 05 2023 13:41:28 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -2611,7 +2652,6 @@ const MAKE_COMMANDS = function () {
 			if (newTeam == teamInfo) return `%s is already on ${teamInfo.name.toUpperCase()}`;
 			teamInfo = newTeam;
 			TeamManager.set(ship, team, true, false);
-			try { UIData.updateScoreboard(game); } catch (e) {}
 		}
 		return team ? `Set %s to team ${teamInfo.name.toUpperCase()}`: showTeamInfo(ship);
 	}, '%r', {
@@ -2675,7 +2715,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Sat Sep 23 2023 10:12:13 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Thu Oct 05 2023 13:41:28 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
 	planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -2685,7 +2725,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Sat Sep 23 2023 10:12:13 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Thu Oct 05 2023 13:41:28 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
 	toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -3045,7 +3085,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Sat Sep 23 2023 10:12:13 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Thu Oct 05 2023 13:41:28 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
 	ghostTeam: GhostTeam,
@@ -3093,7 +3133,12 @@ const TeamManager = {
 		ship.set({hue: teamData.hue});
 		if (changeTeam) {
 			ship.set({team: teamData.id});
+			let oldTeamID = ship.custom.team;
 			ship.custom.team = teamData.id;
+			if (oldTeamID !== teamData.id && "function" == typeof this.onShipTeamChange) try {
+				let oldTeamOBJ = oldTeamID == null ? null : this.getDataFromID(oldTeamID);
+				this.onShipTeamChange(ship, teamData, oldTeamOBJ);
+			} catch (e) {}
 			AbilityManager.updateShipsList(teamData);
 		}
 		if (TpBackToBase) MapManager.spawn(ship);
@@ -3668,7 +3713,7 @@ const AbilityManager = {
 			for (let abil in oldAbilityManager.abilities) {
 				let ability = oldAbilityManager.abilities[abil], newAbility = AbilityManager.abilities[abil];
 				if (newAbility != null) newAbility.ships = ability.ships;
-				ability.onCodeChanged(newAbility);
+				ability.onCodeChange(newAbility);
 			}
 
 			// reset abilities on ships
@@ -3798,7 +3843,7 @@ const AbilityManager = {
 
 			if ("function" != typeof ability.initialize) ability.initialize = templates.initialize;
 
-			if ("function" != typeof ability.onCodeChanged) ability.onCodeChanged = templates.onCodeChanged;
+			if ("function" != typeof ability.onCodeChange) ability.onCodeChange = templates.onCodeChange;
 
 			if ("function" != typeof ability.getDefaultShipCode) ability.getDefaultShipCode = templates.getDefaultShipCode;
 
@@ -3894,7 +3939,7 @@ const AbilityManager = {
 
 		this.ships_list = Object.keys(this.abilities).sort();
 
-		return model;
+		this.lastModelUsage = model;
 	},
 	getAssignableShipsList: function (ship, forceUpdate = false) {
 		let teamData = TeamManager.getDataFromShip(ship);
@@ -3923,10 +3968,6 @@ const AbilityManager = {
 		}
 
 		if ((oldList.length > 0 || newList.length > 0) && "function" == typeof this.onShipsListUpdate) this.onShipsListUpdate(team, newList, oldList);
-		// update func:
-		// team: team needs to be updated
-		// newList: new allowed ships
-		// oldList: new disabled ships
 	},
 	getShipCodes: function () {
 		if (!Array.isArray(this.ship_codes)) this.initialize();
