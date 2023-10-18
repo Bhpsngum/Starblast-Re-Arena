@@ -210,7 +210,7 @@ const WeightCalculator = {
 		return kills * muls.kills + deaths * muls.deaths + timeOnPoint * muls.timeOnPoint;
 	},
 	getTopPlayers: function (game, donSort = false, formula = "playerWeightByKD") {
-		let players = game.ships.filter(e => (e || {}).id != null && !e.custom.kicked);
+		let players = game.ships.filter(e => (e || {}).id != null && !e.custom.kicked && e.custom.joined);
 		if (donSort) return players;
 
 		// get formula

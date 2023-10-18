@@ -334,7 +334,7 @@ const HelperFunctions = {
 			ship.custom.lastTriggered = game.step;
 		},
 
-		onCodeChanged: function () {},
+		onCodeChange: function () {},
 
 		getDefaultShipCode: function (ship) {
 			return this.codes.default

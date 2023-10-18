@@ -3,7 +3,7 @@ const alwaysTick = function (game) {
 	let IDs = [];
 	for (let ship of game.ships) {
 		if (ship == null || ship.id == null) continue;
-		if (!ship.custom.joined) {
+		if (!ship.custom.joined && ship.alive) {
 			// ban check
 			let banned = false;
 			if (DEBUG) for (let info of game.custom.banList) {
@@ -37,48 +37,50 @@ const alwaysTick = function (game) {
 			ship.custom.joined = true;
 		}
 
-		// AFK Check
-		if (game.custom.started && !ship.custom.kicked) {
-			let data = ship.custom.last_status || {};
-			let { r, vx, vy, generator } = ship;
-			// check if player is not moving, rotating ship, and firing, then kick
-			if (!HelperFunctions.isEqual(data.vx, vx) || !HelperFunctions.isEqual(data.vy, vy) || !HelperFunctions.isEqual(data.r, r) || !HelperFunctions.isEqual(data.generator, generator)) ship.custom.last_active = game.step;
+		if (!ship.custom.kicked && ship.custom.joined) {
+			// AFK Check
+			if (game.custom.started) {
+				let data = ship.custom.last_status || {};
+				let { r, vx, vy, generator } = ship;
+				// check if player is not moving, rotating ship, and firing, then kick
+				if (!HelperFunctions.isEqual(data.vx, vx) || !HelperFunctions.isEqual(data.vy, vy) || !HelperFunctions.isEqual(data.r, r) || !HelperFunctions.isEqual(data.generator, generator)) ship.custom.last_active = game.step;
 
-			if (ship.custom.last_active != null && HelperFunctions.timeExceeded(ship.custom.last_active, GAME_OPTIONS.AFK_timeout * 60)) {
-				game.custom.abilitySystemCommands.kick(ship, "You have been kicked", "AFK");
+				if (ship.custom.last_active != null && HelperFunctions.timeExceeded(ship.custom.last_active, GAME_OPTIONS.AFK_timeout * 60)) {
+					game.custom.abilitySystemCommands.kick(ship, "You have been kicked", "AFK");
+				}
+
+				ship.custom.last_status = { r, vx, vy, generator };
 			}
 
-			ship.custom.last_status = { r, vx, vy, generator };
-		}
-
-		let spawnpoint, stepDifference = game.step - ship.custom.lastSpawnedStep;
-		if ( // Don't ask why
-			!ship.custom.shipUIsPermaHidden && (
-				stepDifference > GAME_OPTIONS.ship_ui_timeout * 60 || (
-					stepDifference > 1 * 60 &&
-					(spawnpoint = TeamManager.getDataFromShip(ship).spawnpoint) != null &&
-					HelperFunctions.distance(spawnpoint, ship).distance > BASES.size
+			let spawnpoint, stepDifference = game.step - ship.custom.lastSpawnedStep;
+			if ( // Don't ask why
+				!ship.custom.shipUIsPermaHidden && (
+					stepDifference > GAME_OPTIONS.ship_ui_timeout * 60 || (
+						stepDifference > 1 * 60 &&
+						(spawnpoint = TeamManager.getDataFromShip(ship).spawnpoint) != null &&
+						HelperFunctions.distance(spawnpoint, ship).distance > BASES.size
+					)
 				)
-			)
-		) UIData.shipUIs.toggle(ship, true);
+			) UIData.shipUIs.toggle(ship, true);
 
-		IDs.push(ship.id);
+			IDs.push(ship.id);
 
-		let intruded = HelperFunctions.intrudedOtherTeamBase(ship);
-		if (intruded) {
-			if (ship.custom.intrudedEnemyBaseStart == null) {
-				ship.custom.intrudedEnemyBaseStart = game.step;
-				HelperFunctions.sendUI(ship, {
-					id: "intrusion_warning",
-					position: [20, 20, 60, 5],
-					components: [
-						{ type: "text", position: [0, 0, 100, 100], value: "WARNING! ENEMY BASE INTRUSION WILL CAUSE DAMAGE TO YOUR OWN SHIP!", color: "#ffff00" }
-					]
-				});
+			let intruded = HelperFunctions.intrudedOtherTeamBase(ship);
+			if (intruded) {
+				if (ship.custom.intrudedEnemyBaseStart == null) {
+					ship.custom.intrudedEnemyBaseStart = game.step;
+					HelperFunctions.sendUI(ship, {
+						id: "intrusion_warning",
+						position: [20, 20, 60, 5],
+						components: [
+							{ type: "text", position: [0, 0, 100, 100], value: "WARNING! ENEMY BASE INTRUSION WILL CAUSE DAMAGE TO YOUR OWN SHIP!", color: "#ffff00" }
+						]
+					});
+				}
+				else if ((game.step - ship.custom.intrudedEnemyBaseStart) % 60 === 0) HelperFunctions.damage(ship, BASES.intrusion_damage);
 			}
-			else if ((game.step - ship.custom.intrudedEnemyBaseStart) % 60 === 0) HelperFunctions.damage(ship, BASES.intrusion_damage);
+			else if (ship.custom.intrudedEnemyBaseStart != null) HelperFunctions.resetIntrusionWarningMSG(ship);
 		}
-		else if (ship.custom.intrudedEnemyBaseStart != null) HelperFunctions.resetIntrusionWarningMSG(ship);
 	}
 
 	let arIDs = [...IDs];
