@@ -1,7 +1,7 @@
 this.event = function (event, game) {
 	AbilityManager.globalEvent(event, game);
 	let ship = event.ship;
-	if (ship == null || ship.id == null || ship.custom.kicked) return;
+	if (ship == null || ship.id == null || ship.custom.kicked || !ship.custom.joined) return;
 	switch (event.name) {
 		case "ship_spawned":
 			TeamManager.set(ship, void 0, false, true);
