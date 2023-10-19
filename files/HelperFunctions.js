@@ -259,7 +259,7 @@ const HelperFunctions = {
 		return parsedUI
 	},
 	sendUI: function (ship, UI) {
-		if (ship != null && "function" == typeof ship.setUIComponent) ship.setUIComponent(this.parseUI(UI));
+		if (ship != null && (ship === game || ship.id != null) && "function" == typeof ship.setUIComponent) ship.setUIComponent(this.parseUI(UI));
 	},
 	TimeManager: {
 		id_pool: 0,
