@@ -35,7 +35,7 @@ const alwaysTick = function (game) {
 						id: AbilityManager.UI.id,
 						visible: false
 					});
-					ship.set({ type: 101, idle: true, vx: 0, vy: 0, x: 0, y: 0 });
+					ship.set({ type: 101, idle: true, vx: 0, vy: 0, x: 0, y: 0, angle: 90 });
 				}
 				ship.custom.kills = ship.custom.deaths = 0;
 				ship.custom.chooseTimes = {};
@@ -61,7 +61,7 @@ const alwaysTick = function (game) {
 			}
 
 			let spawnpoint, stepDifference = game.step - ship.custom.lastSpawnedStep;
-			let isOutOfBase = stepDifference > 1 * 60 && (spawnpoint = TeamManager.getDataFromShip(ship).spawnpoint) != null && HelperFunctions.distance(spawnpoint, ship).distance > BASES.size;
+			let isOutOfBase = HelperFunctions.isOutOfBase(ship, true);
 			if (!ship.custom.shipUIsPermaHidden && (stepDifference > GAME_OPTIONS.ship_ui_timeout * 60 || isOutOfBase)) UIData.shipUIs.toggle(ship, true);
 
 			/*	ANTI-BASECAMP MECHANISM
@@ -69,8 +69,7 @@ const alwaysTick = function (game) {
 
 				While ship is on base:
 					- no collider + not affected by enemy abils
-					- if ship used abil then yes collider + affected by enemy abils
-				If ship is leaving the base and still didn't use abil:
+				If ship is leaving the base:
 					- he gets collider on + invulnerability for 15 sec + still not affected by enemy abils
 					- if he fires then invulnerability is gone (it should be automatical in Starblast native logic) + should be affected by enemy abils
 					- if he uses abil then invulnerability is also gone + should be affected by enemy abils
@@ -475,11 +474,12 @@ const main_phase = function (game) {
 	if ((game.step - game.custom.startedStep) % (GAME_OPTIONS.alienSpawns.interval * 60) === 0) {
 		let alienSpec = GAME_OPTIONS.alienSpawns;
 		while (game.aliens.length < alienSpec.capacity) game.addAlien({
-			...HelperFunctions.randomItem(AlienSpawns).value, //x, y
+			...HelperFunctions.randomItem(AlienSpawns).value, // x, y
 			level: HelperFunctions.randIntInRange(alienSpec.level.min, alienSpec.level.max + 1),
 			crystal_drop: HelperFunctions.randIntInRange(alienSpec.crystals.min, alienSpec.crystals.max + 1),
 			weapon_drop: HelperFunctions.randomItem(alienSpec.collectibles).value,
-			code: HelperFunctions.randomItem(alienSpec.codes).value
+			code: HelperFunctions.randomItem(alienSpec.codes).value,
+			points: 0
 		})
 	}
 }
