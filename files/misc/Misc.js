@@ -355,9 +355,9 @@ const UIData = {
 		shipSelectPrefix: "choose_ship",
 		shipSelectSize: {
 			textLengthToWidthRatio: 3, // text_len = ratio * ui_width, to keep the text looks pretty and aligned
-			// Please note that multiple pages are available, itemsPerRow * itemsPerColumn is the number of items in one page
-			itemsPerRow: 3, // horizontal items count
-			itemsPerColumn: 5, // vertical items count
+			// Please note that multiple pages are available, columns * rows is the number of items in one page
+			columns: 3, // horizontal items count
+			rows: 5, // vertical items count
 			xStart: 26,
 			yStart: 25,
 			contentYStart: 30,
@@ -370,7 +370,7 @@ const UIData = {
 			return Math.round(width * this.shipSelectSize.textLengthToWidthRatio);
 		},
 		getTotalItemsCountPerPage: function () {
-			return this.shipSelectSize.itemsPerColumn * this.shipSelectSize.itemsPerRow; 
+			return this.shipSelectSize.rows * this.shipSelectSize.columns; 
 		},
 		positionCache: {},
 		styles: {
@@ -488,35 +488,35 @@ const UIData = {
 				row: 0,
 				column: 0
 			}) {
-				let index = obj.row * UIData.shipUIs.shipSelectSize.itemsPerRow + obj.column;
+				let index = obj.row * UIData.shipUIs.shipSelectSize.columns + obj.column;
 				return UIData.shipUIs.getUserShipsList(ship)[index];
 			},
 			getIndexFromID: function (id = "") {
 				let pos = id.match(new RegExp(`^${UIData.shipUIs.shipSelectPrefix}_(\\d+)_(\\d+)$`));
 				if (pos == null) return null;
 				return {
-					row: Math.max(Math.min(pos[1], UIData.shipUIs.shipSelectSize.itemsPerRow), 0) || 0,
-					column: Math.max(Math.min(pos[2], UIData.shipUIs.shipSelectSize.itemsPerColumn), 0) || 0
+					row: Math.max(Math.min(pos[1], UIData.shipUIs.shipSelectSize.rows), 0) || 0,
+					column: Math.max(Math.min(pos[2], UIData.shipUIs.shipSelectSize.columns), 0) || 0
 				}
 			},
 			getIndexFromName: function (name = "") {
 				let index = AbilityManager.ships_list.indexOf(name);
 				if (index < 0) return null;
-				let { itemsPerRow } = UIData.shipUIs.shipSelectSize;
+				let { columns } = UIData.shipUIs.shipSelectSize;
 				let itemsCount = UIData.shipUIs.getTotalItemsCountPerPage();
 				let page = Math.trunc(index / itemsCount);
 				let pageOffset = index % itemsCount;
 				return {
 					page,
-					row: Math.trunc(pageOffset / itemsPerRow),
-					column: pageOffset % itemsPerRow
+					row: Math.trunc(pageOffset / columns),
+					column: pageOffset % columns
 				}
 			}
 		},
 		utilItems: [
 			{ id: "prev_page", text: "%s Prev page", icon: "<", shortcut: String.fromCharCode(188), style: "cyan", clickable: (canUseButtons, canUseUI, totalPages) => canUseButtons && totalPages > 1 },
 			{ id: "prev_ship", text: "%s Prev ship", icon: "[", shortcut: String.fromCharCode(219), style: "default", clickable: (canUseButtons, canUseUI, totalPages) => canUseUI },
-			{ id: "random_ship", text: "Random [?]", icon: "?", shortcut: String.fromCharCode(191), style: "cyan", clickable: (canUseButtons, canUseUI, totalPages) => canUseUI },
+			{ id: "random_ship", text: "Random [%s]", icon: "?", shortcut: String.fromCharCode(191), style: "cyan", clickable: (canUseButtons, canUseUI, totalPages) => canUseUI },
 			{ id: "next_ship", text: "Next ship %s", icon: "]", shortcut: String.fromCharCode(221), style: "default", clickable: (canUseButtons, canUseUI, totalPages) => canUseUI },
 			{ id: "next_page", text: "Next page %s", icon: ">", shortcut: String.fromCharCode(190), style: "cyan", clickable: (canUseButtons, canUseUI, totalPages) => canUseButtons && totalPages > 1 }
 		],
@@ -526,8 +526,8 @@ const UIData = {
 			let UISpec = this.shipSelectSize;
 
 			if (!visible) {
-				for (let row = 0; row < UISpec.itemsPerColumn; ++row) {
-					for (let column = 0; column < UISpec.itemsPerRow; ++column) {
+				for (let row = 0; row < UISpec.rows; ++row) {
+					for (let column = 0; column < UISpec.columns; ++column) {
 						HelperFunctions.sendUI(ship, { id: this.ItemID.getString({ row, column }), visible: false, clickable: false });
 					}
 				}
@@ -535,23 +535,23 @@ const UIData = {
 				return;
 			}
 
-			let { itemsPerRow, itemsPerColumn } = UISpec;
+			let { columns, rows } = UISpec;
 
 			let abilities = this.getUserShipsList(ship);
 
-			let width = (UISpec.xEnd - UISpec.xStart) / (itemsPerRow + (itemsPerRow - 1) * UISpec.margin_scale_x);
-			let height = (UISpec.yEnd - UISpec.contentYStart) / (itemsPerColumn + (itemsPerColumn - 1) * UISpec.margin_scale_y);
+			let width = (UISpec.xEnd - UISpec.xStart) / (columns + (columns - 1) * UISpec.margin_scale_x);
+			let height = (UISpec.yEnd - UISpec.contentYStart) / (rows + (rows - 1) * UISpec.margin_scale_y);
 
-			let lastLineXOffset = (itemsPerRow - (abilities.length % itemsPerRow || itemsPerRow)) * width * (1 + UISpec.margin_scale_x) / 2;
+			let lastLineXOffset = (columns - (abilities.length % columns || columns)) * width * (1 + UISpec.margin_scale_x) / 2;
 
 			let i = 0;
 			let canUseButtons = HelperFunctions.canUseButtons(ship);
 			let canUseUI = canUseButtons && !AbilityManager.isActionBlocked(ship).blocked;
 
-			let rowsCount = Math.ceil(abilities.length / itemsPerRow);
+			let rowsCount = Math.ceil(abilities.length / columns);
 
 			for (let abil of abilities) {
-				let row = Math.trunc(i / itemsPerRow), column = i % itemsPerRow;
+				let row = Math.trunc(i / columns), column = i % columns;
 				let offsetX = row == rowsCount - 1 ? lastLineXOffset : 0;
 				let usable = canUseUI && AbilityManager.assign(ship, abil, true).success;
 				let style = "";
@@ -573,8 +573,8 @@ const UIData = {
 			for (; i < totalItems; ++i) {
 				HelperFunctions.sendUI(ship, {
 					id: this.ItemID.getString({
-						row: Math.trunc(i / itemsPerRow),
-						column: i % itemsPerRow
+						row: Math.trunc(i / columns),
+						column: i % columns
 					}),
 					visible: false,
 					clickable: false
