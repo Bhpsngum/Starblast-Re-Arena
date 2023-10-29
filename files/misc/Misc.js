@@ -182,6 +182,15 @@ const GameHelperFunctions = {
 	isEqual: function (a, b) {
 		// compare a == b by using epsilon error
 		return Math.abs(a - b) < this.epsilon;
+	},
+	spawnShip: function (ship) {
+		HelperFunctions.setCollider(ship, false);
+		ship.custom.lastColliderIndex = HelperFunctions.getColliderLog(ship).length - 1;
+		HelperFunctions.setInvisible(ship, true);
+		ship.custom.lastInvisibleIndex = HelperFunctions.getInvisibleLog(ship).length - 1;
+		ship.custom.noLongerInvisible = false;
+		ship.custom.leaveBaseInvulTime = false;
+		ship.custom.generator = null;
 	}
 }
 
@@ -695,10 +704,10 @@ const UIData = {
 						{ type: "text", value: `${player.custom.kills}/${player.custom.deaths} `, position: pos, color, align: "right"},
 					]
 				}).flat()
-			]
-		}
+			];
 
-		this.updatePlayerCount(game);
+			this.updatePlayerCount(game);
+		}
 
 		for (let ship of game.ships) {
 			if (ship && ship.id != null) this.renderScoreboard(ship);
@@ -713,7 +722,7 @@ const UIData = {
 			]
 		});
 		let scoreboardData = { ...this.scoreboard };
-		if (game.custom.started) {
+		if (game.custom.started && ship.custom.joined) {
 			// highlight players
 			let compos = HelperFunctions.clone(scoreboardData.components);
 			let foundIndex = compos.findIndex(c => c.type == "player" && c.id === ship.id);
@@ -782,7 +791,8 @@ const UIData = {
 		let res = func();
 		if (res.success) {
 			AbilityManager.restore(ship);
-			ship.set({ vx: 0, vy: 0, invulnerable: GAME_OPTIONS.ship_invulnerability * 60 });
+			ship.set({ vx: 0, vy: 0 });
+			HelperFunctions.setInvulnerable(ship, GAME_OPTIONS.ship_invulnerability * 60);
 			let x = (ship.custom.chooseTimes[ship.custom.shipName] || 0) + 1;
 			if (x >= GAME_OPTIONS.duplicate_choose_limit) return this.shipUIs.toggle(ship, true);
 			ship.custom.chooseTimes[ship.custom.shipName] = x;
@@ -923,6 +933,14 @@ AbilityManager.onAbilityEnd = function (ship) {
 }
 
 AbilityManager.onAbilityStart = function (ship, inAbilityBeforeStart) {
+	if (!ship.custom.noLongerInvisible) {
+		ship.custom.noLongerInvisible = true;
+		let colliderLog = HelperFunctions.getColliderLog(ship), invisibleLog = HelperFunctions.getInvisibleLog(ship), invulnerableLog = HelperFunctions.getInvulnerableLog(ship);
+		if (colliderLog.length - 1 == ship.custom.lastColliderIndex) HelperFunctions.setCollider(ship, true);
+		if (invisibleLog.length - 1 == ship.custom.lastInvisibleIndex) HelperFunctions.setInvisible(ship, false);
+		if (invulnerableLog.length - 1 == ship.custom.lastInvulnerableIndex) HelperFunctions.setInvulnerable(ship, 0);
+		ship.custom.lastColliderIndex = ship.custom.lastInvisibleIndex = ship.custom.lastInvulnerableIndex = null;
+	}
 	if (!inAbilityBeforeStart && !ship.custom.shipUIsHidden) UIData.shipUIs.toggleSelectMenu(ship);
 }
 

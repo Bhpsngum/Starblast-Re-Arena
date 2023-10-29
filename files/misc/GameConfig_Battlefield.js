@@ -8,6 +8,7 @@ Object.assign(GAME_OPTIONS, {
 	waiting_time: 30, // in seconds
 	ship_ui_timeout: 30, // time for the ship ui to hide, in seconds
 	ship_invulnerability: 5, // invulnerability duration for ship upon spawning/changing ship through ship menu, in seconds
+	leaving_base_invulnerability: 15, // invulnerability duration after leaving base without using ability, in seconds
 	healing_ratio: 1, // better don't touch this
 	crystal_drop: 0.5, // this.options.crystal_drop
 	map_size: 200,

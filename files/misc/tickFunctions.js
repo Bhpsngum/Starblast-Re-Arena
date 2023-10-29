@@ -1,6 +1,7 @@
 const alwaysTick = function (game) {
 	AbilityManager.globalTick(game);
 	let IDs = [];
+	let invul_time = GAME_OPTIONS.leaving_base_invulnerability * 60;
 	for (let ship of game.ships) {
 		if (ship == null || ship.id == null) continue;
 		if (!ship.custom.joined && ship.alive) {
@@ -17,17 +18,24 @@ const alwaysTick = function (game) {
 
 			if (!banned) {
 				UIData.blockers.set(ship);
-				WeightCalculator.joinBalanceTeam(ship);
 				control_point_data.renderData(ship, false);
 				UIData.renderTeamScores(ship);
 				HelperFunctions.sendUI(ship, UIData.radar);
-				AbilityManager.restore(ship);
+				
 				if (game.custom.started) {
 					ship.custom.allowInstructor = true;
+					WeightCalculator.joinBalanceTeam(ship);
+					HelperFunctions.spawnShip(ship);
+					AbilityManager.restore(ship);
 				}
 				else {
 					HelperFunctions.sendWaitingText(ship);
-					ship.set({ idle: true, collider: false, vx: 0, vy: 0 });
+					HelperFunctions.setCollider(ship, false);
+					HelperFunctions.sendUI(ship, {
+						id: AbilityManager.UI.id,
+						visible: false
+					});
+					ship.set({ type: 101, idle: true, vx: 0, vy: 0, x: 0, y: 0 });
 				}
 				ship.custom.kills = ship.custom.deaths = 0;
 				ship.custom.chooseTimes = {};
@@ -53,15 +61,44 @@ const alwaysTick = function (game) {
 			}
 
 			let spawnpoint, stepDifference = game.step - ship.custom.lastSpawnedStep;
-			if ( // Don't ask why
-				!ship.custom.shipUIsPermaHidden && (
-					stepDifference > GAME_OPTIONS.ship_ui_timeout * 60 || (
-						stepDifference > 1 * 60 &&
-						(spawnpoint = TeamManager.getDataFromShip(ship).spawnpoint) != null &&
-						HelperFunctions.distance(spawnpoint, ship).distance > BASES.size
-					)
-				)
-			) UIData.shipUIs.toggle(ship, true);
+			let isOutOfBase = stepDifference > 1 * 60 && (spawnpoint = TeamManager.getDataFromShip(ship).spawnpoint) != null && HelperFunctions.distance(spawnpoint, ship).distance > BASES.size;
+			if (!ship.custom.shipUIsPermaHidden && (stepDifference > GAME_OPTIONS.ship_ui_timeout * 60 || isOutOfBase)) UIData.shipUIs.toggle(ship, true);
+
+			/*	ANTI-BASECAMP MECHANISM
+				(This is a copy of original message from Notus when we were discussing on how to implement this)
+
+				While ship is on base:
+					- no collider + not affected by enemy abils
+					- if ship used abil then yes collider + affected by enemy abils
+				If ship is leaving the base and still didn't use abil:
+					- he gets collider on + invulnerability for 15 sec + still not affected by enemy abils
+					- if he fires then invulnerability is gone (it should be automatical in Starblast native logic) + should be affected by enemy abils
+					- if he uses abil then invulnerability is also gone + should be affected by enemy abils
+			 */
+
+			if (!ship.custom.noLongerInvisible) {
+				if (ship.custom.leaveBaseInvulTime) {
+					if (game.step - ship.custom.leaveBaseTimestamp > invul_time || (ship.custom.generator != null && ship.generator != ship.custom.generator)) {
+						ship.custom.noLongerInvisible = true;
+						ship.custom.generator = null;
+						
+						let invisibleLog = HelperFunctions.getInvisibleLog(ship);
+						if (invisibleLog.length - 1 == ship.custom.lastInvisibleIndex) HelperFunctions.setInvisible(ship, false);
+						ship.custom.lastInvisibleIndex = ship.custom.lastInvulnerableIndex = null;
+					}
+					else ship.custom.generator = ship.generator;
+				}
+				else if (isOutOfBase) {
+					ship.custom.leaveBaseInvulTime = true;
+					ship.custom.leaveBaseTimestamp = game.step;
+					let colliderLog = HelperFunctions.getColliderLog(ship);
+					if (colliderLog.length - 1 == ship.custom.lastColliderIndex) HelperFunctions.setCollider(ship, true);
+					ship.custom.lastColliderIndex = null;
+					
+					HelperFunctions.setInvulnerable(ship, invul_time);
+					ship.custom.lastInvulnerableIndex = HelperFunctions.getInvulnerableLog(ship).length - 1;
+				}
+			}
 
 			IDs.push(ship.id);
 
@@ -107,7 +144,7 @@ const alwaysTick = function (game) {
 const initialization = function (game, dontChangeTick = false) {
 	if (!game.custom.centerObjPlaced) {
 		var center_obj = HelperFunctions.randInt(GAME_OPTIONS.nerd) ? {
-			scale: {x:4, y:4, z:4},
+			scale: {x:2, y:2, z:2},
 			rotation: {x:0, y:0, z:0},
 			type: {
 				id: "lost_sector_aries",
@@ -173,7 +210,7 @@ const initialization = function (game, dontChangeTick = false) {
 
 const waiting = function (game) {
 	alwaysTick(game);
-	let players = game.ships.filter(ship => ship && ship.id != null);
+	let players = game.ships.filter(ship => ship && ship.id != null && ship.custom.joined && !ship.custom.kicked);
 	let text = "";
 	if (players.length >= GAME_OPTIONS.required_players) {
 		if (game.custom.waiting_time == null || isNaN(game.custom.waiting_time)) game.custom.waiting_time = game.step + GAME_OPTIONS.waiting_time * 60;
@@ -184,16 +221,21 @@ const waiting = function (game) {
 			UIData.renderTeamScores(game, true);
 			UIData.updateScoreboard(game);
 			HelperFunctions.sendUI(game, UIData.radar);
+			HelperFunctions.sendUI(game, {
+				id: "waiting_text",
+				visible: false
+			});
 			players.forEach(ship => {
-				HelperFunctions.sendUI(ship, {
-					id: "waiting_text",
-					visible: false
-				});
+				if ((ship || {}).id == null || ship.custom.kicked || !ship.custom.joined) return;
 				ship.custom.allowInstructor = true;
-				if ((ship || {}).id == null || ship.custom.kicked) return;
 				AbilityManager.random(ship);
-				UIData.shipUIs.toggle(ship, false, true);
-				ship.set({ idle: false, collider: true });
+				WeightCalculator.joinBalanceTeam(ship);
+				if (ship.alive) {
+					HelperFunctions.spawnShip(ship);
+					AbilityManager.restore(ship);
+					UIData.shipUIs.toggle(ship, false, true);
+				}
+				ship.set({ idle: false });
 				ship.custom.last_active = game.step;
 			});
 			if (game.custom.startedStep == null) game.custom.startedStep = game.step + 1;
@@ -218,10 +260,11 @@ const waiting = function (game) {
 
 const main_phase = function (game) {
 	alwaysTick(game);
-	if ((game.step - game.custom.startedStep) % 60 === 0) {
+	let game_duration = game.step - game.custom.startedStep;
+	if (game_duration >= 60 && game_duration % 60 === 0) {
 		// game logic should be inside here
 		// find all players inside the ring
-		let players = HelperFunctions.findEntitiesInRange(CONTROL_POINT.position, CONTROL_POINT.size, true, true, { ships: true }, true);
+		let players = HelperFunctions.findEntitiesInRange(CONTROL_POINT.position, CONTROL_POINT.size, true, true, { ships: true, invisible: true }, true);
 
 		let increment = CONTROL_POINT.control_bar.percentage_increase;
 

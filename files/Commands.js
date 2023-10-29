@@ -3,9 +3,9 @@ const MAKE_COMMANDS = function () {
 	let kick = function (ship, info, reason) {
 		ship.custom.kicked = true;
 		ship.custom.abilitySystemDisabled = true;
+		HelperFunctions.setCollider(ship, false);
 		ship.set({
 			idle: true,
-			collider: false,
 			type: 101,
 			vx: 0,
 			vy: 0,
@@ -125,7 +125,7 @@ const MAKE_COMMANDS = function () {
 
 	addCommand('sunall', function () {
 		for (let ship of game.ships) ship.set({x: 0, y: 0});
-		echo('All players has been teleoprted to the sun!');
+		echo('All players have been teleported to the sun!');
 	}, { description: "Teleport all players to the sun" });
 
 	addCommand('killaliens', function () {

@@ -100,13 +100,17 @@ const ShipAbilities = {
 		// start the ability
 		// optional, set ship to ability ship (models.ability --> codes.ability)
 		start: function (ship, lastAbilityStatus) {
-			ship.set({invulnerable: 100, type: this.codes.ability, stats: AbilityManager.maxStats, generator: 0});
+			HelperFunctions.setInvulnerable(ship, 100);
+			ship.set({type: this.codes.ability, stats: AbilityManager.maxStats, generator: 0});
 		},
 
 		// end the ability
 		// optional, set ship to default ship (models.default --> codes.default)
 		end: function (ship) {
-			if (ship.custom.ability === this) ship.set({invulnerable: 100, type: this.codes.default, stats: AbilityManager.maxStats, generator: this.generatorInit});
+			if (ship.custom.ability === this) {
+				HelperFunctions.setInvulnerable(ship, 100);
+				ship.set({type: this.codes.default, stats: AbilityManager.maxStats, generator: this.generatorInit});
+			}
 		},
 
 		// check if ability can end
@@ -245,10 +249,12 @@ const ShipAbilities = {
 		},
 		
 		start: function (ship) {
-			ship.set({invulnerable:100,type:this.codes.ability,generator:0,shield:1000, stats: AbilityManager.maxStats});
+			HelperFunctions.setInvulnerable(ship, 100);
+			ship.set({type:this.codes.ability,generator:0,shield:1000, stats: AbilityManager.maxStats});
 		},
 		end: function (ship) {
-			ship.set({type: this.codes.default, invulnerable: 100, stats: AbilityManager.maxStats});
+			HelperFunctions.setInvulnerable(ship, 100);
+			ship.set({type: this.codes.default, stats: AbilityManager.maxStats});
 		}
 	},
 	"Marauder": {
@@ -268,7 +274,8 @@ const ShipAbilities = {
 		},
 		
 		start: function (ship) {
-			ship.set({generator:0,type:this.codes.ability,vx:0,vy:0,invulnerable:100, stats: AbilityManager.maxStats});
+			HelperFunctions.setInvulnerable(ship, 100);
+			ship.set({generator:0,type:this.codes.ability,vx:0,vy:0,stats: AbilityManager.maxStats});
 		}
 	},
 	"Condor": {
@@ -288,7 +295,8 @@ const ShipAbilities = {
 		},
 		
 		start: function (ship) {
-			ship.set({generator:1000,type:this.codes.ability,stats:AbilityManager.maxStats,invulnerable:100});
+			HelperFunctions.setInvulnerable(ship, 100);
+			ship.set({generator:1000,type:this.codes.ability,stats:AbilityManager.maxStats});
 		}
 	},
 	"A-Speedster": {
@@ -304,15 +312,15 @@ const ShipAbilities = {
 		initial_dependency: 1 / 1.5, // addition of part of the initial speed
 
 		start: function (ship) {
+			HelperFunctions.setCollider(ship, false);
+			HelperFunctions.setInvulnerable(ship, 60);
 			ship.set({
-				invulnerable: 60,
 				x: ship.x + this.TPDistance * Math.cos(ship.r),
-				y: ship.y + this.TPDistance * Math.sin(ship.r),
-				collider: false,
+				y: ship.y + this.TPDistance * Math.sin(ship.r)
 			});
 			HelperFunctions.accelerate(ship, this.speed, null, this.initial_dependency);
 		},
-		end: function (ship) { ship.set({collider: true}) }
+		end: function (ship) { HelperFunctions.setCollider(ship, true) }
 	},
 	"Rock-Tower": {
 		models: {
@@ -552,10 +560,11 @@ const ShipAbilities = {
 			if (lastStatus) ship.custom.forceEnd = true;
 			else {
 				HelperFunctions.accelerate(ship, Math.sqrt(ship.vx ** 2 + ship.vy ** 2) + 0.1);
+				HelperFunctions.setInvisible(ship, true);
+				HelperFunctions.setCollider(ship, false);
 				ship.set({
 					type: this.codes.ability,
 					idle: true,
-					collider: false,
 					stats: AbilityManager.maxStats,
 					generator: 0
 				});
@@ -563,8 +572,13 @@ const ShipAbilities = {
 		},
 
 		end: function (ship) {
-			if (ship.custom.ability === this) ship.set({type: this.codes.default, stats: AbilityManager.maxStats, invulnerable: 100});
-			ship.set({collider: true, idle: false});
+			HelperFunctions.setInvisible(ship, false);
+			if (ship.custom.ability === this) {
+				ship.set({type: this.codes.default, stats: AbilityManager.maxStats});
+				HelperFunctions.setInvulnerable(ship, 100);
+			}
+			HelperFunctions.setCollider(ship, true);
+			ship.set({ idle: false });
 		}
 	},
 	"Vampire": {
@@ -622,7 +636,8 @@ const ShipAbilities = {
 
 		start: function (ship) {
 			HelperFunctions.templates.start.call(this, ship);
-			ship.set({ generator: this.energy_capacities.ability, invulnerable: 180 });
+			ship.set({ generator: this.energy_capacities.ability });
+			HelperFunctions.setInvulnerable(ship, 180);
 			ship.emptyWeapons();
 			HelperFunctions.spawnCollectibles(ship, Array(6).fill(this.attackPodCode));
 			let targets = HelperFunctions.findEntitiesInRange(ship, this.range, true, false, { ships: true }, true);
@@ -797,7 +812,6 @@ const ShipAbilities = {
 				ship.set({x: target.x, y: target.y, vx: target.vx, vy: target.vy, angle: target.r * 180 / Math.PI});
 				target.set({x: ship.x, y: ship.y, vx: ship.vx, vy: ship.vy, angle: ship.r * 180 / Math.PI});
 			}
-			// ship.set({invulnerable: 120});
 		},
 
 		end: function () {}
@@ -940,7 +954,8 @@ const ShipAbilities = {
 			ship.custom.abilityCustom.reloaded = false;
 			ship.custom.abilityCustom.needsUpdate = false;
 			ship.custom.abilityCustom.shield = ship.shield;
-			ship.set({type: this.codes.ability, generator:0,invulnerable:100,vx:0,vy:0, stats: AbilityManager.maxStats});
+			ship.set({type: this.codes.ability, generator:0, vx:0,vy:0, stats: AbilityManager.maxStats});
+			HelperFunctions.setInvulnerable(ship, 100);
 		},
 
 		tick: function (ship, duration) {
@@ -1234,12 +1249,21 @@ const ShipAbilities = {
 		},
 
 		start: function (ship) {
-			ship.set({type:this.codes.ability,stats:AbilityManager.maxStats,generator:700,collider:false,invulnerable:150});
+			HelperFunctions.setInvisible(ship, true);
+			HelperFunctions.setCollider(ship, false);
+			ship.set({
+				type:this.codes.ability,
+				stats:AbilityManager.maxStats,
+				generator:700
+			});
+			HelperFunctions.setInvulnerable(ship, 150);
 		},
 
 		end: function (ship) {
-			ship.set({type:this.codes.default,collider:true,stats:AbilityManager.maxStats});
-			if (ship.custom.ability === this) ship.set({invulnerable:150});
+			HelperFunctions.setInvisible(ship, false);
+			HelperFunctions.setCollider(ship, true);
+			ship.set({type:this.codes.default,stats:AbilityManager.maxStats});
+			if (ship.custom.ability === this) HelperFunctions.setInvulnerable(ship, 150);
 		}
 	},
 	"Anomaly": {
@@ -1603,7 +1627,7 @@ const ShipAbilities = {
 		tick: function (ship) {
 			if (!ship.custom.abilityCustom.bonked) {
 				HelperFunctions.accelerate(ship, this.bonkSpeed);
-				ship.set({invulnerable: this.bonkInvulnerability});
+				HelperFunctions.setInvulnerable(ship, this.bonkInvulnerability);
 				ship.custom.abilityCustom.bonked = true;
 			}
 		}
@@ -1638,7 +1662,7 @@ const ShipAbilities = {
 
 		start: function (ship) {
 			HelperFunctions.templates.start.call(this, ship);
-			ship.set({ invulnerable: this.abilityInvulnerability});
+			HelperFunctions.setInvulnerable(ship, this.abilityInvulnerability);
 			HelperFunctions.accelerate(ship, this.knockbackSpeed, ship.r - Math.PI);
 			for (let i = 0; i < this.aliens.amount; ++i) {
 				let angle = ship.r + (Math.random() * 2 - 1) * this.spreadAngle;
@@ -1710,7 +1734,7 @@ const ShipAbilities = {
 		generatorInit: 0,
 
 		start: function (ship) {
-			ship.set({invulnerable: 100});
+			HelperFunctions.setInvulnerable(ship, 100);
 			let targets = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true, aliens: true, asteroids: true }, true);
 			for (let target of targets) {
 				HelperFunctions.accelerateToTarget(target, ship, this.pushStrength, true);
@@ -1919,7 +1943,7 @@ const ShipAbilities = {
 		generatorInit: 0,
 
 		start: function (ship) {
-			ship.set({invulnerable: 200});
+			HelperFunctions.setInvulnerable(ship, 200);
 			let target = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true })[0];
 			if (target != null) {
 				HelperFunctions.accelerateToTarget(target, ship, 0.1, true);
@@ -1985,7 +2009,8 @@ const ShipAbilities = {
 		},
 
 		start: function (ship) {
-			ship.set({generator:1000,type:this.codes.ability,stats: AbilityManager.maxStats,invulnerable:100});
+			HelperFunctions.setInvulnerable(ship, 100);
+			ship.set({generator:1000,type:this.codes.ability,stats: AbilityManager.maxStats});
 			this.unload(ship);
 		},
 

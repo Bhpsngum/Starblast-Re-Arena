@@ -374,9 +374,9 @@ const AbilityManager = {
 		let ignoreAll = ignoreReset === true;
 		if (!ignoreAll && !ignoreReset.blocker) {
 			this.clearAllActionBlockers(ship);
+			HelperFunctions.setCollider(ship, true);
 			ship.set({
 				healing: false,
-				collider: true,
 				idle: false
 			});
 		}
@@ -553,7 +553,7 @@ const AbilityManager = {
 				this.random(ship, true);
 				ship.custom.__ability__initialized__ = true;
 			}
-			if (this.showAbilityNotice && ship.custom.allowInstructor) {
+			if (ship.custom.__ability__initialized__ && ship.alive && this.showAbilityNotice && ship.custom.allowInstructor) {
 				if (this.abilityNoticeMessage) {
 					ship.instructorSays(String(this.abilityNoticeMessage.call(GAME_OPTIONS, ship)), TeamManager.getDataFromShip(ship).instructor);
 					if (this.abilityNoticeTimeout > 0) HelperFunctions.TimeManager.setTimeout(function () {

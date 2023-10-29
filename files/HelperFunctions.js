@@ -167,12 +167,11 @@ const HelperFunctions = {
 		aliens: false, // include aliens
 		ships: false, // include asteroids
 		asteroids: false, // include ships
-		self: false // include itself (see notes below)
+		self: false, // include itself (see notes below)
+		invisible: false // include "invisible" entities (Entities with `entity.custom.invisible == true`)
 	}, dontSort = false) {
 		// Find all entities in range
 		// Set `donSort` to `true` if you want it to ignore the sorting
-		// Set `includeSelf` to `true` if you want to include the entity (if condition matches)
-		// Note that please pass `entity` as a ship, asteroid or alien object if neccessary (in case for `includeSelf` to match)
 		// or else, just pass this object to `entity`:
 		// {
 		//     x: Number,
@@ -191,7 +190,7 @@ const HelperFunctions = {
 			// Only find aliens if:
 			// - Given entity is an alien --> teammate =?= true
 			// - Given entity is not an alien --> enemy =?= true
-			if (isAlien ? teammate : enemy) data.push(...game.aliens.filter(alien => alien != null && alien.id != -1 && (includes.self || !isAlien || alien !== entity) && this.distance(entity, alien).distance <= range))
+			if (isAlien ? teammate : enemy) data.push(...game.aliens.filter(alien => alien != null && alien.id != -1 && (includes.invisible || !alien.custom.invisible) && (includes.self || !isAlien || alien !== entity) && this.distance(entity, alien).distance <= range))
 		}
 		
 		if (includes.asteroids) {
@@ -199,12 +198,12 @@ const HelperFunctions = {
 			// Only find asteroids if:
 			// - Given entity is an asteroid --> at least `teammate` or `enemy` is `true` (since we don't know if asteroids are friends or foes to each other?)
 			// - Given entity is not an asteroid --> enemy =?= true
-			if (isAsteroid ? (teammate || enemy) : enemy) data.push(...game.asteroids.filter(asteroid => asteroid != null && asteroid.id != -1 && (includes.self || !isAsteroid || asteroid !== entity) && this.distance(entity, asteroid).distance <= range));
+			if (isAsteroid ? (teammate || enemy) : enemy) data.push(...game.asteroids.filter(asteroid => asteroid != null && asteroid.id != -1 && (includes.invisible || !asteroid.custom.invisible) && (includes.self || !isAsteroid || asteroid !== entity) && this.distance(entity, asteroid).distance <= range));
 		}
 
 		// Only find ships if either `teammate` or `enemy` is `true`
 
-		if (includes.ships && (teammate || enemy)) data.push(...game.ships.filter(ship => (ship || {}).id != null && ship.alive && (includes.self || ship !== entity) && this.satisfies(entity, ship, teammate, enemy) && this.distance(entity, ship).distance <= range));
+		if (includes.ships && (teammate || enemy)) data.push(...game.ships.filter(ship => (ship || {}).id != null && ship.alive && (includes.invisible || !ship.custom.invisible) && (includes.self || ship !== entity) && this.satisfies(entity, ship, teammate, enemy) && this.distance(entity, ship).distance <= range));
 		
 		// if you only need to select enemies in range and don't care about the order by distance, set `dontSort` to `true`
 		// the sorting procedure below this might be heavy, so only use sorted array it if you need to
@@ -261,6 +260,33 @@ const HelperFunctions = {
 	sendUI: function (ship, UI) {
 		if (ship != null && (ship === game || ship.id != null) && "function" == typeof ship.setUIComponent) ship.setUIComponent(this.parseUI(UI));
 	},
+	getInvisibleLog: function (ship) {
+		if (!Array.isArray(ship.custom.invisibleLog)) ship.custom.invisibleLog = [false];
+		return ship.custom.invisibleLog;
+	},
+	setInvisible: function (ship, status) {
+		status = !!status;
+		this.getInvisibleLog(ship).push(status);
+		ship.custom.invisible = status;
+	},
+	getColliderLog: function (ship) {
+		if (!Array.isArray(ship.custom.colliderLog)) ship.custom.colliderLog = [true];
+		return ship.custom.colliderLog;
+	},
+	setCollider: function (ship, status) {
+		status = !!status;
+		this.getColliderLog(ship).push(status);
+		ship.set({ collider: ship.custom.collider = status });
+	},
+	getInvulnerableLog: function (ship) {
+		if (!Array.isArray(ship.custom.invulnerableLog)) ship.custom.invulnerableLog = [0];
+		return ship.custom.invulnerableLog;
+	},
+	setInvulnerable: function (ship, invul) {
+		invul = +invul;
+		this.getInvulnerableLog(ship).push(invul);
+		ship.set({ invulnerable: invul });
+	},
 	TimeManager: {
 		id_pool: 0,
 		setTimeout: function(f, time, ...args){
@@ -303,11 +329,15 @@ const HelperFunctions = {
 		},
 
 		start: function (ship) {
-			ship.set({invulnerable: 100, type: this.codes.ability, stats: AbilityManager.maxStats, generator: 0});
+			HelperFunctions.setInvulnerable(ship, 100);
+			ship.set({type: this.codes.ability, stats: AbilityManager.maxStats, generator: 0});
 		},
 
 		end: function (ship) {
-			if (ship.custom.ability === this) ship.set({invulnerable: 100, type: this.codes.default, stats: AbilityManager.maxStats, generator: this.generatorInit});
+			if (ship.custom.ability === this) {
+				HelperFunctions.setInvulnerable(ship, 100);
+				ship.set({type: this.codes.default, stats: AbilityManager.maxStats, generator: this.generatorInit});
+			}
 		},
 
 		tick: function () {},
