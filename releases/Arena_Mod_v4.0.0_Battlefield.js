@@ -22,7 +22,7 @@ const __ABILITY_SYSTEM_INFO__ = {
 	name: "Arena_Mod",
 	branch: "Battlefield",
 	version: "4.0.0",
-	buildID: "18b7be3c3fd"
+	buildID: "18b8080c9c7"
 };
 
 
@@ -140,7 +140,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_Battlefield.js at Sun Oct 29 2023 23:43:26 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_Battlefield.js at Mon Oct 30 2023 21:13:25 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -183,7 +183,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams_Battlefield.js at Sun Oct 29 2023 23:43:26 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams_Battlefield.js at Mon Oct 30 2023 21:13:25 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
 	{
@@ -233,7 +233,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps_Battlefield.js at Sun Oct 29 2023 23:43:26 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps_Battlefield.js at Mon Oct 30 2023 21:13:25 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
 	{
@@ -465,7 +465,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Sun Oct 29 2023 23:43:26 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Mon Oct 30 2023 21:13:25 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
 	"Test ship": {
@@ -2642,7 +2642,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Sun Oct 29 2023 23:43:26 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Mon Oct 30 2023 21:13:25 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -2956,7 +2956,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Sun Oct 29 2023 23:43:26 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Mon Oct 30 2023 21:13:25 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
 	planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -2966,7 +2966,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Sun Oct 29 2023 23:43:26 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Mon Oct 30 2023 21:13:25 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
 	toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -3356,7 +3356,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Sun Oct 29 2023 23:43:26 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Mon Oct 30 2023 21:13:25 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
 	ghostTeam: GhostTeam,
@@ -4272,7 +4272,7 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/GameConfig_Battlefield.js at Sun Oct 29 2023 23:43:26 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig_Battlefield.js at Mon Oct 30 2023 21:13:25 GMT+0900 (Japan Standard Time) */
 
 const map_name = "Re:Arena Battlefield"; // leave `null` if you want randomized map name
 
@@ -4389,7 +4389,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Sun Oct 29 2023 23:43:26 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Mon Oct 30 2023 21:13:25 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
 	setSpawnpointsOBJ: function () {
@@ -4707,8 +4707,8 @@ const UIData = {
 				id: "map_info",
 				position: [1, 90, 10, 5],
 				components: [
-					{type: "text", position: [0,0,100,50], value: `${map.name} Map`, color: '#cde', align: "left"},
-					{type: "text", position: [0,50,100,50], value: `By ${map.author}`, color: '#cde', align: "left"}
+					{type: "text", position: [0,0,100,50], value: `Map: ${map.name}`, color: '#cde', align: "left"},
+					{type: "text", position: [0,50,100,50], value: `Made by: ${map.author}`, color: '#cde', align: "left"}
 				]
 			};
 			let mapIndex = this.list.findIndex(ui => ui.id == "map_info");
@@ -5352,7 +5352,7 @@ TeamManager.onShipTeamChange = function (ship, newTeamOBJ, oldTeamOBJ) {
 
 
 
-/* Imported from misc/tickFunctions.js at Sun Oct 29 2023 23:43:26 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Mon Oct 30 2023 21:13:25 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
 	AbilityManager.globalTick(game);
@@ -5901,8 +5901,11 @@ const endGame = function (game) {
 			{ type: "text", position: [0, 0, 100, 100], value: "MATCH FINISHED!", color: "yellow"}
 		]
 	});
+	game.custom.abilitySystemEnabled = false;
 	for (let ship of game.ships) {
 		ship.custom.endGameTick = game.step;
+		HelperFunctions.setInvisible(ship, true);
+		HelperFunctions.setCollider(ship, false);
 	}
 	this.tick = im_here_just_to_kick_every_players_out_of_the_game;
 }
@@ -5918,7 +5921,6 @@ const im_here_just_to_kick_every_players_out_of_the_game = function (game) {
 			endInfo["Your time on point"] = HelperFunctions.toTimer(ship.custom.timeOnPoint || 0)
 			ship.gameover(endInfo);
 			ship.custom.kicked = true;
-			ship.custom.abilitySystemDisabled = true;
 		}
 	}
 }
@@ -5936,7 +5938,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Sun Oct 29 2023 23:43:26 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Mon Oct 30 2023 21:13:25 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
 	AbilityManager.globalEvent(event, game);
@@ -6020,7 +6022,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Sun Oct 29 2023 23:43:26 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Mon Oct 30 2023 21:13:25 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
 	{ text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
@@ -6090,6 +6092,6 @@ this.options.ships[0] = JSON.stringify(ship101);
 
 
 
-/* Imported from misc/gameInfo.js at Sun Oct 29 2023 23:43:26 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameInfo.js at Mon Oct 30 2023 21:13:25 GMT+0900 (Japan Standard Time) */
 
 AbilityManager.echo(`[[bg;DarkTurquoise;]Re:][[bg;#EE4B2B;]Arena] ([[;#AAFF00;]${__ABILITY_SYSTEM_INFO__.branch}]) [[;Cyan;]v${__ABILITY_SYSTEM_INFO__.version} (Build ID [[;${HelperFunctions.toHSLA(__ABILITY_SYSTEM_INFO__.buildID)};]${__ABILITY_SYSTEM_INFO__.buildID}])\nMap picked: [[b;Cyan;]${MapManager.get().name} by ${MapManager.get().author}\n\nType \`commands\` to see all commands\nAnd \`usage <commandName>\` to show usage of a command\n\n]`);
