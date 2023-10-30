@@ -545,8 +545,11 @@ const endGame = function (game) {
 			{ type: "text", position: [0, 0, 100, 100], value: "MATCH FINISHED!", color: "yellow"}
 		]
 	});
+	game.custom.abilitySystemEnabled = false;
 	for (let ship of game.ships) {
 		ship.custom.endGameTick = game.step;
+		HelperFunctions.setInvisible(ship, true);
+		HelperFunctions.setCollider(ship, false);
 	}
 	this.tick = im_here_just_to_kick_every_players_out_of_the_game;
 }
@@ -562,7 +565,6 @@ const im_here_just_to_kick_every_players_out_of_the_game = function (game) {
 			endInfo["Your time on point"] = HelperFunctions.toTimer(ship.custom.timeOnPoint || 0)
 			ship.gameover(endInfo);
 			ship.custom.kicked = true;
-			ship.custom.abilitySystemDisabled = true;
 		}
 	}
 }

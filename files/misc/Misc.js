@@ -314,8 +314,8 @@ const UIData = {
 				id: "map_info",
 				position: [1, 90, 10, 5],
 				components: [
-					{type: "text", position: [0,0,100,50], value: `${map.name} Map`, color: '#cde', align: "left"},
-					{type: "text", position: [0,50,100,50], value: `By ${map.author}`, color: '#cde', align: "left"}
+					{type: "text", position: [0,0,100,50], value: `Map: ${map.name}`, color: '#cde', align: "left"},
+					{type: "text", position: [0,50,100,50], value: `Made by: ${map.author}`, color: '#cde', align: "left"}
 				]
 			};
 			let mapIndex = this.list.findIndex(ui => ui.id == "map_info");
