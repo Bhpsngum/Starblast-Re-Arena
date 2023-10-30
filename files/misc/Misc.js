@@ -908,6 +908,8 @@ const makeAlienSpawns = function () {
 	}
 }
 
+TeamManager.getAll().map(team => (team.spawning_radius = BASES.size * BASES.spawning_radius_ratio));
+
 AbilityManager.onShipsListUpdate = function (team, newList, oldList) {
 	let { shipUIs } = UIData;
 	let { ItemID } = shipUIs;

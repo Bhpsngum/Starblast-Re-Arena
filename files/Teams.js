@@ -3,7 +3,8 @@ const Teams = [
 		names: ["Red", "Orange"],
 		hues: [0, 30],
 		instructor: "Zoltar",
-		need_spawnpoint: true
+		need_spawnpoint: true,
+		spawning_radius: 69 // radius to spawn randomly from within base center, default 0
 	},
 	{
 		names: ["Cyan", "Blue"],

@@ -6,6 +6,7 @@ Object.assign(GAME_OPTIONS, {
 	required_players: 2, // players required to start, min 2
 	AFK_timeout: 2 * 60, // maximum AFK time before the ship will be kicked, in seconds
 	waiting_time: 30, // in seconds
+	expiration_time: 15 * 60, // match will only end if there's only one team with players after x seconds since match started
 	ship_ui_timeout: 30, // time for the ship ui to hide, in seconds
 	ship_invulnerability: 5, // invulnerability duration for ship upon spawning/changing ship through ship menu, in seconds
 	leaving_base_invulnerability: 15, // invulnerability duration after leaving base without using ability, in seconds
@@ -66,6 +67,7 @@ const CONTROL_POINT = {
 
 const BASES = {
 	size: 45, // in radius
+	spawning_radius_ratio: 0.9, // players will be spawned within radius (size * ratio) from base center (0 <= ratio <= 1), default 1
 	intrusion_damage: 200, // damage per sec if enemy enters the base
 	textures: [ // textures list to choose from (randomized)
 		{
@@ -106,5 +108,10 @@ const BASES = {
 	]
 }
 
+// restriction code, don't touch these
 GAME_OPTIONS.required_players = Math.trunc(Math.max(GAME_OPTIONS.required_players, 2)) || 2; // restriction
+let ratio = BASES.spawning_radius_ratio;
+if (ratio == null || isNaN(ratio)) ratio = 1;
+else ratio = Math.min(Math.max(ratio, 0), 1);
+BASES.spawning_radius_ratio = ratio;
 CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POINT.control_bar.controlling_percentage, CONTROL_POINT.control_bar.dominating_percentage), 100) || 100;

@@ -465,13 +465,16 @@ const main_phase = function (game) {
 
 		// check if any endgame condition matches
 		game.custom.timeout = HelperFunctions.timeExceeded(game.custom.startedStep, GAME_OPTIONS.duration * 60);
-		let test = new Set(WeightCalculator.getTopPlayers(game, true).map(e => e.team));
-		game.custom.oneTeamLeft = test.size < 2;
-		if (game.custom.oneTeamLeft) game.custom.winner = [...test][0];
+
+		if (game_duration > GAME_OPTIONS.expiration_time * 60) {
+			let test = new Set(WeightCalculator.getTopPlayers(game, true).map(e => e.team));
+			game.custom.oneTeamLeft = test.size < 2;
+			if (game.custom.oneTeamLeft) game.custom.winner = [...test][0];
+		}
 		if (game.custom.oneTeamLeft || game.custom.timeout || Math.max(...control_point_data.scores, control_point_data.ghostScore) >= GAME_OPTIONS.points) this.tick = endGame; 
 	}
 
-	if ((game.step - game.custom.startedStep) % (GAME_OPTIONS.alienSpawns.interval * 60) === 0) {
+	if ((game_duration) % (GAME_OPTIONS.alienSpawns.interval * 60) === 0) {
 		let alienSpec = GAME_OPTIONS.alienSpawns;
 		while (game.aliens.length < alienSpec.capacity) game.addAlien({
 			...HelperFunctions.randomItem(AlienSpawns).value, // x, y

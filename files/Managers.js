@@ -127,9 +127,9 @@ const MapManager = {
 		}
 	},
 	spawn: function (ship) {
-		let { spawnpoint } = TeamManager.getDataFromShip(ship);
+		let { spawnpoint, spawning_radius } = TeamManager.getDataFromShip(ship);
 		if (spawnpoint != null) {
-			let distance = Math.random() * BASES.size, angle = Math.random() * 2 * Math.PI;
+			let distance = Math.random() * (Math.max(spawning_radius, 0) || 0), angle = Math.random() * 2 * Math.PI;
 			ship.set({
 				x: spawnpoint.x + distance * Math.cos(angle) ,
 				y: spawnpoint.y + distance * Math.sin(angle)
