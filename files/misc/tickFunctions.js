@@ -549,6 +549,7 @@ const endGame = function (game) {
 		]
 	});
 	game.custom.abilitySystemEnabled = false;
+	game.custom.ended = true;
 	for (let ship of game.ships) {
 		ship.custom.endGameTick = game.step;
 		HelperFunctions.setInvisible(ship, true);

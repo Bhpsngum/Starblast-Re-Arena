@@ -934,6 +934,10 @@ AbilityManager.onShipsListUpdate = function (team, newList, oldList) {
 }
 
 AbilityManager.onAbilityEnd = function (ship) {
+	if (game.custom.ended) {
+		HelperFunctions.setInvisible(ship, true);
+		HelperFunctions.setCollider(ship, false);
+	}
 	if (!ship.custom.shipUIsHidden) UIData.shipUIs.toggleSelectMenu(ship);
 }
 
