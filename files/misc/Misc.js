@@ -941,7 +941,7 @@ AbilityManager.onAbilityEnd = function (ship) {
 	if (!ship.custom.shipUIsHidden) UIData.shipUIs.toggleSelectMenu(ship);
 }
 
-AbilityManager.onAbilitcontentYStart = function (ship, inAbilityBeforeStart) {
+AbilityManager.onAbilityStart = function (ship, inAbilityBeforeStart) {
 	if (!ship.custom.noLongerInvisible && HelperFunctions.isOutOfBase(ship, true)) {
 		ship.custom.noLongerInvisible = true;
 		let colliderLog = HelperFunctions.getColliderLog(ship), invisibleLog = HelperFunctions.getInvisibleLog(ship), invulnerableLog = HelperFunctions.getInvulnerableLog(ship);
