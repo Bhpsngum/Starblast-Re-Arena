@@ -22,7 +22,7 @@ const __ABILITY_SYSTEM_INFO__ = {
 	name: "Arena_Mod",
 	branch: "ShipTesting",
 	version: "4.0.0",
-	buildID: "18b94fbbb0a"
+	buildID: "18b957031f0"
 };
 
 
@@ -140,7 +140,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_ShipTesting.js at Fri Nov 03 2023 20:40:07 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_ShipTesting.js at Fri Nov 03 2023 22:47:19 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -183,7 +183,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Fri Nov 03 2023 20:40:07 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Fri Nov 03 2023 22:47:19 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
 	{
@@ -234,7 +234,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps_ShipTesting.js at Fri Nov 03 2023 20:40:07 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps_ShipTesting.js at Fri Nov 03 2023 22:47:19 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
 	{
@@ -250,7 +250,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Fri Nov 03 2023 20:40:07 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Fri Nov 03 2023 22:47:19 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
 	"Test ship": {
@@ -2427,7 +2427,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Fri Nov 03 2023 20:40:07 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Fri Nov 03 2023 22:47:19 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -2741,7 +2741,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Fri Nov 03 2023 20:40:07 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Fri Nov 03 2023 22:47:19 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
 	planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -2751,7 +2751,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Fri Nov 03 2023 20:40:07 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Fri Nov 03 2023 22:47:19 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
 	toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -3141,7 +3141,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Fri Nov 03 2023 20:40:07 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Fri Nov 03 2023 22:47:19 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
 	ghostTeam: GhostTeam,
@@ -3179,7 +3179,10 @@ const TeamManager = {
 		return this.getAll()[team] || this.ghostTeam;
 	},
 	getDataFromShip: function (ship) {
-		return this.getDataFromID((ship.custom == null || ship.custom.team == null) ? ship.team : ship.custom.team);
+		let ID;
+		if (ship.custom == null || !ship.custom.teamAssigned) ID = null;
+		else ID = ship.custom.team == null ? ship.team : ship.custom.team;
+		return this.getDataFromID(ID);
 	},
 	setGhostTeam: function (ship, changeTeam = false, TpBackToBase = false) {
 		this.set(ship, 69, changeTeam, TpBackToBase)
@@ -3188,11 +3191,11 @@ const TeamManager = {
 		let teamData = this.getDataFromID(team);
 		ship.set({hue: teamData.hue});
 		if (changeTeam) {
+			let oldTeamOBJ = ship.custom.teamAssigned ? this.getDataFromShip(ship) : null;
 			ship.set({team: teamData.id});
-			let oldTeamID = ship.custom.team;
+			ship.custom.teamAssigned = true;
 			ship.custom.team = teamData.id;
-			if (oldTeamID !== teamData.id && "function" == typeof this.onShipTeamChange) try {
-				let oldTeamOBJ = oldTeamID == null ? null : this.getDataFromID(oldTeamID);
+			if (oldTeamOBJ !== teamData && "function" == typeof this.onShipTeamChange) try {
 				this.onShipTeamChange(ship, teamData, oldTeamOBJ);
 			} catch (e) {}
 			AbilityManager.updateShipsList(teamData);
@@ -3695,6 +3698,7 @@ const AbilityManager = {
 		for (let ship of game.ships) {
 			if (ship.id == null) continue;
 			if (!ship.custom.__ability__initialized__ && ship.alive) {
+				ship.custom.sharedAbilityCustom = {};
 				this.random(ship, true);
 				ship.custom.__ability__initialized__ = true;
 			}
