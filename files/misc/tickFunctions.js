@@ -209,6 +209,11 @@ const initialization = function (game, dontChangeTick = false) {
 
 const waiting = function (game) {
 	alwaysTick(game);
+	if (game.custom.started) {
+		this.tick = main_phase;
+		this.tick(game);
+		return;
+	}
 	let players = game.ships.filter(ship => ship && ship.id != null && ship.custom.joined && !ship.custom.kicked);
 	let text = "";
 	if (players.length >= GAME_OPTIONS.required_players) {

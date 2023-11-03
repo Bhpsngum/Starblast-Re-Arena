@@ -34,7 +34,10 @@ const TeamManager = {
 		return this.getAll()[team] || this.ghostTeam;
 	},
 	getDataFromShip: function (ship) {
-		return this.getDataFromID((ship.custom == null || ship.custom.team == null) ? ship.team : ship.custom.team);
+		let ID;
+		if (ship.custom == null || !ship.custom.teamAssigned) ID = null;
+		else ID = ship.custom.team == null ? ship.team : ship.custom.team;
+		return this.getDataFromID(ID);
 	},
 	setGhostTeam: function (ship, changeTeam = false, TpBackToBase = false) {
 		this.set(ship, 69, changeTeam, TpBackToBase)
@@ -43,11 +46,11 @@ const TeamManager = {
 		let teamData = this.getDataFromID(team);
 		ship.set({hue: teamData.hue});
 		if (changeTeam) {
+			let oldTeamOBJ = ship.custom.teamAssigned ? this.getDataFromShip(ship) : null;
 			ship.set({team: teamData.id});
-			let oldTeamID = ship.custom.team;
+			ship.custom.teamAssigned = true;
 			ship.custom.team = teamData.id;
-			if (oldTeamID !== teamData.id && "function" == typeof this.onShipTeamChange) try {
-				let oldTeamOBJ = oldTeamID == null ? null : this.getDataFromID(oldTeamID);
+			if (oldTeamOBJ !== teamData && "function" == typeof this.onShipTeamChange) try {
 				this.onShipTeamChange(ship, teamData, oldTeamOBJ);
 			} catch (e) {}
 			AbilityManager.updateShipsList(teamData);
@@ -550,6 +553,7 @@ const AbilityManager = {
 		for (let ship of game.ships) {
 			if (ship.id == null) continue;
 			if (!ship.custom.__ability__initialized__ && ship.alive) {
+				ship.custom.sharedAbilityCustom = {};
 				this.random(ship, true);
 				ship.custom.__ability__initialized__ = true;
 			}

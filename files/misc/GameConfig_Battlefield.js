@@ -6,7 +6,7 @@ Object.assign(GAME_OPTIONS, {
 	required_players: 2, // players required to start, min 2
 	AFK_timeout: 2 * 60, // maximum AFK time before the ship will be kicked, in seconds
 	waiting_time: 30, // in seconds
-	expiration_time: 5 * 60, // match will only end if there's only one team with players after x seconds since match started
+	expiration_time: 15 * 60, // match will only end if there's only one team with players after x seconds since match started
 	ship_ui_timeout: 30, // time for the ship ui to hide, in seconds
 	ship_invulnerability: 5, // invulnerability duration for ship upon spawning/changing ship through ship menu, in seconds
 	leaving_base_invulnerability: 15, // invulnerability duration after leaving base without using ability, in seconds

@@ -237,7 +237,7 @@ const WeightCalculator = {
 		let teamData = TeamManager.getDataFromID(id);
 		let res = 0;
 		for (let ship of game.ships) {
-			if ((ship || {}).id == null || !ship.custom.joined || ship.custom.kicked) continue;
+			if ((ship || {}).id == null || !ship.custom.joined || ship.custom.kicked || !ship.custom.teamAssigned) continue;
 
 			let shipTeam = TeamManager.getDataFromShip(ship);
 
@@ -259,9 +259,8 @@ const WeightCalculator = {
 	},
 	joinBalanceTeam: function (ship) {
 		// disable team balance for team-based root mode because modding works weird for mods with root mode "team"
-		if (game.options.root_mode == "team") return;
-
-		TeamManager.set(ship, this.getTeamsWeights()[0].id, true, true);
+		if (game.options.root_mode == "team") TeamManager.set(ship, ship.team, false, false);
+		else TeamManager.set(ship, this.getTeamsWeights()[0].id, true, true);
 	}
 }
 
@@ -375,24 +374,28 @@ const UIData = {
 		positionCache: {},
 		styles: {
 			selected: {
+				clickable: false,
 				borderColor: "#AAFF00",
 				textColor: "#AAFF00",
 				borderWidth: 8,
 				bgColor: "hsla(75, 100%, 44.1%, 0.25)"
 			},
 			default: {
+				clickable: true,
 				borderColor: "#FFFFFF",
 				textColor: "#FFFFFF",
 				borderWidth: 2,
 				bgColor: `hsla(210, 20%, 22.3%, 0.25)`
 			},
 			cyan: {
+				clickable: true,
 				borderColor: "#00FFFF",
 				textColor: "#FFFFFF",
 				borderWidth: 2,
 				bgColor: `hsla(180, 100%, 50%, 0.15)`
 			},
 			disabled: {
+				clickable: false,
 				borderColor: "hsla(0, 100%, 50%, 1)",
 				textColor: "#fff",
 				borderWidth: 8,
@@ -434,7 +437,7 @@ const UIData = {
 			if (oldHidden !== isHidden) this.toggleSelectMenu(ship);
 		},
 		sendIndividual: function (ship, position, name, stylePreset, id = null, shortcut = null, customTextScale = null) {
-			let { bgColor, borderColor, borderWidth, textColor } = this.styles[stylePreset];
+			let { bgColor, borderColor, borderWidth, textColor, clickable } = this.styles[stylePreset];
 			let visible = true;
 			let page = this.getUserPageIndex(ship);
 			let positionCache = this.positionCache[page];
@@ -446,7 +449,7 @@ const UIData = {
 				position,
 				visible,
 				shortcut,
-				clickable: stylePreset == "default" || stylePreset == "cyan",
+				clickable,
 				components: [
 					{ type: "box", position: [0, 0, 100, 100], fill: bgColor, stroke: borderColor,width: borderWidth},
 					{ type: "text", position: [0, 0, 100, 100], value: HelperFunctions.fill(name, customTextScale == null ? this.getTextLength((position || [])[2] || 0) : customTextScale), color: textColor}
@@ -546,7 +549,7 @@ const UIData = {
 
 			let i = 0;
 			let canUseButtons = HelperFunctions.canUseButtons(ship);
-			let canUseUI = canUseButtons && !AbilityManager.isActionBlocked(ship).blocked;
+			let canUseUI = canUseButtons && !ship.custom.inAbility && !AbilityManager.isActionBlocked(ship).blocked;
 
 			let rowsCount = Math.ceil(abilities.length / columns);
 
@@ -580,13 +583,6 @@ const UIData = {
 					clickable: false
 				})
 			}
-
-			let abilityUIXStart = AbilityManager.UI.position[0];
-			let abilityUIWidth = AbilityManager.UI.position[2];
-
-			let startEndPos = abilityUIWidth + abilityUIXStart;
-
-			let scaler = 2 + 3/2 * UISpec.margin_scale_x
 
 			let itemsLength = this.utilItems.length
 			let utilWidth = (UISpec.xEnd - UISpec.xStart) / (itemsLength + (itemsLength - 1) * UISpec.margin_scale_x);
@@ -958,5 +954,5 @@ AbilityManager.onActionBlockStateChange = function (ship) {
 }
 
 TeamManager.onShipTeamChange = function (ship, newTeamOBJ, oldTeamOBJ) {
-	if (oldTeamOBJ != null) UIData.updateScoreboard(game);
+	UIData.updateScoreboard(game);
 }
