@@ -35,7 +35,8 @@ const TeamManager = {
 	},
 	getDataFromShip: function (ship) {
 		let ID;
-		if (ship.custom == null || !ship.custom.teamAssigned) ID = null;
+		if (ship.custom == null) ID = ship.team;
+		else if (!ship.custom.teamAssigned) ID = null;
 		else ID = ship.custom.team == null ? ship.team : ship.custom.team;
 		return this.getDataFromID(ID);
 	},
