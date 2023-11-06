@@ -192,9 +192,10 @@ const GameHelperFunctions = {
 		ship.custom.leaveBaseInvulTime = false;
 		ship.custom.generator = null;
 	},
-	isOutOfBase: function (ship, spawningCheck = false) {
-		let spawnpoint, justSpawned = !spawningCheck || (game.step - ship.custom.lastSpawnedStep > 1 * 60);
-		return justSpawned && (spawnpoint = TeamManager.getDataFromShip(ship).spawnpoint) != null && HelperFunctions.distance(spawnpoint, ship).distance > BASES.size;
+	isOutOfBase: function (ship, spawningCheck = false, allowNoSpawnpoint = false) {
+		let spawnpoint = TeamManager.getDataFromShip(ship).spawnpoint, justSpawned = !spawningCheck || (game.step - ship.custom.lastSpawnedStep > 1 * 60);
+		if (spawnpoint == null) return !allowNoSpawnpoint;
+		return justSpawned && HelperFunctions.distance(spawnpoint, ship).distance > BASES.size;
 	}
 }
 
@@ -793,7 +794,7 @@ const UIData = {
 			HelperFunctions.setInvulnerable(ship, GAME_OPTIONS.ship_invulnerability * 60);
 			HelperFunctions.spawnShip(ship);
 			let x = (ship.custom.chooseTimes[ship.custom.shipName] || 0) + 1;
-			if (x >= GAME_OPTIONS.duplicate_choose_limit) return this.shipUIs.toggle(ship, true);
+			if (x >= GAME_OPTIONS.duplicate_choose_limit || TeamManager.getDataFromShip(ship).spawnpoint == null) return this.shipUIs.toggle(ship, true);
 			ship.custom.chooseTimes[ship.custom.shipName] = x;
 			if (oldName != ship.custom.shipName) {
 				let { ItemID } = UIData.shipUIs;
@@ -938,7 +939,7 @@ AbilityManager.onAbilityEnd = function (ship) {
 }
 
 AbilityManager.onAbilityStart = function (ship, inAbilityBeforeStart) {
-	if (!ship.custom.noLongerInvisible && HelperFunctions.isOutOfBase(ship, true)) {
+	if (!ship.custom.noLongerInvisible && HelperFunctions.isOutOfBase(ship, true, false)) {
 		ship.custom.noLongerInvisible = true;
 		let colliderLog = HelperFunctions.getColliderLog(ship), invisibleLog = HelperFunctions.getInvisibleLog(ship), invulnerableLog = HelperFunctions.getInvulnerableLog(ship);
 		if (colliderLog.length - 1 == ship.custom.lastColliderIndex) HelperFunctions.setCollider(ship, true);

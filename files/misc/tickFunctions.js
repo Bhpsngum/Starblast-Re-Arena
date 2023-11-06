@@ -60,9 +60,8 @@ const alwaysTick = function (game) {
 				ship.custom.last_status = { r, vx, vy, generator };
 			}
 
-			let spawnpoint, stepDifference = game.step - ship.custom.lastSpawnedStep;
-			let isOutOfBase = HelperFunctions.isOutOfBase(ship, true);
-			if (!ship.custom.shipUIsPermaHidden && (stepDifference > GAME_OPTIONS.ship_ui_timeout * 60 || isOutOfBase)) UIData.shipUIs.toggle(ship, true);
+			let stepDifference = game.step - ship.custom.lastSpawnedStep;
+			if (!ship.custom.shipUIsPermaHidden && (stepDifference > GAME_OPTIONS.ship_ui_timeout * 60 || HelperFunctions.isOutOfBase(ship, true, true))) UIData.shipUIs.toggle(ship, true);
 
 			/*	ANTI-BASECAMP MECHANISM
 				(This is a copy of original message from Notus when we were discussing on how to implement this)
@@ -87,7 +86,7 @@ const alwaysTick = function (game) {
 					}
 					else ship.custom.generator = ship.generator;
 				}
-				else if (isOutOfBase) {
+				else if (HelperFunctions.isOutOfBase(ship, true, false)) {
 					ship.custom.leaveBaseInvulTime = true;
 					ship.custom.leaveBaseTimestamp = game.step;
 					let colliderLog = HelperFunctions.getColliderLog(ship);
@@ -472,9 +471,10 @@ const main_phase = function (game) {
 		game.custom.timeout = HelperFunctions.timeExceeded(game.custom.startedStep, GAME_OPTIONS.duration * 60);
 
 		if (game_duration > GAME_OPTIONS.expiration_time * 60) {
-			let test = new Set(WeightCalculator.getTopPlayers(game, true).map(e => e.team));
+			let test = new Set(WeightCalculator.getTopPlayers(game, true).map(e => TeamManager.getDataFromShip(e)));
 			game.custom.oneTeamLeft = test.size < 2;
-			if (game.custom.oneTeamLeft) game.custom.winner = [...test][0];
+			game.custom.allLeft = test.size < 1;
+			if (game.custom.oneTeamLeft && !game.custom.allLeft) game.custom.winner = [...test][0].id;
 		}
 		if (game.custom.oneTeamLeft || game.custom.timeout || Math.max(...control_point_data.scores, control_point_data.ghostScore) >= GAME_OPTIONS.points) this.tick = endGame; 
 	}
@@ -500,7 +500,7 @@ const endGame = function (game) {
 	let message = "";
 	switch (true) {
 		case game.custom.timeout: message = "Time's Out!"; break;
-		case game.custom.oneTeamLeft: message = "All players in other teams left!"; break;
+		case game.custom.oneTeamLeft: message = `All players in ${game.custom.allLeft ? "all" : "other"} teams left!`; break;
 		default: message = `One team reaches ${GAME_OPTIONS.points} points!`
 	}
 	if (!game.custom.oneTeamLeft) {
@@ -509,19 +509,17 @@ const endGame = function (game) {
 		if (index < 0) index = "Ghost";
 		game.custom.winner = index;
 	}
-	let winnerData = TeamManager.getDataFromID(game.custom.winner);
-	HelperFunctions.sendUI(game, {
+	let winnerData = (game.custom.oneTeamLeft && game.custom.allLeft) ? null : TeamManager.getDataFromID(game.custom.winner);
+	let endGameNotification = {
 		id: "endgame_notification",
 		position: [25, 20, 50, 10],
 		components: [
-			{ type: "text", position: [0, 0, 100, 50], value: message, color: "#cde"},
-			{ type: "text", position: [0, 50, 50, 50], value: winnerData.name.toUpperCase(), color: HelperFunctions.toHSLA(winnerData.hue, 1, 100, UIData.colorTextLightness), align: "right"},
-			{ type: "text", position: [50, 50, 50, 50], value: " wins!", color: "#cde", align: "left"}
+			{ type: "text", position: [0, 0, 100, 50], value: message, color: "#cde"}
 		]
-	});
+	};
 	game.custom.endGameInfo = {
 		"Status": message,
-		"Winner team": winnerData.name.toUpperCase(),
+		"Winner team": void 0,
 		" ": " ",
 		"Your team": "Unknown",
 		"Your kills / deaths": "0/0",
@@ -536,6 +534,15 @@ const endGame = function (game) {
 		"Code": "github.com/Bhpsngum/Arena-mod-remake",
 		"Feedback": "forms.gle/u9C1Br9kqbdDh22u5"
 	};
+	if (winnerData != null) {
+		let winnerName = winnerData.name.toUpperCase();
+		endGameNotification.components.push(
+			{ type: "text", position: [0, 50, 50, 50], value: winnerName, color: HelperFunctions.toHSLA(winnerData.hue, 1, 100, UIData.colorTextLightness), align: "right"},
+			{ type: "text", position: [50, 50, 50, 50], value: " wins!", color: "#cde", align: "left"}
+		);
+		game.custom.endGameInfo["Winner team"] = winnerName;
+	}
+	HelperFunctions.sendUI(game, endGameNotification);
 
 	let MVP = WeightCalculator.getTopPlayers(game, false, "playerWeight")[0];
 	if (MVP != null && (MVP.custom.kills || MVP.custom.deaths || MVP.custom.timeOnPoint)) Object.assign(game.custom.endGameInfo, {
