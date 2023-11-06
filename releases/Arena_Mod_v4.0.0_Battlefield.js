@@ -22,7 +22,7 @@ const __ABILITY_SYSTEM_INFO__ = {
 	name: "Arena_Mod",
 	branch: "Battlefield",
 	version: "4.0.0",
-	buildID: "18b9f5149ab"
+	buildID: "18ba47e4534"
 };
 
 
@@ -140,7 +140,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_Battlefield.js at Sun Nov 05 2023 20:49:46 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_Battlefield.js at Mon Nov 06 2023 20:57:00 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -183,7 +183,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams_Battlefield.js at Sun Nov 05 2023 20:49:46 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams_Battlefield.js at Mon Nov 06 2023 20:57:00 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
 	{
@@ -234,7 +234,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps_Battlefield.js at Sun Nov 05 2023 20:49:46 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps_Battlefield.js at Mon Nov 06 2023 20:57:00 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
 	{
@@ -466,7 +466,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Sun Nov 05 2023 20:49:46 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Mon Nov 06 2023 20:57:00 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
 	"Test ship": {
@@ -2643,7 +2643,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Sun Nov 05 2023 20:49:46 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Mon Nov 06 2023 20:57:00 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -2957,7 +2957,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Sun Nov 05 2023 20:49:46 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Mon Nov 06 2023 20:57:00 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
 	planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -2967,7 +2967,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Sun Nov 05 2023 20:49:46 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Mon Nov 06 2023 20:57:00 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
 	toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -3357,7 +3357,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Sun Nov 05 2023 20:49:46 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Mon Nov 06 2023 20:57:00 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
 	ghostTeam: GhostTeam,
@@ -4278,7 +4278,7 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/GameConfig_Battlefield.js at Sun Nov 05 2023 20:49:46 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig_Battlefield.js at Mon Nov 06 2023 20:57:00 GMT+0900 (Japan Standard Time) */
 
 const map_name = "Re:Arena Battlefield"; // leave `null` if you want randomized map name
 
@@ -4402,7 +4402,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Sun Nov 05 2023 20:49:46 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Mon Nov 06 2023 20:57:00 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
 	setSpawnpointsOBJ: function () {
@@ -4598,9 +4598,10 @@ const GameHelperFunctions = {
 		ship.custom.leaveBaseInvulTime = false;
 		ship.custom.generator = null;
 	},
-	isOutOfBase: function (ship, spawningCheck = false) {
-		let spawnpoint, justSpawned = !spawningCheck || (game.step - ship.custom.lastSpawnedStep > 1 * 60);
-		return justSpawned && (spawnpoint = TeamManager.getDataFromShip(ship).spawnpoint) != null && HelperFunctions.distance(spawnpoint, ship).distance > BASES.size;
+	isOutOfBase: function (ship, spawningCheck = false, allowNoSpawnpoint = false) {
+		let spawnpoint = TeamManager.getDataFromShip(ship).spawnpoint, justSpawned = !spawningCheck || (game.step - ship.custom.lastSpawnedStep > 1 * 60);
+		if (spawnpoint == null) return !allowNoSpawnpoint;
+		return justSpawned && HelperFunctions.distance(spawnpoint, ship).distance > BASES.size;
 	}
 }
 
@@ -5199,7 +5200,7 @@ const UIData = {
 			HelperFunctions.setInvulnerable(ship, GAME_OPTIONS.ship_invulnerability * 60);
 			HelperFunctions.spawnShip(ship);
 			let x = (ship.custom.chooseTimes[ship.custom.shipName] || 0) + 1;
-			if (x >= GAME_OPTIONS.duplicate_choose_limit) return this.shipUIs.toggle(ship, true);
+			if (x >= GAME_OPTIONS.duplicate_choose_limit || TeamManager.getDataFromShip(ship).spawnpoint == null) return this.shipUIs.toggle(ship, true);
 			ship.custom.chooseTimes[ship.custom.shipName] = x;
 			if (oldName != ship.custom.shipName) {
 				let { ItemID } = UIData.shipUIs;
@@ -5344,7 +5345,7 @@ AbilityManager.onAbilityEnd = function (ship) {
 }
 
 AbilityManager.onAbilityStart = function (ship, inAbilityBeforeStart) {
-	if (!ship.custom.noLongerInvisible && HelperFunctions.isOutOfBase(ship, true)) {
+	if (!ship.custom.noLongerInvisible && HelperFunctions.isOutOfBase(ship, true, false)) {
 		ship.custom.noLongerInvisible = true;
 		let colliderLog = HelperFunctions.getColliderLog(ship), invisibleLog = HelperFunctions.getInvisibleLog(ship), invulnerableLog = HelperFunctions.getInvulnerableLog(ship);
 		if (colliderLog.length - 1 == ship.custom.lastColliderIndex) HelperFunctions.setCollider(ship, true);
@@ -5367,7 +5368,7 @@ TeamManager.onShipTeamChange = function (ship, newTeamOBJ, oldTeamOBJ) {
 
 
 
-/* Imported from misc/tickFunctions.js at Sun Nov 05 2023 20:49:46 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Mon Nov 06 2023 20:57:00 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
 	AbilityManager.globalTick(game);
@@ -5431,9 +5432,8 @@ const alwaysTick = function (game) {
 				ship.custom.last_status = { r, vx, vy, generator };
 			}
 
-			let spawnpoint, stepDifference = game.step - ship.custom.lastSpawnedStep;
-			let isOutOfBase = HelperFunctions.isOutOfBase(ship, true);
-			if (!ship.custom.shipUIsPermaHidden && (stepDifference > GAME_OPTIONS.ship_ui_timeout * 60 || isOutOfBase)) UIData.shipUIs.toggle(ship, true);
+			let stepDifference = game.step - ship.custom.lastSpawnedStep;
+			if (!ship.custom.shipUIsPermaHidden && (stepDifference > GAME_OPTIONS.ship_ui_timeout * 60 || HelperFunctions.isOutOfBase(ship, true, true))) UIData.shipUIs.toggle(ship, true);
 
 			/*	ANTI-BASECAMP MECHANISM
 				(This is a copy of original message from Notus when we were discussing on how to implement this)
@@ -5458,7 +5458,7 @@ const alwaysTick = function (game) {
 					}
 					else ship.custom.generator = ship.generator;
 				}
-				else if (isOutOfBase) {
+				else if (HelperFunctions.isOutOfBase(ship, true, false)) {
 					ship.custom.leaveBaseInvulTime = true;
 					ship.custom.leaveBaseTimestamp = game.step;
 					let colliderLog = HelperFunctions.getColliderLog(ship);
@@ -5843,9 +5843,10 @@ const main_phase = function (game) {
 		game.custom.timeout = HelperFunctions.timeExceeded(game.custom.startedStep, GAME_OPTIONS.duration * 60);
 
 		if (game_duration > GAME_OPTIONS.expiration_time * 60) {
-			let test = new Set(WeightCalculator.getTopPlayers(game, true).map(e => e.team));
+			let test = new Set(WeightCalculator.getTopPlayers(game, true).map(e => TeamManager.getDataFromShip(e)));
 			game.custom.oneTeamLeft = test.size < 2;
-			if (game.custom.oneTeamLeft) game.custom.winner = [...test][0];
+			game.custom.allLeft = test.size < 1;
+			if (game.custom.oneTeamLeft && !game.custom.allLeft) game.custom.winner = [...test][0].id;
 		}
 		if (game.custom.oneTeamLeft || game.custom.timeout || Math.max(...control_point_data.scores, control_point_data.ghostScore) >= GAME_OPTIONS.points) this.tick = endGame; 
 	}
@@ -5871,7 +5872,7 @@ const endGame = function (game) {
 	let message = "";
 	switch (true) {
 		case game.custom.timeout: message = "Time's Out!"; break;
-		case game.custom.oneTeamLeft: message = "All players in other teams left!"; break;
+		case game.custom.oneTeamLeft: message = `All players in ${game.custom.allLeft ? "all" : "other"} teams left!`; break;
 		default: message = `One team reaches ${GAME_OPTIONS.points} points!`
 	}
 	if (!game.custom.oneTeamLeft) {
@@ -5880,19 +5881,17 @@ const endGame = function (game) {
 		if (index < 0) index = "Ghost";
 		game.custom.winner = index;
 	}
-	let winnerData = TeamManager.getDataFromID(game.custom.winner);
-	HelperFunctions.sendUI(game, {
+	let winnerData = (game.custom.oneTeamLeft && game.custom.allLeft) ? null : TeamManager.getDataFromID(game.custom.winner);
+	let endGameNotification = {
 		id: "endgame_notification",
 		position: [25, 20, 50, 10],
 		components: [
-			{ type: "text", position: [0, 0, 100, 50], value: message, color: "#cde"},
-			{ type: "text", position: [0, 50, 50, 50], value: winnerData.name.toUpperCase(), color: HelperFunctions.toHSLA(winnerData.hue, 1, 100, UIData.colorTextLightness), align: "right"},
-			{ type: "text", position: [50, 50, 50, 50], value: " wins!", color: "#cde", align: "left"}
+			{ type: "text", position: [0, 0, 100, 50], value: message, color: "#cde"}
 		]
-	});
+	};
 	game.custom.endGameInfo = {
 		"Status": message,
-		"Winner team": winnerData.name.toUpperCase(),
+		"Winner team": void 0,
 		" ": " ",
 		"Your team": "Unknown",
 		"Your kills / deaths": "0/0",
@@ -5907,6 +5906,15 @@ const endGame = function (game) {
 		"Code": "github.com/Bhpsngum/Arena-mod-remake",
 		"Feedback": "forms.gle/u9C1Br9kqbdDh22u5"
 	};
+	if (winnerData != null) {
+		let winnerName = winnerData.name.toUpperCase();
+		endGameNotification.components.push(
+			{ type: "text", position: [0, 50, 50, 50], value: winnerName, color: HelperFunctions.toHSLA(winnerData.hue, 1, 100, UIData.colorTextLightness), align: "right"},
+			{ type: "text", position: [50, 50, 50, 50], value: " wins!", color: "#cde", align: "left"}
+		);
+		game.custom.endGameInfo["Winner team"] = winnerName;
+	}
+	HelperFunctions.sendUI(game, endGameNotification);
 
 	let MVP = WeightCalculator.getTopPlayers(game, false, "playerWeight")[0];
 	if (MVP != null && (MVP.custom.kills || MVP.custom.deaths || MVP.custom.timeOnPoint)) Object.assign(game.custom.endGameInfo, {
@@ -5962,7 +5970,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Sun Nov 05 2023 20:49:46 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Mon Nov 06 2023 20:57:00 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
 	AbilityManager.globalEvent(event, game);
@@ -6046,7 +6054,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Sun Nov 05 2023 20:49:46 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Mon Nov 06 2023 20:57:00 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
 	{ text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
@@ -6116,6 +6124,6 @@ this.options.ships[0] = JSON.stringify(ship101);
 
 
 
-/* Imported from misc/gameInfo.js at Sun Nov 05 2023 20:49:46 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameInfo.js at Mon Nov 06 2023 20:57:00 GMT+0900 (Japan Standard Time) */
 
 AbilityManager.echo(`[[bg;DarkTurquoise;]Re:][[bg;#EE4B2B;]Arena] ([[;#AAFF00;]${__ABILITY_SYSTEM_INFO__.branch}]) [[;Cyan;]v${__ABILITY_SYSTEM_INFO__.version} (Build ID [[;${HelperFunctions.toHSLA(__ABILITY_SYSTEM_INFO__.buildID)};]${__ABILITY_SYSTEM_INFO__.buildID}])\nMap picked: [[b;Cyan;]${MapManager.get().name} by ${MapManager.get().author}\n\nType \`commands\` to see all commands\nAnd \`usage <commandName>\` to show usage of a command\n\n]`);
