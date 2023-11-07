@@ -22,7 +22,7 @@ const __ABILITY_SYSTEM_INFO__ = {
 	name: "Arena_Mod",
 	branch: "ShipTesting",
 	version: "4.0.0",
-	buildID: "18ba47e4534"
+	buildID: "18ba9c69b39"
 };
 
 
@@ -140,7 +140,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_ShipTesting.js at Mon Nov 06 2023 20:57:00 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_ShipTesting.js at Tue Nov 07 2023 21:34:07 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -183,7 +183,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Mon Nov 06 2023 20:57:00 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Tue Nov 07 2023 21:34:07 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
 	{
@@ -234,7 +234,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps_ShipTesting.js at Mon Nov 06 2023 20:57:00 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps_ShipTesting.js at Tue Nov 07 2023 21:34:07 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
 	{
@@ -250,7 +250,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Mon Nov 06 2023 20:57:00 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Tue Nov 07 2023 21:34:07 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
 	"Test ship": {
@@ -1043,9 +1043,15 @@ const ShipAbilities = {
 		cooldownRestartOnEnd: false,
 		customInAbilityText: true,
 		immovableInAbility: true,
+		
 		requirementsText: function (ship) {
 			return ship.custom.inAbility ? HelperFunctions.timeLeft(ship.custom.lastTriggered + this.duration) : HelperFunctions.templates.requirementsText.call(this, ship);
 		},
+
+		start: function (ship) {
+			HelperFunctions.templates.start.call(this, ship);
+			ship.set({ vx: 0, vy: 0 });
+		}
 	},
 	"Kunai": {
 		models: {
@@ -2427,7 +2433,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Mon Nov 06 2023 20:57:00 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Tue Nov 07 2023 21:34:07 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -2521,9 +2527,16 @@ const MAKE_COMMANDS = function () {
 			block.blocked ? (block.blocker.reason || "Blocked for no reasons") : "",
 			ship.custom.abilitySystemDisabled ? "Ability Disabled" : ""
 		].filter(e => e).join(`.${newline ? "\n" : " "}`))
-	}, showTeamInfo = function (ship) {
+	}, showTeamInfo = function (ship, separator) {
 		let teamInfo = TeamManager.getDataFromShip(ship);
-		return `Team: ${teamInfo.name.toUpperCase()}, Hue: ${teamInfo.hue}, ${teamInfo.ghost ? "Ghost team, " : ""}${teamInfo.spawnpoint ? ("Spawnpoint: X: " + teamInfo.spawnpoint.x + " Y: " + teamInfo.spawnpoint.y) : "No spawnpoint"}`;
+		return showTeamInfoByOBJ(teamInfo, separator);
+	}, showTeamInfoByOBJ = function (teamInfo, separator = ", ") {
+		return [
+			`Team: ${teamInfo.name.toUpperCase()}${teamInfo.ghost ? "" : (" (ID " + teamInfo.id + ")")}`,
+			`Hue: ${teamInfo.hue}`,
+			`${teamInfo.ghost ? "Ghost team" : ""}`,
+			`${teamInfo.spawnpoint ? ("Spawnpoint: X: " + teamInfo.spawnpoint.x + " | Y: " + teamInfo.spawnpoint.y + " | Radius: " + (Math.max(teamInfo.spawning_radius, 0) || 0)) : "No spawnpoint"}`
+		].filter(e => e).join(separator);
 	};
 
 	addCommand('commands', function () {
@@ -2553,6 +2566,23 @@ const MAKE_COMMANDS = function () {
 		],
 		description: "Show all ship infos (specify id to only check that ship's info)"
 	});
+
+	addCommand('teaminfo', function (req) {
+		let id = req.split(" ").slice(1).join(" ").trim();
+		if (!id) {
+			echo("All teams info:");
+			echo(TeamManager.getAll().concat(TeamManager.ghostTeam).map(t => showTeamInfoByOBJ(t, "\n")).join("\n"));
+		}
+		else {
+			let team = TeamManager.getDataFromID(id);
+			echo(showTeamInfoByOBJ(team, "\n"));
+		}
+	}, {
+		arguments: [
+			{ name: "team_id", required: false }
+		],
+		description: "Show team/all teams info based on ID"
+	}); 
 
 	addCommand('sunall', function () {
 		for (let ship of game.ships) ship.set({x: 0, y: 0});
@@ -2679,12 +2709,12 @@ const MAKE_COMMANDS = function () {
 			teamInfo = newTeam;
 			TeamManager.set(ship, team, true, false);
 		}
-		return team ? `Set %s to team ${teamInfo.name.toUpperCase()}`: showTeamInfo(ship);
+		return team ? `Set %s to team ${teamInfo.name.toUpperCase()}`: showTeamInfo(ship, "\n");
 	}, '%r', {
 		arguments: [
 			{ name: "team_id", required: false }
 		],
-		description: "Get/Set ship's team info"
+		description: "Get team info from ship/Change ship's team"
 	});
 
 	addShipCommand('ability', function (ship, id, args) {
@@ -2741,7 +2771,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Mon Nov 06 2023 20:57:00 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Tue Nov 07 2023 21:34:07 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
 	planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -2751,7 +2781,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Mon Nov 06 2023 20:57:00 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Tue Nov 07 2023 21:34:07 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
 	toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -3141,7 +3171,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Mon Nov 06 2023 20:57:00 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Tue Nov 07 2023 21:34:07 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
 	ghostTeam: GhostTeam,
@@ -3176,6 +3206,7 @@ const TeamManager = {
 		return this.teams;
 	},
 	getDataFromID: function (team) {
+		team = team == null ? NaN : +team;
 		return this.getAll()[team] || this.ghostTeam;
 	},
 	getDataFromShip: function (ship) {
