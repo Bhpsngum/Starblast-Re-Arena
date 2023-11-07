@@ -162,7 +162,7 @@ const GameHelperFunctions = {
 		return !ship.custom.kicked && !ship.custom.shipUIsHidden;
 	},
 	intrudedOtherTeamBase: function (ship) {
-		if (BASES.intrusion_damage <= 0 || !ship.alive) return false;
+		if (!game.custom.started || BASES.intrusion_damage <= 0 || !ship.alive) return false;
 
 		let teams = TeamManager.getAll();
 		let shipTeamID = TeamManager.getDataFromShip(ship).id;

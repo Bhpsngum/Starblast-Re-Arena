@@ -789,9 +789,15 @@ const ShipAbilities = {
 		cooldownRestartOnEnd: false,
 		customInAbilityText: true,
 		immovableInAbility: true,
+		
 		requirementsText: function (ship) {
 			return ship.custom.inAbility ? HelperFunctions.timeLeft(ship.custom.lastTriggered + this.duration) : HelperFunctions.templates.requirementsText.call(this, ship);
 		},
+
+		start: function (ship) {
+			HelperFunctions.templates.start.call(this, ship);
+			ship.set({ vx: 0, vy: 0 });
+		}
 	},
 	"Kunai": {
 		models: {

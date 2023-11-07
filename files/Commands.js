@@ -90,9 +90,16 @@ const MAKE_COMMANDS = function () {
 			block.blocked ? (block.blocker.reason || "Blocked for no reasons") : "",
 			ship.custom.abilitySystemDisabled ? "Ability Disabled" : ""
 		].filter(e => e).join(`.${newline ? "\n" : " "}`))
-	}, showTeamInfo = function (ship) {
+	}, showTeamInfo = function (ship, separator) {
 		let teamInfo = TeamManager.getDataFromShip(ship);
-		return `Team: ${teamInfo.name.toUpperCase()}, Hue: ${teamInfo.hue}, ${teamInfo.ghost ? "Ghost team, " : ""}${teamInfo.spawnpoint ? ("Spawnpoint: X: " + teamInfo.spawnpoint.x + " Y: " + teamInfo.spawnpoint.y) : "No spawnpoint"}`;
+		return showTeamInfoByOBJ(teamInfo, separator);
+	}, showTeamInfoByOBJ = function (teamInfo, separator = ", ") {
+		return [
+			`Team: ${teamInfo.name.toUpperCase()}${teamInfo.ghost ? "" : (" (ID " + teamInfo.id + ")")}`,
+			`Hue: ${teamInfo.hue}`,
+			`${teamInfo.ghost ? "Ghost team" : ""}`,
+			`${teamInfo.spawnpoint ? ("Spawnpoint: X: " + teamInfo.spawnpoint.x + " | Y: " + teamInfo.spawnpoint.y + " | Radius: " + (Math.max(teamInfo.spawning_radius, 0) || 0)) : "No spawnpoint"}`
+		].filter(e => e).join(separator);
 	};
 
 	addCommand('commands', function () {
@@ -122,6 +129,23 @@ const MAKE_COMMANDS = function () {
 		],
 		description: "Show all ship infos (specify id to only check that ship's info)"
 	});
+
+	addCommand('teaminfo', function (req) {
+		let id = req.split(" ").slice(1).join(" ").trim();
+		if (!id) {
+			echo("All teams info:");
+			echo(TeamManager.getAll().concat(TeamManager.ghostTeam).map(t => showTeamInfoByOBJ(t, "\n")).join("\n"));
+		}
+		else {
+			let team = TeamManager.getDataFromID(id);
+			echo(showTeamInfoByOBJ(team, "\n"));
+		}
+	}, {
+		arguments: [
+			{ name: "team_id", required: false }
+		],
+		description: "Show team/all teams info based on ID"
+	}); 
 
 	addCommand('sunall', function () {
 		for (let ship of game.ships) ship.set({x: 0, y: 0});
@@ -248,12 +272,12 @@ const MAKE_COMMANDS = function () {
 			teamInfo = newTeam;
 			TeamManager.set(ship, team, true, false);
 		}
-		return team ? `Set %s to team ${teamInfo.name.toUpperCase()}`: showTeamInfo(ship);
+		return team ? `Set %s to team ${teamInfo.name.toUpperCase()}`: showTeamInfo(ship, "\n");
 	}, '%r', {
 		arguments: [
 			{ name: "team_id", required: false }
 		],
-		description: "Get/Set ship's team info"
+		description: "Get team info from ship/Change ship's team"
 	});
 
 	addShipCommand('ability', function (ship, id, args) {
