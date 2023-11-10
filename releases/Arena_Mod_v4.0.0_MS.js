@@ -22,7 +22,7 @@ const __ABILITY_SYSTEM_INFO__ = {
 	name: "Arena_Mod",
 	branch: "MS",
 	version: "4.0.0",
-	buildID: "18ba9c69b39"
+	buildID: "18bb93f6686"
 };
 
 
@@ -140,7 +140,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_MS.js at Tue Nov 07 2023 21:34:07 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_MS.js at Fri Nov 10 2023 21:40:21 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = false; // if in debug phase
 
@@ -183,7 +183,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Tue Nov 07 2023 21:34:07 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Fri Nov 10 2023 21:40:21 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
 	{
@@ -234,7 +234,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Tue Nov 07 2023 21:34:07 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Fri Nov 10 2023 21:40:21 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
 	{
@@ -2740,7 +2740,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Tue Nov 07 2023 21:34:07 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Fri Nov 10 2023 21:40:21 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
 	"Test ship": {
@@ -3419,7 +3419,7 @@ const ShipAbilities = {
 		start: function (ship) {
 			HelperFunctions.templates.start.call(this, ship);
 			ship.custom.abilityCustom.deployed = false;
-			ship.set({ generator: 0 });
+			ship.set({ generator: 0, vx: 0, vy: 0 });
 		},
 		
 		tick: function (ship) {
@@ -3533,7 +3533,7 @@ const ShipAbilities = {
 		cooldownRestartOnEnd: false,
 		customInAbilityText: true,
 		immovableInAbility: true,
-		
+
 		requirementsText: function (ship) {
 			return ship.custom.inAbility ? HelperFunctions.timeLeft(ship.custom.lastTriggered + this.duration) : HelperFunctions.templates.requirementsText.call(this, ship);
 		},
@@ -4199,6 +4199,7 @@ const ShipAbilities = {
 		
 		cooldownRestartOnEnd: false,
 		customInAbilityText: true,
+		immovableInAbility: true,
 		
 		requirementsText: function (ship) {
 			return ship.custom.inAbility ? "CORE UNSTABLE" : HelperFunctions.templates.requirementsText.call(this, ship);
@@ -4207,7 +4208,7 @@ const ShipAbilities = {
 
 		start: function (ship) {
 			HelperFunctions.templates.start.call(this, ship);
-			ship.set({ idle: true });
+			ship.set({ idle: true, vx: 0, vy: 0 });
 		},
 
 		end: function (ship) {
@@ -4479,7 +4480,7 @@ const ShipAbilities = {
 		range: 45,
 		showAbilityRangeUI: true,
 		
-		pushStrength: 1.9,
+		pushStrength: 1.69,
 
 		generatorInit: 0,
 
@@ -4710,7 +4711,7 @@ const ShipAbilities = {
 			ability: '{"name":"Piercer","designer":"nex","level":5,"model":240,"size":1.85,"zoom":0.8,"specs":{"shield":{"capacity":[280,280],"reload":[3,3]},"generator":{"capacity":[500,500],"reload":[0.001,0.001]},"ship":{"mass":170,"speed":[65,65],"rotation":[20,20],"acceleration":[120,120]}},"bodies":{"main":{"section_segments":[45,135,225,315],"offset":{"x":0,"y":-30,"z":7},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[-80,-95,-70,-40,-10,40,60,90,100,90],"z":[-10,-12,-8,-8,-8,-5,5,5,5,5]},"width":[0,25,20,20,20,22,24,24,20,0],"height":[0,5,15,15,20,20,20,20,15,0],"texture":[5,5,4,15.9,18,15.1,5],"propeller":0},"rails":{"section_segments":4,"offset":{"x":8,"y":-30,"z":8},"position":{"x":[5,0,0,0,0,0,0],"y":[-105,-90,-60,-40,-10,40,60],"z":[0,0,0,2,3,4,13]},"width":[0,5,5,4,5,7,0],"height":[0,8,8,6,8,8,0],"texture":6,"propeller":false},"bow":{"section_segments":4,"offset":{"x":0,"y":-130,"z":2},"position":{"x":[-120,-90,-55,-25,-10,0,0,0,-10,-25,-55,-90,-120],"y":[-115,-110,-90,-65,-40,-10,0,10,40,65,90,110,115],"z":[0,0,0,0,0,0,0,0,0,0,0,0,0]},"width":[0,10,12,12,13,15,10,15,13,12,12,10,0],"height":[0,10,12,12,13,15,10,15,13,12,12,10,0],"texture":[4,2,1,-1,6,4,4,6,-1,1,2,4],"propeller":false,"angle":90},"arrow":{"section_segments":4,"offset":{"x":0,"y":35,"z":17},"position":{"x":[0,0,0,0,0,0,0,0],"y":[-210,-170,-175,-30,-40,-20,0,10],"z":[0,0,0,0,0,0,0,0]},"width":[0,15,5,5,7,12,12,0],"height":[0,15,5,5,10,12,11,0],"texture":[49,4,15.9,4,3],"propeller":false,"angle":0,"laser":{"damage":[9,9],"rate":1,"type":1,"speed":[650,650],"number":50,"error":0,"recoil":10}},"string":{"section_segments":4,"offset":{"x":0.1,"y":30,"z":2},"position":{"x":[0,0],"y":[-130,0],"z":[0,21]},"width":[2,2],"height":[2,2],"texture":[49],"propeller":false,"angle":55},"scopeckpit":{"section_segments":12,"offset":{"x":0,"y":110,"z":37},"position":{"x":[0,0,0,0,0,0,0,0],"y":[-75,-70,-35,-25,0,10,50,40],"z":[0,0,0,0,0,0,0,0]},"width":[0,15,15,13,13,15,15,0],"height":[0,15,15,13,13,15,15,0],"texture":[9,15.1,2,13,2,15.1,17],"propeller":true},"propulsors":{"section_segments":8,"offset":{"x":20,"y":60,"z":-8},"position":{"x":[0,0,0,0,0,0,0,0,0],"y":[-50,-48,-35,-10,0,10,30,60,50],"z":[0,0,0,0,0,0,0,0,0]},"width":[0,12,14,14,10,14,14,14,0],"height":[0,24,28,28,20,28,28,28,0],"texture":[3,4,15.1,2,2,15.1,8,17],"propeller":true}},"wings":{"main":{"offset":{"x":25,"y":50,"z":2},"length":[20,30],"width":[70,40,15],"angle":[-20,0],"position":[20,40,50],"texture":[8,15.1],"doubleside":true,"bump":{"position":0,"size":15}},"support":{"offset":{"x":0,"y":-100,"z":-1},"length":[30,40],"width":[100,30,10],"angle":[0,0],"position":[20,0,-10],"texture":[2,15.6],"doubleside":true,"bump":{"position":0,"size":5}},"badge":{"offset":{"x":0,"y":70,"z":52},"length":[20],"width":[30,20],"angle":[-10],"position":[0,20],"texture":[63],"doubleside":true,"bump":{"position":20,"size":8}},"arrowwings":{"offset":{"x":4,"y":5,"z":18},"length":[13],"width":[50,45],"angle":[30],"position":[0,20],"texture":[49],"doubleside":true,"bump":{"position":20,"size":8}},"shields":{"offset":{"x":15,"y":-140,"z":2},"length":[10,30,30,0],"width":[0,15,15,8,0],"angle":[0,0,0,0],"position":[-4,0,10,40,40],"texture":[4,15.1,13,5],"doubleside":true,"bump":{"position":0,"size":200}}},"typespec":{"name":"Piercer","level":5,"model":240,"code":740,"specs":{"shield":{"capacity":[280,280],"reload":[3,3]},"generator":{"capacity":[500,500],"reload":[0.001,0.001]},"ship":{"mass":170,"speed":[65,65],"rotation":[20,20],"acceleration":[120,120]}},"shape":[6.475,5.554,5.519,5.479,5.327,5.101,4.933,4.611,4.5,4.471,4.406,4.302,4.271,1.694,1.433,1.277,1.388,1.551,1.721,1.971,4.824,4.728,4.47,4.615,5.946,5.932,5.946,4.615,4.47,4.728,4.824,1.971,1.721,1.551,1.388,1.277,1.433,1.694,4.271,4.302,4.406,4.471,4.5,4.611,4.933,5.101,5.327,5.479,5.519,5.554],"lasers":[{"x":0,"y":-6.475,"z":0.629,"angle":0,"damage":[9,9],"rate":1,"type":1,"speed":[650,650],"number":50,"spread":0,"error":0,"recoil":10}],"radius":6.475}}'
 		},
 		name: "Reload",
-		cooldown: 12 * 60,
+		cooldown: 15 * 60,
 		duration: 10 * 60,
 		customEndcondition: true,
 		cooldownRestartOnEnd: true,
@@ -4923,7 +4924,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Tue Nov 07 2023 21:34:07 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Fri Nov 10 2023 21:40:21 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -5261,7 +5262,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Tue Nov 07 2023 21:34:07 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Fri Nov 10 2023 21:40:21 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
 	planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -5271,7 +5272,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Tue Nov 07 2023 21:34:07 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Fri Nov 10 2023 21:40:21 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
 	toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -5661,7 +5662,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Tue Nov 07 2023 21:34:07 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Fri Nov 10 2023 21:40:21 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
 	ghostTeam: GhostTeam,
@@ -6583,11 +6584,11 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/gameLogic.js at Tue Nov 07 2023 21:34:07 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Fri Nov 10 2023 21:40:21 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/GameConfig.js at Tue Nov 07 2023 21:34:07 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Fri Nov 10 2023 21:40:21 GMT+0900 (Japan Standard Time) */
 
 const map_name = null; // leave `null` if you want randomized map name
 
@@ -6711,7 +6712,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Tue Nov 07 2023 21:34:07 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Fri Nov 10 2023 21:40:21 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
 	setSpawnpointsOBJ: function () {
@@ -7677,7 +7678,7 @@ TeamManager.onShipTeamChange = function (ship, newTeamOBJ, oldTeamOBJ) {
 
 
 
-/* Imported from misc/tickFunctions.js at Tue Nov 07 2023 21:34:07 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Fri Nov 10 2023 21:40:21 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
 	AbilityManager.globalTick(game);
@@ -8279,7 +8280,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Tue Nov 07 2023 21:34:07 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Fri Nov 10 2023 21:40:21 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
 	AbilityManager.globalEvent(event, game);
@@ -8363,7 +8364,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Tue Nov 07 2023 21:34:07 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Fri Nov 10 2023 21:40:21 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
 	{ text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
@@ -8433,6 +8434,6 @@ this.options.ships[0] = JSON.stringify(ship101);
 
 
 
-/* Imported from misc/gameInfo.js at Tue Nov 07 2023 21:34:07 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameInfo.js at Fri Nov 10 2023 21:40:21 GMT+0900 (Japan Standard Time) */
 
 AbilityManager.echo(`[[bg;DarkTurquoise;]Re:][[bg;#EE4B2B;]Arena] ([[;#AAFF00;]${__ABILITY_SYSTEM_INFO__.branch}]) [[;Cyan;]v${__ABILITY_SYSTEM_INFO__.version} (Build ID [[;${HelperFunctions.toHSLA(__ABILITY_SYSTEM_INFO__.buildID)};]${__ABILITY_SYSTEM_INFO__.buildID}])\nMap picked: [[b;Cyan;]${MapManager.get().name} by ${MapManager.get().author}\n\nType \`commands\` to see all commands\nAnd \`usage <commandName>\` to show usage of a command\n\n]`);
