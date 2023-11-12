@@ -545,13 +545,29 @@ const endGame = function (game) {
 	HelperFunctions.sendUI(game, endGameNotification);
 
 	let MVP = WeightCalculator.getTopPlayers(game, false, "playerWeight")[0];
-	if (MVP != null && (MVP.custom.kills || MVP.custom.deaths || MVP.custom.timeOnPoint)) Object.assign(game.custom.endGameInfo, {
-		"  ": " ",
-		"MVP in this match:": MVP.name,
-		"- Team": TeamManager.getDataFromShip(MVP).name.toUpperCase(),
-		"- Kills / Deaths": [+MVP.custom.kills || 0, +MVP.custom.deaths || 0].join("/"),
-		"- Time on point": HelperFunctions.toTimer(MVP.custom.timeOnPoint || 0)
-	});
+	if (MVP != null && (MVP.custom.kills || MVP.custom.deaths || MVP.custom.timeOnPoint)) {
+		let KD = [+MVP.custom.kills || 0, +MVP.custom.deaths || 0].join(" / "), timeOnPoint = HelperFunctions.toTimer(MVP.custom.timeOnPoint || 0);
+		Object.assign(game.custom.endGameInfo, {
+			"  ": " ",
+			"MVP in this match:": MVP.name,
+			"- Team": TeamManager.getDataFromShip(MVP).name.toUpperCase(),
+			"- Kills / Deaths": KD,
+			"- Time on point": timeOnPoint 
+		});
+
+		UIData.scoreboard.components = [
+			{ type: "text", position: [0, 30, 100, 10], value: "MVP:", color: "#cde" },
+			{ type: "player", id: MVP.id, position: [5, 40, 90, 20], color: HelperFunctions.toHSLA(TeamManager.getDataFromShip(MVP).hue, 1, 100, UIData.colorTextLightness) },
+			{ type: "text", position: [5, 60, 90, 10], value: `${KD} | ${timeOnPoint}`, color: "#cde" }
+		];
+	}
+	else UIData.scoreboard.components = [
+		{ type: "text", position: [0, 40, 100, 10], value: "MVP:", color: "#cde" },
+		{ type: "text", position: [0, 50, 100, 10], value: "None", color: "#cde" },
+	];
+
+	game.custom.abilitySystemEnabled = false;
+	game.custom.ended = true;
 
 	HelperFunctions.sendUI(game, {
 		id: "timer",
@@ -560,8 +576,9 @@ const endGame = function (game) {
 			{ type: "text", position: [0, 0, 100, 100], value: "MATCH FINISHED!", color: "yellow"}
 		]
 	});
-	game.custom.abilitySystemEnabled = false;
-	game.custom.ended = true;
+
+	UIData.updateScoreboard(game);
+
 	for (let ship of game.ships) {
 		ship.custom.endGameTick = game.step;
 		HelperFunctions.setInvisible(ship, true);
@@ -577,7 +594,7 @@ const im_here_just_to_kick_every_players_out_of_the_game = function (game) {
 		if (!ship.custom.kicked && (ship.custom.endGameTick == null || game.step - ship.custom.endGameTick > 5 * 60)) {
 			let endInfo = HelperFunctions.clone(game.custom.endGameInfo);
 			endInfo["Your team"] = TeamManager.getDataFromShip(ship).name.toUpperCase();
-			endInfo["Your kills / deaths"] = [+ship.custom.kills || 0, +ship.custom.deaths || 0].join("/");
+			endInfo["Your kills / deaths"] = [+ship.custom.kills || 0, +ship.custom.deaths || 0].join(" / ");
 			endInfo["Your time on point"] = HelperFunctions.toTimer(ship.custom.timeOnPoint || 0)
 			ship.gameover(endInfo);
 			ship.custom.kicked = true;

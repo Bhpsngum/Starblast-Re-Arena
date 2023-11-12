@@ -685,7 +685,7 @@ const UIData = {
 		HelperFunctions.sendUI(ship, this.player_count);
 	},
 	updateScoreboard: function (game) {
-		if (game.custom.started) {
+		if (game.custom.started && !game.custom.ended) {
 			let players = WeightCalculator.getTopPlayers(game).slice(0, 10);
 			let columnHeight = 100 / 11;
 			let textHeight = columnHeight / 1.2;
@@ -721,7 +721,7 @@ const UIData = {
 			]
 		});
 		let scoreboardData = { ...this.scoreboard };
-		if (game.custom.started && ship.custom.joined) {
+		if (game.custom.started && !game.custom.ended && ship.custom.joined) {
 			// highlight players
 			let compos = HelperFunctions.clone(scoreboardData.components);
 			let foundIndex = compos.findIndex(c => c.type == "player" && c.id === ship.id);
