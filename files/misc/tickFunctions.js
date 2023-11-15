@@ -556,8 +556,8 @@ const endGame = function (game) {
 		});
 
 		UIData.scoreboard.components = [
-			{ type: "text", position: [0, 30, 100, 10], value: "MVP:", color: "#cde" },
-			{ type: "player", id: MVP.id, position: [5, 40, 90, 20], color: HelperFunctions.toHSLA(TeamManager.getDataFromShip(MVP).hue, 1, 100, UIData.colorTextLightness) },
+			{ type: "text", position: [5, 30, 90, 10], value: "MVP:", color: "#cde" },
+			{ type: "player", id: MVP.id, position: [5, 45, 90, 10], color: HelperFunctions.toHSLA(TeamManager.getDataFromShip(MVP).hue, 1, 100, UIData.colorTextLightness) },
 			{ type: "text", position: [5, 60, 90, 10], value: `${KD} | ${timeOnPoint}`, color: "#cde" }
 		];
 	}
