@@ -22,7 +22,7 @@ const __ABILITY_SYSTEM_INFO__ = {
 	name: "Arena_Mod",
 	branch: "ShipTesting",
 	version: "4.0.0",
-	buildID: "18bc3c276e9"
+	buildID: "18bd2e1c9ed"
 };
 
 
@@ -140,7 +140,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_ShipTesting.js at Sun Nov 12 2023 22:39:43 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_ShipTesting.js at Wed Nov 15 2023 21:08:14 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -183,7 +183,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Sun Nov 12 2023 22:39:43 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Wed Nov 15 2023 21:08:14 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
 	{
@@ -234,7 +234,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps_ShipTesting.js at Sun Nov 12 2023 22:39:43 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps_ShipTesting.js at Wed Nov 15 2023 21:08:14 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
 	{
@@ -250,7 +250,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Sun Nov 12 2023 22:39:43 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Wed Nov 15 2023 21:08:14 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
 	"Test ship": {
@@ -2434,7 +2434,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Sun Nov 12 2023 22:39:43 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Wed Nov 15 2023 21:08:14 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -2772,7 +2772,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Sun Nov 12 2023 22:39:43 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Wed Nov 15 2023 21:08:14 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
 	planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -2782,7 +2782,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Sun Nov 12 2023 22:39:43 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Wed Nov 15 2023 21:08:14 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
 	toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -3172,7 +3172,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Sun Nov 12 2023 22:39:43 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Wed Nov 15 2023 21:08:14 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
 	ghostTeam: GhostTeam,
