@@ -911,7 +911,7 @@ AbilityManager.onShipsListUpdate = function (team, newList, oldList) {
 	let { shipUIs } = UIData;
 	let { ItemID } = shipUIs;
 	for (let s of game.ships) {
-		if (s == null || s.id == null || s.custom.shipUIsPermaHidden || s.custom.shipUIsHidden || s.custom.inAbility || AbilityManager.isAbilityBlocked(s).blocked) continue;
+		if (s == null || s.id == null || !AbilityManager.isAbilityInitialized(ship) || s.custom.shipUIsPermaHidden || s.custom.shipUIsHidden || s.custom.inAbility || AbilityManager.isAbilityBlocked(s).blocked) continue;
 		let x = TeamManager.getDataFromShip(s), playerShipName = s.custom.shipName;
 		if (team.ghost ? !x.ghost : team.id !== x.id) continue; // wrong team
 

@@ -162,6 +162,7 @@ const AbilityManager = {
 	UIActionsDelay: 0.2 * 60,
 	_this: this,
 	echo: DEBUG ? game.modding.terminal.echo : function () {},
+	activation_indicator: "__ability__initialized__",
 	ring_model: {
 		section_segments: 64,
 		offset: {x: 0, y: 0, z: 0},
@@ -542,6 +543,9 @@ const AbilityManager = {
 			ship.custom.__hide_aspect_ratio_info__ = false;
 		}
 	},
+	isAbilityInitialized: function (ship) {
+		return ship.custom != null && !!ship.custom[this.activation_indicator];
+	},
 	globalTick2: function (game) {
 		game.custom.abilityCustom.entitiesUpdateRequested = false;
 		HelperFunctions.TimeManager.tick();
@@ -554,12 +558,13 @@ const AbilityManager = {
 
 		for (let ship of game.ships) {
 			if (ship.id == null) continue;
-			if (!ship.custom.__ability__initialized__ && ship.alive) {
+			if (!this.isAbilityInitialized(ship) && ship.alive) {
 				ship.custom.sharedAbilityCustom = {};
 				this.random(ship, true);
-				ship.custom.__ability__initialized__ = true;
+				ship.custom[this.activation_indicator] = true;
 			}
-			if (ship.custom.__ability__initialized__ && ship.alive && this.showAbilityNotice && ship.custom.allowInstructor) {
+			let isAbilityActivated = this.isAbilityInitialized(ship);
+			if (isAbilityActivated && ship.alive && this.showAbilityNotice && ship.custom.allowInstructor) {
 				if (this.abilityNoticeMessage) {
 					ship.instructorSays(String(this.abilityNoticeMessage.call(GAME_OPTIONS, ship)), TeamManager.getDataFromShip(ship).instructor);
 					if (this.abilityNoticeTimeout > 0) HelperFunctions.TimeManager.setTimeout(function () {
@@ -568,7 +573,7 @@ const AbilityManager = {
 				}
 				ship.custom.allowInstructor = false;
 			}
-			if (ship.custom.__ability__initialized__) {
+			if (isAbilityActivated) {
 				if (ship.type != ship.custom.__last_ability_ship_type__) {
 					ship.custom.__last_ability_ship_type__ = ship.type;
 					this.abilityRangeUI.set(ship);
@@ -595,7 +600,7 @@ const AbilityManager = {
 	},
 	globalEvent: function (event, game) {
 		let ship = event.ship;
-		if (ship == null || ship.id == null || !ship.custom.__ability__initialized__ || ship.custom.ability == null) return;
+		if (ship == null || ship.id == null || !this.isAbilityInitialized(ship) || ship.custom.ability == null) return;
 		switch (event.name) {
 			case "ui_component_clicked":
 				let component = event.id;
