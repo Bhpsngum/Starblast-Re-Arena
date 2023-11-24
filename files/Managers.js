@@ -206,9 +206,9 @@ const AbilityManager = {
 		if (!ship.custom.inAbility || ability == null) return;
 		let timePassed = game.step - ship.custom.lastTriggered
 		if (timePassed % ability.tickInterval === 0) ability.tick(ship, timePassed);
-		if (ability.customEndcondition && (ship.custom.forceEnd || ability.canEnd(ship))) this.end(ship);
+		if (ability.customEndcondition && (ship.custom.forceEnd || ability.canEnd(ship))) this.end(ship, false);
 	},
-	end: function (ship) {
+	end: function (ship, forced = true) {
 		let ability = ship.custom.ability;
 		if (ability == null) return;
 		ship.custom.inAbility = false;
@@ -217,7 +217,7 @@ const AbilityManager = {
 		HelperFunctions.TimeManager.clearTimeout(ability.ships.get(ship.id));
 		ability.ships.delete(ship.id);
 		if (ability.cooldownRestartOnEnd) ability.unload(ship);
-		ability.end(ship);
+		ability.end(ship, forced);
 		if ("function" == typeof this.onAbilityEnd) this.onAbilityEnd(ship);
 	},
 	canStart: function (ship) {
@@ -237,7 +237,7 @@ const AbilityManager = {
 			let oldTimeout = ability.ships.get(ship.id);
 			if (oldTimeout != null) HelperFunctions.TimeManager.clearTimeout(oldTimeout);
 			ability.ships.set(ship.id, HelperFunctions.TimeManager.setTimeout(function () {
-				this.end(ship);
+				this.end(ship, false);
 			}.bind(this), ability.duration));
 		}
 

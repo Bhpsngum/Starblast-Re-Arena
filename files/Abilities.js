@@ -106,7 +106,10 @@ const ShipAbilities = {
 
 		// end the ability
 		// optional, set ship to default ship (models.default --> codes.default)
-		end: function (ship) {
+		// Forced:
+		// - [FALSE] if the ending is triggered normally (duration ends, user interaction, etc.)
+		// - [TRUE] if the ending is triggered abnormally (code changes, force assignments, etc.)
+		end: function (ship, forced) {
 			if (ship.custom.ability === this) {
 				HelperFunctions.setInvulnerable(ship, 100);
 				ship.set({type: this.codes.default, stats: AbilityManager.maxStats, generator: this.generatorInit});
