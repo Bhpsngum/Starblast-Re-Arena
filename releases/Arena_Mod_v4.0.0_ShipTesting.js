@@ -22,7 +22,7 @@ const __ABILITY_SYSTEM_INFO__ = {
 	name: "Arena_Mod",
 	branch: "ShipTesting",
 	version: "4.0.0",
-	buildID: "18c02299841"
+	buildID: "18c024e9e5f"
 };
 
 
@@ -140,7 +140,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_ShipTesting.js at Sat Nov 25 2023 01:28:49 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_ShipTesting.js at Sat Nov 25 2023 02:09:15 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -183,7 +183,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Sat Nov 25 2023 01:28:49 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Sat Nov 25 2023 02:09:15 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
 	{
@@ -234,7 +234,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps_ShipTesting.js at Sat Nov 25 2023 01:28:49 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps_ShipTesting.js at Sat Nov 25 2023 02:09:15 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
 	{
@@ -250,7 +250,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Sat Nov 25 2023 01:28:49 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Sat Nov 25 2023 02:09:15 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
 	"Test ship": {
@@ -360,7 +360,10 @@ const ShipAbilities = {
 
 		// end the ability
 		// optional, set ship to default ship (models.default --> codes.default)
-		end: function (ship) {
+		// Forced:
+		// - [FALSE] if the ending is triggered normally (duration ends, user interaction, etc.)
+		// - [TRUE] if the ending is triggered abnormally (code changes, force assignments, etc.)
+		end: function (ship, forced) {
 			if (ship.custom.ability === this) {
 				HelperFunctions.setInvulnerable(ship, 100);
 				ship.set({type: this.codes.default, stats: AbilityManager.maxStats, generator: this.generatorInit});
@@ -2434,7 +2437,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Sat Nov 25 2023 01:28:49 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Sat Nov 25 2023 02:09:15 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -2772,7 +2775,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Sat Nov 25 2023 01:28:49 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Sat Nov 25 2023 02:09:15 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
 	planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -2782,7 +2785,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Sat Nov 25 2023 01:28:49 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Sat Nov 25 2023 02:09:15 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
 	toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -3172,7 +3175,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Sat Nov 25 2023 01:28:49 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Sat Nov 25 2023 02:09:15 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
 	ghostTeam: GhostTeam,
@@ -3382,9 +3385,9 @@ const AbilityManager = {
 		if (!ship.custom.inAbility || ability == null) return;
 		let timePassed = game.step - ship.custom.lastTriggered
 		if (timePassed % ability.tickInterval === 0) ability.tick(ship, timePassed);
-		if (ability.customEndcondition && (ship.custom.forceEnd || ability.canEnd(ship))) this.end(ship);
+		if (ability.customEndcondition && (ship.custom.forceEnd || ability.canEnd(ship))) this.end(ship, false);
 	},
-	end: function (ship) {
+	end: function (ship, forced = true) {
 		let ability = ship.custom.ability;
 		if (ability == null) return;
 		ship.custom.inAbility = false;
@@ -3393,7 +3396,7 @@ const AbilityManager = {
 		HelperFunctions.TimeManager.clearTimeout(ability.ships.get(ship.id));
 		ability.ships.delete(ship.id);
 		if (ability.cooldownRestartOnEnd) ability.unload(ship);
-		ability.end(ship);
+		ability.end(ship, forced);
 		if ("function" == typeof this.onAbilityEnd) this.onAbilityEnd(ship);
 	},
 	canStart: function (ship) {
@@ -3413,7 +3416,7 @@ const AbilityManager = {
 			let oldTimeout = ability.ships.get(ship.id);
 			if (oldTimeout != null) HelperFunctions.TimeManager.clearTimeout(oldTimeout);
 			ability.ships.set(ship.id, HelperFunctions.TimeManager.setTimeout(function () {
-				this.end(ship);
+				this.end(ship, false);
 			}.bind(this), ability.duration));
 		}
 
