@@ -344,9 +344,7 @@ const HelperFunctions = {
 
 		initialize: function () {},
 
-		event: function (event, ship) {
-			if (event.name == "ship_destroyed" && event.ship == ship && this.endOnDeath && ship.custom.inAbility) AbilityManager.end(ship);
-		},
+		event: function (event, ship) {},
 
 		requirementsText: function (ship) {
 			return HelperFunctions.timeLeft(ship.custom.lastTriggered + this.cooldown);
