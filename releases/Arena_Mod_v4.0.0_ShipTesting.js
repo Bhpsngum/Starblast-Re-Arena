@@ -22,7 +22,7 @@ const __ABILITY_SYSTEM_INFO__ = {
 	name: "Arena_Mod",
 	branch: "ShipTesting",
 	version: "4.0.0",
-	buildID: "18c024e9e5f"
+	buildID: "18c075b0c32"
 };
 
 
@@ -140,7 +140,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_ShipTesting.js at Sat Nov 25 2023 02:09:15 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_ShipTesting.js at Sun Nov 26 2023 01:40:56 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -183,7 +183,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Sat Nov 25 2023 02:09:15 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Sun Nov 26 2023 01:40:56 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
 	{
@@ -234,7 +234,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps_ShipTesting.js at Sat Nov 25 2023 02:09:15 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps_ShipTesting.js at Sun Nov 26 2023 01:40:56 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
 	{
@@ -250,7 +250,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Sat Nov 25 2023 02:09:15 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Sun Nov 26 2023 01:40:56 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
 	"Test ship": {
@@ -384,9 +384,9 @@ const ShipAbilities = {
 		},
 
 		// event function if you want to do special stuff while there's an event on duration
-		// optional, end the ability when the ship dies (if `endOnDeath` is true)
+		// optional, do nothing
 		event: function (event, ship) {
-			if (event.name == "ship_destroyed" && event.ship == ship && this.endOnDeath && ship.custom.inAbility) AbilityManager.end(ship);
+
 		},
 
 		// event to be executed globally (and indepently on ships)
@@ -480,8 +480,6 @@ const ShipAbilities = {
 			}
 			HelperFunctions.damage(ship, this.selfDMG);
 		},
-
-		event: function () {},
 
 		end: function () {},
 
@@ -2437,7 +2435,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Sat Nov 25 2023 02:09:15 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Sun Nov 26 2023 01:40:56 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -2775,7 +2773,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Sat Nov 25 2023 02:09:15 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Sun Nov 26 2023 01:40:56 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
 	planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -2785,7 +2783,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Sat Nov 25 2023 02:09:15 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Sun Nov 26 2023 01:40:56 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
 	toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -3133,9 +3131,7 @@ const HelperFunctions = {
 
 		initialize: function () {},
 
-		event: function (event, ship) {
-			if (event.name == "ship_destroyed" && event.ship == ship && this.endOnDeath && ship.custom.inAbility) AbilityManager.end(ship);
-		},
+		event: function (event, ship) {},
 
 		requirementsText: function (ship) {
 			return HelperFunctions.timeLeft(ship.custom.lastTriggered + this.cooldown);
@@ -3175,7 +3171,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Sat Nov 25 2023 02:09:15 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Sun Nov 26 2023 01:40:56 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
 	ghostTeam: GhostTeam,
@@ -3796,6 +3792,9 @@ const AbilityManager = {
 			case "ship_spawned":
 				ship.set({crystals: ship.custom.ability.crystals});
 				if (!ship.custom.inAbility || ship.custom.ability.endOnDeath) ship.custom.ability.unload(ship);
+				break;
+			case "ship_destroyed":
+				if (ship.custom.ability.endOnDeath) this.end(ship, false);
 				break;
 		}
 		AbilityManager.event(event, ship);
