@@ -22,7 +22,7 @@ const __ABILITY_SYSTEM_INFO__ = {
 	name: "Arena_Mod",
 	branch: "MS",
 	version: "4.0.0",
-	buildID: "18c075b0c32"
+	buildID: "18c116fc8bb"
 };
 
 
@@ -80,6 +80,7 @@ this.tick = function (game) {
 
 // make sure to set
 //    - `game.custom.abilitySystemEnabled` to `true` 
+//	  - `ship.custom.useAbilitySystem` to `true`
 //    - `ship.custom.abilitySystemDisabled` to `false` (it should be by default)
 // so that ship can use the abilities
 
@@ -88,6 +89,12 @@ this.event = function (event, game) {
 	AbilityManager.globalEvent(event, game);
 	// your stuff here
 }
+
+// Use the function above if you want to set default ship for anyone joining the game
+// Ability System will check if the first joined ship fits any existing templates to assign
+// Or else, it will use the default template or randomize ships if there is no default template
+// or current default template is invalid
+AbilityManager.setDefaultTemplate("A-Speedster");
 
 // Additionally, there are events that you can modify their functions for your own use:
 AbilityManager.onShipsListUpdate = function (team, newList, oldList) {
@@ -140,7 +147,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_MS.js at Sun Nov 26 2023 01:40:56 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_MS.js at Tue Nov 28 2023 00:39:47 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = false; // if in debug phase
 
@@ -183,7 +190,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Sun Nov 26 2023 01:40:56 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Tue Nov 28 2023 00:39:47 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
 	{
@@ -234,7 +241,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Sun Nov 26 2023 01:40:56 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Tue Nov 28 2023 00:39:47 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
 	{
@@ -2740,7 +2747,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Sun Nov 26 2023 01:40:56 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Tue Nov 28 2023 00:39:47 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
 	"Test ship": {
@@ -2773,6 +2780,17 @@ const ShipAbilities = {
 		// and you can also implement this depends on model like `showAbilityRangeUI`
 
 		level: 7, // default ship level for all models in this template, default `GAME_OPTIONS.ability.ship_levels`
+
+		next: ["Scorpion", "Advanced-Fighter"], // let ship upgrades to different ships (defaults to no upgrades)
+		// Please note that these upgrade to the default model of the template names
+		// for handling stuff for ships after upgrading, please implement `initialize(ship, upgradeFrom)` function in each template
+		
+		nexts: {
+			// specify ship upgrades for specific models in your template
+			default: ["Rock-Tower", "Barracuda"],
+			ability: ["Shadow X-3", "Bastion"]
+			// other modules that aren't specified here (if exists) will receive the default `next` value defined above
+		},
 
 		levels: {
 			// specify ship level for specific models in your template
@@ -2831,7 +2849,8 @@ const ShipAbilities = {
 
 		// stuff to do when init ships
 		// optional, do nothing
-		initialize: function (ship) {
+		// upgradesFrom: the template which this ship upgrades from, `null` if none
+		initialize: function (ship, upgradesFrom) {
 
 		},
 
@@ -3915,7 +3934,7 @@ const ShipAbilities = {
 			ship.custom.abilityCustom.puckTriggered = null;
 			let res = AbilityManager.assign(ship, this.shipName, true, { ability: true });
 			if (res.success) AbilityManager.assign(ship, this.shipName, false, true);
-			else if (res.code != AbilityManager.assignStatus.limitExceeded.code) AbilityManager.assign(ship, this.shipName, false, true, { blocker: true });
+			else if (res.code != AbilityManager.assignStatus.limitExceeded.code) AbilityManager.assign(ship, this.shipName, false, true, { blocker: true, restore: true });
 		},
 
 		requirementsText: function (ship) {
@@ -4925,7 +4944,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Sun Nov 26 2023 01:40:56 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Tue Nov 28 2023 00:39:47 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -5263,7 +5282,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Sun Nov 26 2023 01:40:56 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Tue Nov 28 2023 00:39:47 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
 	planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -5273,7 +5292,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Sun Nov 26 2023 01:40:56 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Tue Nov 28 2023 00:39:47 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
 	toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -5661,7 +5680,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Sun Nov 26 2023 01:40:56 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Tue Nov 28 2023 00:39:47 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
 	ghostTeam: GhostTeam,
@@ -5741,8 +5760,14 @@ const MapManager = {
 			if (this.map == null) this.map = HelperFunctions.randomItem(this.maps).value;
 		}
 		if (this.map == null) {
-			HelperFunctions.terminal.error(`Can't find any maps for ${GAME_OPTIONS.teams_count} team(s)? Are you sure?`);
-			this.map = { name: "Unknown", author: "Unknown", map: "", spawnpoints: []}
+			HelperFunctions.terminal.log(`Can't find any maps for ${GAME_OPTIONS.teams_count} team(s)? Are you sure?`);
+			this.map = {
+				name: "Null",
+				author: "None",
+				spawnpoints: [],
+				pairings: [],
+				map: null
+			}
 		}
 		if (set) {
 			try { game.setCustomMap(this.map.map); } catch (e) {}
@@ -6001,6 +6026,10 @@ const AbilityManager = {
 			code: "IN_ABILITY",
 			reason: "Ship is still in ability"
 		},
+		notInitialized: {
+			code: "NOT_INITIALIZED",
+			reason: "Ship is not yet initialized Ability System"
+		},
 		success: {
 			code: "SUCCESS"
 		},
@@ -6009,8 +6038,14 @@ const AbilityManager = {
 			reason: "Nice"
 		}
 	},
+	initVariables: function (ship) {
+		ship.custom.useAbilitySystem = true;
+		ship.custom.sharedAbilityCustom = {};
+		ship.custom[this.activation_indicator] = true;
+	},
 	assign: function (ship, abilityShip, dontAssign = false, bypass = {
 		// object used to bypass checks (set to `true` to take effect)
+		notInitialized: false, // set this to `true` will force any normal ship to use the Ability System
 		ability: false, // bypass ability checks
 		blocker: false, // bypass action blocker checks
 		limit: false // bypass ship limit checks
@@ -6018,12 +6053,14 @@ const AbilityManager = {
 		// (basically a forced set)
 	}, ignoreReset = {
 		// ignore reset options
-		blocker: false // ignore clearing blockers when set, this might be the only option available
+		blocker: false, // ignore clearing blockers when set, this might be the only option available
+		restore: false // ignore reset crystals + generator + health
 	}) {
 		bypass = bypass || {};
 		let forced = bypass === true;
 		if (!forced) {
-			if (!bypass.ability && ship.custom.inAbility) return { success: false, ...this.assignStatus.inAbility }
+			if (!bypass.notInitialized && !this.isAbilityInitialized(ship)) return { success: false, ...this.assignStatus.notInitialized };
+			if (!bypass.ability && ship.custom.inAbility) return { success: false, ...this.assignStatus.inAbility };
 			let isActionBlocked = bypass.blocker ? { blocked: false } : this.isActionBlocked(ship);
 			if (isActionBlocked.blocked) return {
 				success: false,
@@ -6039,6 +6076,7 @@ const AbilityManager = {
 		}
 		if (!forced && !bypass.limit && this.limitExceeded(abilityShip, ship)) return { success: false, ...this.assignStatus.limitExceeded }
 		if (dontAssign) return { success: true, ...this.assignStatus.success }
+		if (!this.isAbilityInitialized(ship)) this.initVariables(ship);
 		if (shipAbil == null) return this.random(ship, forced);
 		if (ship.custom.inAbility) this.end(ship);
 		ignoreReset = ignoreReset || {};
@@ -6052,6 +6090,10 @@ const AbilityManager = {
 			});
 		}
 		ship.custom.shipName = abilityShip;
+		let oldAbilName = null;
+		if (ship.custom.shipModelChanged && ship.custom != null && ship.custom.ability != null && ship.custom.ability.shipName != null && ship.custom.ability.shipName in this.abilities) {
+			oldAbilName = ship.custom.ability.shipName;
+		}
 		ship.custom.ability = shipAbil;
 		ship.custom.inAbility = false;
 		ship.custom.forceEnd = false;
@@ -6063,20 +6105,26 @@ const AbilityManager = {
 			generator: shipAbil.generatorInit,
 			stats: AbilityManager.maxStats
 		});
-		shipAbil.initialize(ship);
+		ship.custom.shipModelChanged = false;
+		shipAbil.initialize(ship, oldAbilName);
 		shipAbil.unload(ship);
 		this.updateShipsList(TeamManager.getDataFromShip(ship));
+		if (!ignoreAll && !ignoreReset.restore) this.restore(ship);
 		return { success: true };
 	},
 	restore: function (ship) {
+		if (!this.isAbilityInitialized(ship)) return;
 		let abil = ship.custom.ability || {};
 		if (ship != null) ship.set({
 			shield: 1e4,
 			crystals: abil.crystals || 0
 		});
 	},
+	isCompilationError: function () {
+		return DEBUG && game.step == 0 && HelperFunctions.terminal.errors > 0;
+	},
 	globalTick: function (game) {
-		if (DEBUG && game.step == 0 && HelperFunctions.terminal.errors > 0) {
+		if (this.isCompilationError()) {
 			HelperFunctions.terminal.error(`Stopping mod due to ${HelperFunctions.terminal.errors} error(s).`);
 			game.modding.commands.stop();
 			this.globalTick = function () {};
@@ -6208,6 +6256,11 @@ const AbilityManager = {
 			ship.custom.__hide_aspect_ratio_info__ = false;
 		}
 	},
+	setDefaultShip: function (template_name) {
+		let ability = this.abilities[template_name];
+		if (ability != null && ability.codes != null && !isNaN(ability.codes.default)) this.default_template = template_name;
+		else this.default_template = null;
+	},
 	isAbilityInitialized: function (ship) {
 		return ship.custom != null && !!ship.custom[this.activation_indicator];
 	},
@@ -6223,10 +6276,16 @@ const AbilityManager = {
 
 		for (let ship of game.ships) {
 			if (ship.id == null) continue;
-			if (!this.isAbilityInitialized(ship) && ship.alive) {
-				ship.custom.sharedAbilityCustom = {};
-				this.random(ship, true);
-				ship.custom[this.activation_indicator] = true;
+			if (ship.custom.useAbilitySystem && !this.isAbilityInitialized(ship) && ship.alive) {
+				this.initVariables(ship);
+				// check if first join is any ship existing in ability system
+				let template = Object.values(this.abilities).find(v => v && v.codes && v.codes.default === ship.type);
+
+				if (template == null) {
+					if (this.default_template != null) this.assign(ship, this.default_template, false, true);
+					else this.random(ship, true);
+				}
+				else this.assign(ship, template.shipName, false, true);
 			}
 			let isAbilityActivated = this.isAbilityInitialized(ship);
 			if (isAbilityActivated && ship.alive && this.showAbilityNotice && ship.custom.allowInstructor) {
@@ -6240,8 +6299,23 @@ const AbilityManager = {
 			}
 			if (isAbilityActivated) {
 				if (ship.type != ship.custom.__last_ability_ship_type__) {
+					let oldType = ship.custom.__last_ability_ship_type__;
 					ship.custom.__last_ability_ship_type__ = ship.type;
+
+					// change ability range UI
 					this.abilityRangeUI.set(ship);
+
+					// check if this is an upgrade
+					let ability = ship.custom.ability;
+					if (oldType != null && ability != null && !Object.values(ability.codes).includes(ship.type)) {
+						let modelName = Object.keys(ability.codes).find(k => ability.codes[k] === oldType);
+						if (modelName == null) modelName = "default";
+						let index = Object.values(ability.nextCodes[modelName]).indexOf(ship.type);
+						if (index != -1) {
+							ship.custom.shipModelChanged = true;
+							this.assign(ship, ability.nextNames[modelName][index], false, true);
+						}
+					}
 				}
 				if (game.custom.abilitySystemEnabled && !ship.custom.abilitySystemDisabled) {
 					newList.push({ id: ship.id, team: TeamManager.getDataFromShip(ship) });
@@ -6353,6 +6427,32 @@ const AbilityManager = {
 		if (isNaN(value) || value <= 0) value = defaultValue;
 		return value;
 	},
+	getUpgrades: function (next) {
+		let codes = [];
+		if (!Array.isArray(next)) next = [];
+		else {
+			let nexts = [], count = 0;
+			for (let i of next) {
+				let nextAbil = this.abilities[i];
+				if (nextAbil != null && nextAbil.codes != null && !isNaN(nextAbil.codes.default)) {
+					nexts.push(i);
+					codes.push(nextAbil.codes.default);
+					++count;
+				}
+
+				if (count >= 2) break;
+			}
+
+			next = nexts;
+
+			if (next.length == 1) {
+				next.push(next[0]);
+				codes.push(codes[0]);
+			}
+		}
+
+		return { next, codes }
+	},
 	compileAbilities: function () {
 		// Compile ships and abilities
 		
@@ -6447,6 +6547,7 @@ const AbilityManager = {
 
 			// process ship codes
 			ability.codes = {};
+			ability.parsedModels = {};
 			ability.energy_capacities = {};
 
 			let levels = ability.levels, useDynamicShipLevel = levels != null && "object" == typeof levels;
@@ -6462,8 +6563,6 @@ const AbilityManager = {
 
 				jsonData.level = jsonData.typespec.level = level;
 				jsonData.model = model - level * 100;
-
-				jsonData.next = jsonData.typespec.next = [];
 
 				ability.codes[shipAbilityName] = jsonData.typespec.code = model--;
 
@@ -6487,7 +6586,7 @@ const AbilityManager = {
 
 				jsonData.typespec.__ABILITY_SYSTEM_INFO__ = __ABILITY_SYSTEM_INFO__;
 
-				this.ship_codes.push(JSON.stringify(jsonData));
+				ability.parsedModels[shipAbilityName] = jsonData;
 				
 				let showAbilityRangeUI;
 
@@ -6510,6 +6609,31 @@ const AbilityManager = {
 			
 			if (!ability.codes.default) HelperFunctions.terminal.error(`Missing 'default' model for '${shipName}'.`);
 			if (needAbilityShip && !ability.codes.ability) HelperFunctions.terminal.error(`'${shipName}' uses default ability behaviour but model 'ability' is missing.`);
+		}
+
+		// now we assign upgrades if there are no errors
+		if (!this.isCompilationError()) for (let shipName in this.abilities) {
+			let ability = this.abilities[shipName];
+
+			// get default upgrades (if any)
+			let defaultNexts = this.getUpgrades(ability.next);
+			
+			// now let's check upgrades for every specific ships
+
+			let specificNexts = ability.nexts || {}, parsedModels = ability.parsedModels;
+			ability.nextCodes = {};
+			ability.nextNames = {};
+			for (let model in ability.parsedModels) {
+				let nextData = specificNexts[model] == null ? defaultNexts : this.getUpgrades(specificNexts[model]);
+				
+				ability.nextCodes[model] = parsedModels[model].next = parsedModels[model].typespec.next = [...nextData.codes];
+				ability.nextNames[model] = [...nextData.next];
+
+				this.ship_codes.push(JSON.stringify(parsedModels[model]));
+			}
+
+			// remove the parsed model object
+			delete ability.parsedModels;
 		}
 
 		if (this.ship_codes.length < 1) HelperFunctions.terminal.error(`No ships found. What the f*ck?`);
@@ -6561,7 +6685,7 @@ const AbilityManager = {
 	},
 	getShipCodes: function () {
 		if (!Array.isArray(this.ship_codes)) this.initialize();
-		return this.ship_codes;
+		return [...this.ship_codes];
 	},
 	random: function (ship, forced = false) {
 		// select random ship
@@ -6591,11 +6715,11 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/gameLogic.js at Sun Nov 26 2023 01:40:56 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Tue Nov 28 2023 00:39:47 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/GameConfig.js at Sun Nov 26 2023 01:40:56 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Tue Nov 28 2023 00:39:47 GMT+0900 (Japan Standard Time) */
 
 const map_name = null; // leave `null` if you want randomized map name
 
@@ -6719,7 +6843,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Sun Nov 26 2023 01:40:56 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Tue Nov 28 2023 00:39:47 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
 	setSpawnpointsOBJ: function () {
@@ -7512,7 +7636,6 @@ const UIData = {
 		let oldName = ship.custom.shipName;
 		let res = func();
 		if (res.success) {
-			AbilityManager.restore(ship);
 			ship.set({ vx: 0, vy: 0 });
 			HelperFunctions.setInvulnerable(ship, GAME_OPTIONS.ship_invulnerability * 60);
 			HelperFunctions.spawnShip(ship);
@@ -7685,7 +7808,7 @@ TeamManager.onShipTeamChange = function (ship, newTeamOBJ, oldTeamOBJ) {
 
 
 
-/* Imported from misc/tickFunctions.js at Sun Nov 26 2023 01:40:56 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Tue Nov 28 2023 00:39:47 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
 	AbilityManager.globalTick(game);
@@ -7713,18 +7836,15 @@ const alwaysTick = function (game) {
 				
 				if (game.custom.started) {
 					ship.custom.allowInstructor = true;
+					ship.custom.useAbilitySystem = true;
+					AbilityManager.random(ship, true);
 					WeightCalculator.joinBalanceTeam(ship);
 					HelperFunctions.spawnShip(ship);
-					AbilityManager.restore(ship);
 				}
 				else {
 					HelperFunctions.sendWaitingText(ship);
 					HelperFunctions.setCollider(ship, false);
-					HelperFunctions.sendUI(ship, {
-						id: AbilityManager.UI.id,
-						visible: false
-					});
-					ship.set({ type: 101, idle: true, vx: 0, vy: 0, x: 0, y: 0, angle: 90 });
+					ship.set({ idle: true, vx: 0, vy: 0, x: 0, y: 0, angle: 90 });
 				}
 				ship.custom.kills = ship.custom.deaths = 0;
 				ship.custom.chooseTimes = {};
@@ -7920,11 +8040,11 @@ const waiting = function (game) {
 			players.forEach(ship => {
 				if ((ship || {}).id == null || ship.custom.kicked || !ship.custom.joined) return;
 				ship.custom.allowInstructor = true;
-				AbilityManager.random(ship);
+				ship.custom.useAbilitySystem = true;
+				AbilityManager.random(ship, true);
 				WeightCalculator.joinBalanceTeam(ship);
 				if (ship.alive) {
 					HelperFunctions.spawnShip(ship);
-					AbilityManager.restore(ship);
 					UIData.shipUIs.toggle(ship, false, true);
 				}
 				ship.set({ idle: false });
@@ -8304,7 +8424,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Sun Nov 26 2023 01:40:56 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Tue Nov 28 2023 00:39:47 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
 	AbilityManager.globalEvent(event, game);
@@ -8388,7 +8508,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Sun Nov 26 2023 01:40:56 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Tue Nov 28 2023 00:39:47 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
 	{ text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
@@ -8458,6 +8578,6 @@ this.options.ships[0] = JSON.stringify(ship101);
 
 
 
-/* Imported from misc/gameInfo.js at Sun Nov 26 2023 01:40:56 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameInfo.js at Tue Nov 28 2023 00:39:47 GMT+0900 (Japan Standard Time) */
 
 AbilityManager.echo(`[[bg;DarkTurquoise;]Re:][[bg;#EE4B2B;]Arena] ([[;#AAFF00;]${__ABILITY_SYSTEM_INFO__.branch}]) [[;Cyan;]v${__ABILITY_SYSTEM_INFO__.version} (Build ID [[;${HelperFunctions.toHSLA(__ABILITY_SYSTEM_INFO__.buildID)};]${__ABILITY_SYSTEM_INFO__.buildID}])\nMap picked: [[b;Cyan;]${MapManager.get().name} by ${MapManager.get().author}\n\nType \`commands\` to see all commands\nAnd \`usage <commandName>\` to show usage of a command\n\n]`);
