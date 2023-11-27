@@ -1213,6 +1213,8 @@ const ShipAbilities = {
 			let players = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true }).filter(s => shipsList.includes(s.custom.shipName));
 			let puckVictim = null;
 			for (let player of players) {
+				if (!AbilityManager.isAbilityInitialized(player)) continue;
+				
 				if (player.custom.ability === this || this.abilityBlocker.checker(player)) {
 					puckVictim = player;
 					continue;
