@@ -595,7 +595,7 @@ const AbilityManager = {
 			if (ship.custom.useAbilitySystem && !this.isAbilityInitialized(ship) && ship.alive) {
 				this.initVariables(ship);
 				// check if first join is any ship existing in ability system
-				let template = Object.values(this.abilities).find(v => v && v.codes && v.codes.default === ship.type);
+				let template = Object.values(this.abilities).find(v => v && v.codes && Object.values(v.codes).includes(ship.type));
 
 				if (template == null) {
 					if (this.default_template != null) this.assign(ship, this.default_template, false, true);
