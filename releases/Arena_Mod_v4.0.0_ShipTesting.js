@@ -22,7 +22,7 @@ const __ABILITY_SYSTEM_INFO__ = {
 	name: "Arena_Mod",
 	branch: "ShipTesting",
 	version: "4.0.0",
-	buildID: "18c116fc8bb"
+	buildID: "18c11961ea4"
 };
 
 
@@ -147,7 +147,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_ShipTesting.js at Tue Nov 28 2023 00:39:47 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_ShipTesting.js at Tue Nov 28 2023 01:21:40 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -190,7 +190,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Tue Nov 28 2023 00:39:47 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Tue Nov 28 2023 01:21:40 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
 	{
@@ -241,7 +241,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps_ShipTesting.js at Tue Nov 28 2023 00:39:47 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps_ShipTesting.js at Tue Nov 28 2023 01:21:40 GMT+0900 (Japan Standard Time) */
 
 const Maps = [];
 
@@ -249,7 +249,7 @@ const Maps = [];
 
 
 
-/* Imported from Abilities.js at Tue Nov 28 2023 00:39:47 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Tue Nov 28 2023 01:21:40 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
 	"Test ship": {
@@ -2446,7 +2446,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Tue Nov 28 2023 00:39:47 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Tue Nov 28 2023 01:21:40 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -2784,7 +2784,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Tue Nov 28 2023 00:39:47 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Tue Nov 28 2023 01:21:40 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
 	planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -2794,7 +2794,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Tue Nov 28 2023 00:39:47 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Tue Nov 28 2023 01:21:40 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
 	toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -3182,7 +3182,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Tue Nov 28 2023 00:39:47 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Tue Nov 28 2023 01:21:40 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
 	ghostTeam: GhostTeam,
@@ -3781,7 +3781,7 @@ const AbilityManager = {
 			if (ship.custom.useAbilitySystem && !this.isAbilityInitialized(ship) && ship.alive) {
 				this.initVariables(ship);
 				// check if first join is any ship existing in ability system
-				let template = Object.values(this.abilities).find(v => v && v.codes && v.codes.default === ship.type);
+				let template = Object.values(this.abilities).find(v => v && v.codes && Object.values(v.codes).includes(ship.type));
 
 				if (template == null) {
 					if (this.default_template != null) this.assign(ship, this.default_template, false, true);
