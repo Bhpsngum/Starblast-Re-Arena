@@ -51,6 +51,7 @@ this.tick = function (game) {
 
 // make sure to set
 //    - `game.custom.abilitySystemEnabled` to `true` 
+//	  - `ship.custom.useAbilitySystem` to `true`
 //    - `ship.custom.abilitySystemDisabled` to `false` (it should be by default)
 // so that ship can use the abilities
 
@@ -59,6 +60,12 @@ this.event = function (event, game) {
 	AbilityManager.globalEvent(event, game);
 	// your stuff here
 }
+
+// Use the function above if you want to set default ship for anyone joining the game
+// Ability System will check if the first joined ship fits any existing templates to assign
+// Or else, it will use the default template or randomize ships if there is no default template
+// or current default template is invalid
+AbilityManager.setDefaultTemplate("A-Speedster");
 
 // Additionally, there are events that you can modify their functions for your own use:
 AbilityManager.onShipsListUpdate = function (team, newList, oldList) {

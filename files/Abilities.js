@@ -30,6 +30,17 @@ const ShipAbilities = {
 
 		level: 7, // default ship level for all models in this template, default `GAME_OPTIONS.ability.ship_levels`
 
+		next: ["Scorpion", "Advanced-Fighter"], // let ship upgrades to different ships (defaults to no upgrades)
+		// Please note that these upgrade to the default model of the template names
+		// for handling stuff for ships after upgrading, please implement `initialize(ship, upgradeFrom)` function in each template
+		
+		nexts: {
+			// specify ship upgrades for specific models in your template
+			default: ["Rock-Tower", "Barracuda"],
+			ability: ["Shadow X-3", "Bastion"]
+			// other modules that aren't specified here (if exists) will receive the default `next` value defined above
+		},
+
 		levels: {
 			// specify ship level for specific models in your template
 			ability: 10,
@@ -87,7 +98,8 @@ const ShipAbilities = {
 
 		// stuff to do when init ships
 		// optional, do nothing
-		initialize: function (ship) {
+		// upgradesFrom: the template which this ship upgrades from, `null` if none
+		initialize: function (ship, upgradesFrom) {
 
 		},
 
@@ -1171,7 +1183,7 @@ const ShipAbilities = {
 			ship.custom.abilityCustom.puckTriggered = null;
 			let res = AbilityManager.assign(ship, this.shipName, true, { ability: true });
 			if (res.success) AbilityManager.assign(ship, this.shipName, false, true);
-			else if (res.code != AbilityManager.assignStatus.limitExceeded.code) AbilityManager.assign(ship, this.shipName, false, true, { blocker: true });
+			else if (res.code != AbilityManager.assignStatus.limitExceeded.code) AbilityManager.assign(ship, this.shipName, false, true, { blocker: true, restore: true });
 		},
 
 		requirementsText: function (ship) {

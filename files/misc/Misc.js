@@ -789,7 +789,6 @@ const UIData = {
 		let oldName = ship.custom.shipName;
 		let res = func();
 		if (res.success) {
-			AbilityManager.restore(ship);
 			ship.set({ vx: 0, vy: 0 });
 			HelperFunctions.setInvulnerable(ship, GAME_OPTIONS.ship_invulnerability * 60);
 			HelperFunctions.spawnShip(ship);

@@ -24,18 +24,15 @@ const alwaysTick = function (game) {
 				
 				if (game.custom.started) {
 					ship.custom.allowInstructor = true;
+					ship.custom.useAbilitySystem = true;
+					AbilityManager.random(ship, true);
 					WeightCalculator.joinBalanceTeam(ship);
 					HelperFunctions.spawnShip(ship);
-					AbilityManager.restore(ship);
 				}
 				else {
 					HelperFunctions.sendWaitingText(ship);
 					HelperFunctions.setCollider(ship, false);
-					HelperFunctions.sendUI(ship, {
-						id: AbilityManager.UI.id,
-						visible: false
-					});
-					ship.set({ type: 101, idle: true, vx: 0, vy: 0, x: 0, y: 0, angle: 90 });
+					ship.set({ idle: true, vx: 0, vy: 0, x: 0, y: 0, angle: 90 });
 				}
 				ship.custom.kills = ship.custom.deaths = 0;
 				ship.custom.chooseTimes = {};
@@ -231,11 +228,11 @@ const waiting = function (game) {
 			players.forEach(ship => {
 				if ((ship || {}).id == null || ship.custom.kicked || !ship.custom.joined) return;
 				ship.custom.allowInstructor = true;
-				AbilityManager.random(ship);
+				ship.custom.useAbilitySystem = true;
+				AbilityManager.random(ship, true);
 				WeightCalculator.joinBalanceTeam(ship);
 				if (ship.alive) {
 					HelperFunctions.spawnShip(ship);
-					AbilityManager.restore(ship);
 					UIData.shipUIs.toggle(ship, false, true);
 				}
 				ship.set({ idle: false });
