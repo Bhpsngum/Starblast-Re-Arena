@@ -22,7 +22,7 @@ const __ABILITY_SYSTEM_INFO__ = {
 	name: "Arena_Mod",
 	branch: "Main",
 	version: "4.0.0",
-	buildID: "18c11a803fd"
+	buildID: "18c154e4e09"
 };
 
 
@@ -58,13 +58,19 @@ Consider the things below:
 AbilityManager.initialize()
 
 // to get ship codes to put in `this.options`:
-this.options = {
-	reset_tree: true,
-	ships: [
-		// Your other ships, you must include the 101 since ability manager won't make you one
-		AbilityManager.getShipCodes()
-	]
-}
+// there are 2 ways
+var ships;
+// first one
+ships = [
+	// Your other ships, you must include the 101 since ability manager won't make you one
+	...AbilityManager.getShipCodes()
+];
+
+// second one, if you want some custom ships to be managed by AbilityManager
+AbilityManager.addCustomShip({
+	code: "JSON string",
+	next: [505, "A-Speedster"] // number for static ship, string for ability ship
+});
 
 // Please note that after initialization, a value in `AbilityManager.lastModelUsage`
 // indicates that all model slots from 799 down to `AbilityManager.lastModelUsage + 1` have been used up for building models for the Ability System
@@ -147,7 +153,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_Main.js at Tue Nov 28 2023 01:41:12 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_Main.js at Tue Nov 28 2023 18:41:42 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -190,7 +196,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Tue Nov 28 2023 01:41:12 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Tue Nov 28 2023 18:41:42 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
 	{
@@ -241,7 +247,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Tue Nov 28 2023 01:41:12 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Tue Nov 28 2023 18:41:42 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
 	{
@@ -2747,7 +2753,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Tue Nov 28 2023 01:41:12 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Tue Nov 28 2023 18:41:42 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
 	"Test ship": {
@@ -2781,7 +2787,8 @@ const ShipAbilities = {
 
 		level: 7, // default ship level for all models in this template, default `GAME_OPTIONS.ability.ship_levels`
 
-		next: ["Scorpion", "Advanced-Fighter"], // let ship upgrades to different ships (defaults to no upgrades)
+		next: ["Scorpion", 601], // let ship upgrades to different ships (defaults to no upgrades)
+		// use number to point to a specific ship (with no abilities) or string for a ship template
 		// Please note that these upgrade to the default model of the template names
 		// for handling stuff for ships after upgrading, please implement `initialize(ship, upgradeFrom)` function in each template
 		
@@ -2849,7 +2856,7 @@ const ShipAbilities = {
 
 		// stuff to do when init ships
 		// optional, do nothing
-		// upgradesFrom: the template which this ship upgrades from, `null` if none
+		// upgradesFrom: if it upgrades from an ability ship, returns a string of the template name, else ship code
 		initialize: function (ship, upgradesFrom) {
 
 		},
@@ -3965,7 +3972,7 @@ const ShipAbilities = {
 			let puckVictim = null;
 			for (let player of players) {
 				if (!AbilityManager.isAbilityInitialized(player)) continue;
-				
+
 				if (player.custom.ability === this || this.abilityBlocker.checker(player)) {
 					puckVictim = player;
 					continue;
@@ -4946,7 +4953,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Tue Nov 28 2023 01:41:12 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Tue Nov 28 2023 18:41:42 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -5284,7 +5291,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Tue Nov 28 2023 01:41:12 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Tue Nov 28 2023 18:41:42 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
 	planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -5294,7 +5301,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Tue Nov 28 2023 01:41:12 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Tue Nov 28 2023 18:41:42 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
 	toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -5671,8 +5678,8 @@ const HelperFunctions = {
 		log: function (text) {
 			AbilityManager.echo(`[[bg;azure;][AbilityCompiler\\] ${text}]\n`);
 		},
-		error: function (text) {
-			++this.errors;
+		error: function (text, ignore = false) {
+			if (!ignore) ++this.errors;
 			AbilityManager.echo(`[[bg;#FF7733;][AbilityCompiler\\] ${text}]\n`);
 		}
 	}
@@ -5682,7 +5689,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Tue Nov 28 2023 01:41:12 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Tue Nov 28 2023 18:41:42 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
 	ghostTeam: GhostTeam,
@@ -6042,7 +6049,6 @@ const AbilityManager = {
 	},
 	initVariables: function (ship) {
 		ship.custom.useAbilitySystem = true;
-		ship.custom.sharedAbilityCustom = {};
 		ship.custom[this.activation_indicator] = true;
 	},
 	assign: function (ship, abilityShip, dontAssign = false, bypass = {
@@ -6092,7 +6098,7 @@ const AbilityManager = {
 			});
 		}
 		ship.custom.shipName = abilityShip;
-		let oldAbilName = null;
+		let oldAbilName = ship.type;
 		if (ship.custom.shipModelChanged && ship.custom != null && ship.custom.ability != null && ship.custom.ability.shipName != null && ship.custom.ability.shipName in this.abilities) {
 			oldAbilName = ship.custom.ability.shipName;
 		}
@@ -6259,9 +6265,7 @@ const AbilityManager = {
 		}
 	},
 	setDefaultShip: function (template_name) {
-		let ability = this.abilities[template_name];
-		if (ability != null && ability.codes != null && !isNaN(ability.codes.default)) this.default_template = template_name;
-		else this.default_template = null;
+		this.default_template = template_name;
 	},
 	isAbilityInitialized: function (ship) {
 		return ship.custom != null && !!ship.custom[this.activation_indicator];
@@ -6278,16 +6282,23 @@ const AbilityManager = {
 
 		for (let ship of game.ships) {
 			if (ship.id == null) continue;
-			if (ship.custom.useAbilitySystem && !this.isAbilityInitialized(ship) && ship.alive) {
-				this.initVariables(ship);
-				// check if first join is any ship existing in ability system
-				let template = Object.values(this.abilities).find(v => v && v.codes && Object.values(v.codes).includes(ship.type));
+			if (ship.custom.sharedAbilityCustom == null) ship.custom.sharedAbilityCustom = {};
+			if (ship.custom.useAbilitySystem) {
+				if (!this.isAbilityInitialized(ship) && ship.alive) {
+					this.initVariables(ship);
+					// check if first join is any ship existing in ability system
+					let template = Object.values(this.abilities).find(v => v && v.codes && Object.values(v.codes).includes(ship.type));
 
-				if (template == null) {
-					if (this.default_template != null) this.assign(ship, this.default_template, false, true);
-					else this.random(ship, true);
+					if (template == null) {
+						let def = this.default_template, defData = def == null ? null : this.abilities[def];
+						if (defData != null && defData.codes != null && !isNaN(defData.codes.default)) this.assign(ship, def, false, true);
+						else this.random(ship, true);
+					}
+					else this.assign(ship, template.shipName, false, true);
 				}
-				else this.assign(ship, template.shipName, false, true);
+			}
+			else {
+				if (this.isAbilityInitialized(ship)) this.disableAbilitySystem(ship);
 			}
 			let isAbilityActivated = this.isAbilityInitialized(ship);
 			if (isAbilityActivated && ship.alive && this.showAbilityNotice && ship.custom.allowInstructor) {
@@ -6309,13 +6320,39 @@ const AbilityManager = {
 
 					// check if this is an upgrade
 					let ability = ship.custom.ability;
-					if (oldType != null && ability != null && !Object.values(ability.codes).includes(ship.type)) {
-						let modelName = Object.keys(ability.codes).find(k => ability.codes[k] === oldType);
-						if (modelName == null) modelName = "default";
-						let index = Object.values(ability.nextCodes[modelName]).indexOf(ship.type);
-						if (index != -1) {
-							ship.custom.shipModelChanged = true;
-							this.assign(ship, ability.nextNames[modelName][index], false, true);
+					if (oldType != null) {
+						if (ability != null) {
+							if (!Object.values(ability.codes).includes(ship.type)) {
+								let modelName = Object.keys(ability.codes).find(k => ability.codes[k] === oldType);
+								if (modelName != null) {
+									let index = Object.values(ability.nextCodes[modelName]).indexOf(ship.type);
+									if (index != -1) {
+										let template_name = ability.nextNames[modelName][index];
+										if (template_name != null) {
+											ship.custom.shipModelChanged = true;
+											this.assign(ship, template_name, false, true);
+										}
+										else {
+											ship.set({ type: ability.nextCodes[modelName][index] });
+											ship.custom.ability = null;
+											HelperFunctions.sendUI(ship, { id: this.UI.id, visible: false });
+										}
+									}
+								}
+							}
+						}
+						else {
+							let mapping = this.mapping[oldType];
+							if (mapping != null) {
+								let index = mapping.nextCodes.indexOf(ship.type);
+								if (index != -1) {
+									let template_name = mapping.nextNames[index];
+									if (template_name != null) {
+										ship.custom.shipModelChanged = true;
+										this.assign(ship, template_name, false, true);
+									}
+								}
+							}
 						}
 					}
 				}
@@ -6324,7 +6361,7 @@ const AbilityManager = {
 					let oldIndex = oldList.findIndex(s => s.id === ship.id);
 					if (oldIndex >= 0) oldList.splice(oldIndex, 1);
 				}
-				this.tick(ship);
+				if (ship.custom.ability != null) this.tick(ship);
 			}
 			let lastStatus = !!ship.custom.lastActionBlockerStatus;
 			let currentStatus = AbilityManager.isActionBlocked(ship).blocked;
@@ -6424,6 +6461,12 @@ const AbilityManager = {
 			catch (e) { HelperFunctions.terminal.log("Skipping version info checks due to an error while fetching sources."); }
 		}
 	},
+	disableAbilitySystem: function (ship) {
+		ship.custom.useAbilitySystem = false;
+		ship.custom[this.activation_indicator] = false;
+		delete ship.custom.ability;
+		HelperFunctions.sendUI(ship, { id: this.UI.id, visible: false });
+	},
 	checkLevel: function (value, defaultValue = 6) {
 		value = +value;
 		if (isNaN(value) || value <= 0) value = defaultValue;
@@ -6435,11 +6478,19 @@ const AbilityManager = {
 		else {
 			let nexts = [], count = 0;
 			for (let i of next) {
-				let nextAbil = this.abilities[i];
-				if (nextAbil != null && nextAbil.codes != null && !isNaN(nextAbil.codes.default)) {
-					nexts.push(i);
-					codes.push(nextAbil.codes.default);
-					++count;
+				if ("number" == typeof i) {
+					if (!isNaN(i)) {
+						nexts.push(null);
+						codes.push(i);
+					}
+				}
+				else {
+					let nextAbil = this.abilities[i];
+					if (nextAbil != null && nextAbil.codes != null && !isNaN(nextAbil.codes.default)) {
+						nexts.push(i);
+						codes.push(nextAbil.codes.default);
+						++count;
+					}
 				}
 
 				if (count >= 2) break;
@@ -6470,8 +6521,11 @@ const AbilityManager = {
 
 		this.shipLevels = this.checkLevel(this.shipLevels);
 
+		let templatesCount = 0;
+
 		for (let shipName in this.abilities) {
 			let ability = this.abilities[shipName];
+			let error = false;
 			// delete hidden ones
 			if (ability.hidden != null && ability.hidden) {
 				delete this.abilities[shipName];
@@ -6544,7 +6598,8 @@ const AbilityManager = {
 				ability.compile(this._this);
 			}
 			catch (e) {
-				HelperFunctions.terminal.error(`Pre-compiler function for ${shipName} failed to execute.\nCaught Error: ${e.message}`);
+				error = true;
+				HelperFunctions.terminal.error(`Pre-compiler function for ${shipName} failed to execute.\nCaught Error: ${e.message}`, true);
 			}
 
 			// process ship codes
@@ -6602,43 +6657,99 @@ const AbilityManager = {
 				};
 			}
 			catch (e) {
-				HelperFunctions.terminal.error(`Failed to compile ship code for model '${shipAbilityName}' of '${shipName}'.\nCaught Error: ${e.message}`);
+				error = true;
+				HelperFunctions.terminal.error(`Failed to compile ship code for model '${shipAbilityName}' of '${shipName}'.\nCaught Error: ${e.message}`, true);
 			}
 
 			ability.generatorInit = Math.min(1e5, Math.max(0, ability.generatorInit));
 
 			if (isNaN(ability.generatorInit)) ability.generatorInit = ability.energy_capacities.default;
 			
-			if (!ability.codes.default) HelperFunctions.terminal.error(`Missing 'default' model for '${shipName}'.`);
-			if (needAbilityShip && !ability.codes.ability) HelperFunctions.terminal.error(`'${shipName}' uses default ability behaviour but model 'ability' is missing.`);
+			if (!ability.codes.default) {
+				error = true;
+				HelperFunctions.terminal.error(`Missing 'default' model for '${shipName}'.`, true);
+			}
+			if (needAbilityShip && !ability.codes.ability) {
+				error = true;
+				HelperFunctions.terminal.error(`'${shipName}' uses default ability behaviour but model 'ability' is missing.`, true);
+			}
+
+			if (error) {
+				HelperFunctions.terminal.error(`Deleting '${shipName}' due to error(s) in compilation`, true);
+				delete this.abilities[shipName];
+			}
+			else ++templatesCount;
 		}
 
 		// now we assign upgrades if there are no errors
-		if (!this.isCompilationError()) for (let shipName in this.abilities) {
-			let ability = this.abilities[shipName];
+		let customCount = 0;
+		if (!this.isCompilationError()) {
+			// ablity ones first
+			for (let shipName in this.abilities) {
+				let ability = this.abilities[shipName];
 
-			// get default upgrades (if any)
-			let defaultNexts = this.getUpgrades(ability.next);
-			
-			// now let's check upgrades for every specific ships
-
-			let specificNexts = ability.nexts || {}, parsedModels = ability.parsedModels;
-			ability.nextCodes = {};
-			ability.nextNames = {};
-			for (let model in ability.parsedModels) {
-				let nextData = specificNexts[model] == null ? defaultNexts : this.getUpgrades(specificNexts[model]);
+				// get default upgrades (if any)
+				let defaultNexts = this.getUpgrades(ability.next);
 				
-				ability.nextCodes[model] = parsedModels[model].next = parsedModels[model].typespec.next = [...nextData.codes];
-				ability.nextNames[model] = [...nextData.next];
+				// now let's check upgrades for every specific ships
 
-				this.ship_codes.push(JSON.stringify(parsedModels[model]));
+				let specificNexts = ability.nexts || {}, parsedModels = ability.parsedModels;
+				ability.nextCodes = {};
+				ability.nextNames = {};
+				for (let model in ability.parsedModels) {
+					let nextData = specificNexts[model] == null ? defaultNexts : this.getUpgrades(specificNexts[model]);
+					
+					ability.nextCodes[model] = parsedModels[model].next = parsedModels[model].typespec.next = [...nextData.codes];
+					ability.nextNames[model] = [...nextData.next];
+
+					this.ship_codes.push(JSON.stringify(parsedModels[model]));
+				}
+
+				// remove the parsed model object
+				delete ability.parsedModels;
 			}
 
-			// remove the parsed model object
-			delete ability.parsedModels;
+			// then custom ships
+			let index = 0, lastAbilityModel = model, replacements = {};
+			this.mapping = {};
+			for (let shipData of this.customShips) {
+				try {
+					let data = shipData.code = JSON.parse(shipData.code);
+					let upgrades = this.getUpgrades(shipData.next);
+					shipData.nextCodes = upgrades.codes;
+					shipData.nextNames = upgrades.next;
+
+					let type = data.typespec.code, newType = type;
+					if (!isNaN(replacements[type])) newType = replacements[type];
+					else if (isNaN(type) || +type > lastAbilityModel) {
+						while (this.mapping[lastAbilityModel] != null) --lastAbilityModel;
+						newType = lastAbilityModel--;
+					}
+
+					if (type != newType) {
+						HelperFunctions.terminal.log(`${data.name} has overlapped ship code (${type}). Changed to ${newType}.`);
+						this.replacements[type] = data.typespec.code = newType;
+						data.model = newType - data.level * 100;
+					}
+
+					this.mapping[newType] = shipData;
+
+					++customCount;
+				}
+				catch (e) {HelperFunctions.terminal.error(`Failed to process custom ship code at index ${index}`) }
+				++index;
+			}
+
+			for (let type in this.mapping) {
+				let data = this.mapping[type];
+				data.code.next = data.code.typespec.next = data.nextCodes = data.nextCodes.map(e => isNaN(replacements[e]) ? e : replacements[e]);
+
+				data.code = JSON.stringify(data.code);
+				this.ship_codes.push(data.code);
+			}
 		}
 
-		if (this.ship_codes.length < 1) HelperFunctions.terminal.error(`No ships found. What the f*ck?`);
+		HelperFunctions.terminal.log(`Compiled ${799 - model} ability model(s) from ${templatesCount} templates(s) and ${customCount} static model(s).`);
 
 		globalUsage *= GAME_OPTIONS.teams_count || 1;
 
@@ -6693,7 +6804,11 @@ const AbilityManager = {
 		// select random ship
 		return this.assign(ship, HelperFunctions.randomItem(this.getAssignableShipsList(ship)).value, false, forced);
 	},
-	abilities: ShipAbilities
+	abilities: ShipAbilities,
+	customShips: [],
+	addCustomShip: function (shipData) {
+		this.customShips.push(shipData);
+	}
 }
 
 this.__ABILITY_MANAGER_OPTIONS__ = {
@@ -6717,11 +6832,11 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/gameLogic.js at Tue Nov 28 2023 01:41:12 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Tue Nov 28 2023 18:41:42 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/GameConfig.js at Tue Nov 28 2023 01:41:12 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Tue Nov 28 2023 18:41:42 GMT+0900 (Japan Standard Time) */
 
 const map_name = null; // leave `null` if you want randomized map name
 
@@ -6845,7 +6960,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Tue Nov 28 2023 01:41:12 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Tue Nov 28 2023 18:41:42 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
 	setSpawnpointsOBJ: function () {
@@ -7810,7 +7925,7 @@ TeamManager.onShipTeamChange = function (ship, newTeamOBJ, oldTeamOBJ) {
 
 
 
-/* Imported from misc/tickFunctions.js at Tue Nov 28 2023 01:41:12 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Tue Nov 28 2023 18:41:42 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
 	AbilityManager.globalTick(game);
@@ -8426,7 +8541,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Tue Nov 28 2023 01:41:12 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Tue Nov 28 2023 18:41:42 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
 	AbilityManager.globalEvent(event, game);
@@ -8510,7 +8625,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Tue Nov 28 2023 01:41:12 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Tue Nov 28 2023 18:41:42 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
 	{ text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
@@ -8580,6 +8695,6 @@ this.options.ships[0] = JSON.stringify(ship101);
 
 
 
-/* Imported from misc/gameInfo.js at Tue Nov 28 2023 01:41:12 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameInfo.js at Tue Nov 28 2023 18:41:42 GMT+0900 (Japan Standard Time) */
 
 AbilityManager.echo(`[[bg;DarkTurquoise;]Re:][[bg;#EE4B2B;]Arena] ([[;#AAFF00;]${__ABILITY_SYSTEM_INFO__.branch}]) [[;Cyan;]v${__ABILITY_SYSTEM_INFO__.version} (Build ID [[;${HelperFunctions.toHSLA(__ABILITY_SYSTEM_INFO__.buildID)};]${__ABILITY_SYSTEM_INFO__.buildID}])\nMap picked: [[b;Cyan;]${MapManager.get().name} by ${MapManager.get().author}\n\nType \`commands\` to see all commands\nAnd \`usage <commandName>\` to show usage of a command\n\n]`);
