@@ -373,8 +373,8 @@ const HelperFunctions = {
 		log: function (text) {
 			AbilityManager.echo(`[[bg;azure;][AbilityCompiler\\] ${text}]\n`);
 		},
-		error: function (text) {
-			++this.errors;
+		error: function (text, ignore = false) {
+			if (!ignore) ++this.errors;
 			AbilityManager.echo(`[[bg;#FF7733;][AbilityCompiler\\] ${text}]\n`);
 		}
 	}

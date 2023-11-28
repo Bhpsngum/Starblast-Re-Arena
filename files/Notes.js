@@ -29,13 +29,19 @@ Consider the things below:
 AbilityManager.initialize()
 
 // to get ship codes to put in `this.options`:
-this.options = {
-	reset_tree: true,
-	ships: [
-		// Your other ships, you must include the 101 since ability manager won't make you one
-		AbilityManager.getShipCodes()
-	]
-}
+// there are 2 ways
+var ships;
+// first one
+ships = [
+	// Your other ships, you must include the 101 since ability manager won't make you one
+	...AbilityManager.getShipCodes()
+];
+
+// second one, if you want some custom ships to be managed by AbilityManager
+AbilityManager.addCustomShip({
+	code: "JSON string",
+	next: [505, "A-Speedster"] // number for static ship, string for ability ship
+});
 
 // Please note that after initialization, a value in `AbilityManager.lastModelUsage`
 // indicates that all model slots from 799 down to `AbilityManager.lastModelUsage + 1` have been used up for building models for the Ability System

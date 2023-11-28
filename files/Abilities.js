@@ -30,7 +30,8 @@ const ShipAbilities = {
 
 		level: 7, // default ship level for all models in this template, default `GAME_OPTIONS.ability.ship_levels`
 
-		next: ["Scorpion", "Advanced-Fighter"], // let ship upgrades to different ships (defaults to no upgrades)
+		next: ["Scorpion", 601], // let ship upgrades to different ships (defaults to no upgrades)
+		// use number to point to a specific ship (with no abilities) or string for a ship template
 		// Please note that these upgrade to the default model of the template names
 		// for handling stuff for ships after upgrading, please implement `initialize(ship, upgradeFrom)` function in each template
 		
@@ -98,7 +99,7 @@ const ShipAbilities = {
 
 		// stuff to do when init ships
 		// optional, do nothing
-		// upgradesFrom: the template which this ship upgrades from, `null` if none
+		// upgradesFrom: if it upgrades from an ability ship, returns a string of the template name, else ship code
 		initialize: function (ship, upgradesFrom) {
 
 		},
@@ -1214,7 +1215,7 @@ const ShipAbilities = {
 			let puckVictim = null;
 			for (let player of players) {
 				if (!AbilityManager.isAbilityInitialized(player)) continue;
-				
+
 				if (player.custom.ability === this || this.abilityBlocker.checker(player)) {
 					puckVictim = player;
 					continue;

@@ -10,7 +10,7 @@ const GAME_OPTIONS = {
 		include_rings_on_model: false, // the individual ship's ring model inclusion are only checked if this one is `true`
 		shortcut: "X", // ability activation shortcut
 		ship_levels: 6, // all ship levels
-		max_stats: 1e8 - 1, // maximum stats for ships
+		max_stats: void 0, // maximum stats for ships
 		crystals: 0, // crystals when first set, default of `abilityTemplate.crystals`
 		notice: {
 			show: true, // to show it or not

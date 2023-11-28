@@ -356,7 +356,6 @@ const AbilityManager = {
 	},
 	initVariables: function (ship) {
 		ship.custom.useAbilitySystem = true;
-		ship.custom.sharedAbilityCustom = {};
 		ship.custom[this.activation_indicator] = true;
 	},
 	assign: function (ship, abilityShip, dontAssign = false, bypass = {
@@ -406,7 +405,7 @@ const AbilityManager = {
 			});
 		}
 		ship.custom.shipName = abilityShip;
-		let oldAbilName = null;
+		let oldAbilName = ship.type;
 		if (ship.custom.shipModelChanged && ship.custom != null && ship.custom.ability != null && ship.custom.ability.shipName != null && ship.custom.ability.shipName in this.abilities) {
 			oldAbilName = ship.custom.ability.shipName;
 		}
@@ -573,9 +572,7 @@ const AbilityManager = {
 		}
 	},
 	setDefaultShip: function (template_name) {
-		let ability = this.abilities[template_name];
-		if (ability != null && ability.codes != null && !isNaN(ability.codes.default)) this.default_template = template_name;
-		else this.default_template = null;
+		this.default_template = template_name;
 	},
 	isAbilityInitialized: function (ship) {
 		return ship.custom != null && !!ship.custom[this.activation_indicator];
@@ -592,16 +589,23 @@ const AbilityManager = {
 
 		for (let ship of game.ships) {
 			if (ship.id == null) continue;
-			if (ship.custom.useAbilitySystem && !this.isAbilityInitialized(ship) && ship.alive) {
-				this.initVariables(ship);
-				// check if first join is any ship existing in ability system
-				let template = Object.values(this.abilities).find(v => v && v.codes && Object.values(v.codes).includes(ship.type));
+			if (ship.custom.sharedAbilityCustom == null) ship.custom.sharedAbilityCustom = {};
+			if (ship.custom.useAbilitySystem) {
+				if (!this.isAbilityInitialized(ship) && ship.alive) {
+					this.initVariables(ship);
+					// check if first join is any ship existing in ability system
+					let template = Object.values(this.abilities).find(v => v && v.codes && Object.values(v.codes).includes(ship.type));
 
-				if (template == null) {
-					if (this.default_template != null) this.assign(ship, this.default_template, false, true);
-					else this.random(ship, true);
+					if (template == null) {
+						let def = this.default_template, defData = def == null ? null : this.abilities[def];
+						if (defData != null && defData.codes != null && !isNaN(defData.codes.default)) this.assign(ship, def, false, true);
+						else this.random(ship, true);
+					}
+					else this.assign(ship, template.shipName, false, true);
 				}
-				else this.assign(ship, template.shipName, false, true);
+			}
+			else {
+				if (this.isAbilityInitialized(ship)) this.disableAbilitySystem(ship);
 			}
 			let isAbilityActivated = this.isAbilityInitialized(ship);
 			if (isAbilityActivated && ship.alive && this.showAbilityNotice && ship.custom.allowInstructor) {
@@ -623,13 +627,39 @@ const AbilityManager = {
 
 					// check if this is an upgrade
 					let ability = ship.custom.ability;
-					if (oldType != null && ability != null && !Object.values(ability.codes).includes(ship.type)) {
-						let modelName = Object.keys(ability.codes).find(k => ability.codes[k] === oldType);
-						if (modelName == null) modelName = "default";
-						let index = Object.values(ability.nextCodes[modelName]).indexOf(ship.type);
-						if (index != -1) {
-							ship.custom.shipModelChanged = true;
-							this.assign(ship, ability.nextNames[modelName][index], false, true);
+					if (oldType != null) {
+						if (ability != null) {
+							if (!Object.values(ability.codes).includes(ship.type)) {
+								let modelName = Object.keys(ability.codes).find(k => ability.codes[k] === oldType);
+								if (modelName != null) {
+									let index = Object.values(ability.nextCodes[modelName]).indexOf(ship.type);
+									if (index != -1) {
+										let template_name = ability.nextNames[modelName][index];
+										if (template_name != null) {
+											ship.custom.shipModelChanged = true;
+											this.assign(ship, template_name, false, true);
+										}
+										else {
+											ship.set({ type: ability.nextCodes[modelName][index] });
+											ship.custom.ability = null;
+											HelperFunctions.sendUI(ship, { id: this.UI.id, visible: false });
+										}
+									}
+								}
+							}
+						}
+						else {
+							let mapping = this.mapping[oldType];
+							if (mapping != null) {
+								let index = mapping.nextCodes.indexOf(ship.type);
+								if (index != -1) {
+									let template_name = mapping.nextNames[index];
+									if (template_name != null) {
+										ship.custom.shipModelChanged = true;
+										this.assign(ship, template_name, false, true);
+									}
+								}
+							}
 						}
 					}
 				}
@@ -638,7 +668,7 @@ const AbilityManager = {
 					let oldIndex = oldList.findIndex(s => s.id === ship.id);
 					if (oldIndex >= 0) oldList.splice(oldIndex, 1);
 				}
-				this.tick(ship);
+				if (ship.custom.ability != null) this.tick(ship);
 			}
 			let lastStatus = !!ship.custom.lastActionBlockerStatus;
 			let currentStatus = AbilityManager.isActionBlocked(ship).blocked;
@@ -738,6 +768,12 @@ const AbilityManager = {
 			catch (e) { HelperFunctions.terminal.log("Skipping version info checks due to an error while fetching sources."); }
 		}
 	},
+	disableAbilitySystem: function (ship) {
+		ship.custom.useAbilitySystem = false;
+		ship.custom[this.activation_indicator] = false;
+		delete ship.custom.ability;
+		HelperFunctions.sendUI(ship, { id: this.UI.id, visible: false });
+	},
 	checkLevel: function (value, defaultValue = 6) {
 		value = +value;
 		if (isNaN(value) || value <= 0) value = defaultValue;
@@ -749,11 +785,19 @@ const AbilityManager = {
 		else {
 			let nexts = [], count = 0;
 			for (let i of next) {
-				let nextAbil = this.abilities[i];
-				if (nextAbil != null && nextAbil.codes != null && !isNaN(nextAbil.codes.default)) {
-					nexts.push(i);
-					codes.push(nextAbil.codes.default);
-					++count;
+				if ("number" == typeof i) {
+					if (!isNaN(i)) {
+						nexts.push(null);
+						codes.push(i);
+					}
+				}
+				else {
+					let nextAbil = this.abilities[i];
+					if (nextAbil != null && nextAbil.codes != null && !isNaN(nextAbil.codes.default)) {
+						nexts.push(i);
+						codes.push(nextAbil.codes.default);
+						++count;
+					}
 				}
 
 				if (count >= 2) break;
@@ -784,8 +828,11 @@ const AbilityManager = {
 
 		this.shipLevels = this.checkLevel(this.shipLevels);
 
+		let templatesCount = 0;
+
 		for (let shipName in this.abilities) {
 			let ability = this.abilities[shipName];
+			let error = false;
 			// delete hidden ones
 			if (ability.hidden != null && ability.hidden) {
 				delete this.abilities[shipName];
@@ -858,7 +905,8 @@ const AbilityManager = {
 				ability.compile(this._this);
 			}
 			catch (e) {
-				HelperFunctions.terminal.error(`Pre-compiler function for ${shipName} failed to execute.\nCaught Error: ${e.message}`);
+				error = true;
+				HelperFunctions.terminal.error(`Pre-compiler function for ${shipName} failed to execute.\nCaught Error: ${e.message}`, true);
 			}
 
 			// process ship codes
@@ -916,43 +964,99 @@ const AbilityManager = {
 				};
 			}
 			catch (e) {
-				HelperFunctions.terminal.error(`Failed to compile ship code for model '${shipAbilityName}' of '${shipName}'.\nCaught Error: ${e.message}`);
+				error = true;
+				HelperFunctions.terminal.error(`Failed to compile ship code for model '${shipAbilityName}' of '${shipName}'.\nCaught Error: ${e.message}`, true);
 			}
 
 			ability.generatorInit = Math.min(1e5, Math.max(0, ability.generatorInit));
 
 			if (isNaN(ability.generatorInit)) ability.generatorInit = ability.energy_capacities.default;
 			
-			if (!ability.codes.default) HelperFunctions.terminal.error(`Missing 'default' model for '${shipName}'.`);
-			if (needAbilityShip && !ability.codes.ability) HelperFunctions.terminal.error(`'${shipName}' uses default ability behaviour but model 'ability' is missing.`);
+			if (!ability.codes.default) {
+				error = true;
+				HelperFunctions.terminal.error(`Missing 'default' model for '${shipName}'.`, true);
+			}
+			if (needAbilityShip && !ability.codes.ability) {
+				error = true;
+				HelperFunctions.terminal.error(`'${shipName}' uses default ability behaviour but model 'ability' is missing.`, true);
+			}
+
+			if (error) {
+				HelperFunctions.terminal.error(`Deleting '${shipName}' due to error(s) in compilation`, true);
+				delete this.abilities[shipName];
+			}
+			else ++templatesCount;
 		}
 
 		// now we assign upgrades if there are no errors
-		if (!this.isCompilationError()) for (let shipName in this.abilities) {
-			let ability = this.abilities[shipName];
+		let customCount = 0;
+		if (!this.isCompilationError()) {
+			// ablity ones first
+			for (let shipName in this.abilities) {
+				let ability = this.abilities[shipName];
 
-			// get default upgrades (if any)
-			let defaultNexts = this.getUpgrades(ability.next);
-			
-			// now let's check upgrades for every specific ships
-
-			let specificNexts = ability.nexts || {}, parsedModels = ability.parsedModels;
-			ability.nextCodes = {};
-			ability.nextNames = {};
-			for (let model in ability.parsedModels) {
-				let nextData = specificNexts[model] == null ? defaultNexts : this.getUpgrades(specificNexts[model]);
+				// get default upgrades (if any)
+				let defaultNexts = this.getUpgrades(ability.next);
 				
-				ability.nextCodes[model] = parsedModels[model].next = parsedModels[model].typespec.next = [...nextData.codes];
-				ability.nextNames[model] = [...nextData.next];
+				// now let's check upgrades for every specific ships
 
-				this.ship_codes.push(JSON.stringify(parsedModels[model]));
+				let specificNexts = ability.nexts || {}, parsedModels = ability.parsedModels;
+				ability.nextCodes = {};
+				ability.nextNames = {};
+				for (let model in ability.parsedModels) {
+					let nextData = specificNexts[model] == null ? defaultNexts : this.getUpgrades(specificNexts[model]);
+					
+					ability.nextCodes[model] = parsedModels[model].next = parsedModels[model].typespec.next = [...nextData.codes];
+					ability.nextNames[model] = [...nextData.next];
+
+					this.ship_codes.push(JSON.stringify(parsedModels[model]));
+				}
+
+				// remove the parsed model object
+				delete ability.parsedModels;
 			}
 
-			// remove the parsed model object
-			delete ability.parsedModels;
+			// then custom ships
+			let index = 0, lastAbilityModel = model, replacements = {};
+			this.mapping = {};
+			for (let shipData of this.customShips) {
+				try {
+					let data = shipData.code = JSON.parse(shipData.code);
+					let upgrades = this.getUpgrades(shipData.next);
+					shipData.nextCodes = upgrades.codes;
+					shipData.nextNames = upgrades.next;
+
+					let type = data.typespec.code, newType = type;
+					if (!isNaN(replacements[type])) newType = replacements[type];
+					else if (isNaN(type) || +type > lastAbilityModel) {
+						while (this.mapping[lastAbilityModel] != null) --lastAbilityModel;
+						newType = lastAbilityModel--;
+					}
+
+					if (type != newType) {
+						HelperFunctions.terminal.log(`${data.name} has overlapped ship code (${type}). Changed to ${newType}.`);
+						this.replacements[type] = data.typespec.code = newType;
+						data.model = newType - data.level * 100;
+					}
+
+					this.mapping[newType] = shipData;
+
+					++customCount;
+				}
+				catch (e) {HelperFunctions.terminal.error(`Failed to process custom ship code at index ${index}`) }
+				++index;
+			}
+
+			for (let type in this.mapping) {
+				let data = this.mapping[type];
+				data.code.next = data.code.typespec.next = data.nextCodes = data.nextCodes.map(e => isNaN(replacements[e]) ? e : replacements[e]);
+
+				data.code = JSON.stringify(data.code);
+				this.ship_codes.push(data.code);
+			}
 		}
 
-		if (this.ship_codes.length < 1) HelperFunctions.terminal.error(`No ships found. What the f*ck?`);
+		HelperFunctions.terminal.log(`Compiled ${799 - model} ability model(s) from ${templatesCount} templates(s) and ${customCount} static model(s).`);
 
 		globalUsage *= GAME_OPTIONS.teams_count || 1;
 
@@ -1007,7 +1111,11 @@ const AbilityManager = {
 		// select random ship
 		return this.assign(ship, HelperFunctions.randomItem(this.getAssignableShipsList(ship)).value, false, forced);
 	},
-	abilities: ShipAbilities
+	abilities: ShipAbilities,
+	customShips: [],
+	addCustomShip: function (shipData) {
+		this.customShips.push(shipData);
+	}
 }
 
 this.__ABILITY_MANAGER_OPTIONS__ = {
