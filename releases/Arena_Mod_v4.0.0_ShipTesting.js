@@ -22,7 +22,7 @@ const __ABILITY_SYSTEM_INFO__ = {
 	name: "Arena_Mod",
 	branch: "ShipTesting",
 	version: "4.0.0",
-	buildID: "18c25fca74c"
+	buildID: "18c260b32b5"
 };
 
 
@@ -153,7 +153,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_ShipTesting.js at Sat Dec 02 2023 00:26:04 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_ShipTesting.js at Sat Dec 02 2023 00:41:57 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -196,7 +196,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Sat Dec 02 2023 00:26:04 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Sat Dec 02 2023 00:41:57 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
 	{
@@ -247,7 +247,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps_ShipTesting.js at Sat Dec 02 2023 00:26:04 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps_ShipTesting.js at Sat Dec 02 2023 00:41:57 GMT+0900 (Japan Standard Time) */
 
 const Maps = [];
 
@@ -255,7 +255,7 @@ const Maps = [];
 
 
 
-/* Imported from Abilities.js at Sat Dec 02 2023 00:26:04 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Sat Dec 02 2023 00:41:57 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
 	"Test ship": {
@@ -1442,7 +1442,7 @@ const ShipAbilities = {
 			// - otherwise re-assign the Puck template to the ship (this means resetting as well)
 			ship.custom.abilityCustom.puckTriggered = null;
 			let res = AbilityManager.assign(ship, this.shipName, true, { ability: true });
-			if (res.success) AbilityManager.assign(ship, this.shipName, false, true);
+			if (res.success) AbilityManager.assign(ship, this.shipName, false, true, { restore: true });
 			else if (res.code != AbilityManager.assignStatus.limitExceeded.code) AbilityManager.assign(ship, this.shipName, false, true, { blocker: true, restore: true });
 		},
 
@@ -2455,7 +2455,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Sat Dec 02 2023 00:26:04 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Sat Dec 02 2023 00:41:57 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -2793,7 +2793,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Sat Dec 02 2023 00:26:04 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Sat Dec 02 2023 00:41:57 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
 	planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -2803,7 +2803,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Sat Dec 02 2023 00:26:04 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Sat Dec 02 2023 00:41:57 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
 	toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -3191,7 +3191,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Sat Dec 02 2023 00:26:04 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Sat Dec 02 2023 00:41:57 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
 	ghostTeam: GhostTeam,
