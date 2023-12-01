@@ -581,7 +581,9 @@ const AbilityManager = {
 		game.custom.abilityCustom.entitiesUpdateRequested = false;
 		HelperFunctions.TimeManager.tick();
 		for (let ability of Object.values(this.abilities)) {
-			if ("function" == typeof ability.globalTick) ability.globalTick(game);
+			if ("function" == typeof ability.globalTick) try {
+				ability.globalTick(game);
+			} catch (e) { HelperFunctions.terminal.error(`${e.name}: ${e.message}`, 1) }
 		}
 		let oldList = game.custom.__ability_manager_players_list__;
 		if (!Array.isArray(oldList)) oldList = [];
