@@ -1183,7 +1183,7 @@ const ShipAbilities = {
 			// - otherwise re-assign the Puck template to the ship (this means resetting as well)
 			ship.custom.abilityCustom.puckTriggered = null;
 			let res = AbilityManager.assign(ship, this.shipName, true, { ability: true });
-			if (res.success) AbilityManager.assign(ship, this.shipName, false, true);
+			if (res.success) AbilityManager.assign(ship, this.shipName, false, true, { restore: true });
 			else if (res.code != AbilityManager.assignStatus.limitExceeded.code) AbilityManager.assign(ship, this.shipName, false, true, { blocker: true, restore: true });
 		},
 
