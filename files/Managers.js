@@ -704,7 +704,7 @@ const AbilityManager = {
 				if (!ship.custom.inAbility || ship.custom.ability.endOnDeath) ship.custom.ability.unload(ship);
 				break;
 			case "ship_destroyed":
-				if (ship.custom.ability.endOnDeath) this.end(ship, false);
+				if (ship.custom.inAbility && ship.custom.ability.endOnDeath) this.end(ship, false);
 				break;
 		}
 		AbilityManager.event(event, ship);
