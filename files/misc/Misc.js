@@ -215,13 +215,13 @@ const WeightCalculator = {
 	playerWeight: function (ship) {
 		let kills = ship.custom.kills = +ship.custom.kills || 0;
 		let deaths = ship.custom.deaths = +ship.custom.deaths || 0;
-		let timeOnPoint = +ship.custom.timeOnPoint || 0;
+		let teamCaptureValue = +ship.custom.teamCaptureValue || 0;
 
 		let muls = GAME_OPTIONS.player_weight_multipliers;
 
-		if (kills == 0 && deaths == 0 && timeOnPoint == 0) return -Infinity;
+		if (kills == 0 && deaths == 0 && teamCaptureValue == 0) return -Infinity;
 
-		return kills * muls.kills + deaths * muls.deaths + timeOnPoint * muls.timeOnPoint;
+		return kills * muls.kills + deaths * muls.deaths + teamCaptureValue * muls.teamCaptureValue;
 	},
 	getTopPlayers: function (game, donSort = false, formula = "playerWeightByKD") {
 		let players = game.ships.filter(e => (e || {}).id != null && !e.custom.kicked && e.custom.joined);
@@ -268,6 +268,11 @@ const WeightCalculator = {
 const UIData = {
 	colorTextLightness: 65,
 	scoreIncreaseRouding: (String(CONTROL_POINT.score_increase).match(/\..*/) || ["a"])[0].length - 1,
+	roundScore: function (val, toString = false) {
+		val = val.toFixed(this.scoreIncreaseRouding);
+		if (toString) return val;
+		return +val;
+	},
 	control_bar: {
 		id: "POINT_BAR",
 		visible: false
@@ -741,7 +746,7 @@ const UIData = {
 	renderTeamScores: function (ship, forceUpdate = false) {
 		if (forceUpdate && game.custom.started) {
 			let increaseAmount = 0;
-			try { increaseAmount = game.custom.increaseAmount.toFixed(this.scoreIncreaseRouding) } catch (e) {}
+			try { increaseAmount = this.roundScore(game.custom.increaseAmount) } catch (e) {}
 			UIData.scores = {
 				id: "team_points",
 				position: [35,11.5,30,5],

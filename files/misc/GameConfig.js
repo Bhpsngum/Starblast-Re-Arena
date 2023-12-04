@@ -17,10 +17,10 @@ Object.assign(GAME_OPTIONS, {
 	buttons_cooldown: 0.25, // must wait after x (seconds) before the same button can be triggered again
 	duplicate_choose_limit: 5, // immediately close the ship menu after a single ship has been chosen x times
 	player_weight_multipliers: { // multipliers for calculating player weight
-		// formula: weight(player, multiplier) = player.kills * multiplier.kills + player.deaths * multiplier.deaths + player.timeOnPoint * multiplier.timeOnPoint
+		// formula: weight(player, multiplier) = player.kills * multiplier.kills + player.deaths * multiplier.deaths + player.teamCaptureValue * multiplier.teamCaptureValue
 		kills: 3,
 		deaths: -1,
-		timeOnPoint: 1/10
+		teamCaptureValue: 1
 	},
 	alienSpawns: {
 		level: {
@@ -55,7 +55,8 @@ const CONTROL_POINT = {
 		dominating_percentage: 90 // % of control one team needs in order to dominate and gain points
 	},
 	score_increase: 0.1, // team points increases per sec for the dominating team
-	player_multiplier: false, // when set to true, the increase is per player per sec, and not per sec anymore
+	disadvantage_multiplier_threshold: 25, // To prevent the score increase multiplier from going up too high
+	// this value must be higher than 1.
 	textures: [
 		{
 			url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/capture_area.png",

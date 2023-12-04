@@ -328,7 +328,6 @@ const main_phase = function (game) {
 
 				// benefit!
 				for (let ship of players) {
-					ship.custom.timeOnPoint = (ship.custom.timeOnPoint || 0) + 1;
 					let TeamData = TeamManager.getDataFromShip(ship);
 					if (!TeamData.ghost) control_point_data.teams[TeamData.id] += increment;
 					else control_point_data.ghost += increment;
@@ -354,7 +353,6 @@ const main_phase = function (game) {
 					ghostData
 				];
 				for (let ship of players) {
-					ship.custom.timeOnPoint = (ship.custom.timeOnPoint || 0) + 1;
 					let TeamData = TeamManager.getDataFromShip(ship);
 					if (!TeamData.ghost) ++teamControls[TeamData.id].ships;
 					else ++ghostData.ships
@@ -429,19 +427,39 @@ const main_phase = function (game) {
 		// if there are team(s) with highest control meets the requirements
 		// and ONLY one team has that control percentage
 		// that team is winning
+
+		// get max score
+		let maxScore = Math.max(...control_point_data.scores, control_point_data.ghostScore);
+
+		let winningScore = GAME_OPTIONS.points;
+
 		if (maxControl >= CONTROL_POINT.control_bar.controlling_percentage && maxControlTeam.length == 1) {
 			let winningTeam = maxControlTeam[0];
 			HelperFunctions.setControlPointOBJ(false, winningTeam);
 			if (maxControl >= CONTROL_POINT.control_bar.dominating_percentage) {
 				scoreIncreased = true;
+				let score = winningTeam == "ghost" ? control_point_data.ghostScore : control_point_data.scores[winningTeam];
+
 				let mult = 1;
-				if (CONTROL_POINT.player_multiplier) {
-					let winningTeamInfo = TeamManager.getDataFromID(winningTeam);
-					mult = winningTeamInfo.ghost ? 1 : players.filter(s => TeamManager.getDataFromShip(s).id === winningTeamInfo.id).length;
+				if (score != maxScore) Math.max(Math.min(CONTROL_POINT.disadvantage_multiplier_threshold, (100 - score) / (100 - maxScore)), 1) || 1;
+
+				let increaseAmount = game.custom.increaseAmount = UIData.roundScore(CONTROL_POINT.score_increase * mult);
+
+				score = UIData.roundScore(score + increaseAmount);
+
+				if (winningTeam == "ghost") control_point_data.ghostScore = score;
+				else control_point_data.scores[winningTeam] = score;
+
+				let teamPlayers = players.filter(p => HelperFunctions.isTeam(p, { team: winningTeam }));
+
+				let benefits = increaseAmount / teamPlayers.length;
+
+				for (let p of teamPlayers) {
+					if (p.custom.teamCaptureValue == null) p.custom.teamCaptureValue = 0;
+					p.custom.teamCaptureValue += benefits;
 				}
-				let increaseAmount = game.custom.increaseAmount = CONTROL_POINT.score_increase * mult;
-				if (winningTeam == "ghost") control_point_data.ghostScore += increaseAmount;
-				else control_point_data.scores[winningTeam] += increaseAmount;
+
+				maxScore = Math.max(maxScore, score);
 			}
 		}
 		else HelperFunctions.setControlPointOBJ(true); // or else it's still neutral
@@ -473,7 +491,7 @@ const main_phase = function (game) {
 			game.custom.allLeft = test.size < 1;
 			if (game.custom.oneTeamLeft && !game.custom.allLeft) game.custom.winner = [...test][0].id;
 		}
-		if (game.custom.oneTeamLeft || game.custom.timeout || Math.max(...control_point_data.scores, control_point_data.ghostScore) >= GAME_OPTIONS.points) this.tick = endGame; 
+		if (game.custom.oneTeamLeft || game.custom.timeout || maxScore >= winningScore) this.tick = endGame; 
 	}
 
 	if ((game_duration) % (GAME_OPTIONS.alienSpawns.interval * 60) === 0) {
@@ -520,12 +538,12 @@ const endGame = function (game) {
 		" ": " ",
 		"Your team": "Unknown",
 		"Your kills / deaths": "0/0",
-		"Your time on point": 0,
+		"Your Team Capture Point (TCP)": 0,
 		"  ": void 0,
 		"MVP in this match:": void 0,
 		"- Team": void 0,
 		"- Kills / Deaths": void 0,
-		"- Time on point": void 0,
+		"- Team Capture Point (TCP)": void 0,
 		"   ": " ",
 		"Community Discord": "discord.gg/697sdMJwKj",
 		"Code": "github.com/Bhpsngum/Arena-mod-remake",
@@ -542,20 +560,20 @@ const endGame = function (game) {
 	HelperFunctions.sendUI(game, endGameNotification);
 
 	let MVP = WeightCalculator.getTopPlayers(game, false, "playerWeight")[0];
-	if (MVP != null && (MVP.custom.kills || MVP.custom.deaths || MVP.custom.timeOnPoint)) {
-		let KD = [+MVP.custom.kills || 0, +MVP.custom.deaths || 0].join(" / "), timeOnPoint = HelperFunctions.toTimer(MVP.custom.timeOnPoint || 0);
+	if (MVP != null && (MVP.custom.kills || MVP.custom.deaths || MVP.custom.teamCaptureValue)) {
+		let KD = [+MVP.custom.kills || 0, +MVP.custom.deaths || 0].join(" / "), teamCaptureValue = UIData.roundScore(Math.min(GAME_OPTIONS.points, MVP.custom.teamCaptureValue) || 0).toString();
 		Object.assign(game.custom.endGameInfo, {
 			"  ": " ",
 			"MVP in this match:": MVP.name,
 			"- Team": TeamManager.getDataFromShip(MVP).name.toUpperCase(),
 			"- Kills / Deaths": KD,
-			"- Time on point": timeOnPoint 
+			"- Team Capture Point (TCP)": teamCaptureValue 
 		});
 
 		UIData.scoreboard.components = [
 			{ type: "text", position: [5, 30, 90, 10], value: "MVP:", color: "#cde" },
 			{ type: "player", id: MVP.id, position: [5, 45, 90, 10], color: HelperFunctions.toHSLA(TeamManager.getDataFromShip(MVP).hue, 1, 100, UIData.colorTextLightness) },
-			{ type: "text", position: [5, 60, 90, 10], value: `${KD} | ${timeOnPoint}`, color: "#cde" }
+			{ type: "text", position: [5, 60, 90, 10], value: `${KD} | TCP: ${teamCaptureValue}`, color: "#cde" }
 		];
 	}
 	else UIData.scoreboard.components = [
@@ -592,7 +610,7 @@ const im_here_just_to_kick_every_players_out_of_the_game = function (game) {
 			let endInfo = HelperFunctions.clone(game.custom.endGameInfo);
 			endInfo["Your team"] = TeamManager.getDataFromShip(ship).name.toUpperCase();
 			endInfo["Your kills / deaths"] = [+ship.custom.kills || 0, +ship.custom.deaths || 0].join(" / ");
-			endInfo["Your time on point"] = HelperFunctions.toTimer(ship.custom.timeOnPoint || 0)
+			endInfo["Your Team Capture Point (TCP)"] = UIData.roundScore(Math.min(GAME_OPTIONS.points, ship.custom.teamCaptureValue) || 0).toString()
 			ship.gameover(endInfo);
 			ship.custom.kicked = true;
 		}
