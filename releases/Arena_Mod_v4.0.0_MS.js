@@ -22,7 +22,7 @@ const __ABILITY_SYSTEM_INFO__ = {
 	name: "Arena_Mod",
 	branch: "MS",
 	version: "4.0.0",
-	buildID: "18c35527983"
+	buildID: "18c36a1d792"
 };
 
 
@@ -153,7 +153,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_MS.js at Mon Dec 04 2023 23:54:06 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_MS.js at Tue Dec 05 2023 06:00:25 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = false; // if in debug phase
 
@@ -196,7 +196,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Mon Dec 04 2023 23:54:06 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Tue Dec 05 2023 06:00:25 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
 	{
@@ -247,7 +247,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Mon Dec 04 2023 23:54:06 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Tue Dec 05 2023 06:00:25 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
 	{
@@ -2753,7 +2753,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Mon Dec 04 2023 23:54:06 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Tue Dec 05 2023 06:00:25 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
 	"Test ship": {
@@ -4953,7 +4953,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Mon Dec 04 2023 23:54:06 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Tue Dec 05 2023 06:00:25 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -5291,7 +5291,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Mon Dec 04 2023 23:54:06 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Tue Dec 05 2023 06:00:25 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
 	planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -5301,7 +5301,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Mon Dec 04 2023 23:54:06 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Tue Dec 05 2023 06:00:25 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
 	toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -5689,7 +5689,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Mon Dec 04 2023 23:54:06 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Tue Dec 05 2023 06:00:25 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
 	ghostTeam: GhostTeam,
@@ -6834,11 +6834,11 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/gameLogic.js at Mon Dec 04 2023 23:54:06 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Tue Dec 05 2023 06:00:25 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/GameConfig.js at Mon Dec 04 2023 23:54:06 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Tue Dec 05 2023 06:00:25 GMT+0900 (Japan Standard Time) */
 
 const map_name = null; // leave `null` if you want randomized map name
 
@@ -6859,10 +6859,10 @@ Object.assign(GAME_OPTIONS, {
 	buttons_cooldown: 0.25, // must wait after x (seconds) before the same button can be triggered again
 	duplicate_choose_limit: 5, // immediately close the ship menu after a single ship has been chosen x times
 	player_weight_multipliers: { // multipliers for calculating player weight
-		// formula: weight(player, multiplier) = player.kills * multiplier.kills + player.deaths * multiplier.deaths + player.timeOnPoint * multiplier.timeOnPoint
+		// formula: weight(player, multiplier) = player.kills * multiplier.kills + player.deaths * multiplier.deaths + player.teamCaptureValue * multiplier.teamCaptureValue
 		kills: 3,
 		deaths: -1,
-		timeOnPoint: 1/10
+		teamCaptureValue: 1
 	},
 	alienSpawns: {
 		level: {
@@ -6897,7 +6897,8 @@ const CONTROL_POINT = {
 		dominating_percentage: 90 // % of control one team needs in order to dominate and gain points
 	},
 	score_increase: 0.1, // team points increases per sec for the dominating team
-	player_multiplier: false, // when set to true, the increase is per player per sec, and not per sec anymore
+	disadvantage_multiplier_threshold: 25, // To prevent the score increase multiplier from going up too high
+	// this value must be higher than 1.
 	textures: [
 		{
 			url: "https://raw.githubusercontent.com/Bhpsngum/Arena-mod-remake/main/resources/textures/capture_area.png",
@@ -6962,7 +6963,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Mon Dec 04 2023 23:54:06 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Tue Dec 05 2023 06:00:25 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
 	setSpawnpointsOBJ: function () {
@@ -7181,13 +7182,13 @@ const WeightCalculator = {
 	playerWeight: function (ship) {
 		let kills = ship.custom.kills = +ship.custom.kills || 0;
 		let deaths = ship.custom.deaths = +ship.custom.deaths || 0;
-		let timeOnPoint = +ship.custom.timeOnPoint || 0;
+		let teamCaptureValue = +ship.custom.teamCaptureValue || 0;
 
 		let muls = GAME_OPTIONS.player_weight_multipliers;
 
-		if (kills == 0 && deaths == 0 && timeOnPoint == 0) return -Infinity;
+		if (kills == 0 && deaths == 0 && teamCaptureValue == 0) return -Infinity;
 
-		return kills * muls.kills + deaths * muls.deaths + timeOnPoint * muls.timeOnPoint;
+		return kills * muls.kills + deaths * muls.deaths + teamCaptureValue * muls.teamCaptureValue;
 	},
 	getTopPlayers: function (game, donSort = false, formula = "playerWeightByKD") {
 		let players = game.ships.filter(e => (e || {}).id != null && !e.custom.kicked && e.custom.joined);
@@ -7234,6 +7235,11 @@ const WeightCalculator = {
 const UIData = {
 	colorTextLightness: 65,
 	scoreIncreaseRouding: (String(CONTROL_POINT.score_increase).match(/\..*/) || ["a"])[0].length - 1,
+	roundScore: function (val, toString = false) {
+		val = val.toFixed(this.scoreIncreaseRouding);
+		if (toString) return val;
+		return +val;
+	},
 	control_bar: {
 		id: "POINT_BAR",
 		visible: false
@@ -7707,7 +7713,7 @@ const UIData = {
 	renderTeamScores: function (ship, forceUpdate = false) {
 		if (forceUpdate && game.custom.started) {
 			let increaseAmount = 0;
-			try { increaseAmount = game.custom.increaseAmount.toFixed(this.scoreIncreaseRouding) } catch (e) {}
+			try { increaseAmount = this.roundScore(game.custom.increaseAmount) } catch (e) {}
 			UIData.scores = {
 				id: "team_points",
 				position: [35,11.5,30,5],
@@ -7927,7 +7933,7 @@ TeamManager.onShipTeamChange = function (ship, newTeamOBJ, oldTeamOBJ) {
 
 
 
-/* Imported from misc/tickFunctions.js at Mon Dec 04 2023 23:54:06 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Tue Dec 05 2023 06:00:25 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
 	AbilityManager.globalTick(game);
@@ -8259,7 +8265,6 @@ const main_phase = function (game) {
 
 				// benefit!
 				for (let ship of players) {
-					ship.custom.timeOnPoint = (ship.custom.timeOnPoint || 0) + 1;
 					let TeamData = TeamManager.getDataFromShip(ship);
 					if (!TeamData.ghost) control_point_data.teams[TeamData.id] += increment;
 					else control_point_data.ghost += increment;
@@ -8285,7 +8290,6 @@ const main_phase = function (game) {
 					ghostData
 				];
 				for (let ship of players) {
-					ship.custom.timeOnPoint = (ship.custom.timeOnPoint || 0) + 1;
 					let TeamData = TeamManager.getDataFromShip(ship);
 					if (!TeamData.ghost) ++teamControls[TeamData.id].ships;
 					else ++ghostData.ships
@@ -8360,19 +8364,39 @@ const main_phase = function (game) {
 		// if there are team(s) with highest control meets the requirements
 		// and ONLY one team has that control percentage
 		// that team is winning
+
+		// get max score
+		let maxScore = Math.max(...control_point_data.scores, control_point_data.ghostScore);
+
+		let winningScore = GAME_OPTIONS.points;
+
 		if (maxControl >= CONTROL_POINT.control_bar.controlling_percentage && maxControlTeam.length == 1) {
 			let winningTeam = maxControlTeam[0];
 			HelperFunctions.setControlPointOBJ(false, winningTeam);
 			if (maxControl >= CONTROL_POINT.control_bar.dominating_percentage) {
 				scoreIncreased = true;
+				let score = winningTeam == "ghost" ? control_point_data.ghostScore : control_point_data.scores[winningTeam];
+
 				let mult = 1;
-				if (CONTROL_POINT.player_multiplier) {
-					let winningTeamInfo = TeamManager.getDataFromID(winningTeam);
-					mult = winningTeamInfo.ghost ? 1 : players.filter(s => TeamManager.getDataFromShip(s).id === winningTeamInfo.id).length;
+				if (score != maxScore) Math.max(Math.min(CONTROL_POINT.disadvantage_multiplier_threshold, (100 - score) / (100 - maxScore)), 1) || 1;
+
+				let increaseAmount = game.custom.increaseAmount = UIData.roundScore(CONTROL_POINT.score_increase * mult);
+
+				score = UIData.roundScore(score + increaseAmount);
+
+				if (winningTeam == "ghost") control_point_data.ghostScore = score;
+				else control_point_data.scores[winningTeam] = score;
+
+				let teamPlayers = players.filter(p => HelperFunctions.isTeam(p, { team: winningTeam }));
+
+				let benefits = increaseAmount / teamPlayers.length;
+
+				for (let p of teamPlayers) {
+					if (p.custom.teamCaptureValue == null) p.custom.teamCaptureValue = 0;
+					p.custom.teamCaptureValue += benefits;
 				}
-				let increaseAmount = game.custom.increaseAmount = CONTROL_POINT.score_increase * mult;
-				if (winningTeam == "ghost") control_point_data.ghostScore += increaseAmount;
-				else control_point_data.scores[winningTeam] += increaseAmount;
+
+				maxScore = Math.max(maxScore, score);
 			}
 		}
 		else HelperFunctions.setControlPointOBJ(true); // or else it's still neutral
@@ -8404,7 +8428,7 @@ const main_phase = function (game) {
 			game.custom.allLeft = test.size < 1;
 			if (game.custom.oneTeamLeft && !game.custom.allLeft) game.custom.winner = [...test][0].id;
 		}
-		if (game.custom.oneTeamLeft || game.custom.timeout || Math.max(...control_point_data.scores, control_point_data.ghostScore) >= GAME_OPTIONS.points) this.tick = endGame; 
+		if (game.custom.oneTeamLeft || game.custom.timeout || maxScore >= winningScore) this.tick = endGame; 
 	}
 
 	if ((game_duration) % (GAME_OPTIONS.alienSpawns.interval * 60) === 0) {
@@ -8451,12 +8475,12 @@ const endGame = function (game) {
 		" ": " ",
 		"Your team": "Unknown",
 		"Your kills / deaths": "0/0",
-		"Your time on point": 0,
+		"Your Team Capture Point (TCP)": 0,
 		"  ": void 0,
 		"MVP in this match:": void 0,
 		"- Team": void 0,
 		"- Kills / Deaths": void 0,
-		"- Time on point": void 0,
+		"- Team Capture Point (TCP)": void 0,
 		"   ": " ",
 		"Community Discord": "discord.gg/697sdMJwKj",
 		"Code": "github.com/Bhpsngum/Arena-mod-remake",
@@ -8473,20 +8497,20 @@ const endGame = function (game) {
 	HelperFunctions.sendUI(game, endGameNotification);
 
 	let MVP = WeightCalculator.getTopPlayers(game, false, "playerWeight")[0];
-	if (MVP != null && (MVP.custom.kills || MVP.custom.deaths || MVP.custom.timeOnPoint)) {
-		let KD = [+MVP.custom.kills || 0, +MVP.custom.deaths || 0].join(" / "), timeOnPoint = HelperFunctions.toTimer(MVP.custom.timeOnPoint || 0);
+	if (MVP != null && (MVP.custom.kills || MVP.custom.deaths || MVP.custom.teamCaptureValue)) {
+		let KD = [+MVP.custom.kills || 0, +MVP.custom.deaths || 0].join(" / "), teamCaptureValue = UIData.roundScore(Math.min(GAME_OPTIONS.points, MVP.custom.teamCaptureValue) || 0).toString();
 		Object.assign(game.custom.endGameInfo, {
 			"  ": " ",
 			"MVP in this match:": MVP.name,
 			"- Team": TeamManager.getDataFromShip(MVP).name.toUpperCase(),
 			"- Kills / Deaths": KD,
-			"- Time on point": timeOnPoint 
+			"- Team Capture Point (TCP)": teamCaptureValue 
 		});
 
 		UIData.scoreboard.components = [
 			{ type: "text", position: [5, 30, 90, 10], value: "MVP:", color: "#cde" },
 			{ type: "player", id: MVP.id, position: [5, 45, 90, 10], color: HelperFunctions.toHSLA(TeamManager.getDataFromShip(MVP).hue, 1, 100, UIData.colorTextLightness) },
-			{ type: "text", position: [5, 60, 90, 10], value: `${KD} | ${timeOnPoint}`, color: "#cde" }
+			{ type: "text", position: [5, 60, 90, 10], value: `${KD} | TCP: ${teamCaptureValue}`, color: "#cde" }
 		];
 	}
 	else UIData.scoreboard.components = [
@@ -8523,7 +8547,7 @@ const im_here_just_to_kick_every_players_out_of_the_game = function (game) {
 			let endInfo = HelperFunctions.clone(game.custom.endGameInfo);
 			endInfo["Your team"] = TeamManager.getDataFromShip(ship).name.toUpperCase();
 			endInfo["Your kills / deaths"] = [+ship.custom.kills || 0, +ship.custom.deaths || 0].join(" / ");
-			endInfo["Your time on point"] = HelperFunctions.toTimer(ship.custom.timeOnPoint || 0)
+			endInfo["Your Team Capture Point (TCP)"] = UIData.roundScore(Math.min(GAME_OPTIONS.points, ship.custom.teamCaptureValue) || 0).toString()
 			ship.gameover(endInfo);
 			ship.custom.kicked = true;
 		}
@@ -8543,7 +8567,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Mon Dec 04 2023 23:54:06 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Tue Dec 05 2023 06:00:25 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
 	AbilityManager.globalEvent(event, game);
@@ -8627,7 +8651,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Mon Dec 04 2023 23:54:06 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Tue Dec 05 2023 06:00:25 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
 	{ text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
@@ -8697,6 +8721,6 @@ this.options.ships[0] = JSON.stringify(ship101);
 
 
 
-/* Imported from misc/gameInfo.js at Mon Dec 04 2023 23:54:06 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameInfo.js at Tue Dec 05 2023 06:00:25 GMT+0900 (Japan Standard Time) */
 
 AbilityManager.echo(`[[bg;DarkTurquoise;]Re:][[bg;#EE4B2B;]Arena] ([[;#AAFF00;]${__ABILITY_SYSTEM_INFO__.branch}]) [[;Cyan;]v${__ABILITY_SYSTEM_INFO__.version} (Build ID [[;${HelperFunctions.toHSLA(__ABILITY_SYSTEM_INFO__.buildID)};]${__ABILITY_SYSTEM_INFO__.buildID}])\nMap picked: [[b;Cyan;]${MapManager.get().name} by ${MapManager.get().author}\n\nType \`commands\` to see all commands\nAnd \`usage <commandName>\` to show usage of a command\n\n]`);
