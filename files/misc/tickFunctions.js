@@ -73,7 +73,7 @@ const alwaysTick = function (game) {
 
 			if (!ship.custom.noLongerInvisible) {
 				if (ship.custom.leaveBaseInvulTime) {
-					if (game.step - ship.custom.leaveBaseTimestamp > invul_time || (ship.custom.generator != null && ship.generator != ship.custom.generator)) {
+					if (game.step - ship.custom.leaveBaseTimestamp > invul_time || (ship.custom.generator != null && ship.generator < ship.custom.generator)) {
 						ship.custom.noLongerInvisible = true;
 						ship.custom.generator = null;
 						
