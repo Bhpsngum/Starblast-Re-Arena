@@ -22,7 +22,7 @@ const __ABILITY_SYSTEM_INFO__ = {
 	name: "Arena_Mod",
 	branch: "MS",
 	version: "4.0.0",
-	buildID: "18c36a1d792"
+	buildID: "18c4e5be408"
 };
 
 
@@ -153,7 +153,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_MS.js at Tue Dec 05 2023 06:00:25 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_MS.js at Sat Dec 09 2023 20:34:54 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = false; // if in debug phase
 
@@ -196,7 +196,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Tue Dec 05 2023 06:00:25 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Sat Dec 09 2023 20:34:54 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
 	{
@@ -247,7 +247,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Tue Dec 05 2023 06:00:25 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Sat Dec 09 2023 20:34:54 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
 	{
@@ -2753,7 +2753,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Tue Dec 05 2023 06:00:25 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Sat Dec 09 2023 20:34:54 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
 	"Test ship": {
@@ -4953,7 +4953,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Tue Dec 05 2023 06:00:25 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Sat Dec 09 2023 20:34:54 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -5291,7 +5291,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Tue Dec 05 2023 06:00:25 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Sat Dec 09 2023 20:34:54 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
 	planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -5301,7 +5301,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Tue Dec 05 2023 06:00:25 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Sat Dec 09 2023 20:34:54 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
 	toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -5689,7 +5689,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Tue Dec 05 2023 06:00:25 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Sat Dec 09 2023 20:34:54 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
 	ghostTeam: GhostTeam,
@@ -6834,11 +6834,11 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/gameLogic.js at Tue Dec 05 2023 06:00:25 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Sat Dec 09 2023 20:34:54 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/GameConfig.js at Tue Dec 05 2023 06:00:25 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Sat Dec 09 2023 20:34:54 GMT+0900 (Japan Standard Time) */
 
 const map_name = null; // leave `null` if you want randomized map name
 
@@ -6860,7 +6860,7 @@ Object.assign(GAME_OPTIONS, {
 	duplicate_choose_limit: 5, // immediately close the ship menu after a single ship has been chosen x times
 	player_weight_multipliers: { // multipliers for calculating player weight
 		// formula: weight(player, multiplier) = player.kills * multiplier.kills + player.deaths * multiplier.deaths + player.teamCaptureValue * multiplier.teamCaptureValue
-		kills: 3,
+		kills: 2,
 		deaths: -1,
 		teamCaptureValue: 1
 	},
@@ -6963,7 +6963,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Tue Dec 05 2023 06:00:25 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Sat Dec 09 2023 20:34:54 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
 	setSpawnpointsOBJ: function () {
@@ -7933,7 +7933,7 @@ TeamManager.onShipTeamChange = function (ship, newTeamOBJ, oldTeamOBJ) {
 
 
 
-/* Imported from misc/tickFunctions.js at Tue Dec 05 2023 06:00:25 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Sat Dec 09 2023 20:34:54 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
 	AbilityManager.globalTick(game);
@@ -8378,7 +8378,7 @@ const main_phase = function (game) {
 				let score = winningTeam == "ghost" ? control_point_data.ghostScore : control_point_data.scores[winningTeam];
 
 				let mult = 1;
-				if (score != maxScore) Math.max(Math.min(CONTROL_POINT.disadvantage_multiplier_threshold, (100 - score) / (100 - maxScore)), 1) || 1;
+				if (score != maxScore) mult = Math.max(Math.min(CONTROL_POINT.disadvantage_multiplier_threshold, (100 - score) / (100 - maxScore)), 1) || 1;
 
 				let increaseAmount = game.custom.increaseAmount = UIData.roundScore(CONTROL_POINT.score_increase * mult);
 
@@ -8567,7 +8567,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Tue Dec 05 2023 06:00:25 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Sat Dec 09 2023 20:34:54 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
 	AbilityManager.globalEvent(event, game);
@@ -8651,7 +8651,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Tue Dec 05 2023 06:00:25 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Sat Dec 09 2023 20:34:54 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
 	{ text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
@@ -8721,6 +8721,6 @@ this.options.ships[0] = JSON.stringify(ship101);
 
 
 
-/* Imported from misc/gameInfo.js at Tue Dec 05 2023 06:00:25 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameInfo.js at Sat Dec 09 2023 20:34:54 GMT+0900 (Japan Standard Time) */
 
 AbilityManager.echo(`[[bg;DarkTurquoise;]Re:][[bg;#EE4B2B;]Arena] ([[;#AAFF00;]${__ABILITY_SYSTEM_INFO__.branch}]) [[;Cyan;]v${__ABILITY_SYSTEM_INFO__.version} (Build ID [[;${HelperFunctions.toHSLA(__ABILITY_SYSTEM_INFO__.buildID)};]${__ABILITY_SYSTEM_INFO__.buildID}])\nMap picked: [[b;Cyan;]${MapManager.get().name} by ${MapManager.get().author}\n\nType \`commands\` to see all commands\nAnd \`usage <commandName>\` to show usage of a command\n\n]`);
