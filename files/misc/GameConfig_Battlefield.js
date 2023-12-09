@@ -18,7 +18,7 @@ Object.assign(GAME_OPTIONS, {
 	duplicate_choose_limit: 5, // immediately close the ship menu after a single ship has been chosen x times
 	player_weight_multipliers: { // multipliers for calculating player weight
 		// formula: weight(player, multiplier) = player.kills * multiplier.kills + player.deaths * multiplier.deaths + player.teamCaptureValue * multiplier.teamCaptureValue
-		kills: 3,
+		kills: 2,
 		deaths: -1,
 		teamCaptureValue: 1
 	},

@@ -441,7 +441,7 @@ const main_phase = function (game) {
 				let score = winningTeam == "ghost" ? control_point_data.ghostScore : control_point_data.scores[winningTeam];
 
 				let mult = 1;
-				if (score != maxScore) Math.max(Math.min(CONTROL_POINT.disadvantage_multiplier_threshold, (100 - score) / (100 - maxScore)), 1) || 1;
+				if (score != maxScore) mult = Math.max(Math.min(CONTROL_POINT.disadvantage_multiplier_threshold, (100 - score) / (100 - maxScore)), 1) || 1;
 
 				let increaseAmount = game.custom.increaseAmount = UIData.roundScore(CONTROL_POINT.score_increase * mult);
 
