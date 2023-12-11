@@ -687,31 +687,32 @@ const AbilityManager = {
 		game.custom.__ability_manager_players_list__ = newList;
 	},
 	globalEvent: function (event, game) {
-		let ship = event.ship;
-		if (ship == null || ship.id == null || !this.isAbilityInitialized(ship) || ship.custom.ability == null) return;
-		switch (event.name) {
-			case "ui_component_clicked":
-				let component = event.id;
-				switch (component) {
-					case this.UI.id:
-						this.start(ship);
-						break;
-					default:
-						if (ship.custom.__abilitySystem_last_ui_action__ != null && game.step - ship.custom.__abilitySystem_last_ui_action__ <= this.UIActionsDelay) break;
-						ship.custom.__abilitySystem_last_ui_action__ = game.step;
-						this.abilityRangeUI.handleOptions(ship, component);
-				}
-				break;
-			case "ship_spawned":
-				ship.set({crystals: ship.custom.ability.crystals});
-				if (!ship.custom.inAbility || ship.custom.ability.endOnDeath) ship.custom.ability.unload(ship);
-				break;
-			case "ship_destroyed":
-				if (ship.custom.inAbility && ship.custom.ability.endOnDeath) this.end(ship, false);
-				break;
+		let ship = event.ship, valid = HelperFunctions.isValidShip(ship);
+		if (valid && this.isAbilityInitialized(ship) && ship.custom.ability != null) {
+			switch (event.name) {
+				case "ui_component_clicked":
+					let component = event.id;
+					switch (component) {
+						case this.UI.id:
+							this.start(ship);
+							break;
+						default:
+							if (ship.custom.__abilitySystem_last_ui_action__ != null && game.step - ship.custom.__abilitySystem_last_ui_action__ <= this.UIActionsDelay) break;
+							ship.custom.__abilitySystem_last_ui_action__ = game.step;
+							this.abilityRangeUI.handleOptions(ship, component);
+					}
+					break;
+				case "ship_spawned":
+					ship.set({crystals: ship.custom.ability.crystals});
+					if (!ship.custom.inAbility || ship.custom.ability.endOnDeath) ship.custom.ability.unload(ship);
+					break;
+				case "ship_destroyed":
+					if (ship.custom.inAbility && ship.custom.ability.endOnDeath) this.end(ship, false);
+					break;
+			}
 		}
-		AbilityManager.event(event, ship);
-		if (event.killer != null) AbilityManager.event(event, event.killer);
+		if (valid) AbilityManager.event(event, ship);
+		if (HelperFunctions.isValidShip(event.killer)) AbilityManager.event(event, event.killer);
 		for (let ability of Object.values(AbilityManager.abilities)) {
 			if ("function" == typeof ability.globalEvent) ability.globalEvent(event);
 		}

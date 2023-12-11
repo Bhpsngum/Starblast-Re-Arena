@@ -243,7 +243,7 @@ const ShipAbilities = {
 		end: function () {},
 
 		globalEvent: function (event) {
-			if (event.name == "ship_destroyed" && event.ship != null) this.removeEMP(event.ship);
+			if (event.name == "ship_destroyed" && HelperFunctions.isValidShip(event.ship)) this.removeEMP(event.ship);
 		}
 	},
 	"Scorpion": {
@@ -441,6 +441,7 @@ const ShipAbilities = {
 			if (ship.custom.ability !== this) return;
 			let ships = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true }, true);
 			for (let victim of ships) {
+				if (victim.custom.invincible) continue;
 				let affectionRatio = 1 - (HelperFunctions.distance(ship, victim).distance / this.range);
 				let shipMass = this.shipMasses.get(victim.type) || 1;
 				HelperFunctions.damage(victim, affectionRatio * this.torpedoDamage);
@@ -828,7 +829,7 @@ const ShipAbilities = {
 
 		start: function (ship) {
 			let target = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true })[0];
-			if (target != null) {
+			if (HelperFunctions.isValidShip(target)) {
 				ship.set({x: target.x, y: target.y, vx: target.vx, vy: target.vy, angle: target.r * 180 / Math.PI});
 				target.set({x: ship.x, y: ship.y, vx: ship.vx, vy: ship.vy, angle: ship.r * 180 / Math.PI});
 			}
@@ -1239,7 +1240,7 @@ const ShipAbilities = {
 
 		globalEvent: function (event) {
 			let ship;
-			if (event.name == "ship_destroyed" && (ship = event.ship) != null) {
+			if (event.name == "ship_destroyed" && HelperFunctions.isValidShip(ship = event.ship)) {
 				this.removePuck(ship);
 				if (this.shipChangeBlocker.checker(ship)) this.endPuckPhase(ship);
 			}
@@ -1247,7 +1248,7 @@ const ShipAbilities = {
 
 		globalTick: function (game) {
 			for (let ship of game.ships) {
-				if (ship != null && ship.id != null && this.shipChangeBlocker.checker(ship) && game.step - ship.custom.abilityCustom.puckTriggered > this.controlDuration) {
+				if (HelperFunctions.isValidShip(ship) && this.shipChangeBlocker.checker(ship) && game.step - ship.custom.abilityCustom.puckTriggered > this.controlDuration) {
 					this.endPuckPhase(ship);
 				}
 			}
@@ -1271,7 +1272,6 @@ const ShipAbilities = {
 		},
 
 		start: function (ship) {
-			HelperFunctions.setInvisible(ship, true);
 			HelperFunctions.setCollider(ship, false);
 			ship.set({
 				type:this.codes.ability,
@@ -1282,7 +1282,6 @@ const ShipAbilities = {
 		},
 
 		end: function (ship) {
-			HelperFunctions.setInvisible(ship, false);
 			HelperFunctions.setCollider(ship, true);
 			ship.set({type:this.codes.default,stats:AbilityManager.maxStats});
 			if (ship.custom.ability === this) HelperFunctions.setInvulnerable(ship, 150);
@@ -1369,6 +1368,10 @@ const ShipAbilities = {
 		getCooldown: function (ship) {
 			return (ship.custom.abilityCustom || {}).noWaspEnemies ? this.penaltyCooldown : this.cooldown;
 		},
+
+		removeSting: function (ship) {
+			ship.custom.poisonousShip = ship.custom.poisonousStart = null;
+		},
 		
 		canStart: function (ship) {
 			return HelperFunctions.timeExceeded(ship.custom.lastTriggered, this.getCooldown(ship));
@@ -1381,12 +1384,13 @@ const ShipAbilities = {
 		start: function (ship) {
 			let target = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true })[0];
 
-			if (target != null) {
+			let valid = HelperFunctions.isValidShip(target);
+			if (valid) {
 				target.custom.poisonousStart = game.step - 1;
 				target.custom.poisonousShip = ship;
 			}
 			
-			ship.custom.abilityCustom.noWaspEnemies = target == null;
+			ship.custom.abilityCustom.noWaspEnemies = !valid;
 
 			ship.custom.forceEnd = true;
 		},
@@ -1395,20 +1399,25 @@ const ShipAbilities = {
 
 		globalTick: function (game) {
 			for (let ship of game.ships) {
-				if (ship.custom.poisonousShip && ship.custom.poisonousStart != null) {
+				if (HelperFunctions.isValidShip(ship.custom.poisonousShip) && ship.custom.poisonousStart != null) {
 					let poisonousTime = game.step - ship.custom.poisonousStart;
 					if (ship.alive && poisonousTime % this.tickInterval == 0) {
 						HelperFunctions.damage(ship, this.damage);
 						ship.custom.poisonousShip.set({shield: ship.custom.poisonousShip.shield + this.damage * this.healingRatio});
 					}
 
-					if (poisonousTime >= this.stingDuration) ship.custom.poisonousShip = ship.custom.poisonousStart = null;
+					if (poisonousTime >= this.stingDuration) this.removeSting(ship);
 				}
 			}
 		},
 
 		event: function (event, ship) {
 			if (event.name == "ship_destroyed" && event.ship === ship) (ship.custom.abilityCustom || {}).noWaspEnemies = false;
+		},
+
+		globalEvent: function (event) {
+			let ship;
+			if (event.name == "ship_destroyed" && HelperFunctions.isValidShip(ship = event.ship)) this.removeSting(ship);
 		}
 	},
 	"Arcane": {
@@ -1968,7 +1977,7 @@ const ShipAbilities = {
 		start: function (ship) {
 			HelperFunctions.setInvulnerable(ship, 200);
 			let target = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true })[0];
-			if (target != null) {
+			if (HelperFunctions.isValidShip(target)) {
 				HelperFunctions.accelerateToTarget(target, ship, 0.1, true);
 				HelperFunctions.TimeManager.setTimeout(function () {
 					HelperFunctions.accelerate(target, this.launchStrength, ship.r)

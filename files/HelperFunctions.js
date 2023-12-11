@@ -203,7 +203,7 @@ const HelperFunctions = {
 
 		// Only find ships if either `teammate` or `enemy` is `true`
 
-		if (includes.ships && (teammate || enemy)) data.push(...game.ships.filter(ship => (ship || {}).id != null && ship.alive && (includes.invisible || !ship.custom.invisible) && (includes.self || ship !== entity) && this.satisfies(entity, ship, teammate, enemy) && this.distance(entity, ship).distance <= range));
+		if (includes.ships && (teammate || enemy)) data.push(...game.ships.filter(ship => this.isValidShip(ship) && ship.alive && (includes.invisible || !ship.custom.invisible) && (includes.self || ship !== entity) && this.satisfies(entity, ship, teammate, enemy) && this.distance(entity, ship).distance <= range));
 		
 		// if you only need to select enemies in range and don't care about the order by distance, set `dontSort` to `true`
 		// the sorting procedure below this might be heavy, so only use sorted array it if you need to
@@ -211,7 +211,11 @@ const HelperFunctions = {
 
 		return data.sort((a, b) => this.distance(entity, a).distance - this.distance(entity, b).distance);
 	},
-	damage: function (ship, num) {
+	isValidShip: function (ship) {
+		return ship != null && ship.id != null;
+	},
+	damage: function (ship, num, force = false) {
+		if (!force && ship.custom.invincible) return;
 		// damage ship by `num` HP
 		if (ship.shield < num){
 			let val = ship.crystals + ship.shield;
@@ -273,10 +277,13 @@ const HelperFunctions = {
 		if (!Array.isArray(ship.custom.colliderLog)) ship.custom.colliderLog = [true];
 		return ship.custom.colliderLog;
 	},
-	setCollider: function (ship, status) {
+	setCollider: function (ship, status, dontChangeInvincibility = false) {
 		status = !!status;
+
 		this.getColliderLog(ship).push(status);
 		ship.set({ collider: ship.custom.collider = status });
+
+		if (!dontChangeInvincibility) ship.custom.invincible = !status;
 	},
 	getInvulnerableLog: function (ship) {
 		if (!Array.isArray(ship.custom.invulnerableLog)) ship.custom.invulnerableLog = [0];
