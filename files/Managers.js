@@ -31,7 +31,8 @@ const TeamManager = {
 		return this.teams;
 	},
 	getDataFromID: function (team) {
-		team = team == null ? NaN : +team;
+		if (team == null) return this.ghostTeam;
+		team = +team || team;
 		return this.getAll()[team] || this.ghostTeam;
 	},
 	getDataFromShip: function (ship) {
