@@ -22,7 +22,7 @@ const __ABILITY_SYSTEM_INFO__ = {
 	name: "Arena_Mod",
 	branch: "MS",
 	version: "4.0.0",
-	buildID: "18c59b04c02"
+	buildID: "18c59e659b7"
 };
 
 
@@ -153,7 +153,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_MS.js at Tue Dec 12 2023 01:22:55 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_MS.js at Tue Dec 12 2023 02:21:57 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = false; // if in debug phase
 
@@ -196,7 +196,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Tue Dec 12 2023 01:22:55 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Tue Dec 12 2023 02:21:57 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
 	{
@@ -247,7 +247,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Tue Dec 12 2023 01:22:55 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Tue Dec 12 2023 02:21:57 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
 	{
@@ -2753,7 +2753,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Tue Dec 12 2023 01:22:55 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Tue Dec 12 2023 02:21:57 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
 	"Test ship": {
@@ -3000,7 +3000,7 @@ const ShipAbilities = {
 		end: function () {},
 
 		globalEvent: function (event) {
-			if (event.name == "ship_destroyed" && event.ship != null) this.removeEMP(event.ship);
+			if (event.name == "ship_destroyed" && HelperFunctions.isValidShip(event.ship)) this.removeEMP(event.ship);
 		}
 	},
 	"Scorpion": {
@@ -3198,6 +3198,7 @@ const ShipAbilities = {
 			if (ship.custom.ability !== this) return;
 			let ships = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true }, true);
 			for (let victim of ships) {
+				if (victim.custom.invincible) continue;
 				let affectionRatio = 1 - (HelperFunctions.distance(ship, victim).distance / this.range);
 				let shipMass = this.shipMasses.get(victim.type) || 1;
 				HelperFunctions.damage(victim, affectionRatio * this.torpedoDamage);
@@ -3585,7 +3586,7 @@ const ShipAbilities = {
 
 		start: function (ship) {
 			let target = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true })[0];
-			if (target != null) {
+			if (HelperFunctions.isValidShip(target)) {
 				ship.set({x: target.x, y: target.y, vx: target.vx, vy: target.vy, angle: target.r * 180 / Math.PI});
 				target.set({x: ship.x, y: ship.y, vx: ship.vx, vy: ship.vy, angle: ship.r * 180 / Math.PI});
 			}
@@ -3996,7 +3997,7 @@ const ShipAbilities = {
 
 		globalEvent: function (event) {
 			let ship;
-			if (event.name == "ship_destroyed" && (ship = event.ship) != null) {
+			if (event.name == "ship_destroyed" && HelperFunctions.isValidShip(ship = event.ship)) {
 				this.removePuck(ship);
 				if (this.shipChangeBlocker.checker(ship)) this.endPuckPhase(ship);
 			}
@@ -4004,7 +4005,7 @@ const ShipAbilities = {
 
 		globalTick: function (game) {
 			for (let ship of game.ships) {
-				if (ship != null && ship.id != null && this.shipChangeBlocker.checker(ship) && game.step - ship.custom.abilityCustom.puckTriggered > this.controlDuration) {
+				if (HelperFunctions.isValidShip(ship) && this.shipChangeBlocker.checker(ship) && game.step - ship.custom.abilityCustom.puckTriggered > this.controlDuration) {
 					this.endPuckPhase(ship);
 				}
 			}
@@ -4028,7 +4029,6 @@ const ShipAbilities = {
 		},
 
 		start: function (ship) {
-			HelperFunctions.setInvisible(ship, true);
 			HelperFunctions.setCollider(ship, false);
 			ship.set({
 				type:this.codes.ability,
@@ -4039,7 +4039,6 @@ const ShipAbilities = {
 		},
 
 		end: function (ship) {
-			HelperFunctions.setInvisible(ship, false);
 			HelperFunctions.setCollider(ship, true);
 			ship.set({type:this.codes.default,stats:AbilityManager.maxStats});
 			if (ship.custom.ability === this) HelperFunctions.setInvulnerable(ship, 150);
@@ -4126,6 +4125,10 @@ const ShipAbilities = {
 		getCooldown: function (ship) {
 			return (ship.custom.abilityCustom || {}).noWaspEnemies ? this.penaltyCooldown : this.cooldown;
 		},
+
+		removeSting: function (ship) {
+			ship.custom.poisonousShip = ship.custom.poisonousStart = null;
+		},
 		
 		canStart: function (ship) {
 			return HelperFunctions.timeExceeded(ship.custom.lastTriggered, this.getCooldown(ship));
@@ -4138,12 +4141,13 @@ const ShipAbilities = {
 		start: function (ship) {
 			let target = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true })[0];
 
-			if (target != null) {
+			let valid = HelperFunctions.isValidShip(target);
+			if (valid) {
 				target.custom.poisonousStart = game.step - 1;
 				target.custom.poisonousShip = ship;
 			}
 			
-			ship.custom.abilityCustom.noWaspEnemies = target == null;
+			ship.custom.abilityCustom.noWaspEnemies = !valid;
 
 			ship.custom.forceEnd = true;
 		},
@@ -4152,20 +4156,25 @@ const ShipAbilities = {
 
 		globalTick: function (game) {
 			for (let ship of game.ships) {
-				if (ship.custom.poisonousShip && ship.custom.poisonousStart != null) {
+				if (HelperFunctions.isValidShip(ship.custom.poisonousShip) && ship.custom.poisonousStart != null) {
 					let poisonousTime = game.step - ship.custom.poisonousStart;
 					if (ship.alive && poisonousTime % this.tickInterval == 0) {
 						HelperFunctions.damage(ship, this.damage);
 						ship.custom.poisonousShip.set({shield: ship.custom.poisonousShip.shield + this.damage * this.healingRatio});
 					}
 
-					if (poisonousTime >= this.stingDuration) ship.custom.poisonousShip = ship.custom.poisonousStart = null;
+					if (poisonousTime >= this.stingDuration) this.removeSting(ship);
 				}
 			}
 		},
 
 		event: function (event, ship) {
 			if (event.name == "ship_destroyed" && event.ship === ship) (ship.custom.abilityCustom || {}).noWaspEnemies = false;
+		},
+
+		globalEvent: function (event) {
+			let ship;
+			if (event.name == "ship_destroyed" && HelperFunctions.isValidShip(ship = event.ship)) this.removeSting(ship);
 		}
 	},
 	"Arcane": {
@@ -4725,7 +4734,7 @@ const ShipAbilities = {
 		start: function (ship) {
 			HelperFunctions.setInvulnerable(ship, 200);
 			let target = HelperFunctions.findEntitiesInRange(ship, this.range, false, true, { ships: true })[0];
-			if (target != null) {
+			if (HelperFunctions.isValidShip(target)) {
 				HelperFunctions.accelerateToTarget(target, ship, 0.1, true);
 				HelperFunctions.TimeManager.setTimeout(function () {
 					HelperFunctions.accelerate(target, this.launchStrength, ship.r)
@@ -4953,7 +4962,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Tue Dec 12 2023 01:22:55 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Tue Dec 12 2023 02:21:57 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -5291,7 +5300,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Tue Dec 12 2023 01:22:55 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Tue Dec 12 2023 02:21:57 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
 	planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -5301,7 +5310,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Tue Dec 12 2023 01:22:55 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Tue Dec 12 2023 02:21:57 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
 	toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -5508,7 +5517,7 @@ const HelperFunctions = {
 
 		// Only find ships if either `teammate` or `enemy` is `true`
 
-		if (includes.ships && (teammate || enemy)) data.push(...game.ships.filter(ship => (ship || {}).id != null && ship.alive && (includes.invisible || !ship.custom.invisible) && (includes.self || ship !== entity) && this.satisfies(entity, ship, teammate, enemy) && this.distance(entity, ship).distance <= range));
+		if (includes.ships && (teammate || enemy)) data.push(...game.ships.filter(ship => this.isValidShip(ship) && ship.alive && (includes.invisible || !ship.custom.invisible) && (includes.self || ship !== entity) && this.satisfies(entity, ship, teammate, enemy) && this.distance(entity, ship).distance <= range));
 		
 		// if you only need to select enemies in range and don't care about the order by distance, set `dontSort` to `true`
 		// the sorting procedure below this might be heavy, so only use sorted array it if you need to
@@ -5516,7 +5525,11 @@ const HelperFunctions = {
 
 		return data.sort((a, b) => this.distance(entity, a).distance - this.distance(entity, b).distance);
 	},
-	damage: function (ship, num) {
+	isValidShip: function (ship) {
+		return ship != null && ship.id != null;
+	},
+	damage: function (ship, num, force = false) {
+		if (!force && ship.custom.invincible) return;
 		// damage ship by `num` HP
 		if (ship.shield < num){
 			let val = ship.crystals + ship.shield;
@@ -5578,10 +5591,13 @@ const HelperFunctions = {
 		if (!Array.isArray(ship.custom.colliderLog)) ship.custom.colliderLog = [true];
 		return ship.custom.colliderLog;
 	},
-	setCollider: function (ship, status) {
+	setCollider: function (ship, status, dontChangeInvincibility = false) {
 		status = !!status;
+
 		this.getColliderLog(ship).push(status);
 		ship.set({ collider: ship.custom.collider = status });
+
+		if (!dontChangeInvincibility) ship.custom.invincible = !status;
 	},
 	getInvulnerableLog: function (ship) {
 		if (!Array.isArray(ship.custom.invulnerableLog)) ship.custom.invulnerableLog = [0];
@@ -5689,7 +5705,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Tue Dec 12 2023 01:22:55 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Tue Dec 12 2023 02:21:57 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
 	ghostTeam: GhostTeam,
@@ -6380,31 +6396,32 @@ const AbilityManager = {
 		game.custom.__ability_manager_players_list__ = newList;
 	},
 	globalEvent: function (event, game) {
-		let ship = event.ship;
-		if (ship == null || ship.id == null || !this.isAbilityInitialized(ship) || ship.custom.ability == null) return;
-		switch (event.name) {
-			case "ui_component_clicked":
-				let component = event.id;
-				switch (component) {
-					case this.UI.id:
-						this.start(ship);
-						break;
-					default:
-						if (ship.custom.__abilitySystem_last_ui_action__ != null && game.step - ship.custom.__abilitySystem_last_ui_action__ <= this.UIActionsDelay) break;
-						ship.custom.__abilitySystem_last_ui_action__ = game.step;
-						this.abilityRangeUI.handleOptions(ship, component);
-				}
-				break;
-			case "ship_spawned":
-				ship.set({crystals: ship.custom.ability.crystals});
-				if (!ship.custom.inAbility || ship.custom.ability.endOnDeath) ship.custom.ability.unload(ship);
-				break;
-			case "ship_destroyed":
-				if (ship.custom.inAbility && ship.custom.ability.endOnDeath) this.end(ship, false);
-				break;
+		let ship = event.ship, valid = HelperFunctions.isValidShip(ship);
+		if (valid && this.isAbilityInitialized(ship) && ship.custom.ability != null) {
+			switch (event.name) {
+				case "ui_component_clicked":
+					let component = event.id;
+					switch (component) {
+						case this.UI.id:
+							this.start(ship);
+							break;
+						default:
+							if (ship.custom.__abilitySystem_last_ui_action__ != null && game.step - ship.custom.__abilitySystem_last_ui_action__ <= this.UIActionsDelay) break;
+							ship.custom.__abilitySystem_last_ui_action__ = game.step;
+							this.abilityRangeUI.handleOptions(ship, component);
+					}
+					break;
+				case "ship_spawned":
+					ship.set({crystals: ship.custom.ability.crystals});
+					if (!ship.custom.inAbility || ship.custom.ability.endOnDeath) ship.custom.ability.unload(ship);
+					break;
+				case "ship_destroyed":
+					if (ship.custom.inAbility && ship.custom.ability.endOnDeath) this.end(ship, false);
+					break;
+			}
 		}
-		AbilityManager.event(event, ship);
-		if (event.killer != null) AbilityManager.event(event, event.killer);
+		if (valid) AbilityManager.event(event, ship);
+		if (HelperFunctions.isValidShip(event.killer)) AbilityManager.event(event, event.killer);
 		for (let ability of Object.values(AbilityManager.abilities)) {
 			if ("function" == typeof ability.globalEvent) ability.globalEvent(event);
 		}
@@ -6835,11 +6852,11 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/gameLogic.js at Tue Dec 12 2023 01:22:55 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Tue Dec 12 2023 02:21:57 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/GameConfig.js at Tue Dec 12 2023 01:22:55 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Tue Dec 12 2023 02:21:57 GMT+0900 (Japan Standard Time) */
 
 const map_name = null; // leave `null` if you want randomized map name
 
@@ -6964,7 +6981,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Tue Dec 12 2023 01:22:55 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Tue Dec 12 2023 02:21:57 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
 	setSpawnpointsOBJ: function () {
@@ -7934,7 +7951,7 @@ TeamManager.onShipTeamChange = function (ship, newTeamOBJ, oldTeamOBJ) {
 
 
 
-/* Imported from misc/tickFunctions.js at Tue Dec 12 2023 01:22:55 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Tue Dec 12 2023 02:21:57 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
 	AbilityManager.globalTick(game);
@@ -8568,7 +8585,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Tue Dec 12 2023 01:22:55 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Tue Dec 12 2023 02:21:57 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
 	AbilityManager.globalEvent(event, game);
@@ -8652,7 +8669,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Tue Dec 12 2023 01:22:55 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Tue Dec 12 2023 02:21:57 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
 	{ text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
@@ -8722,6 +8739,6 @@ this.options.ships[0] = JSON.stringify(ship101);
 
 
 
-/* Imported from misc/gameInfo.js at Tue Dec 12 2023 01:22:55 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameInfo.js at Tue Dec 12 2023 02:21:57 GMT+0900 (Japan Standard Time) */
 
 AbilityManager.echo(`[[bg;DarkTurquoise;]Re:][[bg;#EE4B2B;]Arena] ([[;#AAFF00;]${__ABILITY_SYSTEM_INFO__.branch}]) [[;Cyan;]v${__ABILITY_SYSTEM_INFO__.version} (Build ID [[;${HelperFunctions.toHSLA(__ABILITY_SYSTEM_INFO__.buildID)};]${__ABILITY_SYSTEM_INFO__.buildID}])\nMap picked: [[b;Cyan;]${MapManager.get().name} by ${MapManager.get().author}\n\nType \`commands\` to see all commands\nAnd \`usage <commandName>\` to show usage of a command\n\n]`);
