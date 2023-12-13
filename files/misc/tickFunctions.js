@@ -431,7 +431,7 @@ const main_phase = function (game) {
 		// get max score
 		let maxScore = Math.max(...control_point_data.scores, control_point_data.ghostScore);
 
-		let winningScore = GAME_OPTIONS.points;
+		let winningScore = GAME_OPTIONS.points, timeLeft = HelperFunctions.timeLeft(game.custom.startedStep + GAME_OPTIONS.duration * 60);
 
 		if (maxControl >= CONTROL_POINT.control_bar.controlling_percentage && maxControlTeam.length == 1) {
 			let winningTeam = maxControlTeam[0];
@@ -440,8 +440,10 @@ const main_phase = function (game) {
 				scoreIncreased = true;
 				let score = winningTeam == "ghost" ? control_point_data.ghostScore : control_point_data.scores[winningTeam];
 
+				let targetScore = Math.min(winningScore, maxScore + timeLeft * CONTROL_POINT.score_increase);
+
 				let mult = 1;
-				if (score != maxScore) mult = Math.max(Math.min(CONTROL_POINT.disadvantage_multiplier_threshold, (100 - score) / (100 - maxScore)), 1) || 1;
+				if (score != maxScore) mult = Math.max(Math.min(CONTROL_POINT.disadvantage_multiplier_threshold, (targetScore - score) / (targetScore - maxScore)), 1) || 1;
 
 				let increaseAmount = game.custom.increaseAmount = UIData.roundScore(CONTROL_POINT.score_increase * mult);
 
@@ -478,7 +480,7 @@ const main_phase = function (game) {
 			id: "timer",
 			position: [40,7.5,20,4],
 			components: [
-				{ type: "text", position: [0, 0, 100, 100], value: HelperFunctions.toTimer(HelperFunctions.timeLeft(game.custom.startedStep + GAME_OPTIONS.duration * 60)), color: "gray"}
+				{ type: "text", position: [0, 0, 100, 100], value: HelperFunctions.toTimer(timeLeft), color: "gray"}
 			]
 		});
 
