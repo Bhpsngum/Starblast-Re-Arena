@@ -6,6 +6,7 @@ Re:Arena - Arena Mod Remake/Recontinuation (v3.1.3 - v4.0+)
 - Ships: Caramel
 - Maps: Supernova, Caramel, Bylolopro, Nerd69420, Megalodon, Gooby, and others
 - Contributors: Tost, Caramel, Lexydrow, Akira, Gooby, and others
+- GitHub Repository Contributors: @theonlypwner
 
 GitHub Repository: https://github.com/Bhpsngum/Arena-mod-remake
 

@@ -211,7 +211,7 @@ const AbilityManager = {
 		this.updateUI(ship);
 		let ability = ship.custom.ability;
 		if (!ship.custom.inAbility || ability == null) return;
-		let timePassed = game.step - ship.custom.lastTriggered
+		let timePassed = game.step - ship.custom.lastTriggered;
 		if (timePassed % ability.tickInterval === 0) ability.tick(ship, timePassed);
 		if (ability.customEndcondition && (ship.custom.forceEnd || ability.canEnd(ship))) this.end(ship, false);
 	},

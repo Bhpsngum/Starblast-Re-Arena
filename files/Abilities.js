@@ -544,7 +544,7 @@ const ShipAbilities = {
 		},
 
 		compile: function () {
-			this.tickInterval = Math.floor(this.duration / (this.ammountCanFire + 2));
+			this.tickInterval = Math.floor(this.duration / (this.ammountCanFire + 1));
 		}
 	},
 	"Ekho": {
