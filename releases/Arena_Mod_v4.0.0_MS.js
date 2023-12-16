@@ -23,7 +23,7 @@ const __ABILITY_SYSTEM_INFO__ = {
 	name: "Arena_Mod",
 	branch: "MS",
 	version: "4.0.0",
-	buildID: "0a9e717"
+	buildID: "2f067d0"
 };
 
 
@@ -154,7 +154,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_MS.js at Sat Dec 16 2023 22:31:24 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_MS.js at Sat Dec 16 2023 22:41:17 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = false; // if in debug phase
 
@@ -197,7 +197,7 @@ GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players
 
 
 
-/* Imported from Teams.js at Sat Dec 16 2023 22:31:24 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Sat Dec 16 2023 22:41:17 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
 	{
@@ -248,7 +248,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Sat Dec 16 2023 22:31:24 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Sat Dec 16 2023 22:41:17 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
 	{
@@ -2754,7 +2754,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Sat Dec 16 2023 22:31:24 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Sat Dec 16 2023 22:41:17 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
 	"Test ship": {
@@ -4963,7 +4963,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Sat Dec 16 2023 22:31:24 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Sat Dec 16 2023 22:41:17 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -5301,7 +5301,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Sat Dec 16 2023 22:31:24 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Sat Dec 16 2023 22:41:17 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
 	planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -5311,7 +5311,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Sat Dec 16 2023 22:31:24 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Sat Dec 16 2023 22:41:17 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
 	toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -5706,7 +5706,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Sat Dec 16 2023 22:31:24 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Sat Dec 16 2023 22:41:17 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
 	ghostTeam: GhostTeam,
@@ -6853,11 +6853,11 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/gameLogic.js at Sat Dec 16 2023 22:31:24 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Sat Dec 16 2023 22:41:17 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/GameConfig.js at Sat Dec 16 2023 22:31:24 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Sat Dec 16 2023 22:41:17 GMT+0900 (Japan Standard Time) */
 
 const map_name = null; // leave `null` if you want randomized map name
 
@@ -6982,7 +6982,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Sat Dec 16 2023 22:31:24 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Sat Dec 16 2023 22:41:17 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
 	setSpawnpointsOBJ: function () {
@@ -7285,14 +7285,15 @@ const UIData = {
 	blockers: {
 		rebuild: function () {
 			// rebuild score block
-			let buildHue = parseInt(__ABILITY_SYSTEM_INFO__.buildID, 16) % 360, scoreBlock = {
+			let buildID = __ABILITY_SYSTEM_INFO__.buildID;
+			let buildHue = parseInt(buildID, 16) % 360, scoreBlock = {
 				id: "score_block",
 				position: [4,3,12,6],
 				components:[
 					{type:'box',position:[0,0,100,100],fill:"black", stroke: HelperFunctions.toHSLA(buildHue), width: 2},
 					{type:'box',position:[0,0,100,100],fill: HelperFunctions.toHSLA(buildHue, 0.25)},
 					{type: "text", position: [5,5,90,45], value: `Re:Arena (${__ABILITY_SYSTEM_INFO__.branch}) v${__ABILITY_SYSTEM_INFO__.version}`, color: HelperFunctions.toHSLA(buildHue)},
-					{type: "text", position: [5,50,90,45], value: `Build ID: ${__ABILITY_SYSTEM_INFO__.buildID.padStart(20, " ")}`, color: HelperFunctions.toHSLA(buildHue)}
+					{type: "text", position: [5,50,90,45], value: `Build ID: ${buildID.padStart(Math.max(0, 12 - buildID.length) * 2 + buildID.length, " ")}`, color: HelperFunctions.toHSLA(buildHue)}
 				]
 			};
 			let index = this.list.findIndex(ui => ui.id == "score_block");
@@ -7952,7 +7953,7 @@ TeamManager.onShipTeamChange = function (ship, newTeamOBJ, oldTeamOBJ) {
 
 
 
-/* Imported from misc/tickFunctions.js at Sat Dec 16 2023 22:31:24 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Sat Dec 16 2023 22:41:17 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
 	AbilityManager.globalTick(game);
@@ -8588,7 +8589,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Sat Dec 16 2023 22:31:24 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Sat Dec 16 2023 22:41:17 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
 	AbilityManager.globalEvent(event, game);
@@ -8672,7 +8673,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Sat Dec 16 2023 22:31:24 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Sat Dec 16 2023 22:41:17 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
 	{ text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
@@ -8742,6 +8743,6 @@ this.options.ships[0] = JSON.stringify(ship101);
 
 
 
-/* Imported from misc/gameInfo.js at Sat Dec 16 2023 22:31:24 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameInfo.js at Sat Dec 16 2023 22:41:17 GMT+0900 (Japan Standard Time) */
 
 AbilityManager.echo(`[[bg;DarkTurquoise;]Re:][[bg;#EE4B2B;]Arena] ([[;#AAFF00;]${__ABILITY_SYSTEM_INFO__.branch}]) [[;Cyan;]v${__ABILITY_SYSTEM_INFO__.version} (Build ID [[;${HelperFunctions.toHSLA(__ABILITY_SYSTEM_INFO__.buildID)};]${__ABILITY_SYSTEM_INFO__.buildID}])\nMap picked: [[b;Cyan;]${MapManager.get().name} by ${MapManager.get().author}\n\nType \`commands\` to see all commands\nAnd \`usage <commandName>\` to show usage of a command\n\n]`);
