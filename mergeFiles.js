@@ -64,8 +64,15 @@ const compileMultipleFiles = async function (templates) {
 	for (let template of templates) await compile(template);
 }
 
-let templates = process.argv.slice(2).filter(e => e.trim());
+let args = process.argv.slice(2).filter(e => e.trim());
 
-if (templates.length < 1) templates = package.branches;
+let templates = args.slice(1);
 
-compileMultipleFiles(templates);
+if (args[0]) {
+	buildID = args[0];
+
+	if (templates.length < 1) templates = package.branches;
+
+	compileMultipleFiles(templates);
+}
+else console.log("No Build ID specified. Canceling the process.");

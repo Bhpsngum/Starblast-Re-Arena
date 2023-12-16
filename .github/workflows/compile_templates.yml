@@ -20,8 +20,10 @@ jobs:
     - name: Cleanup old Arena files
       run: rm -rfv releases/*
     - uses: actions/setup-node@v3
+    - name: Get GitHub short SHA as Build ID
+      run: echo "SHORT_SHA=`git rev-parse --short HEAD`" >> $GITHUB_ENV
     - name: Compile Arena files
-      run: npm run compile
+      run: npm run compile ${SHORT_SHA}
     - name: Deploy Arena files
       run: |
         git config user.name "github-actions[bot]"
