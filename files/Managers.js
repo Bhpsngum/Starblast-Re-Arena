@@ -591,7 +591,7 @@ const AbilityManager = {
 		let newList = [];
 
 		for (let ship of game.ships) {
-			if (ship.id == null) continue;
+			if (!HelperFunctions.isValidShip(ship)) continue;
 			if (ship.custom.sharedAbilityCustom == null) ship.custom.sharedAbilityCustom = {};
 			if (ship.custom.useAbilitySystem) {
 				if (!this.isAbilityInitialized(ship) && ship.alive) {
@@ -732,6 +732,7 @@ const AbilityManager = {
 
 			// reset abilities on ships
 			for (let ship of game.ships) {
+				if (!HelperFunctions.isValidShip(ship) || !this.isAbilityInitialized(ship)) continue;
 				if (ship.custom.abilityCustom == null) ship.custom.abilityCustom = {};
 				oldAbilityManager.end(ship);
 				let ability = AbilityManager.abilities[ship.custom.shipName];
