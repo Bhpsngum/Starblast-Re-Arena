@@ -299,14 +299,15 @@ const UIData = {
 	blockers: {
 		rebuild: function () {
 			// rebuild score block
-			let buildHue = parseInt(__ABILITY_SYSTEM_INFO__.buildID, 16) % 360, scoreBlock = {
+			let buildID = __ABILITY_SYSTEM_INFO__.buildID;
+			let buildHue = parseInt(buildID, 16) % 360, scoreBlock = {
 				id: "score_block",
 				position: [4,3,12,6],
 				components:[
 					{type:'box',position:[0,0,100,100],fill:"black", stroke: HelperFunctions.toHSLA(buildHue), width: 2},
 					{type:'box',position:[0,0,100,100],fill: HelperFunctions.toHSLA(buildHue, 0.25)},
 					{type: "text", position: [5,5,90,45], value: `Re:Arena (${__ABILITY_SYSTEM_INFO__.branch}) v${__ABILITY_SYSTEM_INFO__.version}`, color: HelperFunctions.toHSLA(buildHue)},
-					{type: "text", position: [5,50,90,45], value: `Build ID: ${__ABILITY_SYSTEM_INFO__.buildID.padStart(20, " ")}`, color: HelperFunctions.toHSLA(buildHue)}
+					{type: "text", position: [5,50,90,45], value: `Build ID: ${buildID.padStart(Math.max(0, 12 - buildID.length) * 2 + buildID.length, " ")}`, color: HelperFunctions.toHSLA(buildHue)}
 				]
 			};
 			let index = this.list.findIndex(ui => ui.id == "score_block");

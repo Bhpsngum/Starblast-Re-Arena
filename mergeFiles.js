@@ -2,7 +2,7 @@
 
 const fs = require("fs").promises;
 const package = require("./package.json");
-let date = new Date(), buildID = (+date).toString(16);
+let date = new Date(), buildID;
 let credits, abilitySystemInfo = function (tmpl_name) {
 	return `const __ABILITY_SYSTEM_INFO__ = {
 	name: "${package.name}",
