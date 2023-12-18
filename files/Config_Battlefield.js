@@ -9,6 +9,8 @@ const GAME_OPTIONS = {
 	ability: {
 		include_rings_on_model: false, // the individual ship's ring model inclusion are only checked if this one is `true`
 		shortcut: "X", // ability activation shortcut
+		switchShortcut: [String.fromCharCode(220), "\\"], // switch from clickable ability UI to unclickable (only responds to shortcut)
+		// first member, actual shortcut, second member shortcut shown as text (if those 2 are different from each other)
 		ship_levels: 6, // all ship levels
 		max_stats: 1e8 - 1, // maximum stats for ships
 		crystals: 720, // crystals when first set, default of `abilityTemplate.crystals`
@@ -34,3 +36,6 @@ Capture the objective and get ${this.points} points to win. Good luck!`
 // don't remove those
 GAME_OPTIONS.teams_count = Math.trunc(Math.min(Math.max(GAME_OPTIONS.teams_count, 0), 5)) || 0; // restriction
 GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players, 1), 240)) || 1;
+
+if (!Array.isArray(GAME_OPTIONS.ability.shortcut)) GAME_OPTIONS.ability.shortcut = Array(2).fill(GAME_OPTIONS.ability.shortcut);
+if (!Array.isArray(GAME_OPTIONS.ability.switchShortcut)) GAME_OPTIONS.ability.switchShortcut = Array(2).fill(GAME_OPTIONS.ability.switchShortcut);

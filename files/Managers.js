@@ -159,7 +159,10 @@ const AbilityManager = {
 	showAbilityNotice: GAME_OPTIONS.ability.notice.show,
 	abilityNoticeTimeout: GAME_OPTIONS.ability.notice.timeout,
 	abilityNoticeMessage: GAME_OPTIONS.ability.notice.message,
-	abilityShortcut: GAME_OPTIONS.ability.shortcut,
+	abilityShortcut: GAME_OPTIONS.ability.shortcut[0],
+	abilityShortcutText: GAME_OPTIONS.ability.shortcut[1],
+	abilitySwitchModeShortcut: GAME_OPTIONS.ability.switchShortcut[0],
+	abilitySwitchModeShortcutText: GAME_OPTIONS.ability.switchShortcut[1],
 	shipLevels: GAME_OPTIONS.ability.ship_levels,
 	model_conversion_ratio: 50, // don't change
 	maxStats: GAME_OPTIONS.ability.max_stats,
@@ -266,24 +269,53 @@ const AbilityManager = {
 			text: ship.custom.inAbility && ability.cooldownRestartOnEnd && !ability.customInAbilityText ? "In Ability" : ability.requirementsText(ship)
 		}
 	},
-	updateUI: function (ship) {
+	updateIndicator: function (ship) {
+		ship.custom.__switch_mode_initialized__ = true;
+		let hasAbility = (ship.custom || {}).ability != null;
+		HelperFunctions.sendUI(ship, {
+			id: this.UI.id + "_toggleUIClickableText",
+			position: [21, 0, 10, 2.5],
+			visible: hasAbility,
+			components: [
+				{ type: "text", position: [0, 0, 100, 100], value: `Ability UI: ${(ship.custom || {}).abilityUIUnclickable ? "Unclickable" : "Clickable"} [${this.abilitySwitchModeShortcutText}]`, color: "#FFFFFF", align: "left" }
+			]
+		});
+		HelperFunctions.sendUI(ship, {
+			id: this.UI.id + "_toggleUIClickable",
+			position: [0, 0, 0, 0],
+			clickable: hasAbility,
+			visible: false,
+			shortcut: this.abilitySwitchModeShortcut,
+			components: []
+		});
+	},
+	updateUI: function (ship, forced) {
 		let lastUI = ship.custom.lastUI || {}, ability = ship.custom.ability;
 		let abilityName = ability.abilityName(ship), { ready, text } = this.requirementsInfo(ship);
-		if (lastUI.ready !== ready || lastUI.text !== text || lastUI.abilityName !== abilityName) {
-			lastUI = ship.custom.lastUI = { ready, text, abilityName };
+		if (forced || lastUI.ready !== ready || lastUI.text !== text || lastUI.abilityName !== abilityName) {
 			let color = this.UI.colors[ready ? "ready" : "notReady"];
+			let unclickable = (ship.custom || {}).abilityUIUnclickable;
 			HelperFunctions.sendUI(ship, {
 				id: this.UI.id,
 				position: this.UI.position,
-				clickable: lastUI.ready,
+				clickable: ready && !unclickable,
 				visible: true,
 				shortcut: this.abilityShortcut,
 				components: [
-					{ type: "text",position:[0,0,100,50],value: HelperFunctions.fill(abilityName + ` [${this.abilityShortcut}]`, 15), color: "#FFFFFF"},
+					{ type: "text",position:[0,0,100,50],value: HelperFunctions.fill(abilityName + ` [${this.abilityShortcutText}]`, 15), color: "#FFFFFF"},
 					{ type: "box",position:[0,50,100,50],fill: color.fill, stroke: color.stroke,width:4},
 					{ type: "text",position:[2.5,57.5,95,35],value: text ,color: color.text},
 				]
-			})
+			});
+			if (forced || lastUI.ready != ready) HelperFunctions.sendUI(ship, {
+				id: this.UI.id + "_hidden",
+				position: [0, 0, 0, 0],
+				visible: false,
+				clickable: ready && unclickable,
+				shortcut: this.abilityShortcut,
+				components: []
+			});
+			lastUI = ship.custom.lastUI = { ready, text, abilityName };
 		}
 	},
 	event: function (event, ship) {
@@ -424,6 +456,7 @@ const AbilityManager = {
 		ship.custom.shipModelChanged = false;
 		shipAbil.initialize(ship, oldAbilName);
 		shipAbil.unload(ship);
+		this.updateIndicator(ship);
 		this.updateShipsList(TeamManager.getDataFromShip(ship));
 		if (!ignoreAll && !ignoreReset.restore) this.restore(ship);
 		return { success: true };
@@ -551,7 +584,8 @@ const AbilityManager = {
 
 				HelperFunctions.sendUI(ship, {
 					id: this.optionUI.prefix + "next",
-					clickable: true,
+					clickable: !ship.custom.abilityUIUnclickable,
+					visible: !ship.custom.abilityUIUnclickable,
 					position: [75, 5, 5, 2.5],
 					components: [
 						{ type: "box", position: [0, 0, 100, 100], stroke: "#cde", width: 2},
@@ -608,7 +642,7 @@ const AbilityManager = {
 				}
 			}
 			else {
-				if (this.isAbilityInitialized(ship)) this.disableAbilitySystem(ship);
+				if (this.isAbilityInitialized(ship) && ship.alive) this.disableAbilitySystem(ship);
 			}
 			let isAbilityActivated = this.isAbilityInitialized(ship);
 			if (isAbilityActivated && ship.alive && this.showAbilityNotice && ship.custom.allowInstructor) {
@@ -620,6 +654,7 @@ const AbilityManager = {
 				}
 				ship.custom.allowInstructor = false;
 			}
+			if (!ship.custom.__switch_mode_initialized__) this.updateIndicator(ship);
 			if (isAbilityActivated) {
 				if (ship.type != ship.custom.__last_ability_ship_type__) {
 					let oldType = ship.custom.__last_ability_ship_type__;
@@ -694,7 +729,15 @@ const AbilityManager = {
 					let component = event.id;
 					switch (component) {
 						case this.UI.id:
+							if (ship.custom.abilityUIUnclickable) break;
+						case this.UI.id + "_hidden":
 							this.start(ship);
+							break;
+						case this.UI.id + "_toggleUIClickable":
+							ship.custom.abilityUIUnclickable = !ship.custom.abilityUIUnclickable;
+							this.updateUI(ship, true);
+							this.updateIndicator(ship);
+							this.abilityRangeUI.set(ship, true);
 							break;
 						default:
 							if (ship.custom.__abilitySystem_last_ui_action__ != null && game.step - ship.custom.__abilitySystem_last_ui_action__ <= this.UIActionsDelay) break;
