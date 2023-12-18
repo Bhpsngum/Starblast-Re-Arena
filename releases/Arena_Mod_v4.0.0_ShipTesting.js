@@ -23,7 +23,7 @@ const __ABILITY_SYSTEM_INFO__ = {
 	name: "Arena_Mod",
 	branch: "ShipTesting",
 	version: "4.0.0",
-	buildID: "cb6f070"
+	buildID: "08a3e9c"
 };
 
 
@@ -154,7 +154,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_ShipTesting.js at Sun Dec 17 2023 00:47:58 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_ShipTesting.js at Mon Dec 18 2023 22:24:14 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -167,6 +167,8 @@ const GAME_OPTIONS = {
 	ability: {
 		include_rings_on_model: false, // the individual ship's ring model inclusion are only checked if this one is `true`
 		shortcut: "X", // ability activation shortcut
+		switchShortcut: [String.fromCharCode(220), "\\"], // switch from clickable ability UI to unclickable (only responds to shortcut)
+		// first member, actual shortcut, second member shortcut shown as text (if those 2 are different from each other)
 		ship_levels: 6, // all ship levels
 		max_stats: 1e8 - 1, // maximum stats for ships
 		crystals: 720, // crystals when first set, default of `abilityTemplate.crystals`
@@ -193,11 +195,14 @@ Press [${this.ability.shortcut}] to activate it.`
 GAME_OPTIONS.teams_count = Math.trunc(Math.min(Math.max(GAME_OPTIONS.teams_count, 0), 5)) || 0; // restriction
 GAME_OPTIONS.max_players = Math.trunc(Math.min(Math.max(GAME_OPTIONS.max_players, 1), 240)) || 1;
 
+if (!Array.isArray(GAME_OPTIONS.ability.shortcut)) GAME_OPTIONS.ability.shortcut = Array(2).fill(GAME_OPTIONS.ability.shortcut);
+if (!Array.isArray(GAME_OPTIONS.ability.switchShortcut)) GAME_OPTIONS.ability.switchShortcut = Array(2).fill(GAME_OPTIONS.ability.switchShortcut);
 
 
 
 
-/* Imported from Teams.js at Sun Dec 17 2023 00:47:58 GMT+0900 (Japan Standard Time) */
+
+/* Imported from Teams.js at Mon Dec 18 2023 22:24:14 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
 	{
@@ -248,7 +253,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps_ShipTesting.js at Sun Dec 17 2023 00:47:58 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps_ShipTesting.js at Mon Dec 18 2023 22:24:14 GMT+0900 (Japan Standard Time) */
 
 const Maps = [];
 
@@ -256,7 +261,7 @@ const Maps = [];
 
 
 
-/* Imported from Abilities.js at Sun Dec 17 2023 00:47:58 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Mon Dec 18 2023 22:24:14 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
 	"Test ship": {
@@ -2465,7 +2470,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Sun Dec 17 2023 00:47:58 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Mon Dec 18 2023 22:24:14 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -2803,7 +2808,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Sun Dec 17 2023 00:47:58 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Mon Dec 18 2023 22:24:14 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
 	planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -2813,7 +2818,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Sun Dec 17 2023 00:47:58 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Mon Dec 18 2023 22:24:14 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
 	toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -3208,7 +3213,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Sun Dec 17 2023 00:47:58 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Mon Dec 18 2023 22:24:14 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
 	ghostTeam: GhostTeam,
@@ -3371,7 +3376,10 @@ const AbilityManager = {
 	showAbilityNotice: GAME_OPTIONS.ability.notice.show,
 	abilityNoticeTimeout: GAME_OPTIONS.ability.notice.timeout,
 	abilityNoticeMessage: GAME_OPTIONS.ability.notice.message,
-	abilityShortcut: GAME_OPTIONS.ability.shortcut,
+	abilityShortcut: GAME_OPTIONS.ability.shortcut[0],
+	abilityShortcutText: GAME_OPTIONS.ability.shortcut[1],
+	abilitySwitchModeShortcut: GAME_OPTIONS.ability.switchShortcut[0],
+	abilitySwitchModeShortcutText: GAME_OPTIONS.ability.switchShortcut[1],
 	shipLevels: GAME_OPTIONS.ability.ship_levels,
 	model_conversion_ratio: 50, // don't change
 	maxStats: GAME_OPTIONS.ability.max_stats,
@@ -3478,24 +3486,53 @@ const AbilityManager = {
 			text: ship.custom.inAbility && ability.cooldownRestartOnEnd && !ability.customInAbilityText ? "In Ability" : ability.requirementsText(ship)
 		}
 	},
-	updateUI: function (ship) {
+	updateIndicator: function (ship) {
+		ship.custom.__switch_mode_initialized__ = true;
+		let hasAbility = (ship.custom || {}).ability != null;
+		HelperFunctions.sendUI(ship, {
+			id: this.UI.id + "_toggleUIClickableText",
+			position: [21, 0, 10, 2.5],
+			visible: hasAbility,
+			components: [
+				{ type: "text", position: [0, 0, 100, 100], value: `Ability UI: ${(ship.custom || {}).abilityUIUnclickable ? "Unclickable" : "Clickable"} [${this.abilitySwitchModeShortcutText}]`, color: "#FFFFFF", align: "left" }
+			]
+		});
+		HelperFunctions.sendUI(ship, {
+			id: this.UI.id + "_toggleUIClickable",
+			position: [0, 0, 0, 0],
+			clickable: hasAbility,
+			visible: false,
+			shortcut: this.abilitySwitchModeShortcut,
+			components: []
+		});
+	},
+	updateUI: function (ship, forced) {
 		let lastUI = ship.custom.lastUI || {}, ability = ship.custom.ability;
 		let abilityName = ability.abilityName(ship), { ready, text } = this.requirementsInfo(ship);
-		if (lastUI.ready !== ready || lastUI.text !== text || lastUI.abilityName !== abilityName) {
-			lastUI = ship.custom.lastUI = { ready, text, abilityName };
+		if (forced || lastUI.ready !== ready || lastUI.text !== text || lastUI.abilityName !== abilityName) {
 			let color = this.UI.colors[ready ? "ready" : "notReady"];
+			let unclickable = (ship.custom || {}).abilityUIUnclickable;
 			HelperFunctions.sendUI(ship, {
 				id: this.UI.id,
 				position: this.UI.position,
-				clickable: lastUI.ready,
+				clickable: ready && !unclickable,
 				visible: true,
 				shortcut: this.abilityShortcut,
 				components: [
-					{ type: "text",position:[0,0,100,50],value: HelperFunctions.fill(abilityName + ` [${this.abilityShortcut}]`, 15), color: "#FFFFFF"},
+					{ type: "text",position:[0,0,100,50],value: HelperFunctions.fill(abilityName + ` [${this.abilityShortcutText}]`, 15), color: "#FFFFFF"},
 					{ type: "box",position:[0,50,100,50],fill: color.fill, stroke: color.stroke,width:4},
 					{ type: "text",position:[2.5,57.5,95,35],value: text ,color: color.text},
 				]
-			})
+			});
+			if (forced || lastUI.ready != ready) HelperFunctions.sendUI(ship, {
+				id: this.UI.id + "_hidden",
+				position: [0, 0, 0, 0],
+				visible: false,
+				clickable: ready && unclickable,
+				shortcut: this.abilityShortcut,
+				components: []
+			});
+			lastUI = ship.custom.lastUI = { ready, text, abilityName };
 		}
 	},
 	event: function (event, ship) {
@@ -3636,6 +3673,7 @@ const AbilityManager = {
 		ship.custom.shipModelChanged = false;
 		shipAbil.initialize(ship, oldAbilName);
 		shipAbil.unload(ship);
+		this.updateIndicator(ship);
 		this.updateShipsList(TeamManager.getDataFromShip(ship));
 		if (!ignoreAll && !ignoreReset.restore) this.restore(ship);
 		return { success: true };
@@ -3763,7 +3801,8 @@ const AbilityManager = {
 
 				HelperFunctions.sendUI(ship, {
 					id: this.optionUI.prefix + "next",
-					clickable: true,
+					clickable: !ship.custom.abilityUIUnclickable,
+					visible: !ship.custom.abilityUIUnclickable,
 					position: [75, 5, 5, 2.5],
 					components: [
 						{ type: "box", position: [0, 0, 100, 100], stroke: "#cde", width: 2},
@@ -3820,7 +3859,7 @@ const AbilityManager = {
 				}
 			}
 			else {
-				if (this.isAbilityInitialized(ship)) this.disableAbilitySystem(ship);
+				if (this.isAbilityInitialized(ship) && ship.alive) this.disableAbilitySystem(ship);
 			}
 			let isAbilityActivated = this.isAbilityInitialized(ship);
 			if (isAbilityActivated && ship.alive && this.showAbilityNotice && ship.custom.allowInstructor) {
@@ -3832,6 +3871,7 @@ const AbilityManager = {
 				}
 				ship.custom.allowInstructor = false;
 			}
+			if (!ship.custom.__switch_mode_initialized__) this.updateIndicator(ship);
 			if (isAbilityActivated) {
 				if (ship.type != ship.custom.__last_ability_ship_type__) {
 					let oldType = ship.custom.__last_ability_ship_type__;
@@ -3906,7 +3946,15 @@ const AbilityManager = {
 					let component = event.id;
 					switch (component) {
 						case this.UI.id:
+							if (ship.custom.abilityUIUnclickable) break;
+						case this.UI.id + "_hidden":
 							this.start(ship);
+							break;
+						case this.UI.id + "_toggleUIClickable":
+							ship.custom.abilityUIUnclickable = !ship.custom.abilityUIUnclickable;
+							this.updateUI(ship, true);
+							this.updateIndicator(ship);
+							this.abilityRangeUI.set(ship, true);
 							break;
 						default:
 							if (ship.custom.__abilitySystem_last_ui_action__ != null && game.step - ship.custom.__abilitySystem_last_ui_action__ <= this.UIActionsDelay) break;
