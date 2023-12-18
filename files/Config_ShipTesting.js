@@ -21,7 +21,7 @@ const GAME_OPTIONS = {
 				// this function binds to `GAME_OPTIONS` object
 				return `Greetings, Commander.
 Your ship is equipped with a special ability module.
-Press [${this.ability.shortcut}] to activate it.`
+Press [${this.ability.shortcut[1]}] to activate it.`
 // Capture the objective and get ${this.points} points to win. Good luck!`
 			}
 		},
