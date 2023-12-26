@@ -23,7 +23,7 @@ const __ABILITY_SYSTEM_INFO__ = {
 	name: "Arena_Mod",
 	branch: "ShipTesting",
 	version: "4.0.0",
-	buildID: "3ace6e9"
+	buildID: "9cf0e1f"
 };
 
 
@@ -154,7 +154,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_ShipTesting.js at Tue Dec 19 2023 00:17:02 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_ShipTesting.js at Tue Dec 26 2023 20:08:57 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -202,7 +202,7 @@ if (!Array.isArray(GAME_OPTIONS.ability.switchShortcut)) GAME_OPTIONS.ability.sw
 
 
 
-/* Imported from Teams.js at Tue Dec 19 2023 00:17:02 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Tue Dec 26 2023 20:08:57 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
 	{
@@ -253,7 +253,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps_ShipTesting.js at Tue Dec 19 2023 00:17:02 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps_ShipTesting.js at Tue Dec 26 2023 20:08:57 GMT+0900 (Japan Standard Time) */
 
 const Maps = [];
 
@@ -261,7 +261,7 @@ const Maps = [];
 
 
 
-/* Imported from Abilities.js at Tue Dec 19 2023 00:17:02 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Tue Dec 26 2023 20:08:57 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
 	"Test ship": {
@@ -1791,7 +1791,7 @@ const ShipAbilities = {
   
 		offensiveModelRadius: 7,
 	  
-		stateSpeed: 0.3, // accelerating speed when switching between forms
+		// stateSpeed: 0.3, // accelerating speed when switching between forms
   
 		getCooldown: function (ship) {
 			return ship.custom.abilityCustom.isDefensive ? this.defensiveCooldown : this.cooldown;
@@ -1821,7 +1821,7 @@ const ShipAbilities = {
 				stats: AbilityManager.maxStats,
 				generator: this.energy_capacities[model]
 			});
-			HelperFunctions.accelerate(ship,  this.stateSpeed * ((-1) ** !!isDefensive));
+			// HelperFunctions.accelerate(ship,  this.stateSpeed * ((-1) ** !!isDefensive));
 			ship.custom.forceEnd = true;
 		},
 
@@ -2470,7 +2470,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Tue Dec 19 2023 00:17:02 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Tue Dec 26 2023 20:08:57 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -2808,7 +2808,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Tue Dec 19 2023 00:17:02 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Tue Dec 26 2023 20:08:57 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
 	planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -2818,7 +2818,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Tue Dec 19 2023 00:17:02 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Tue Dec 26 2023 20:08:57 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
 	toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -3213,7 +3213,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Tue Dec 19 2023 00:17:02 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Tue Dec 26 2023 20:08:57 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
 	ghostTeam: GhostTeam,
