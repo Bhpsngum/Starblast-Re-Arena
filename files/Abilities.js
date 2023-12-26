@@ -1526,7 +1526,7 @@ const ShipAbilities = {
   
 		offensiveModelRadius: 7,
 	  
-		stateSpeed: 0.3, // accelerating speed when switching between forms
+		// stateSpeed: 0.3, // accelerating speed when switching between forms
   
 		getCooldown: function (ship) {
 			return ship.custom.abilityCustom.isDefensive ? this.defensiveCooldown : this.cooldown;
@@ -1556,7 +1556,7 @@ const ShipAbilities = {
 				stats: AbilityManager.maxStats,
 				generator: this.energy_capacities[model]
 			});
-			HelperFunctions.accelerate(ship,  this.stateSpeed * ((-1) ** !!isDefensive));
+			// HelperFunctions.accelerate(ship,  this.stateSpeed * ((-1) ** !!isDefensive));
 			ship.custom.forceEnd = true;
 		},
 
