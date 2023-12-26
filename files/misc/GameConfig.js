@@ -55,7 +55,7 @@ const CONTROL_POINT = {
 		dominating_percentage: 90 // % of control one team needs in order to dominate and gain points
 	},
 	score_increase: 0.1, // team points increases per sec for the dominating team
-	disadvantage_multiplier_threshold: 25, // To prevent the score increase multiplier from going up too high
+	disadvantage_multiplier_threshold: 10, // To prevent the score increase multiplier from going up too high
 	// this value must be higher than 1.
 	textures: [
 		{
