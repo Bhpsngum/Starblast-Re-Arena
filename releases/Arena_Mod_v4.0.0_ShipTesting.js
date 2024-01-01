@@ -23,7 +23,7 @@ const __ABILITY_SYSTEM_INFO__ = {
 	name: "Arena_Mod",
 	branch: "ShipTesting",
 	version: "4.0.0",
-	buildID: "f7044eb"
+	buildID: "6ece01a"
 };
 
 
@@ -154,7 +154,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_ShipTesting.js at Tue Dec 26 2023 22:36:33 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_ShipTesting.js at Mon Jan 01 2024 23:22:01 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -202,7 +202,7 @@ if (!Array.isArray(GAME_OPTIONS.ability.switchShortcut)) GAME_OPTIONS.ability.sw
 
 
 
-/* Imported from Teams.js at Tue Dec 26 2023 22:36:33 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Mon Jan 01 2024 23:22:01 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
 	{
@@ -253,7 +253,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps_ShipTesting.js at Tue Dec 26 2023 22:36:33 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps_ShipTesting.js at Mon Jan 01 2024 23:22:01 GMT+0900 (Japan Standard Time) */
 
 const Maps = [];
 
@@ -261,7 +261,7 @@ const Maps = [];
 
 
 
-/* Imported from Abilities.js at Tue Dec 26 2023 22:36:33 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Mon Jan 01 2024 23:22:01 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
 	"Test ship": {
@@ -2470,7 +2470,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Tue Dec 26 2023 22:36:33 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Mon Jan 01 2024 23:22:01 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -2808,7 +2808,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Tue Dec 26 2023 22:36:33 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Mon Jan 01 2024 23:22:01 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
 	planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -2818,7 +2818,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Tue Dec 26 2023 22:36:33 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Mon Jan 01 2024 23:22:01 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
 	toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -3213,7 +3213,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Tue Dec 26 2023 22:36:33 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Mon Jan 01 2024 23:22:01 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
 	ghostTeam: GhostTeam,
@@ -3289,6 +3289,7 @@ const MapManager = {
 		return this.maps[nameOrIndex] || this.maps.find(m => m.name.toLowerCase() == String(nameOrIndex).toLowerCase());
 	},
 	get: function (set = false, forceReset = false) {
+		if (game.custom.last_map != null) this.map = this.maps.find(m => m.name === game.custom.last_map.name && m.author === game.custom.last_map.author);
 		if (this.map == null || forceReset) {
 			this.map = this.search(GAME_OPTIONS.map_preset_name);
 			if (this.map == null) this.map = HelperFunctions.randomItem(this.maps).value;
@@ -3305,7 +3306,7 @@ const MapManager = {
 		}
 		if (set) {
 			try { game.setCustomMap(this.map.map); } catch (e) {}
-			this.assignSpawnpoints();
+			this.assignSpawnpoints(forceReset);
 		}
 		return this.map;
 	},
@@ -3319,7 +3320,7 @@ const MapManager = {
 			return absoluteDistance;
 		}); // no invalid pairs
 	},
-	assignSpawnpoints: function () {
+	assignSpawnpoints: function (forced = false) {
 		let teams = [...TeamManager.getAll(), TeamManager.ghostTeam], { spawnpoints, pairings } = this.get();
 
 		if (!Array.isArray(spawnpoints) || spawnpoints.length < 1) return;
@@ -3336,6 +3337,19 @@ const MapManager = {
 		let curPair = pairs.shift(), dist = GAME_OPTIONS.teams_count;
 
 		for (let team of teams) if (team && team.need_spawnpoint) {
+			// ignore teams with already-assigned spawnpoints unless forced to
+			if (!forced && team.spawnpoint != null) {
+				let index = spawnpoints.findIndex(sp => sp.x === team.spawnpoint.x && sp.y === team.spawnpoint.y);
+				if (index > -1) {
+					for (let pair of [...pairs, curPair]) {
+						let pairIndex = pair.indexOf(index);
+						if (pairIndex > -1) pair.splice(pairIndex, 1);
+					}
+					--dist;
+					continue;
+				}
+			}
+
 			if (curPair.length < 1) { // current candidate has no spawnpoints
 				if (pairs.length < 1) break; // no more pairs
 				curPair = this.sortPairings(pairs, dist).shift();
@@ -3365,9 +3379,9 @@ const MapManager = {
 			});
 		}
 	},
-	set: function (nameOrIndex, set = false) {
+	set: function (nameOrIndex, set = false, resetSpawnpoints = false) {
 		this.map = this.search(nameOrIndex);
-		return this.get(set);
+		return this.get(set, resetSpawnpoints);
 	}
 }
 
@@ -3994,11 +4008,11 @@ const AbilityManager = {
 			for (let ship of game.ships) {
 				if (!HelperFunctions.isValidShip(ship) || !this.isAbilityInitialized(ship)) continue;
 				if (ship.custom.abilityCustom == null) ship.custom.abilityCustom = {};
-				oldAbilityManager.end(ship);
-				let ability = AbilityManager.abilities[ship.custom.shipName];
-				if (ability != null) ship.custom.ability = ability;
-				else AbilityManager.random(ship, true);
+				if (ship.custom.inAbility) oldAbilityManager.end(ship);
+				AbilityManager.assign(ship, ship.custom.shipName, false, true, true);
 			}
+
+			if ("function" == typeof this.onCodeChange) this.onCodeChange();
 		}
 
 		game.custom.AbilityManager = AbilityManager;
