@@ -422,7 +422,7 @@ const UIData = {
 				]
 			});
 		},
-		toggle: function (ship, perma = false, firstOpen = false) {
+		toggle: function (ship, perma = false, firstOpen = false, option = null, forced = false) {
 			// perma means also hides the choose ship button
 			// first open to assign starting tick
 			if (!game.custom.started || !game.custom.abilitySystemEnabled || ship.custom.abilitySystemDisabled) {
@@ -430,7 +430,7 @@ const UIData = {
 				perma = true;
 			}
 			if (!firstOpen && ship.custom.shipUIsPermaHidden) return;
-			let isHidden = perma || firstOpen || !ship.custom.shipUIsHidden;
+			let isHidden = perma || firstOpen || (option == null ? !ship.custom.shipUIsHidden : !!option);
 			if (perma) {
 				ship.custom.shipUIsPermaHidden = true;
 			}
@@ -440,8 +440,8 @@ const UIData = {
 			}
 			let oldHidden = ship.custom.shipUIsHidden;
 			ship.custom.shipUIsHidden = isHidden;
-			if (oldHidden !== isHidden || perma || firstOpen) this.openUI(ship, !perma);
-			if (oldHidden !== isHidden) this.toggleSelectMenu(ship);
+			if (forced || oldHidden !== isHidden || perma || firstOpen) this.openUI(ship, !perma);
+			if (forced || oldHidden !== isHidden) this.toggleSelectMenu(ship);
 		},
 		sendIndividual: function (ship, position, name, stylePreset, id = null, shortcut = null, customTextScale = null) {
 			let { bgColor, borderColor, borderWidth, textColor, clickable } = this.styles[stylePreset];
@@ -961,4 +961,10 @@ AbilityManager.onActionBlockStateChange = function (ship) {
 
 TeamManager.onShipTeamChange = function (ship, newTeamOBJ, oldTeamOBJ) {
 	UIData.updateScoreboard(game);
+}
+
+AbilityManager.onCodeChange = function () {
+	if (game.custom.abilitySystemEnabled) for (let ship of game.ships) {
+		if (HelperFunctions.isValidShip(ship) && !ship.custom.abilitySystemDisabled) UIData.shipUIs.toggle(ship, false, false, !!ship.custom.shipUIsHidden, true);
+	}
 }

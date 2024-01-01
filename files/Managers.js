@@ -72,6 +72,7 @@ const MapManager = {
 		return this.maps[nameOrIndex] || this.maps.find(m => m.name.toLowerCase() == String(nameOrIndex).toLowerCase());
 	},
 	get: function (set = false, forceReset = false) {
+		if (game.custom.last_map != null) this.map = this.maps.find(m => m.name === game.custom.last_map.name && m.author === game.custom.last_map.author);
 		if (this.map == null || forceReset) {
 			this.map = this.search(GAME_OPTIONS.map_preset_name);
 			if (this.map == null) this.map = HelperFunctions.randomItem(this.maps).value;
@@ -88,7 +89,7 @@ const MapManager = {
 		}
 		if (set) {
 			try { game.setCustomMap(this.map.map); } catch (e) {}
-			this.assignSpawnpoints();
+			this.assignSpawnpoints(forceReset);
 		}
 		return this.map;
 	},
@@ -102,7 +103,7 @@ const MapManager = {
 			return absoluteDistance;
 		}); // no invalid pairs
 	},
-	assignSpawnpoints: function () {
+	assignSpawnpoints: function (forced = false) {
 		let teams = [...TeamManager.getAll(), TeamManager.ghostTeam], { spawnpoints, pairings } = this.get();
 
 		if (!Array.isArray(spawnpoints) || spawnpoints.length < 1) return;
@@ -119,6 +120,19 @@ const MapManager = {
 		let curPair = pairs.shift(), dist = GAME_OPTIONS.teams_count;
 
 		for (let team of teams) if (team && team.need_spawnpoint) {
+			// ignore teams with already-assigned spawnpoints unless forced to
+			if (!forced && team.spawnpoint != null) {
+				let index = spawnpoints.findIndex(sp => sp.x === team.spawnpoint.x && sp.y === team.spawnpoint.y);
+				if (index > -1) {
+					for (let pair of [...pairs, curPair]) {
+						let pairIndex = pair.indexOf(index);
+						if (pairIndex > -1) pair.splice(pairIndex, 1);
+					}
+					--dist;
+					continue;
+				}
+			}
+
 			if (curPair.length < 1) { // current candidate has no spawnpoints
 				if (pairs.length < 1) break; // no more pairs
 				curPair = this.sortPairings(pairs, dist).shift();
@@ -148,9 +162,9 @@ const MapManager = {
 			});
 		}
 	},
-	set: function (nameOrIndex, set = false) {
+	set: function (nameOrIndex, set = false, resetSpawnpoints = false) {
 		this.map = this.search(nameOrIndex);
-		return this.get(set);
+		return this.get(set, resetSpawnpoints);
 	}
 }
 
@@ -777,11 +791,11 @@ const AbilityManager = {
 			for (let ship of game.ships) {
 				if (!HelperFunctions.isValidShip(ship) || !this.isAbilityInitialized(ship)) continue;
 				if (ship.custom.abilityCustom == null) ship.custom.abilityCustom = {};
-				oldAbilityManager.end(ship);
-				let ability = AbilityManager.abilities[ship.custom.shipName];
-				if (ability != null) ship.custom.ability = ability;
-				else AbilityManager.random(ship, true);
+				if (ship.custom.inAbility) oldAbilityManager.end(ship);
+				AbilityManager.assign(ship, ship.custom.shipName, false, true, true);
 			}
+
+			if ("function" == typeof this.onCodeChange) this.onCodeChange();
 		}
 
 		game.custom.AbilityManager = AbilityManager;
