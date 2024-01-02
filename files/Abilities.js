@@ -1252,6 +1252,10 @@ const ShipAbilities = {
 					this.endPuckPhase(ship);
 				}
 			}
+		},
+
+		initialize: function (ship) {
+			ship.set({ healing: false });
 		}
 	},
 	"Sigma": {
