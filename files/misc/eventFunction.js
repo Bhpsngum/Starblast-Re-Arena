@@ -4,6 +4,10 @@ this.event = function (event, game) {
 	if (ship == null || ship.id == null || ship.custom.kicked || !ship.custom.joined) return;
 	switch (event.name) {
 		case "ship_spawned":
+			if (ship.custom.spectator) {
+				ship.set({ x: 0, y: 0 });
+				break;
+			}
 			TeamManager.set(ship, void 0, false, true);
 			AbilityManager.restore(ship);
 			HelperFunctions.resetIntrusionWarningMSG(ship);
@@ -14,6 +18,7 @@ this.event = function (event, game) {
 			if (game.custom.abilitySystemEnabled && !ship.custom.abilitySystemDisabled) UIData.shipUIs.toggle(ship, false, true);
 			break;
 		case "ship_destroyed":
+			if (ship.custom.spectator) break;
 			HelperFunctions.resetIntrusionWarningMSG(ship);
 			ship.custom.deaths = (ship.custom.deaths + 1) || 1;
 			let killer = event.killer;
@@ -21,7 +26,7 @@ this.event = function (event, game) {
 			UIData.updateScoreboard(game);
 			break;
 		case "ui_component_clicked":
-			if (UIData.blockers.has(event.id)) break;
+			if (ship.custom.spectator || UIData.blockers.has(event.id)) break;
 			if (ship.custom.lastClickedStep != null && game.step - ship.custom.lastClickedStep < GAME_OPTIONS.buttons_cooldown * 60) break;
 			ship.custom.lastClickedStep = game.step;
 			let component = event.id;

@@ -168,6 +168,7 @@ const HelperFunctions = {
 		ships: false, // include asteroids
 		asteroids: false, // include ships
 		self: false, // include itself (see notes below)
+		spectator: false, // include spectators (you should not do this)
 		invisible: false // include "invisible" entities (Entities with `entity.custom.invisible == true`)
 	}, dontSort = false) {
 		// Find all entities in range
@@ -203,7 +204,7 @@ const HelperFunctions = {
 
 		// Only find ships if either `teammate` or `enemy` is `true`
 
-		if (includes.ships && (teammate || enemy)) data.push(...game.ships.filter(ship => this.isValidShip(ship) && ship.alive && (includes.invisible || !ship.custom.invisible) && (includes.self || ship !== entity) && this.satisfies(entity, ship, teammate, enemy) && this.distance(entity, ship).distance <= range));
+		if (includes.ships && (teammate || enemy)) data.push(...game.ships.filter(ship => this.isValidShip(ship) && ship.alive && (includes.spectator || !ship.custom.spectator) && (includes.invisible || !ship.custom.invisible) && (includes.self || ship !== entity) && this.satisfies(entity, ship, teammate, enemy) && this.distance(entity, ship).distance <= range));
 		
 		// if you only need to select enemies in range and don't care about the order by distance, set `dontSort` to `true`
 		// the sorting procedure below this might be heavy, so only use sorted array it if you need to

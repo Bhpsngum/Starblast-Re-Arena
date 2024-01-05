@@ -224,7 +224,7 @@ const WeightCalculator = {
 		return kills * muls.kills + deaths * muls.deaths + teamCaptureValue * muls.teamCaptureValue;
 	},
 	getTopPlayers: function (game, donSort = false, formula = "playerWeightByKD") {
-		let players = game.ships.filter(e => (e || {}).id != null && !e.custom.kicked && e.custom.joined);
+		let players = game.ships.filter(e => (e || {}).id != null && !e.custom.kicked && e.custom.joined && !e.custom.spectator);
 		if (donSort) return players;
 
 		// get formula
@@ -238,7 +238,7 @@ const WeightCalculator = {
 		let teamData = TeamManager.getDataFromID(id);
 		let res = 0;
 		for (let ship of game.ships) {
-			if ((ship || {}).id == null || !ship.custom.joined || ship.custom.kicked || !ship.custom.teamAssigned) continue;
+			if ((ship || {}).id == null || !ship.custom.joined || ship.custom.kicked || !ship.custom.teamAssigned || ship.custom.spectator) continue;
 
 			let shipTeam = TeamManager.getDataFromShip(ship);
 
@@ -425,7 +425,7 @@ const UIData = {
 		toggle: function (ship, perma = false, firstOpen = false, option = null, forced = false) {
 			// perma means also hides the choose ship button
 			// first open to assign starting tick
-			if (!game.custom.started || !game.custom.abilitySystemEnabled || ship.custom.abilitySystemDisabled) {
+			if (!game.custom.started || !game.custom.abilitySystemEnabled || !ship.custom.useAbilitySystem || ship.custom.abilitySystemDisabled) {
 				firstOpen = false;
 				perma = true;
 			}
@@ -727,7 +727,7 @@ const UIData = {
 			]
 		});
 		let scoreboardData = { ...this.scoreboard };
-		if (game.custom.started && !game.custom.ended && ship.custom.joined) {
+		if (game.custom.started && !game.custom.ended && !ship.custom.spectator && ship.custom.joined) {
 			// highlight players
 			let compos = HelperFunctions.clone(scoreboardData.components);
 			let foundIndex = compos.findIndex(c => c.type == "player" && c.id === ship.id);

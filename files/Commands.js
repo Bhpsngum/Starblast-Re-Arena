@@ -2,7 +2,8 @@
 const MAKE_COMMANDS = function () {
 	let kick = function (ship, info, reason) {
 		ship.custom.kicked = true;
-		ship.custom.abilitySystemDisabled = true;
+		ship.custom.useAbilitySystem = false;
+		ship.custom.spectator = true;
 		HelperFunctions.setCollider(ship, false);
 		ship.set({
 			idle: true,

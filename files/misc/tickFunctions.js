@@ -24,10 +24,19 @@ const alwaysTick = function (game) {
 				
 				if (game.custom.started) {
 					ship.custom.allowInstructor = true;
-					ship.custom.useAbilitySystem = true;
-					AbilityManager.random(ship, true);
-					WeightCalculator.joinBalanceTeam(ship);
-					HelperFunctions.spawnShip(ship);
+					if (GAME_OPTIONS.spectator_enabled && ship.type == 102) {
+						ship.custom.spectator = true;
+						HelperFunctions.setCollider(ship, false);
+						ship.set({ x: 0, y: 0 });
+						UIData.renderScoreboard(ship);
+						UIData.renderPlayerCount(ship);
+					}
+					else {
+						ship.custom.useAbilitySystem = true;
+						AbilityManager.random(ship, true);
+						WeightCalculator.joinBalanceTeam(ship);
+						HelperFunctions.spawnShip(ship);
+					}
 				}
 				else {
 					HelperFunctions.sendWaitingText(ship);
@@ -42,7 +51,7 @@ const alwaysTick = function (game) {
 			ship.custom.joined = true;
 		}
 
-		if (!ship.custom.kicked && ship.custom.joined) {
+		if (!ship.custom.spectator && !ship.custom.kicked && ship.custom.joined) {
 			// AFK Check
 			if (game.custom.started) {
 				let data = ship.custom.last_status || {};
@@ -228,15 +237,21 @@ const waiting = function (game) {
 			players.forEach(ship => {
 				if ((ship || {}).id == null || ship.custom.kicked || !ship.custom.joined) return;
 				ship.custom.allowInstructor = true;
-				ship.custom.useAbilitySystem = true;
-				AbilityManager.random(ship, true);
-				WeightCalculator.joinBalanceTeam(ship);
-				if (ship.alive) {
-					HelperFunctions.spawnShip(ship);
-					UIData.shipUIs.toggle(ship, false, true);
+				if (GAME_OPTIONS.spectator_enabled && ship.type == 102) {
+					ship.custom.spectator = true;
+					HelperFunctions.setCollider(ship, false);
+				}
+				else {
+					ship.custom.useAbilitySystem = true;
+					AbilityManager.random(ship, true);
+					WeightCalculator.joinBalanceTeam(ship);
+					if (ship.alive) {
+						HelperFunctions.spawnShip(ship);
+						UIData.shipUIs.toggle(ship, false, true);
+					}
+					ship.custom.last_active = game.step;
 				}
 				ship.set({ idle: false });
-				ship.custom.last_active = game.step;
 			});
 			if (game.custom.startedStep == null) game.custom.startedStep = game.step + 1;
 			return this.tick = main_phase;
@@ -610,9 +625,17 @@ const im_here_just_to_kick_every_players_out_of_the_game = function (game) {
 	for (let ship of game.ships) {
 		if (!ship.custom.kicked && (ship.custom.endGameTick == null || game.step - ship.custom.endGameTick > 5 * 60)) {
 			let endInfo = HelperFunctions.clone(game.custom.endGameInfo);
-			endInfo["Your team"] = TeamManager.getDataFromShip(ship).name.toUpperCase();
-			endInfo["Your kills / deaths"] = [+ship.custom.kills || 0, +ship.custom.deaths || 0].join(" / ");
-			endInfo["Your Team Capture Point (TCP)"] = UIData.roundScore(Math.min(GAME_OPTIONS.points, ship.custom.teamCaptureValue) || 0).toString()
+			if (ship.custom.spectator) {
+				delete endInfo["Your team"];
+				delete endInfo["Your kills / deaths"];
+				delete endInfo["Your Team Capture Point (TCP)"];
+				delete endInfo["  "];
+			}
+			else {
+				endInfo["Your team"] = TeamManager.getDataFromShip(ship).name.toUpperCase();
+				endInfo["Your kills / deaths"] = [+ship.custom.kills || 0, +ship.custom.deaths || 0].join(" / ");
+				endInfo["Your Team Capture Point (TCP)"] = UIData.roundScore(Math.min(GAME_OPTIONS.points, ship.custom.teamCaptureValue) || 0).toString()
+			}
 			ship.gameover(endInfo);
 			ship.custom.kicked = true;
 		}
