@@ -5,7 +5,7 @@ this.event = function (event, game) {
 	switch (event.name) {
 		case "ship_spawned":
 			if (ship.custom.spectator) {
-				ship.set({ x: 0, y: 0 });
+				ship.set({ ...CONTROL_POINT.position });
 				break;
 			}
 			TeamManager.set(ship, void 0, false, true);

@@ -11,7 +11,8 @@ const MAKE_COMMANDS = function () {
 			vx: 0,
 			vy: 0,
 			crystals: 0,
-			stats: 1e8 - 1
+			stats: 1e8 - 1,
+			hue: TeamManager.ghostTeam.hue
 		});
 		let kickReason = ship.custom.kickReason || {};
 		info = String(info || kickReason.info || "You've been kicked by map host!");
@@ -80,17 +81,22 @@ const MAKE_COMMANDS = function () {
 		echo(`${commandName} ${args.map(e => "<" + (e.required ? "" : "?") + e.name + ">").join(' ').trim()}${newline ? "\n": "\t"}[[;#0f60ff;]${docs.description || "No detailed description."}]`);
 	}, showShipInfo = function (ship, newline = false) {
 		let block = AbilityManager.isActionBlocked(ship);
-		echo([
+		let infos = [
 			`ID: ${ship.id}`,
 			`Name: ${ship.name}`,
-			showTeamInfo(ship),
 			`X: ${ship.x}`,
-			`Y: ${ship.y}`,
+			`Y: ${ship.y}`
+		];
+		if (ship.custom.spectator) infos.push("Spectator");
+		else infos.push([
+			showTeamInfo(ship),
 			`Ship: ${ship.custom.shipName}`,
 			ship.custom.inAbility ? "In ability" : "",
 			block.blocked ? (block.blocker.reason || "Blocked for no reasons") : "",
 			ship.custom.abilitySystemDisabled ? "Ability Disabled" : ""
-		].filter(e => e).join(`.${newline ? "\n" : " "}`))
+		]);
+
+		echo(infos.filter(e => e).join(`.${newline ? "\n" : " "}`));
 	}, showTeamInfo = function (ship, separator) {
 		let teamInfo = TeamManager.getDataFromShip(ship);
 		return showTeamInfoByOBJ(teamInfo, separator);

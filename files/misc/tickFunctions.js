@@ -27,7 +27,7 @@ const alwaysTick = function (game) {
 					if (GAME_OPTIONS.spectator_enabled && ship.type == 102) {
 						ship.custom.spectator = true;
 						HelperFunctions.setCollider(ship, false);
-						ship.set({ x: 0, y: 0 });
+						ship.set({ ...CONTROL_POINT.position });
 						UIData.renderScoreboard(ship);
 						UIData.renderPlayerCount(ship);
 					}
@@ -41,7 +41,7 @@ const alwaysTick = function (game) {
 				else {
 					HelperFunctions.sendWaitingText(ship);
 					HelperFunctions.setCollider(ship, false);
-					ship.set({ idle: true, vx: 0, vy: 0, x: 0, y: 0, angle: 90 });
+					ship.set({ idle: true, vx: 0, vy: 0, ...CONTROL_POINT.position, angle: 90, hue: TeamManager.ghostTeam.hue });
 				}
 				ship.custom.kills = ship.custom.deaths = 0;
 				ship.custom.chooseTimes = {};
@@ -240,6 +240,7 @@ const waiting = function (game) {
 				if (GAME_OPTIONS.spectator_enabled && ship.type == 102) {
 					ship.custom.spectator = true;
 					HelperFunctions.setCollider(ship, false);
+					ship.set({ hue: TeamManager.ghostTeam.hue });
 				}
 				else {
 					ship.custom.useAbilitySystem = true;
