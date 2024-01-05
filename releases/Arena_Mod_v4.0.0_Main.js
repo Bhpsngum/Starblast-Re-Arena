@@ -23,7 +23,7 @@ const __ABILITY_SYSTEM_INFO__ = {
 	name: "Arena_Mod",
 	branch: "Main",
 	version: "4.0.0",
-	buildID: "b461a52"
+	buildID: "b5d61b4"
 };
 
 
@@ -154,7 +154,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_Main.js at Wed Jan 03 2024 00:47:12 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_Main.js at Fri Jan 05 2024 11:09:13 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -202,7 +202,7 @@ if (!Array.isArray(GAME_OPTIONS.ability.switchShortcut)) GAME_OPTIONS.ability.sw
 
 
 
-/* Imported from Teams.js at Wed Jan 03 2024 00:47:12 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Fri Jan 05 2024 11:09:13 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
 	{
@@ -253,7 +253,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps.js at Wed Jan 03 2024 00:47:12 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps.js at Fri Jan 05 2024 11:09:13 GMT+0900 (Japan Standard Time) */
 
 const Maps = [
 	{
@@ -2759,7 +2759,7 @@ const Maps = [
 
 
 
-/* Imported from Abilities.js at Wed Jan 03 2024 00:47:12 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Fri Jan 05 2024 11:09:13 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
 	"Test ship": {
@@ -4972,13 +4972,14 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Wed Jan 03 2024 00:47:12 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Fri Jan 05 2024 11:09:13 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
 	let kick = function (ship, info, reason) {
 		ship.custom.kicked = true;
-		ship.custom.abilitySystemDisabled = true;
+		ship.custom.useAbilitySystem = false;
+		ship.custom.spectator = true;
 		HelperFunctions.setCollider(ship, false);
 		ship.set({
 			idle: true,
@@ -5310,7 +5311,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Wed Jan 03 2024 00:47:12 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Fri Jan 05 2024 11:09:13 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
 	planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -5320,7 +5321,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Wed Jan 03 2024 00:47:12 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Fri Jan 05 2024 11:09:13 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
 	toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -5492,6 +5493,7 @@ const HelperFunctions = {
 		ships: false, // include asteroids
 		asteroids: false, // include ships
 		self: false, // include itself (see notes below)
+		spectator: false, // include spectators (you should not do this)
 		invisible: false // include "invisible" entities (Entities with `entity.custom.invisible == true`)
 	}, dontSort = false) {
 		// Find all entities in range
@@ -5527,7 +5529,7 @@ const HelperFunctions = {
 
 		// Only find ships if either `teammate` or `enemy` is `true`
 
-		if (includes.ships && (teammate || enemy)) data.push(...game.ships.filter(ship => this.isValidShip(ship) && ship.alive && (includes.invisible || !ship.custom.invisible) && (includes.self || ship !== entity) && this.satisfies(entity, ship, teammate, enemy) && this.distance(entity, ship).distance <= range));
+		if (includes.ships && (teammate || enemy)) data.push(...game.ships.filter(ship => this.isValidShip(ship) && ship.alive && (includes.spectator || !ship.custom.spectator) && (includes.invisible || !ship.custom.invisible) && (includes.self || ship !== entity) && this.satisfies(entity, ship, teammate, enemy) && this.distance(entity, ship).distance <= range));
 		
 		// if you only need to select enemies in range and don't care about the order by distance, set `dontSort` to `true`
 		// the sorting procedure below this might be heavy, so only use sorted array it if you need to
@@ -5715,7 +5717,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Wed Jan 03 2024 00:47:12 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Fri Jan 05 2024 11:09:13 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
 	ghostTeam: GhostTeam,
@@ -6920,11 +6922,11 @@ Object.defineProperty(this, 'options', {
 
 
 
-/* Imported from misc/gameLogic.js at Wed Jan 03 2024 00:47:12 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameLogic.js at Fri Jan 05 2024 11:09:13 GMT+0900 (Japan Standard Time) */
 
 
 
-/* Imported from misc/GameConfig.js at Wed Jan 03 2024 00:47:12 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/GameConfig.js at Fri Jan 05 2024 11:09:13 GMT+0900 (Japan Standard Time) */
 
 const map_name = null; // leave `null` if you want randomized map name
 
@@ -6942,6 +6944,8 @@ Object.assign(GAME_OPTIONS, {
 	crystal_drop: 0.5, // this.options.crystal_drop
 	map_size: 100,
 	radar_zoom: 1,
+	spectator_enabled: !!DEBUG, // whether to allow spectators or not
+	spectator_zoom: 0.5, // spectator zoom
 	buttons_cooldown: 0.25, // must wait after x (seconds) before the same button can be triggered again
 	duplicate_choose_limit: 5, // immediately close the ship menu after a single ship has been chosen x times
 	player_weight_multipliers: { // multipliers for calculating player weight
@@ -7049,7 +7053,7 @@ CONTROL_POINT.control_bar.dominating_percentage = Math.min(Math.max(CONTROL_POIN
 
 
 
-/* Imported from misc/Misc.js at Wed Jan 03 2024 00:47:12 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/Misc.js at Fri Jan 05 2024 11:09:13 GMT+0900 (Japan Standard Time) */
 
 const GameHelperFunctions = {
 	setSpawnpointsOBJ: function () {
@@ -7277,7 +7281,7 @@ const WeightCalculator = {
 		return kills * muls.kills + deaths * muls.deaths + teamCaptureValue * muls.teamCaptureValue;
 	},
 	getTopPlayers: function (game, donSort = false, formula = "playerWeightByKD") {
-		let players = game.ships.filter(e => (e || {}).id != null && !e.custom.kicked && e.custom.joined);
+		let players = game.ships.filter(e => (e || {}).id != null && !e.custom.kicked && e.custom.joined && !e.custom.spectator);
 		if (donSort) return players;
 
 		// get formula
@@ -7291,7 +7295,7 @@ const WeightCalculator = {
 		let teamData = TeamManager.getDataFromID(id);
 		let res = 0;
 		for (let ship of game.ships) {
-			if ((ship || {}).id == null || !ship.custom.joined || ship.custom.kicked || !ship.custom.teamAssigned) continue;
+			if ((ship || {}).id == null || !ship.custom.joined || ship.custom.kicked || !ship.custom.teamAssigned || ship.custom.spectator) continue;
 
 			let shipTeam = TeamManager.getDataFromShip(ship);
 
@@ -7478,7 +7482,7 @@ const UIData = {
 		toggle: function (ship, perma = false, firstOpen = false, option = null, forced = false) {
 			// perma means also hides the choose ship button
 			// first open to assign starting tick
-			if (!game.custom.started || !game.custom.abilitySystemEnabled || ship.custom.abilitySystemDisabled) {
+			if (!game.custom.started || !game.custom.abilitySystemEnabled || !ship.custom.useAbilitySystem || ship.custom.abilitySystemDisabled) {
 				firstOpen = false;
 				perma = true;
 			}
@@ -7780,7 +7784,7 @@ const UIData = {
 			]
 		});
 		let scoreboardData = { ...this.scoreboard };
-		if (game.custom.started && !game.custom.ended && ship.custom.joined) {
+		if (game.custom.started && !game.custom.ended && !ship.custom.spectator && ship.custom.joined) {
 			// highlight players
 			let compos = HelperFunctions.clone(scoreboardData.components);
 			let foundIndex = compos.findIndex(c => c.type == "player" && c.id === ship.id);
@@ -8026,7 +8030,7 @@ AbilityManager.onCodeChange = function () {
 
 
 
-/* Imported from misc/tickFunctions.js at Wed Jan 03 2024 00:47:12 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/tickFunctions.js at Fri Jan 05 2024 11:09:13 GMT+0900 (Japan Standard Time) */
 
 const alwaysTick = function (game) {
 	AbilityManager.globalTick(game);
@@ -8054,10 +8058,19 @@ const alwaysTick = function (game) {
 				
 				if (game.custom.started) {
 					ship.custom.allowInstructor = true;
-					ship.custom.useAbilitySystem = true;
-					AbilityManager.random(ship, true);
-					WeightCalculator.joinBalanceTeam(ship);
-					HelperFunctions.spawnShip(ship);
+					if (GAME_OPTIONS.spectator_enabled && ship.type == 102) {
+						ship.custom.spectator = true;
+						HelperFunctions.setCollider(ship, false);
+						ship.set({ x: 0, y: 0 });
+						UIData.renderScoreboard(ship);
+						UIData.renderPlayerCount(ship);
+					}
+					else {
+						ship.custom.useAbilitySystem = true;
+						AbilityManager.random(ship, true);
+						WeightCalculator.joinBalanceTeam(ship);
+						HelperFunctions.spawnShip(ship);
+					}
 				}
 				else {
 					HelperFunctions.sendWaitingText(ship);
@@ -8072,7 +8085,7 @@ const alwaysTick = function (game) {
 			ship.custom.joined = true;
 		}
 
-		if (!ship.custom.kicked && ship.custom.joined) {
+		if (!ship.custom.spectator && !ship.custom.kicked && ship.custom.joined) {
 			// AFK Check
 			if (game.custom.started) {
 				let data = ship.custom.last_status || {};
@@ -8258,15 +8271,21 @@ const waiting = function (game) {
 			players.forEach(ship => {
 				if ((ship || {}).id == null || ship.custom.kicked || !ship.custom.joined) return;
 				ship.custom.allowInstructor = true;
-				ship.custom.useAbilitySystem = true;
-				AbilityManager.random(ship, true);
-				WeightCalculator.joinBalanceTeam(ship);
-				if (ship.alive) {
-					HelperFunctions.spawnShip(ship);
-					UIData.shipUIs.toggle(ship, false, true);
+				if (GAME_OPTIONS.spectator_enabled && ship.type == 102) {
+					ship.custom.spectator = true;
+					HelperFunctions.setCollider(ship, false);
+				}
+				else {
+					ship.custom.useAbilitySystem = true;
+					AbilityManager.random(ship, true);
+					WeightCalculator.joinBalanceTeam(ship);
+					if (ship.alive) {
+						HelperFunctions.spawnShip(ship);
+						UIData.shipUIs.toggle(ship, false, true);
+					}
+					ship.custom.last_active = game.step;
 				}
 				ship.set({ idle: false });
-				ship.custom.last_active = game.step;
 			});
 			if (game.custom.startedStep == null) game.custom.startedStep = game.step + 1;
 			return this.tick = main_phase;
@@ -8640,9 +8659,17 @@ const im_here_just_to_kick_every_players_out_of_the_game = function (game) {
 	for (let ship of game.ships) {
 		if (!ship.custom.kicked && (ship.custom.endGameTick == null || game.step - ship.custom.endGameTick > 5 * 60)) {
 			let endInfo = HelperFunctions.clone(game.custom.endGameInfo);
-			endInfo["Your team"] = TeamManager.getDataFromShip(ship).name.toUpperCase();
-			endInfo["Your kills / deaths"] = [+ship.custom.kills || 0, +ship.custom.deaths || 0].join(" / ");
-			endInfo["Your Team Capture Point (TCP)"] = UIData.roundScore(Math.min(GAME_OPTIONS.points, ship.custom.teamCaptureValue) || 0).toString()
+			if (ship.custom.spectator) {
+				delete endInfo["Your team"];
+				delete endInfo["Your kills / deaths"];
+				delete endInfo["Your Team Capture Point (TCP)"];
+				delete endInfo["  "];
+			}
+			else {
+				endInfo["Your team"] = TeamManager.getDataFromShip(ship).name.toUpperCase();
+				endInfo["Your kills / deaths"] = [+ship.custom.kills || 0, +ship.custom.deaths || 0].join(" / ");
+				endInfo["Your Team Capture Point (TCP)"] = UIData.roundScore(Math.min(GAME_OPTIONS.points, ship.custom.teamCaptureValue) || 0).toString()
+			}
 			ship.gameover(endInfo);
 			ship.custom.kicked = true;
 		}
@@ -8662,7 +8689,7 @@ else this.tick = initialization;
 
 
 
-/* Imported from misc/eventFunction.js at Wed Jan 03 2024 00:47:12 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/eventFunction.js at Fri Jan 05 2024 11:09:13 GMT+0900 (Japan Standard Time) */
 
 this.event = function (event, game) {
 	AbilityManager.globalEvent(event, game);
@@ -8670,6 +8697,10 @@ this.event = function (event, game) {
 	if (ship == null || ship.id == null || ship.custom.kicked || !ship.custom.joined) return;
 	switch (event.name) {
 		case "ship_spawned":
+			if (ship.custom.spectator) {
+				ship.set({ x: 0, y: 0 });
+				break;
+			}
 			TeamManager.set(ship, void 0, false, true);
 			AbilityManager.restore(ship);
 			HelperFunctions.resetIntrusionWarningMSG(ship);
@@ -8680,6 +8711,7 @@ this.event = function (event, game) {
 			if (game.custom.abilitySystemEnabled && !ship.custom.abilitySystemDisabled) UIData.shipUIs.toggle(ship, false, true);
 			break;
 		case "ship_destroyed":
+			if (ship.custom.spectator) break;
 			HelperFunctions.resetIntrusionWarningMSG(ship);
 			ship.custom.deaths = (ship.custom.deaths + 1) || 1;
 			let killer = event.killer;
@@ -8687,7 +8719,7 @@ this.event = function (event, game) {
 			UIData.updateScoreboard(game);
 			break;
 		case "ui_component_clicked":
-			if (UIData.blockers.has(event.id)) break;
+			if (ship.custom.spectator || UIData.blockers.has(event.id)) break;
 			if (ship.custom.lastClickedStep != null && game.step - ship.custom.lastClickedStep < GAME_OPTIONS.buttons_cooldown * 60) break;
 			ship.custom.lastClickedStep = game.step;
 			let component = event.id;
@@ -8746,7 +8778,7 @@ this.event = function (event, game) {
 
 
 
-/* Imported from misc/gameOptions.js at Wed Jan 03 2024 00:47:12 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameOptions.js at Fri Jan 05 2024 11:09:13 GMT+0900 (Japan Standard Time) */
 
 const vocabulary = [
 	{ text: "Heal", icon:"\u0038", key:"H" }, // heal my pods?
@@ -8788,12 +8820,32 @@ this.options = {
 	map_size: GAME_OPTIONS.map_size,
 	release_crystal: true,
 	ships: [
-		HelperFunctions.randInt(GAME_OPTIONS.x) ? '{"name":"I\'m Ready!","level":1,"model":1,"size":1.05,"specs":{"shield":{"capacity":[75,100],"reload":[2,3]},"generator":{"capacity":[40,60],"reload":[10,15]},"ship":{"mass":60,"speed":[125,145],"rotation":[110,130],"acceleration":[100,120]}},"bodies":{"main":{"section_segments":12,"offset":{"x":0,"y":0,"z":10},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[-65,-60,-50,-20,10,30,55,75,60],"z":[0,0,0,0,0,0,0,0,0]},"width":[0,8,10,30,25,30,18,15,0],"height":[0,6,8,12,20,20,18,15,0],"propeller":true,"texture":[4,63,10,1,1,1,12,17]},"cockpit":{"section_segments":12,"offset":{"x":0,"y":0,"z":20},"position":{"x":[0,0,0,0,0,0,0],"y":[-15,0,20,30,60],"z":[0,0,0,0,0]},"width":[0,13,17,10,5],"height":[0,18,25,18,5],"propeller":false,"texture":[7,9,9,4,4]},"cannon":{"section_segments":6,"offset":{"x":0,"y":-15,"z":-10},"position":{"x":[0,0,0,0,0,0],"y":[-40,-50,-20,0,20,30],"z":[0,0,0,0,0,20]},"width":[0,5,8,11,7,0],"height":[0,5,8,11,10,0],"angle":0,"laser":{"damage":[5,6],"rate":4,"type":1,"speed":[160,180],"number":1,"error":2.5},"propeller":false,"texture":[3,3,10,3]}},"wings":{"main":{"length":[60,20],"width":[100,50,40],"angle":[-10,10],"position":[0,20,10],"doubleside":true,"offset":{"x":0,"y":10,"z":5},"bump":{"position":30,"size":20},"texture":[11,63]}},"typespec":{"name":"I\'m Ready!","level":1,"model":1,"code":101,"specs":{"shield":{"capacity":[75,100],"reload":[2,3]},"generator":{"capacity":[40,60],"reload":[10,15]},"ship":{"mass":60,"speed":[125,145],"rotation":[110,130],"acceleration":[100,120]}},"shape":[1.368,1.368,1.093,0.965,0.883,0.827,0.791,0.767,0.758,0.777,0.847,0.951,1.092,1.667,1.707,1.776,1.856,1.827,1.744,1.687,1.525,1.415,1.335,1.606,1.603,1.578,1.603,1.606,1.335,1.415,1.525,1.687,1.744,1.827,1.856,1.776,1.707,1.667,1.654,0.951,0.847,0.777,0.758,0.767,0.791,0.827,0.883,0.965,1.093,1.368],"lasers":[{"x":0,"y":-1.365,"z":-0.21,"angle":0,"damage":[5,6],"rate":4,"type":1,"speed":[160,180],"number":1,"spread":0,"error":2.5,"recoil":0}],"radius":1.856}}' : '{"name":"I\'m Ready!","designer":"Supernova","level":1,"model":1,"size":1,"specs":{"shield":{"capacity":[125,175],"reload":[2,4]},"generator":{"capacity":[75,125],"reload":[20,35]},"ship":{"mass":90,"speed":[100,120],"rotation":[50,70],"acceleration":[100,130]}},"bodies":{"ring":{"section_segments":100,"offset":{"x":0,"y":0,"z":0},"position":{"x":[0,0,0,0,0,0,0,0],"y":[0,0,0,0,0,0,0,0],"z":[0,0,0,0,0,0,0,0,0]},"width":[80,100,100,100,100,100,100,80],"height":[80,100,100,100,100,100,100,80],"texture":63,"propeller":false,"vertical":true},"spike1":{"section_segments":4,"offset":{"x":-73,"y":-65,"z":0},"position":{"x":[0,0,0,0,0,0,0],"y":[-30,0,20,50],"z":[0,0,0]},"width":[0,20,20,0],"height":[0,10,10,0],"texture":[1],"angle":46,"propeller":false},"spike2":{"section_segments":4,"offset":{"x":-57,"y":53,"z":0},"position":{"x":[0,0,0,0,0,0,0],"y":[-30,0,20,50],"z":[0,0,0]},"width":[0,20,20,0],"height":[0,10,10,0],"texture":[1],"angle":-46,"propeller":false},"x_1":{"section_segments":[45,135,225,315],"offset":{"x":0,"y":0,"z":0},"position":{"x":[-18,-18,18,18],"y":[-20,-20,20,20],"z":[0,0,0,0]},"width":[0,10,10,0],"height":[0,10,10,0],"texture":[1]},"x_2":{"section_segments":[45,135,225,315],"offset":{"x":0,"y":0,"z":0},"position":{"x":[18,18,-18,-18],"y":[-20,-20,20,20],"z":[0,0,0,0]},"width":[0,10,10,0],"height":[0,10,10,0],"texture":[1]}},"typespec":{"name":"I\'m Ready!","level":1,"model":1,"code":101,"specs":{"shield":{"capacity":[125,175],"reload":[2,4]},"generator":{"capacity":[75,125],"reload":[20,35]},"ship":{"mass":90,"speed":[100,120],"rotation":[50,70],"acceleration":[100,130]}},"shape":[2,2,2,2,2,2.093,2.481,2.555,2.227,2,2,2,2,2,2,2,2,2.164,2.545,2.557,2.162,2,2,2,2,2,2,2,2,2,2.162,2.557,2.545,2.164,2,2,2,2,2,2,2,2,2.227,2.555,2.481,2.093,2,2,2,2],"lasers":[],"radius":2.557}}',
+		HelperFunctions.randInt(GAME_OPTIONS.x) ? '{"name":"Player","level":1,"model":1,"size":1.05,"specs":{"shield":{"capacity":[75,100],"reload":[2,3]},"generator":{"capacity":[40,60],"reload":[10,15]},"ship":{"mass":60,"speed":[125,145],"rotation":[110,130],"acceleration":[100,120]}},"bodies":{"main":{"section_segments":12,"offset":{"x":0,"y":0,"z":10},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[-65,-60,-50,-20,10,30,55,75,60],"z":[0,0,0,0,0,0,0,0,0]},"width":[0,8,10,30,25,30,18,15,0],"height":[0,6,8,12,20,20,18,15,0],"propeller":true,"texture":[4,63,10,1,1,1,12,17]},"cockpit":{"section_segments":12,"offset":{"x":0,"y":0,"z":20},"position":{"x":[0,0,0,0,0,0,0],"y":[-15,0,20,30,60],"z":[0,0,0,0,0]},"width":[0,13,17,10,5],"height":[0,18,25,18,5],"propeller":false,"texture":[7,9,9,4,4]},"cannon":{"section_segments":6,"offset":{"x":0,"y":-15,"z":-10},"position":{"x":[0,0,0,0,0,0],"y":[-40,-50,-20,0,20,30],"z":[0,0,0,0,0,20]},"width":[0,5,8,11,7,0],"height":[0,5,8,11,10,0],"angle":0,"laser":{"damage":[5,6],"rate":4,"type":1,"speed":[160,180],"number":1,"error":2.5},"propeller":false,"texture":[3,3,10,3]}},"wings":{"main":{"length":[60,20],"width":[100,50,40],"angle":[-10,10],"position":[0,20,10],"doubleside":true,"offset":{"x":0,"y":10,"z":5},"bump":{"position":30,"size":20},"texture":[11,63]}},"typespec":{"name":"Player","level":1,"model":1,"code":101,"specs":{"shield":{"capacity":[75,100],"reload":[2,3]},"generator":{"capacity":[40,60],"reload":[10,15]},"ship":{"mass":60,"speed":[125,145],"rotation":[110,130],"acceleration":[100,120]}},"shape":[1.368,1.368,1.093,0.965,0.883,0.827,0.791,0.767,0.758,0.777,0.847,0.951,1.092,1.667,1.707,1.776,1.856,1.827,1.744,1.687,1.525,1.415,1.335,1.606,1.603,1.578,1.603,1.606,1.335,1.415,1.525,1.687,1.744,1.827,1.856,1.776,1.707,1.667,1.654,0.951,0.847,0.777,0.758,0.767,0.791,0.827,0.883,0.965,1.093,1.368],"lasers":[{"x":0,"y":-1.365,"z":-0.21,"angle":0,"damage":[5,6],"rate":4,"type":1,"speed":[160,180],"number":1,"spread":0,"error":2.5,"recoil":0}],"radius":1.856}}' : '{"name":"Player","designer":"Supernova","level":1,"model":1,"size":1,"specs":{"shield":{"capacity":[125,175],"reload":[2,4]},"generator":{"capacity":[75,125],"reload":[20,35]},"ship":{"mass":90,"speed":[100,120],"rotation":[50,70],"acceleration":[100,130]}},"bodies":{"ring":{"section_segments":100,"offset":{"x":0,"y":0,"z":0},"position":{"x":[0,0,0,0,0,0,0,0],"y":[0,0,0,0,0,0,0,0],"z":[0,0,0,0,0,0,0,0,0]},"width":[80,100,100,100,100,100,100,80],"height":[80,100,100,100,100,100,100,80],"texture":63,"propeller":false,"vertical":true},"spike1":{"section_segments":4,"offset":{"x":-73,"y":-65,"z":0},"position":{"x":[0,0,0,0,0,0,0],"y":[-30,0,20,50],"z":[0,0,0]},"width":[0,20,20,0],"height":[0,10,10,0],"texture":[1],"angle":46,"propeller":false},"spike2":{"section_segments":4,"offset":{"x":-57,"y":53,"z":0},"position":{"x":[0,0,0,0,0,0,0],"y":[-30,0,20,50],"z":[0,0,0]},"width":[0,20,20,0],"height":[0,10,10,0],"texture":[1],"angle":-46,"propeller":false},"x_1":{"section_segments":[45,135,225,315],"offset":{"x":0,"y":0,"z":0},"position":{"x":[-18,-18,18,18],"y":[-20,-20,20,20],"z":[0,0,0,0]},"width":[0,10,10,0],"height":[0,10,10,0],"texture":[1]},"x_2":{"section_segments":[45,135,225,315],"offset":{"x":0,"y":0,"z":0},"position":{"x":[18,18,-18,-18],"y":[-20,-20,20,20],"z":[0,0,0,0]},"width":[0,10,10,0],"height":[0,10,10,0],"texture":[1]}},"typespec":{"name":"Player","level":1,"model":1,"code":101,"specs":{"shield":{"capacity":[125,175],"reload":[2,4]},"generator":{"capacity":[75,125],"reload":[20,35]},"ship":{"mass":90,"speed":[100,120],"rotation":[50,70],"acceleration":[100,130]}},"shape":[2,2,2,2,2,2.093,2.481,2.555,2.227,2,2,2,2,2,2,2,2,2.164,2.545,2.557,2.162,2,2,2,2,2,2,2,2,2,2.162,2.557,2.545,2.164,2,2,2,2,2,2,2,2,2.227,2.555,2.481,2.093,2,2,2,2],"lasers":[],"radius":2.557}}',
 		...AbilityManager.getShipCodes()
 	]
 }
 
 let ship101 = JSON.parse(this.options.ships[0]);
+
+if (GAME_OPTIONS.spectator_enabled) {
+	let Spectator_102 = '{"name":"Spectator","level":1,"model":2,"size":0.025,"zoom":0.075,"specs":{"shield":{"capacity":[1e-30,1e-30],"reload":[1000,1000]},"generator":{"capacity":[1e-30,1e-30],"reload":[1,1]},"ship":{"mass":1,"speed":[150,150],"rotation":[1000,1000],"acceleration":[1000,1000]}},"bodies":{"face":{"section_segments":100,"angle":0,"offset":{"x":0,"y":0,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"y":[-2,-2,2,2],"z":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},"width":[0,1,1,0],"height":[0,1,1,0],"vertical":true,"texture":[6]}},"typespec":{"name":"Spectator","level":1,"model":2,"code":102,"specs":{"shield":{"capacity":[1e-30,1e-30],"reload":[1000,1000]},"generator":{"capacity":[1e-30,1e-30],"reload":[1,1]},"ship":{"mass":1,"speed":[150,150],"rotation":[1000,1000],"acceleration":[1000,1000]}},"shape":[0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001],"lasers":[],"radius":0.001}}';
+
+	// modify specs to prevent screen clogging
+	let parsedSpec = JSON.parse(Spectator_102);
+
+	let specRadius = 20 * 10;
+	let idealZoom = GAME_OPTIONS.spectator_zoom; // at radius 1
+
+	parsedSpec.typespec.radius = specRadius;
+	parsedSpec.typespec.shape = Array(10).fill(0);
+
+	parsedSpec.zoom = Math.pow(specRadius / 3, 0.3) / (Math.pow(1 / 3, 0.3) / idealZoom);
+
+	Spectator_102 = JSON.stringify(parsedSpec);
+
+	this.options.ships.splice(1, 0, Spectator_102);
+	this.options.choose_ship.push(102);
+}
 
 for (let val of [ship101, ship101.typespec]) {
 	val.specs.generator = {
@@ -8816,6 +8868,6 @@ this.options.ships[0] = JSON.stringify(ship101);
 
 
 
-/* Imported from misc/gameInfo.js at Wed Jan 03 2024 00:47:12 GMT+0900 (Japan Standard Time) */
+/* Imported from misc/gameInfo.js at Fri Jan 05 2024 11:09:13 GMT+0900 (Japan Standard Time) */
 
 AbilityManager.echo(`[[bg;DarkTurquoise;]Re:][[bg;#EE4B2B;]Arena] ([[;#AAFF00;]${__ABILITY_SYSTEM_INFO__.branch}]) [[;Cyan;]v${__ABILITY_SYSTEM_INFO__.version} (Build ID [[;${HelperFunctions.toHSLA(__ABILITY_SYSTEM_INFO__.buildID)};]${__ABILITY_SYSTEM_INFO__.buildID}])\nMap picked: [[b;Cyan;]${MapManager.get().name} by ${MapManager.get().author}\n\nType \`commands\` to see all commands\nAnd \`usage <commandName>\` to show usage of a command\n\n]`);

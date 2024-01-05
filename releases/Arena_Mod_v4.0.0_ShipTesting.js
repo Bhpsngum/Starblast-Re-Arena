@@ -23,7 +23,7 @@ const __ABILITY_SYSTEM_INFO__ = {
 	name: "Arena_Mod",
 	branch: "ShipTesting",
 	version: "4.0.0",
-	buildID: "b461a52"
+	buildID: "b5d61b4"
 };
 
 
@@ -154,7 +154,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_ShipTesting.js at Wed Jan 03 2024 00:47:12 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_ShipTesting.js at Fri Jan 05 2024 11:09:13 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -202,7 +202,7 @@ if (!Array.isArray(GAME_OPTIONS.ability.switchShortcut)) GAME_OPTIONS.ability.sw
 
 
 
-/* Imported from Teams.js at Wed Jan 03 2024 00:47:12 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Fri Jan 05 2024 11:09:13 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
 	{
@@ -253,7 +253,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps_ShipTesting.js at Wed Jan 03 2024 00:47:12 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps_ShipTesting.js at Fri Jan 05 2024 11:09:13 GMT+0900 (Japan Standard Time) */
 
 const Maps = [];
 
@@ -261,7 +261,7 @@ const Maps = [];
 
 
 
-/* Imported from Abilities.js at Wed Jan 03 2024 00:47:12 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Fri Jan 05 2024 11:09:13 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
 	"Test ship": {
@@ -2474,13 +2474,14 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Wed Jan 03 2024 00:47:12 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Fri Jan 05 2024 11:09:13 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
 	let kick = function (ship, info, reason) {
 		ship.custom.kicked = true;
-		ship.custom.abilitySystemDisabled = true;
+		ship.custom.useAbilitySystem = false;
+		ship.custom.spectator = true;
 		HelperFunctions.setCollider(ship, false);
 		ship.set({
 			idle: true,
@@ -2812,7 +2813,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Wed Jan 03 2024 00:47:12 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Fri Jan 05 2024 11:09:13 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
 	planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -2822,7 +2823,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Wed Jan 03 2024 00:47:12 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Fri Jan 05 2024 11:09:13 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
 	toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -2994,6 +2995,7 @@ const HelperFunctions = {
 		ships: false, // include asteroids
 		asteroids: false, // include ships
 		self: false, // include itself (see notes below)
+		spectator: false, // include spectators (you should not do this)
 		invisible: false // include "invisible" entities (Entities with `entity.custom.invisible == true`)
 	}, dontSort = false) {
 		// Find all entities in range
@@ -3029,7 +3031,7 @@ const HelperFunctions = {
 
 		// Only find ships if either `teammate` or `enemy` is `true`
 
-		if (includes.ships && (teammate || enemy)) data.push(...game.ships.filter(ship => this.isValidShip(ship) && ship.alive && (includes.invisible || !ship.custom.invisible) && (includes.self || ship !== entity) && this.satisfies(entity, ship, teammate, enemy) && this.distance(entity, ship).distance <= range));
+		if (includes.ships && (teammate || enemy)) data.push(...game.ships.filter(ship => this.isValidShip(ship) && ship.alive && (includes.spectator || !ship.custom.spectator) && (includes.invisible || !ship.custom.invisible) && (includes.self || ship !== entity) && this.satisfies(entity, ship, teammate, enemy) && this.distance(entity, ship).distance <= range));
 		
 		// if you only need to select enemies in range and don't care about the order by distance, set `dontSort` to `true`
 		// the sorting procedure below this might be heavy, so only use sorted array it if you need to
@@ -3217,7 +3219,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Wed Jan 03 2024 00:47:12 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Fri Jan 05 2024 11:09:13 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
 	ghostTeam: GhostTeam,
