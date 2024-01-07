@@ -23,7 +23,7 @@ const __ABILITY_SYSTEM_INFO__ = {
 	name: "Arena_Mod",
 	branch: "ShipTesting",
 	version: "4.0.0",
-	buildID: "76310ba"
+	buildID: "f64ca46"
 };
 
 
@@ -154,7 +154,7 @@ you can fck around and find out how to compile custom templates as well
 
 
 
-/* Imported from Config_ShipTesting.js at Fri Jan 05 2024 21:10:32 GMT+0900 (Japan Standard Time) */
+/* Imported from Config_ShipTesting.js at Sun Jan 07 2024 20:59:10 GMT+0900 (Japan Standard Time) */
 
 const DEBUG = true; // if in debug phase
 
@@ -202,7 +202,7 @@ if (!Array.isArray(GAME_OPTIONS.ability.switchShortcut)) GAME_OPTIONS.ability.sw
 
 
 
-/* Imported from Teams.js at Fri Jan 05 2024 21:10:32 GMT+0900 (Japan Standard Time) */
+/* Imported from Teams.js at Sun Jan 07 2024 20:59:10 GMT+0900 (Japan Standard Time) */
 
 const Teams = [
 	{
@@ -253,7 +253,7 @@ const GhostTeam = {
 
 
 
-/* Imported from Maps_ShipTesting.js at Fri Jan 05 2024 21:10:32 GMT+0900 (Japan Standard Time) */
+/* Imported from Maps_ShipTesting.js at Sun Jan 07 2024 20:59:10 GMT+0900 (Japan Standard Time) */
 
 const Maps = [];
 
@@ -261,7 +261,7 @@ const Maps = [];
 
 
 
-/* Imported from Abilities.js at Fri Jan 05 2024 21:10:32 GMT+0900 (Japan Standard Time) */
+/* Imported from Abilities.js at Sun Jan 07 2024 20:59:10 GMT+0900 (Japan Standard Time) */
 
 const ShipAbilities = {
 	"Test ship": {
@@ -2474,7 +2474,7 @@ const ShipAbilities = {
 
 
 
-/* Imported from Commands.js at Fri Jan 05 2024 21:10:32 GMT+0900 (Japan Standard Time) */
+/* Imported from Commands.js at Sun Jan 07 2024 20:59:10 GMT+0900 (Japan Standard Time) */
 
 // only available when DEBUG is `true`
 const MAKE_COMMANDS = function () {
@@ -2819,7 +2819,7 @@ const MAKE_COMMANDS = function () {
 
 
 
-/* Imported from Resources.js at Fri Jan 05 2024 21:10:32 GMT+0900 (Japan Standard Time) */
+/* Imported from Resources.js at Sun Jan 07 2024 20:59:10 GMT+0900 (Japan Standard Time) */
 
 const RESOURCES = {
 	planeOBJ: "https://starblast.data.neuronality.com/mods/objects/plane.obj"
@@ -2829,7 +2829,7 @@ const RESOURCES = {
 
 
 
-/* Imported from HelperFunctions.js at Fri Jan 05 2024 21:10:32 GMT+0900 (Japan Standard Time) */
+/* Imported from HelperFunctions.js at Sun Jan 07 2024 20:59:10 GMT+0900 (Japan Standard Time) */
 
 const HelperFunctions = {
 	toHSLA: function (hue = 0, alpha = 1, saturation = 100, lightness = 50) {
@@ -3225,7 +3225,7 @@ const HelperFunctions = {
 
 
 
-/* Imported from Managers.js at Fri Jan 05 2024 21:10:32 GMT+0900 (Japan Standard Time) */
+/* Imported from Managers.js at Sun Jan 07 2024 20:59:10 GMT+0900 (Japan Standard Time) */
 
 const TeamManager = {
 	ghostTeam: GhostTeam,
